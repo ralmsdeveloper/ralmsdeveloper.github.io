@@ -6,7 +6,7 @@
 # `jekyll serve`. If you change this file, please restart the server process.
 
 # Site Settings
-locale                   : "pt_BR"
+locale                   : "pt-BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
@@ -80,7 +80,7 @@ author:
   name             : "Rafael Almeida"
   avatar           : /assets/images/bio.jpg
   bio              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
-  location         : #"Somewhere"
+  location         : "Sergipe-Brasil"
   email            : ralms@ralms.net
   uri              : https://ralmsdeveloper.github.io
   bitbucket        :
