@@ -1,5 +1,5 @@
 ﻿---
-title: "EntityFrameworkCore.FirebirdSQL  2.0.9"
+title: "EntityFrameworkCore.FirebirdSQL  2.0.8"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
@@ -14,40 +14,22 @@ tags:
 
 **EntityFrameworkCore For FirebirdSQL**
 
-Fala pessoal, acabei de disponibilizar para vocês a versão 2.0.9 “quentinha” do EntityFrameworkCore.FirebirdSql, o Framework de acesso a dados ao FirebirdSQL, escrito 100% em .Net Core para vocês amantes do EF Core assim como EU!!!
+Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdSql.
 
-Nessa versão disponibilizo a compatibilidade para os que usam o Firebird 3.x, de ter o auto incremento por trigger como era nas versões anteriores!
+Muitas melhorias e implementações em:
 
-Como faço para usar esse recurso com Firebird 3.x?
-Simples, vamos lá!
+■ Scaffold
+■ Insert em Lote
+■ Delete em Lote
+■ Update em Lote
+■ Consumo de Chave Primária Composta
+■ GitHub / Nuget
 
-**Para usar o auto incremento por trigger:**
-```csharp
-protected override void OnModelCreating(ModelBuilder modelo)
-{
-    modelo.Entity<Author>()
-        .Property(x => x.AuthorId)
-        .UseFirebirdIdentityColumn();
-    modelo.Entity<Book>()
-        .Property(x => x.BookId)
-        .UseFirebirdSequenceTrigger();
-}
-```
-**Para usar o auto-incremento automático:**
 
-```csharp
-protected override void OnModelCreating(ModelBuilder modelo)
-{
-    modelo.Entity<Author>()
-        .Property(x => x.AuthorId)
-        .UseFirebirdIdentityColumn();
-    modelo.Entity<Book>()
-        .Property(x => x.BookId)
-        .UseFirebirdIdentityColumn();
-}
-```
-Nuget: [https://www.nuget.org/packages?q=EntityFrameworkCore.FirebirdSQL](https://www.nuget.org/packages?q=EntityFrameworkCore.FirebirdSQL)
+[Git](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
+
+[Nuget](https://www.nuget.org/packages?q=EntityFrameworkCore.FirebirdSQL)
 
 Ou se preferir instale pelo console em seu projeto!
 
-`Install-Package EntityFrameworkCore.FirebirdSQL -Version 2.0.9`
+`Install-Package EntityFrameworkCore.FirebirdSQL -Version 2.0.8`
