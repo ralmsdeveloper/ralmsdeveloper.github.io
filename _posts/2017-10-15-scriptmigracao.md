@@ -9,7 +9,9 @@ tags:
   - EntityFrameworkCore
 ---
 
-Fala pessoal esse final de semana resolvi fazer esse pequeno post, para mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!
+![01]({{ site.url }}{{ site.baseurl }}/assets/images/efcore.png)
+
+Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!
 Bom quando o EF Core gera as migrações as mesmas ficam embutidas na aplicação, então para os que quiserem ter mais esse controle é bem simples!
 
 Vamos imaginar o seguinte cenário.
