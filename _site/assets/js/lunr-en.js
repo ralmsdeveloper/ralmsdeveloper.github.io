@@ -30,7 +30,7 @@ var idx = lunr(function () {
   
     idx.add({
       title: "EntityFrameworkCore For FirebirdSQL",
-      excerpt: "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
+      excerpt: "EntityFrameworkCore For FirebirdSQL Lançamento EntityFrameworkCore for FirebirdSQL Com enorme prazer que venho informar que hoje o EntityframworkCore.FirebirdSQL está disponível, tomei...",
       categories: ["Provider"],
       tags: ["CSharp","NetStandard","EntityFrameworkCore"],
       id: 2
@@ -108,7 +108,7 @@ var store = [
       {
         "title": "EntityFrameworkCore For FirebirdSQL",
         "url": "http://localhost:4000/provider/provider-firebirdsql-efcore/",
-        "excerpt": "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
+        "excerpt": "EntityFrameworkCore For FirebirdSQL Lançamento EntityFrameworkCore for FirebirdSQL Com enorme prazer que venho informar que hoje o EntityframworkCore.FirebirdSQL está disponível, tomei...",
         "teaser":
           
             null
