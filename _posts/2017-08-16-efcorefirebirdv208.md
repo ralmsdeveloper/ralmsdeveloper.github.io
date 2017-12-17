@@ -17,12 +17,13 @@ Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdS
 
 Muitas melhorias e implementações em:
 
-- [x] Scaffold
-- [x] Insert em Lote
-- [x] Delete em Lote
-- [x] Update em Lote
-- [x] Consumo de Chave Primária Composta
-- [x] GitHub / Nuget
+- Scaffold
+- Insert em Lote
+- Delete em Lote
+- Update em Lote
+- Consumo de Chave Primária Composta
+
+Obrigado a todos pelos e-mails que recebido.
 
 
 [Git](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
