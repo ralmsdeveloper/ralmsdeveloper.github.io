@@ -19,12 +19,12 @@
 
 
 
-<title>Query Compileda no EntityFrameworkCore 2.0 - Ralms.NET</title>
+<title>SQL Injection EntityFrameworkCore - Ralms.NET</title>
 
 
 
 
-<meta name="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+<meta name="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
 
 
 
@@ -33,7 +33,7 @@
 
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Ralms.NET">
-<meta property="og:title" content="Query Compileda no EntityFrameworkCore 2.0">
+<meta property="og:title" content="SQL Injection EntityFrameworkCore">
 
 
   <link rel="canonical" href="http://localhost:4000/csharp/sqlinjection/">
@@ -41,7 +41,7 @@
 
 
 
-  <meta property="og:description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+  <meta property="og:description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
 
 
 
@@ -298,15 +298,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Query Compileda no EntityFrameworkCore 2.0">
-    <meta itemprop="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+    <meta itemprop="headline" content="SQL Injection EntityFrameworkCore">
+    <meta itemprop="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
     <meta itemprop="datePublished" content="August 01, 2017">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">Query Compileda no EntityFrameworkCore 2.0
+          <h1 class="page__title" itemprop="headline">SQL Injection EntityFrameworkCore
 </h1>
           
             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
@@ -328,7 +328,7 @@
 
 <p>Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.</p>
 
-<p>Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.</p>
+<p>Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança.</p>
 
 <p>Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.</p>
 
@@ -485,7 +485,7 @@
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=Query+Compileda+no+EntityFrameworkCore+2.0%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=SQL+Injection+EntityFrameworkCore%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
   <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
@@ -502,7 +502,7 @@
 ">Previous</a>
     
     
-      <a href="http://localhost:4000/csharp/csharp-novidade/" class="pagination--pager" title="Novidade C# 7.3, o que vem por ai?
+      <a href="http://localhost:4000/sql%20server/sqlserverclr/" class="pagination--pager" title="Usando CLR no SQL Server
 ">Next</a>
     
   </nav>
@@ -541,6 +541,34 @@
 </p>
     
     <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/sql%20server/sqlserverclr/" rel="permalink">Usando CLR no SQL Server
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">NET Framework CLR + SQL Server
+
+“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Window...</p>
   </article>
 </div>
         
@@ -596,32 +624,6 @@ Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno po
     <p class="archive__item-excerpt" itemprop="description">#EntityFrameworkCore For FirebirdSQL#
 
 Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/csharp/binarionetcore/" rel="permalink">Query Compileda no EntityFrameworkCore 2.0
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implement...</p>
   </article>
 </div>
         

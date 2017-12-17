@@ -47,7 +47,7 @@ var idx = lunr(function () {
     
   
     idx.add({
-      title: "Query Compileda no EntityFrameworkCore 2.0",
+      title: "SQL Injection EntityFrameworkCore",
       excerpt: "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
       categories: ["CSharp"],
       tags: ["CSharp","EntityFrameworkCore"],
@@ -56,11 +56,20 @@ var idx = lunr(function () {
     
   
     idx.add({
+      title: "Usando CLR no SQL Server",
+      excerpt: "NET Framework CLR + SQL Server “A partir do SQL Server 2005, o SQL Server apresenta a integração do componente...",
+      categories: ["SQL Server"],
+      tags: ["CSharp","SQL Server"],
+      id: 5
+    });
+    
+  
+    idx.add({
       title: "Novidade C# 7.3, o que vem por ai?",
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
       categories: ["CSharp"],
       tags: ["CSharp"],
-      id: 5
+      id: 6
     });
     
   
@@ -119,9 +128,20 @@ var store = [
     
       
       {
-        "title": "Query Compileda no EntityFrameworkCore 2.0",
+        "title": "SQL Injection EntityFrameworkCore",
         "url": "http://localhost:4000/csharp/sqlinjection/",
         "excerpt": "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Usando CLR no SQL Server",
+        "url": "http://localhost:4000/sql%20server/sqlserverclr/",
+        "excerpt": "NET Framework CLR + SQL Server “A partir do SQL Server 2005, o SQL Server apresenta a integração do componente...",
         "teaser":
           
             null
