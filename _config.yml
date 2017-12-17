@@ -2,7 +2,7 @@ minimal_mistakes_skin    : "default" # "air", "aqua", "contrast", "dark", "dirt"
 locale                   : "pt_BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
-name                     : "Rafael Almeida"
+name                     : "ralmsdeveloper"
 description              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
 url                      : http://www.ralms.net
 baseurl                  : "./"
@@ -20,7 +20,6 @@ comments:
     num_posts            : # 5 (default)
     colorscheme          : # "light" (default), "dark"
 staticman:
-  allowedFields          : ['name', 'email', 'url', 'message']
   branch                 : "blog"
   commitMessage          : "New comment."
   filename               : comment-{@timestamp}
