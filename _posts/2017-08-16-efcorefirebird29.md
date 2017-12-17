@@ -12,18 +12,17 @@ tags:
 
 ![01]({{ site.url }}{{ site.baseurl }}/assets/images/firebird.png)
 
-**EntityFrameworkCore For FirebirdSQL**
 
 Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdSql.
 
 Muitas melhorias e implementações em:
 
-■ Scaffold
-■ Insert em Lote
-■ Delete em Lote
-■ Update em Lote
-■ Consumo de Chave Primária Composta
-■ GitHub / Nuget
+- [x] Scaffold
+- [x] Insert em Lote
+- [x] Delete em Lote
+- [x] Update em Lote
+- [x] Consumo de Chave Primária Composta
+- [x] GitHub / Nuget
 
 
 [Git](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
