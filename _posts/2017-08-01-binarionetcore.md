@@ -9,7 +9,7 @@ tags:
 ---
 
 Boa noite,
-Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Core.
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core C#.
 Ué e nas versões anteriores não faz?!
 Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.
 
@@ -23,60 +23,62 @@ using System.IO;
 
 namespace CriaLerArquivoBinario
 {
-	class Program
-	{
-		static void Main(string[] args)
-		{
-			var arquivo = AppContext.BaseDirectory + "Exemplo.bin";
-			if (File.Exists(arquivo))
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var arquivo = AppContext.BaseDirectory + "Exemplo.bin";
+            if (File.Exists(arquivo))
+			{
 				File.Delete((arquivo));
-
-			var cadastro = new Pessoa
-			{
-				Nome = "Rafael Almeida",
-				Endereco = "Avenida de Teste",
-				Idade = 28,
-				Credito = 8000m
-			};
-
-			//Gravar no arquivo!
-			using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))
-			{
-				escrever.Write(cadastro.Nome);
-				escrever.Write(cadastro.Endereco);
-				escrever.Write(cadastro.Idade);
-				escrever.Write(cadastro.Credito);
-				escrever.Close();
 			}
 
-			//Resetar objeto
-			cadastro = new Pessoa();
+            var cadastro = new Pessoa
+            {
+                Nome = "Rafael Almeida",
+                Endereco = "Avenida de Teste",
+                Idade = 28,
+                Credito = 8000m
+            };
 
-			using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))
-			{
-				cadastro.Nome = ler.ReadString();
-				cadastro.Endereco = ler.ReadString();
-				cadastro.Idade = ler.ReadInt32();
-				cadastro.Credito = ler.ReadDecimal();
+            //Gravar no arquivo!
+            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))
+            {
+                escrever.Write(cadastro.Nome);
+                escrever.Write(cadastro.Endereco);
+                escrever.Write(cadastro.Idade);
+                escrever.Write(cadastro.Credito);
+                escrever.Close();
+            }
 
-				//Imprimir dados na tela
-				Console.WriteLine($"Nome....: {cadastro.Nome}");
-				Console.WriteLine($"Endereço: {cadastro.Endereco}");
-				Console.WriteLine($"Idade...: {cadastro.Idade}");
-				Console.WriteLine($"Crédito.: {cadastro.Credito}");
+            //Resetar objeto
+            cadastro = new Pessoa();
 
-			}
-			Console.ReadKey();
-		}
-	}
+            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))
+            {
+                cadastro.Nome = ler.ReadString();
+                cadastro.Endereco = ler.ReadString();
+                cadastro.Idade = ler.ReadInt32();
+                cadastro.Credito = ler.ReadDecimal();
 
-	class Pessoa
-	{
-		public string Nome { get; set; }
-		public string Endereco { get; set; }
-		public int Idade { get; set; }
-		public decimal Credito { get; set; }
-	}
+                //Imprimir dados na tela
+                Console.WriteLine($"Nome....: {cadastro.Nome}");
+                Console.WriteLine($"Endereço: {cadastro.Endereco}");
+                Console.WriteLine($"Idade...: {cadastro.Idade}");
+                Console.WriteLine($"Crédito.: {cadastro.Credito}");
+
+            }
+            Console.ReadKey();
+        }
+    }
+
+    class Pessoa
+    {
+        public string Nome { get; set; }
+        public string Endereco { get; set; }
+        public int Idade { get; set; }
+        public decimal Credito { get; set; }
+    }
 }
 
 ```
