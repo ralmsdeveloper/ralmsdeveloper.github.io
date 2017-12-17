@@ -29,11 +29,20 @@ var idx = lunr(function () {
     
   
     idx.add({
+      title: "Injeção de Dependência Asp.Net Core 2 (Razor)",
+      excerpt: "Fala Pessoal, Tudo Bem?! Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página. Para isso antes...",
+      categories: ["Razor"],
+      tags: ["Razor",".Net Core"],
+      id: 2
+    });
+    
+  
+    idx.add({
       title: "EntityFrameworkCore For FirebirdSQL",
       excerpt: "EntityFrameworkCore For FirebirdSQL Lançamento EntityFrameworkCore for FirebirdSQL Com enorme prazer que venho informar que hoje o EntityframworkCore.FirebirdSQL está disponível, tomei...",
       categories: ["Provider"],
       tags: ["CSharp","NetStandard","EntityFrameworkCore"],
-      id: 2
+      id: 3
     });
     
   
@@ -42,7 +51,7 @@ var idx = lunr(function () {
       excerpt: "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
       categories: ["CSharp"],
       tags: ["CSharp"],
-      id: 3
+      id: 4
     });
     
   
@@ -51,7 +60,7 @@ var idx = lunr(function () {
       excerpt: "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
       categories: ["CSharp"],
       tags: ["CSharp","EntityFrameworkCore"],
-      id: 4
+      id: 5
     });
     
   
@@ -60,7 +69,7 @@ var idx = lunr(function () {
       excerpt: "NET Framework CLR + SQL Server “A partir do SQL Server 2005, o SQL Server apresenta a integração do componente...",
       categories: ["SQL Server"],
       tags: ["CSharp","SQL Server"],
-      id: 5
+      id: 6
     });
     
   
@@ -69,7 +78,7 @@ var idx = lunr(function () {
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
       categories: ["CSharp"],
       tags: ["CSharp"],
-      id: 6
+      id: 7
     });
     
   
@@ -98,6 +107,17 @@ var store = [
         "title": "Query Compileda no EntityFrameworkCore 2.0",
         "url": "http://localhost:4000/csharp/binarionetcore/",
         "excerpt": "Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Injeção de Dependência Asp.Net Core 2 (Razor)",
+        "url": "http://localhost:4000/razor/injecaodependencia/",
+        "excerpt": "Fala Pessoal, Tudo Bem?! Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página. Para isso antes...",
         "teaser":
           
             null

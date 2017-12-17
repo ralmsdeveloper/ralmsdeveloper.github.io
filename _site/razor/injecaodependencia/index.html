@@ -1,0 +1,671 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Injeção de Dependência Asp.Net Core 2 (Razor) - Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala Pessoal, Tudo Bem?!Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página.Para isso antes de tudo vamos criar uma Interface e uma Classe.Eu criei um arquivo ExemploService.cs para exemplo.using System.Collections.Generic;using Microsoft.AspNetCore.Mvc.Rendering;namespace ExemploInjecaoDeDependencia{  public interface IExemploService  {    List&lt;SelectListItem&gt; Estados { get; }  }  public class ExemploService : IExemploService  {    public List&lt;SelectListItem&gt; Estados    {      get =&gt; new List&lt;SelectListItem&gt;      {        new SelectListItem {Value = &quot;12&quot;, Text = &quot;Acre&quot;},        new SelectListItem {Value = &quot;27&quot;, Text = &quot;Alagoas&quot;},        new SelectListItem {Value = &quot;13&quot;, Text = &quot;Amazonas&quot;},        new SelectListItem {Value = &quot;16&quot;, Text = &quot;Amapá&quot;},        new SelectListItem {Value = &quot;29&quot;, Text = &quot;Bahia&quot;},        new SelectListItem {Value = &quot;23&quot;, Text = &quot;Ceará&quot;},        new SelectListItem {Value = &quot;53&quot;, Text = &quot;Distrito Federal&quot;},        new SelectListItem {Value = &quot;32&quot;, Text = &quot;Espírito Santo&quot;},        new SelectListItem {Value = &quot;52&quot;, Text = &quot;Goiás&quot;},        new SelectListItem {Value = &quot;21&quot;, Text = &quot;Maranhão&quot;},        new SelectListItem {Value = &quot;31&quot;, Text = &quot;Minas Gerais&quot;},        new SelectListItem {Value = &quot;50&quot;, Text = &quot;Mato Grosso do Sul&quot;},        new SelectListItem {Value = &quot;51&quot;, Text = &quot;Mato Grosso&quot;},        new SelectListItem {Value = &quot;15&quot;, Text = &quot;Pará&quot;},        new SelectListItem {Value = &quot;25&quot;, Text = &quot;Paraíba&quot;},        new SelectListItem {Value = &quot;26&quot;, Text = &quot;Pernambuco&quot;},        new SelectListItem {Value = &quot;22&quot;, Text = &quot;Piauí&quot;},        new SelectListItem {Value = &quot;41&quot;, Text = &quot;Paraná&quot;},        new SelectListItem {Value = &quot;33&quot;, Text = &quot;Rio de Janeiro&quot;},        new SelectListItem {Value = &quot;24&quot;, Text = &quot;Rio Grande do Norte&quot;},        new SelectListItem {Value = &quot;11&quot;, Text = &quot;Rondônia&quot;},        new SelectListItem {Value = &quot;14&quot;, Text = &quot;Roraima&quot;},        new SelectListItem {Value = &quot;43&quot;, Text = &quot;Rio Grande do Sul&quot;},        new SelectListItem {Value = &quot;42&quot;, Text = &quot;Santa Catarina&quot;},        new SelectListItem {Value = &quot;28&quot;, Text = &quot;Sergipe&quot;},        new SelectListItem {Value = &quot;35&quot;, Text = &quot;São Paulo&quot;},        new SelectListItem {Value = &quot;17&quot;, Text = &quot;Tocantis&quot;}      };    }  }}Agora iremos precisar adicionar o serviço em nosso Startup.cs no método ConfigureServices, O meu ficou assim! public void ConfigureServices(IServiceCollection services) {     services.AddMvc();     services.AddScoped&lt;IExemploService, ExemploService&gt;(); }Vamos agora injetar o serviço em nossa página, veja um pequeno Exemplo:@page@model IndexModel@inject IExemploService Exemplo@{    ViewData[&quot;Title&quot;] = &quot;Home page&quot;;}&lt;h3&gt;Estados&lt;/h3&gt;&lt;select name=&quot;estados&quot;&gt;    @foreach (var item in Exemplo.Estados)    {        &lt;option value=&quot;@item.Value&quot;&gt;@item.Text&lt;/option&gt;    }&lt;/select&gt; O resultado é esse:Dica:Razor Pages é uma nova implementação do ASP.NET Core MVC, mais leve, Em minha opinião se tornou muito mais produtivo o desenvolvimento em muitos cenários além de ser mais limpo.Caso queira usar uma função dentro de sua página Razor, é simples:@page@model IndexModel @functions {    public string OlaMundo()    {        return &quot;Olá Pessoal&quot;;    }}&lt;div&gt;:) @OlaMundo()&lt;/div&gt;Espero que goste 🙂 até a próxima…">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:title" content="Injeção de Dependência Asp.Net Core 2 (Razor)">
+
+
+  <link rel="canonical" href="http://localhost:4000/razor/injecaodependencia/">
+  <meta property="og:url" content="http://localhost:4000/razor/injecaodependencia/">
+
+
+
+  <meta property="og:description" content="Fala Pessoal, Tudo Bem?!Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página.Para isso antes de tudo vamos criar uma Interface e uma Classe.Eu criei um arquivo ExemploService.cs para exemplo.using System.Collections.Generic;using Microsoft.AspNetCore.Mvc.Rendering;namespace ExemploInjecaoDeDependencia{  public interface IExemploService  {    List&lt;SelectListItem&gt; Estados { get; }  }  public class ExemploService : IExemploService  {    public List&lt;SelectListItem&gt; Estados    {      get =&gt; new List&lt;SelectListItem&gt;      {        new SelectListItem {Value = &quot;12&quot;, Text = &quot;Acre&quot;},        new SelectListItem {Value = &quot;27&quot;, Text = &quot;Alagoas&quot;},        new SelectListItem {Value = &quot;13&quot;, Text = &quot;Amazonas&quot;},        new SelectListItem {Value = &quot;16&quot;, Text = &quot;Amapá&quot;},        new SelectListItem {Value = &quot;29&quot;, Text = &quot;Bahia&quot;},        new SelectListItem {Value = &quot;23&quot;, Text = &quot;Ceará&quot;},        new SelectListItem {Value = &quot;53&quot;, Text = &quot;Distrito Federal&quot;},        new SelectListItem {Value = &quot;32&quot;, Text = &quot;Espírito Santo&quot;},        new SelectListItem {Value = &quot;52&quot;, Text = &quot;Goiás&quot;},        new SelectListItem {Value = &quot;21&quot;, Text = &quot;Maranhão&quot;},        new SelectListItem {Value = &quot;31&quot;, Text = &quot;Minas Gerais&quot;},        new SelectListItem {Value = &quot;50&quot;, Text = &quot;Mato Grosso do Sul&quot;},        new SelectListItem {Value = &quot;51&quot;, Text = &quot;Mato Grosso&quot;},        new SelectListItem {Value = &quot;15&quot;, Text = &quot;Pará&quot;},        new SelectListItem {Value = &quot;25&quot;, Text = &quot;Paraíba&quot;},        new SelectListItem {Value = &quot;26&quot;, Text = &quot;Pernambuco&quot;},        new SelectListItem {Value = &quot;22&quot;, Text = &quot;Piauí&quot;},        new SelectListItem {Value = &quot;41&quot;, Text = &quot;Paraná&quot;},        new SelectListItem {Value = &quot;33&quot;, Text = &quot;Rio de Janeiro&quot;},        new SelectListItem {Value = &quot;24&quot;, Text = &quot;Rio Grande do Norte&quot;},        new SelectListItem {Value = &quot;11&quot;, Text = &quot;Rondônia&quot;},        new SelectListItem {Value = &quot;14&quot;, Text = &quot;Roraima&quot;},        new SelectListItem {Value = &quot;43&quot;, Text = &quot;Rio Grande do Sul&quot;},        new SelectListItem {Value = &quot;42&quot;, Text = &quot;Santa Catarina&quot;},        new SelectListItem {Value = &quot;28&quot;, Text = &quot;Sergipe&quot;},        new SelectListItem {Value = &quot;35&quot;, Text = &quot;São Paulo&quot;},        new SelectListItem {Value = &quot;17&quot;, Text = &quot;Tocantis&quot;}      };    }  }}Agora iremos precisar adicionar o serviço em nosso Startup.cs no método ConfigureServices, O meu ficou assim! public void ConfigureServices(IServiceCollection services) {     services.AddMvc();     services.AddScoped&lt;IExemploService, ExemploService&gt;(); }Vamos agora injetar o serviço em nossa página, veja um pequeno Exemplo:@page@model IndexModel@inject IExemploService Exemplo@{    ViewData[&quot;Title&quot;] = &quot;Home page&quot;;}&lt;h3&gt;Estados&lt;/h3&gt;&lt;select name=&quot;estados&quot;&gt;    @foreach (var item in Exemplo.Estados)    {        &lt;option value=&quot;@item.Value&quot;&gt;@item.Text&lt;/option&gt;    }&lt;/select&gt; O resultado é esse:Dica:Razor Pages é uma nova implementação do ASP.NET Core MVC, mais leve, Em minha opinião se tornou muito mais produtivo o desenvolvimento em muitos cenários além de ser mais limpo.Caso queira usar uma função dentro de sua página Razor, é simples:@page@model IndexModel @functions {    public string OlaMundo()    {        return &quot;Olá Pessoal&quot;;    }}&lt;div&gt;:) @OlaMundo()&lt;/div&gt;Espero que goste 🙂 até a próxima…">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-08-01T00:00:00-03:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Rafael Almeida",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        <li>
+          <a href="https://ralmsdeveloper.github.io" itemprop="url">
+            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Injeção de Dependência Asp.Net Core 2 (Razor)">
+    <meta itemprop="description" content="Fala Pessoal, Tudo Bem?!Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página.Para isso antes de tudo vamos criar uma Interface e uma Classe.Eu criei um arquivo ExemploService.cs para exemplo.using System.Collections.Generic;using Microsoft.AspNetCore.Mvc.Rendering;namespace ExemploInjecaoDeDependencia{  public interface IExemploService  {    List&lt;SelectListItem&gt; Estados { get; }  }  public class ExemploService : IExemploService  {    public List&lt;SelectListItem&gt; Estados    {      get =&gt; new List&lt;SelectListItem&gt;      {        new SelectListItem {Value = &quot;12&quot;, Text = &quot;Acre&quot;},        new SelectListItem {Value = &quot;27&quot;, Text = &quot;Alagoas&quot;},        new SelectListItem {Value = &quot;13&quot;, Text = &quot;Amazonas&quot;},        new SelectListItem {Value = &quot;16&quot;, Text = &quot;Amapá&quot;},        new SelectListItem {Value = &quot;29&quot;, Text = &quot;Bahia&quot;},        new SelectListItem {Value = &quot;23&quot;, Text = &quot;Ceará&quot;},        new SelectListItem {Value = &quot;53&quot;, Text = &quot;Distrito Federal&quot;},        new SelectListItem {Value = &quot;32&quot;, Text = &quot;Espírito Santo&quot;},        new SelectListItem {Value = &quot;52&quot;, Text = &quot;Goiás&quot;},        new SelectListItem {Value = &quot;21&quot;, Text = &quot;Maranhão&quot;},        new SelectListItem {Value = &quot;31&quot;, Text = &quot;Minas Gerais&quot;},        new SelectListItem {Value = &quot;50&quot;, Text = &quot;Mato Grosso do Sul&quot;},        new SelectListItem {Value = &quot;51&quot;, Text = &quot;Mato Grosso&quot;},        new SelectListItem {Value = &quot;15&quot;, Text = &quot;Pará&quot;},        new SelectListItem {Value = &quot;25&quot;, Text = &quot;Paraíba&quot;},        new SelectListItem {Value = &quot;26&quot;, Text = &quot;Pernambuco&quot;},        new SelectListItem {Value = &quot;22&quot;, Text = &quot;Piauí&quot;},        new SelectListItem {Value = &quot;41&quot;, Text = &quot;Paraná&quot;},        new SelectListItem {Value = &quot;33&quot;, Text = &quot;Rio de Janeiro&quot;},        new SelectListItem {Value = &quot;24&quot;, Text = &quot;Rio Grande do Norte&quot;},        new SelectListItem {Value = &quot;11&quot;, Text = &quot;Rondônia&quot;},        new SelectListItem {Value = &quot;14&quot;, Text = &quot;Roraima&quot;},        new SelectListItem {Value = &quot;43&quot;, Text = &quot;Rio Grande do Sul&quot;},        new SelectListItem {Value = &quot;42&quot;, Text = &quot;Santa Catarina&quot;},        new SelectListItem {Value = &quot;28&quot;, Text = &quot;Sergipe&quot;},        new SelectListItem {Value = &quot;35&quot;, Text = &quot;São Paulo&quot;},        new SelectListItem {Value = &quot;17&quot;, Text = &quot;Tocantis&quot;}      };    }  }}Agora iremos precisar adicionar o serviço em nosso Startup.cs no método ConfigureServices, O meu ficou assim! public void ConfigureServices(IServiceCollection services) {     services.AddMvc();     services.AddScoped&lt;IExemploService, ExemploService&gt;(); }Vamos agora injetar o serviço em nossa página, veja um pequeno Exemplo:@page@model IndexModel@inject IExemploService Exemplo@{    ViewData[&quot;Title&quot;] = &quot;Home page&quot;;}&lt;h3&gt;Estados&lt;/h3&gt;&lt;select name=&quot;estados&quot;&gt;    @foreach (var item in Exemplo.Estados)    {        &lt;option value=&quot;@item.Value&quot;&gt;@item.Text&lt;/option&gt;    }&lt;/select&gt; O resultado é esse:Dica:Razor Pages é uma nova implementação do ASP.NET Core MVC, mais leve, Em minha opinião se tornou muito mais produtivo o desenvolvimento em muitos cenários além de ser mais limpo.Caso queira usar uma função dentro de sua página Razor, é simples:@page@model IndexModel @functions {    public string OlaMundo()    {        return &quot;Olá Pessoal&quot;;    }}&lt;div&gt;:) @OlaMundo()&lt;/div&gt;Espero que goste 🙂 até a próxima…">
+    <meta itemprop="datePublished" content="August 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Injeção de Dependência Asp.Net Core 2 (Razor)
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://localhost:4000/assets/images/aspnetcore.png" alt="01" /></p>
+
+<p>Fala Pessoal, Tudo Bem?!</p>
+
+<p>Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página.</p>
+
+<p>Para isso antes de tudo vamos criar uma Interface e uma Classe.
+Eu criei um arquivo ExemploService.cs para exemplo.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.Rendering</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nn">ExemploInjecaoDeDependencia</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="k">interface</span> <span class="nc">IExemploService</span>
+  <span class="p">{</span>
+    <span class="n">List</span><span class="p">&lt;</span><span class="n">SelectListItem</span><span class="p">&gt;</span> <span class="n">Estados</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="k">public</span> <span class="k">class</span> <span class="nc">ExemploService</span> <span class="p">:</span> <span class="n">IExemploService</span>
+  <span class="p">{</span>
+    <span class="k">public</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SelectListItem</span><span class="p">&gt;</span> <span class="n">Estados</span>
+    <span class="p">{</span>
+      <span class="k">get</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="n">SelectListItem</span><span class="p">&gt;</span>
+      <span class="p">{</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"12"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Acre"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"27"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Alagoas"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"13"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Amazonas"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"16"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Amapá"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"29"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Bahia"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"23"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Ceará"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"53"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Distrito Federal"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"32"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Espírito Santo"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"52"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Goiás"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"21"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Maranhão"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"31"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Minas Gerais"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"50"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Mato Grosso do Sul"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"51"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Mato Grosso"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"15"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Pará"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"25"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Paraíba"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"26"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Pernambuco"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"22"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Piauí"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"41"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Paraná"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"33"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Rio de Janeiro"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"24"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Rio Grande do Norte"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"11"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Rondônia"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"14"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Roraima"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"43"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Rio Grande do Sul"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"42"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Santa Catarina"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"28"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Sergipe"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"35"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"São Paulo"</span><span class="p">},</span>
+        <span class="k">new</span> <span class="n">SelectListItem</span> <span class="p">{</span><span class="n">Value</span> <span class="p">=</span> <span class="s">"17"</span><span class="p">,</span> <span class="n">Text</span> <span class="p">=</span> <span class="s">"Tocantis"</span><span class="p">}</span>
+      <span class="p">};</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Agora iremos precisar adicionar o serviço em nosso <strong>Startup.cs</strong> no método ConfigureServices, O meu ficou assim!</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+ <span class="p">{</span>
+     <span class="n">services</span><span class="p">.</span><span class="nf">AddMvc</span><span class="p">();</span>
+     <span class="n">services</span><span class="p">.</span><span class="n">AddScoped</span><span class="p">&lt;</span><span class="n">IExemploService</span><span class="p">,</span> <span class="n">ExemploService</span><span class="p">&gt;();</span>
+ <span class="p">}</span>
+</code></pre></div></div>
+
+<p>Vamos agora injetar o serviço em nossa página, veja um pequeno Exemplo:</p>
+
+<pre><code class="language-sharp">@page
+@model IndexModel
+@inject IExemploService Exemplo
+@{
+    ViewData["Title"] = "Home page";
+}
+&lt;h3&gt;Estados&lt;/h3&gt;
+&lt;select name="estados"&gt;
+    @foreach (var item in Exemplo.Estados)
+    {
+        &lt;option value="@item.Value"&gt;@item.Text&lt;/option&gt;
+    }
+&lt;/select&gt; 
+</code></pre>
+
+<p><strong>O resultado é esse:</strong></p>
+
+<p><img src="http://localhost:4000/assets/images/exemploselect.png" alt="01" /></p>
+
+<p>Dica:
+Razor Pages é uma nova implementação do ASP.NET Core MVC, mais leve, Em minha opinião se tornou muito mais produtivo o desenvolvimento em muitos cenários além de ser mais limpo.
+Caso queira usar uma função dentro de sua página Razor, é simples:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">@page</span>
+<span class="n">@model</span> <span class="n">IndexModel</span> 
+<span class="n">@functions</span> <span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="nf">OlaMundo</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="s">"Olá Pessoal"</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="p">&lt;</span><span class="n">div</span><span class="p">&gt;:)</span> <span class="nf">@OlaMundo</span><span class="p">()&lt;/</span><span class="n">div</span><span class="p">&gt;</span>
+</code></pre></div></div>
+
+<p>Espero que goste 🙂 até a próxima…</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#net-core" class="page__taxonomy-item" rel="tag">.Net Core</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#razor" class="page__taxonomy-item" rel="tag">Razor</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#razor" class="page__taxonomy-item" rel="tag">Razor</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-08-01T00:00:00-03:00">August 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Inje%C3%A7%C3%A3o+de+Depend%C3%AAncia+Asp.Net+Core+2+%28Razor%29%20http%3A%2F%2Flocalhost%3A4000%2Frazor%2Finjecaodependencia%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Finjecaodependencia%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Finjecaodependencia%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Finjecaodependencia%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/csharp/binarionetcore/" class="pagination--pager" title="Query Compileda no EntityFrameworkCore 2.0
+">Previous</a>
+    
+    
+      <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" class="pagination--pager" title="EntityFrameworkCore For FirebirdSQL
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/sql%20server/sqlserverclr/" rel="permalink">Usando CLR no SQL Server
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">NET Framework CLR + SQL Server
+
+“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Window...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/sqlinjection/" rel="permalink">SQL Injection EntityFrameworkCore
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Olá pessoal!
+
+Isso não é um ARTIGO, é uma dica.
+
+Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.
+
+Muitos sites e sis...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/querycompilada/" rel="permalink">Dados Binário em .Net Core
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Boa noite,
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
