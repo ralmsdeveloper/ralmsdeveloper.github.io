@@ -23,7 +23,7 @@ Muitas melhorias e implementações em:
 - Update em Lote
 - Consumo de Chave Primária Composta
 
-Obrigado a todos pelos e-mails que recebido.
+Obrigado a todos pelos e-mails que tenho recebido.
 
 
 [Git](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
