@@ -1,0 +1,533 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Novidade C# 7.3, o que vem por ai? - Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, estarei algumas vezes falando algo sobre o mesmo.Pois bem, esses dias estava fazendo algo e por curiosidade fui consultar nos fontes do Roslyn como aquilo tinha sido projetado. Foi então que me deparei com algo inusitado, olhando a documentação das novas features, encontrei o “Range”, algo bem semelhante ao que existe em Pascal.Isso mesmo, está sendo implementado essa nova funcionalidade no C#. O que me chama mais atenção, é que a Microsoft como a mantenedora do projeto, está simplesmente ouvindo, aceitando sugestões e evoluindo nesse mundo open source.Muitas mentes ao redor do mundo estão voltadas para ver esse projeto crescer, e quem ganha com isso somos nós, que utilizamos essa tecnologia. Sou programador C# há anos e venho acompanhando o crescimento benéfico dele. É muito bom ver isso.Sem muitas delongas, vamos ao foco!Em Pascal temos a estrutura Range em um Array representada assim:type meuArray = array[0..100] of integer;A partir da nova feature do C# 7.3, passaremos a ter essa nova funcionalidade, que estará disponível no namespace “System.Range”, e teremos algo assim em comparação ao Pascal:var meuArray = array[0..100];Os intervalos poderão ser para nós termos uma resolução mais simplificada de uma validação. Por exemplo, usando um switch-case, poderemos fazer validações utilizando o Range muito mais simplificado que antes, da seguinte forma:switch (r){    case 0..10:        break;    case 11..20:        break;    case 21..30:        break;}Por padrão, a escala do Range faz implementação da interface IEnumerable, de forma que, ao utilizarmos um Range por escala, é a mesma coisa de fazermos algo assim já disponível em Linq:IEnumerable&lt;int&gt; numeros = Enumerable.Range(0,10);Dessa forma poderemos fazer interações com a nova implementação da seguinte forma:foreach (var r in 0..10){    Console.WriteLine(string.Join(&quot;,&quot;, (0..r).Select(x =&gt; r * x)));}Minha intenção nesse artigo foi apenas mostrar essa pequena e útil implementação, que será de muita utilidade em várias situações.Desde o lançamento do C# 7, temos várias coisas legais, como:Tuplas:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#tuplesFunções Locais:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#local-functionsExceções em Expressão:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#throw-expressionsMain Async:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7-1Este artigo é um post original de IMasters publicado por mim.Abraços!">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:title" content="Novidade C# 7.3, o que vem por ai?">
+
+
+  <link rel="canonical" href="http://localhost:4000/csharp/csharp-novidade/">
+  <meta property="og:url" content="http://localhost:4000/csharp/csharp-novidade/">
+
+
+
+  <meta property="og:description" content="Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, estarei algumas vezes falando algo sobre o mesmo.Pois bem, esses dias estava fazendo algo e por curiosidade fui consultar nos fontes do Roslyn como aquilo tinha sido projetado. Foi então que me deparei com algo inusitado, olhando a documentação das novas features, encontrei o “Range”, algo bem semelhante ao que existe em Pascal.Isso mesmo, está sendo implementado essa nova funcionalidade no C#. O que me chama mais atenção, é que a Microsoft como a mantenedora do projeto, está simplesmente ouvindo, aceitando sugestões e evoluindo nesse mundo open source.Muitas mentes ao redor do mundo estão voltadas para ver esse projeto crescer, e quem ganha com isso somos nós, que utilizamos essa tecnologia. Sou programador C# há anos e venho acompanhando o crescimento benéfico dele. É muito bom ver isso.Sem muitas delongas, vamos ao foco!Em Pascal temos a estrutura Range em um Array representada assim:type meuArray = array[0..100] of integer;A partir da nova feature do C# 7.3, passaremos a ter essa nova funcionalidade, que estará disponível no namespace “System.Range”, e teremos algo assim em comparação ao Pascal:var meuArray = array[0..100];Os intervalos poderão ser para nós termos uma resolução mais simplificada de uma validação. Por exemplo, usando um switch-case, poderemos fazer validações utilizando o Range muito mais simplificado que antes, da seguinte forma:switch (r){    case 0..10:        break;    case 11..20:        break;    case 21..30:        break;}Por padrão, a escala do Range faz implementação da interface IEnumerable, de forma que, ao utilizarmos um Range por escala, é a mesma coisa de fazermos algo assim já disponível em Linq:IEnumerable&lt;int&gt; numeros = Enumerable.Range(0,10);Dessa forma poderemos fazer interações com a nova implementação da seguinte forma:foreach (var r in 0..10){    Console.WriteLine(string.Join(&quot;,&quot;, (0..r).Select(x =&gt; r * x)));}Minha intenção nesse artigo foi apenas mostrar essa pequena e útil implementação, que será de muita utilidade em várias situações.Desde o lançamento do C# 7, temos várias coisas legais, como:Tuplas:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#tuplesFunções Locais:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#local-functionsExceções em Expressão:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#throw-expressionsMain Async:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7-1Este artigo é um post original de IMasters publicado por mim.Abraços!">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-12-08T00:00:00-02:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Rafael Almeida",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://ralms.net" >Sobre</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Novidade C# 7.3, o que vem por ai?">
+    <meta itemprop="description" content="Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, estarei algumas vezes falando algo sobre o mesmo.Pois bem, esses dias estava fazendo algo e por curiosidade fui consultar nos fontes do Roslyn como aquilo tinha sido projetado. Foi então que me deparei com algo inusitado, olhando a documentação das novas features, encontrei o “Range”, algo bem semelhante ao que existe em Pascal.Isso mesmo, está sendo implementado essa nova funcionalidade no C#. O que me chama mais atenção, é que a Microsoft como a mantenedora do projeto, está simplesmente ouvindo, aceitando sugestões e evoluindo nesse mundo open source.Muitas mentes ao redor do mundo estão voltadas para ver esse projeto crescer, e quem ganha com isso somos nós, que utilizamos essa tecnologia. Sou programador C# há anos e venho acompanhando o crescimento benéfico dele. É muito bom ver isso.Sem muitas delongas, vamos ao foco!Em Pascal temos a estrutura Range em um Array representada assim:type meuArray = array[0..100] of integer;A partir da nova feature do C# 7.3, passaremos a ter essa nova funcionalidade, que estará disponível no namespace “System.Range”, e teremos algo assim em comparação ao Pascal:var meuArray = array[0..100];Os intervalos poderão ser para nós termos uma resolução mais simplificada de uma validação. Por exemplo, usando um switch-case, poderemos fazer validações utilizando o Range muito mais simplificado que antes, da seguinte forma:switch (r){    case 0..10:        break;    case 11..20:        break;    case 21..30:        break;}Por padrão, a escala do Range faz implementação da interface IEnumerable, de forma que, ao utilizarmos um Range por escala, é a mesma coisa de fazermos algo assim já disponível em Linq:IEnumerable&lt;int&gt; numeros = Enumerable.Range(0,10);Dessa forma poderemos fazer interações com a nova implementação da seguinte forma:foreach (var r in 0..10){    Console.WriteLine(string.Join(&quot;,&quot;, (0..r).Select(x =&gt; r * x)));}Minha intenção nesse artigo foi apenas mostrar essa pequena e útil implementação, que será de muita utilidade em várias situações.Desde o lançamento do C# 7, temos várias coisas legais, como:Tuplas:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#tuplesFunções Locais:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#local-functionsExceções em Expressão:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#throw-expressionsMain Async:https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7-1Este artigo é um post original de IMasters publicado por mim.Abraços!">
+    <meta itemprop="datePublished" content="December 08, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Novidade C# 7.3, o que vem por ai?
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, estarei algumas vezes falando algo sobre o mesmo.
+Pois bem, esses dias estava fazendo algo e por curiosidade fui consultar nos fontes do Roslyn como aquilo tinha sido projetado. Foi então que me deparei com algo inusitado, olhando a documentação das novas features, encontrei o “Range”, algo bem semelhante ao que existe em Pascal.</p>
+
+<p>Isso mesmo, está sendo implementado essa nova funcionalidade no C#. O que me chama mais atenção, é que a Microsoft como a mantenedora do projeto, está simplesmente ouvindo, aceitando sugestões e evoluindo nesse mundo open source.</p>
+
+<p>Muitas mentes ao redor do mundo estão voltadas para ver esse projeto crescer, e quem ganha com isso somos nós, que utilizamos essa tecnologia. Sou programador C# há anos e venho acompanhando o crescimento benéfico dele. É muito bom ver isso.</p>
+
+<p>Sem muitas delongas, vamos ao foco!</p>
+
+<p>Em Pascal temos a estrutura Range em um Array representada assim:</p>
+
+<div class="language-pascal highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">type</span> <span class="n">meuArray</span> <span class="p">=</span> <span class="k">array</span><span class="p">[</span><span class="m">0..100</span><span class="p">]</span> <span class="k">of</span> <span class="kt">integer</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>A partir da nova feature do C# 7.3, passaremos a ter essa nova funcionalidade, que estará disponível no namespace “System.Range”, e teremos algo assim em comparação ao Pascal:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">meuArray</span> <span class="p">=</span> <span class="n">array</span><span class="p">[</span><span class="m">0.</span><span class="p">.</span><span class="m">100</span><span class="p">];</span>
+</code></pre></div></div>
+
+<p>Os intervalos poderão ser para nós termos uma resolução mais simplificada de uma validação. Por exemplo, usando um switch-case, poderemos fazer validações utilizando o Range muito mais simplificado que antes, da seguinte forma:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">switch</span> <span class="p">(</span><span class="n">r</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">case</span> <span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">:</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="m">11.</span><span class="p">.</span><span class="m">20</span><span class="p">:</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="m">21.</span><span class="p">.</span><span class="m">30</span><span class="p">:</span>
+        <span class="k">break</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Por padrão, a escala do Range faz implementação da interface IEnumerable, de forma que, ao utilizarmos um Range por escala, é a mesma coisa de fazermos algo assim já disponível em Linq:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IEnumerable</span><span class="p">&lt;</span><span class="kt">int</span><span class="p">&gt;</span> <span class="n">numeros</span> <span class="p">=</span> <span class="n">Enumerable</span><span class="p">.</span><span class="nf">Range</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">10</span><span class="p">);</span>
+</code></pre></div></div>
+
+<p>Dessa forma poderemos fazer interações com a nova implementação da seguinte forma:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">r</span> <span class="k">in</span> <span class="m">0.</span><span class="p">.</span><span class="m">10</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="kt">string</span><span class="p">.</span><span class="nf">Join</span><span class="p">(</span><span class="s">","</span><span class="p">,</span> <span class="p">(</span><span class="m">0.</span><span class="p">.</span><span class="n">r</span><span class="p">).</span><span class="nf">Select</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">r</span> <span class="p">*</span> <span class="n">x</span><span class="p">)));</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Minha intenção nesse artigo foi apenas mostrar essa pequena e útil implementação, que será de muita utilidade em várias situações.</p>
+
+<p>Desde o lançamento do C# 7, temos várias coisas legais, como:</p>
+
+<p>Tuplas:
+<a href="https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#tuples">https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#tuples</a></p>
+
+<p>Funções Locais:
+<a href="https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#local-functions">https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#local-functions</a></p>
+
+<p>Exceções em Expressão:
+<a href="https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#throw-expressions">https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7#throw-expressions</a></p>
+
+<p>Main Async:
+<a href="https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7-1">https://docs.microsoft.com/pt-br/dotnet/csharp/whats-new/csharp-7-1</a></p>
+
+<p>Este artigo é um post original de <a href="https://imasters.com.br/linguagens/c-sharp/novidades-no-c-7-3/?trace=1519021197&amp;source=single">IMasters</a> publicado por mim.
+Abraços!</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-12-08T00:00:00-02:00">December 08, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Novidade+C%23+7.3%2C+o+que+vem+por+ai%3F%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcsharp-novidade%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcsharp-novidade%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcsharp-novidade%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcsharp-novidade%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
