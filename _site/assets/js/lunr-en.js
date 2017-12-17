@@ -11,11 +11,20 @@ var idx = lunr(function () {
   
   
     idx.add({
-      title: "Dados Binário em .Net Core",
-      excerpt: "Boa noite, Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler...",
+      title: "Compressão de Dados",
+      excerpt: "Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo. Nos dias de hoje com HDs/SSDS para armazenamentos não...",
       categories: ["CSharp"],
       tags: ["CSharp"],
       id: 0
+    });
+    
+  
+    idx.add({
+      title: "Query Compileda no EntityFrameworkCore 2.0",
+      excerpt: "Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que...",
+      categories: ["CSharp"],
+      tags: ["CSharp","EntityFrameworkCore"],
+      id: 1
     });
     
   
@@ -24,7 +33,25 @@ var idx = lunr(function () {
       excerpt: "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
       categories: ["Provider"],
       tags: ["CSharp","NetStandard","EntityFrameworkCore"],
-      id: 1
+      id: 2
+    });
+    
+  
+    idx.add({
+      title: "Dados Binário em .Net Core",
+      excerpt: "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
+      categories: ["CSharp"],
+      tags: ["CSharp"],
+      id: 3
+    });
+    
+  
+    idx.add({
+      title: "Query Compileda no EntityFrameworkCore 2.0",
+      excerpt: "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
+      categories: ["CSharp"],
+      tags: ["CSharp","EntityFrameworkCore"],
+      id: 4
     });
     
   
@@ -33,7 +60,7 @@ var idx = lunr(function () {
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
       categories: ["CSharp"],
       tags: ["CSharp"],
-      id: 2
+      id: 5
     });
     
   
@@ -48,9 +75,20 @@ var store = [
     
       
       {
-        "title": "Dados Binário em .Net Core",
+        "title": "Compressão de Dados",
+        "url": "http://localhost:4000/csharp/compressaodados/",
+        "excerpt": "Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo. Nos dias de hoje com HDs/SSDS para armazenamentos não...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Query Compileda no EntityFrameworkCore 2.0",
         "url": "http://localhost:4000/csharp/binarionetcore/",
-        "excerpt": "Boa noite, Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler...",
+        "excerpt": "Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que...",
         "teaser":
           
             null
@@ -62,6 +100,28 @@ var store = [
         "title": "EntityFrameworkCore For FirebirdSQL",
         "url": "http://localhost:4000/provider/provider-firebirdsql-efcore/",
         "excerpt": "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Dados Binário em .Net Core",
+        "url": "http://localhost:4000/csharp/querycompilada/",
+        "excerpt": "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Query Compileda no EntityFrameworkCore 2.0",
+        "url": "http://localhost:4000/csharp/sqlinjection/",
+        "excerpt": "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
         "teaser":
           
             null

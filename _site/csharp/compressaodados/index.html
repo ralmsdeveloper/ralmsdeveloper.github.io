@@ -1,0 +1,629 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Compressão de Dados - Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo.Nos dias de hoje com HDs/SSDS para armazenamentos não podemos reclamar de “ESPAÇO”.Bom não é bem assim, para quem desenvolve sistemas e utiliza por exemplo um SQL Server Express que é limitado o tamanho de banco a 10GB, as vezes se preocupa se o banco está crescendo.Podemos ganhar mais espaço fazendo ajustes nas informações antes mesmo de enviar para o banco, uma compactação.Isso é valido para quem precisar armazenar bytes de uma imagem por exemplo, ou até mesmo um arquivo.O Exemplo abaixo compactar uma informação que é passada como string e devolve em Byte ou vice-versa.public static class Compressao{    private static void CopiaOsBytes(Stream origem, Stream destino)    {        var bytes = new byte[4096];        int total;        while ((total = origem.Read(bytes, 0, bytes.Length)) != 0)        {            destino.Write(bytes, 0, total);        }    }    public static byte[] CompactarBytes(string str)    {        var bytes = Encoding.UTF8.GetBytes(str);        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(mso, System.IO.Compression.CompressionMode.Compress))                {                    CopiaOsBytes(msi, gs);                }                return mso.ToArray();            }        }    }    public static string DescompactarBytes(byte[] bytes)    {        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(msi, System.IO.Compression.CompressionMode.Decompress))                {                    CopiaOsBytes(gs, mso);                }                return Encoding.UTF8.GetString(mso.ToArray());            }        }    }}">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:title" content="Compressão de Dados">
+
+
+  <link rel="canonical" href="http://localhost:4000/csharp/compressaodados/">
+  <meta property="og:url" content="http://localhost:4000/csharp/compressaodados/">
+
+
+
+  <meta property="og:description" content="Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo.Nos dias de hoje com HDs/SSDS para armazenamentos não podemos reclamar de “ESPAÇO”.Bom não é bem assim, para quem desenvolve sistemas e utiliza por exemplo um SQL Server Express que é limitado o tamanho de banco a 10GB, as vezes se preocupa se o banco está crescendo.Podemos ganhar mais espaço fazendo ajustes nas informações antes mesmo de enviar para o banco, uma compactação.Isso é valido para quem precisar armazenar bytes de uma imagem por exemplo, ou até mesmo um arquivo.O Exemplo abaixo compactar uma informação que é passada como string e devolve em Byte ou vice-versa.public static class Compressao{    private static void CopiaOsBytes(Stream origem, Stream destino)    {        var bytes = new byte[4096];        int total;        while ((total = origem.Read(bytes, 0, bytes.Length)) != 0)        {            destino.Write(bytes, 0, total);        }    }    public static byte[] CompactarBytes(string str)    {        var bytes = Encoding.UTF8.GetBytes(str);        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(mso, System.IO.Compression.CompressionMode.Compress))                {                    CopiaOsBytes(msi, gs);                }                return mso.ToArray();            }        }    }    public static string DescompactarBytes(byte[] bytes)    {        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(msi, System.IO.Compression.CompressionMode.Decompress))                {                    CopiaOsBytes(gs, mso);                }                return Encoding.UTF8.GetString(mso.ToArray());            }        }    }}">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-01-01T00:00:00-02:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Rafael Almeida",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://ralms.net" >Sobre</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        <li>
+          <a href="https://ralmsdeveloper.github.io" itemprop="url">
+            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Compressão de Dados">
+    <meta itemprop="description" content="Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo.Nos dias de hoje com HDs/SSDS para armazenamentos não podemos reclamar de “ESPAÇO”.Bom não é bem assim, para quem desenvolve sistemas e utiliza por exemplo um SQL Server Express que é limitado o tamanho de banco a 10GB, as vezes se preocupa se o banco está crescendo.Podemos ganhar mais espaço fazendo ajustes nas informações antes mesmo de enviar para o banco, uma compactação.Isso é valido para quem precisar armazenar bytes de uma imagem por exemplo, ou até mesmo um arquivo.O Exemplo abaixo compactar uma informação que é passada como string e devolve em Byte ou vice-versa.public static class Compressao{    private static void CopiaOsBytes(Stream origem, Stream destino)    {        var bytes = new byte[4096];        int total;        while ((total = origem.Read(bytes, 0, bytes.Length)) != 0)        {            destino.Write(bytes, 0, total);        }    }    public static byte[] CompactarBytes(string str)    {        var bytes = Encoding.UTF8.GetBytes(str);        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(mso, System.IO.Compression.CompressionMode.Compress))                {                    CopiaOsBytes(msi, gs);                }                return mso.ToArray();            }        }    }    public static string DescompactarBytes(byte[] bytes)    {        using (var msi = new MemoryStream(bytes))        {            using (var mso = new MemoryStream())            {                using (var gs = new System.IO.Compression.GZipStream(msi, System.IO.Compression.CompressionMode.Decompress))                {                    CopiaOsBytes(gs, mso);                }                return Encoding.UTF8.GetString(mso.ToArray());            }        }    }}">
+    <meta itemprop="datePublished" content="January 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Compressão de Dados
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo.</p>
+
+<p>Nos dias de hoje com HDs/SSDS para armazenamentos não podemos reclamar de “ESPAÇO”.</p>
+
+<p>Bom não é bem assim, para quem desenvolve sistemas e utiliza por exemplo um SQL Server Express que é limitado o tamanho de banco a 10GB, as vezes se preocupa se o banco está crescendo.</p>
+
+<p>Podemos ganhar mais espaço fazendo ajustes nas informações antes mesmo de enviar para o banco, uma compactação.</p>
+
+<p>Isso é valido para quem precisar armazenar bytes de uma imagem por exemplo, ou até mesmo um arquivo.</p>
+
+<p>O Exemplo abaixo compactar uma informação que é passada como string e devolve em Byte ou vice-versa.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">Compressao</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">CopiaOsBytes</span><span class="p">(</span><span class="n">Stream</span> <span class="n">origem</span><span class="p">,</span> <span class="n">Stream</span> <span class="n">destino</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">bytes</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">byte</span><span class="p">[</span><span class="m">4096</span><span class="p">];</span>
+        <span class="kt">int</span> <span class="n">total</span><span class="p">;</span>
+        <span class="k">while</span> <span class="p">((</span><span class="n">total</span> <span class="p">=</span> <span class="n">origem</span><span class="p">.</span><span class="nf">Read</span><span class="p">(</span><span class="n">bytes</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">bytes</span><span class="p">.</span><span class="n">Length</span><span class="p">))</span> <span class="p">!=</span> <span class="m">0</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">destino</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">bytes</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">total</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">byte</span><span class="p">[]</span> <span class="nf">CompactarBytes</span><span class="p">(</span><span class="kt">string</span> <span class="n">str</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">bytes</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">str</span><span class="p">);</span>
+
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">msi</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MemoryStream</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">mso</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MemoryStream</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">gs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">Compression</span><span class="p">.</span><span class="nf">GZipStream</span><span class="p">(</span><span class="n">mso</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">Compression</span><span class="p">.</span><span class="n">CompressionMode</span><span class="p">.</span><span class="n">Compress</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="nf">CopiaOsBytes</span><span class="p">(</span><span class="n">msi</span><span class="p">,</span> <span class="n">gs</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="k">return</span> <span class="n">mso</span><span class="p">.</span><span class="nf">ToArray</span><span class="p">();</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">DescompactarBytes</span><span class="p">(</span><span class="kt">byte</span><span class="p">[]</span> <span class="n">bytes</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">msi</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MemoryStream</span><span class="p">(</span><span class="n">bytes</span><span class="p">))</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">mso</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MemoryStream</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">gs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">Compression</span><span class="p">.</span><span class="nf">GZipStream</span><span class="p">(</span><span class="n">msi</span><span class="p">,</span> <span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">Compression</span><span class="p">.</span><span class="n">CompressionMode</span><span class="p">.</span><span class="n">Decompress</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="nf">CopiaOsBytes</span><span class="p">(</span><span class="n">gs</span><span class="p">,</span> <span class="n">mso</span><span class="p">);</span>
+                <span class="p">}</span>
+                <span class="k">return</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetString</span><span class="p">(</span><span class="n">mso</span><span class="p">.</span><span class="nf">ToArray</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-01-01T00:00:00-02:00">January 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Compress%C3%A3o+de+Dados%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcompressaodados%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcompressaodados%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcompressaodados%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fcompressaodados%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="#" class="pagination--pager disabled">Previous</a>
+    
+    
+      <a href="http://localhost:4000/csharp/binarionetcore/" class="pagination--pager" title="Query Compileda no EntityFrameworkCore 2.0
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/sqlinjection/" rel="permalink">Query Compileda no EntityFrameworkCore 2.0
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Olá pessoal!
+
+Isso não é um ARTIGO, é uma dica.
+
+Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.
+
+Muitos sites e sis...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/querycompilada/" rel="permalink">Dados Binário em .Net Core
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Boa noite,
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" rel="permalink">EntityFrameworkCore For FirebirdSQL
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">#EntityFrameworkCore For FirebirdSQL#
+
+Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

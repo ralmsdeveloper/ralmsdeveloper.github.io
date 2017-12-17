@@ -19,12 +19,12 @@
 
 
 
-<title>Dados Binário em .Net Core - Ralms.NET</title>
+<title>Query Compileda no EntityFrameworkCore 2.0 - Ralms.NET</title>
 
 
 
 
-<meta name="description" content="Boa noite,Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Core.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{	class Program	{		static void Main(string[] args)		{			var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;			if (File.Exists(arquivo))				File.Delete((arquivo));			var cadastro = new Pessoa			{				Nome = &quot;Rafael Almeida&quot;,				Endereco = &quot;Avenida de Teste&quot;,				Idade = 28,				Credito = 8000m			};			//Gravar no arquivo!			using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))			{				escrever.Write(cadastro.Nome);				escrever.Write(cadastro.Endereco);				escrever.Write(cadastro.Idade);				escrever.Write(cadastro.Credito);				escrever.Close();			}			//Resetar objeto			cadastro = new Pessoa();			using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))			{				cadastro.Nome = ler.ReadString();				cadastro.Endereco = ler.ReadString();				cadastro.Idade = ler.ReadInt32();				cadastro.Credito = ler.ReadDecimal();				//Imprimir dados na tela				Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);				Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);				Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);				Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);			}			Console.ReadKey();		}	}	class Pessoa	{		public string Nome { get; set; }		public string Endereco { get; set; }		public int Idade { get; set; }		public decimal Credito { get; set; }	}}">
+<meta name="description" content="Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implemente no EF Core 2.0, que é a EF.CompileQuery.Aqui está o link:https://imasters.com.br/linguagens/asp/query-compiled-no-entityframeworkcore-2-0/">
 
 
 
@@ -33,7 +33,7 @@
 
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Ralms.NET">
-<meta property="og:title" content="Dados Binário em .Net Core">
+<meta property="og:title" content="Query Compileda no EntityFrameworkCore 2.0">
 
 
   <link rel="canonical" href="http://localhost:4000/csharp/binarionetcore/">
@@ -41,7 +41,7 @@
 
 
 
-  <meta property="og:description" content="Boa noite,Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Core.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{	class Program	{		static void Main(string[] args)		{			var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;			if (File.Exists(arquivo))				File.Delete((arquivo));			var cadastro = new Pessoa			{				Nome = &quot;Rafael Almeida&quot;,				Endereco = &quot;Avenida de Teste&quot;,				Idade = 28,				Credito = 8000m			};			//Gravar no arquivo!			using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))			{				escrever.Write(cadastro.Nome);				escrever.Write(cadastro.Endereco);				escrever.Write(cadastro.Idade);				escrever.Write(cadastro.Credito);				escrever.Close();			}			//Resetar objeto			cadastro = new Pessoa();			using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))			{				cadastro.Nome = ler.ReadString();				cadastro.Endereco = ler.ReadString();				cadastro.Idade = ler.ReadInt32();				cadastro.Credito = ler.ReadDecimal();				//Imprimir dados na tela				Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);				Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);				Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);				Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);			}			Console.ReadKey();		}	}	class Pessoa	{		public string Nome { get; set; }		public string Endereco { get; set; }		public int Idade { get; set; }		public decimal Credito { get; set; }	}}">
+  <meta property="og:description" content="Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implemente no EF Core 2.0, que é a EF.CompileQuery.Aqui está o link:https://imasters.com.br/linguagens/asp/query-compiled-no-entityframeworkcore-2-0/">
 
 
 
@@ -259,12 +259,6 @@
       
 
       
-        <li>
-          <a href="https://www.stackoverflow.com/users/ralmsdeveloper" itemprop="sameAs">
-            <i class="fa fa-fw fa-stack-overflow" aria-hidden="true"></i> Stack Overflow
-          </a>
-        </li>
-      
 
       
 
@@ -304,15 +298,15 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="Dados Binário em .Net Core">
-    <meta itemprop="description" content="Boa noite,Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Core.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{	class Program	{		static void Main(string[] args)		{			var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;			if (File.Exists(arquivo))				File.Delete((arquivo));			var cadastro = new Pessoa			{				Nome = &quot;Rafael Almeida&quot;,				Endereco = &quot;Avenida de Teste&quot;,				Idade = 28,				Credito = 8000m			};			//Gravar no arquivo!			using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))			{				escrever.Write(cadastro.Nome);				escrever.Write(cadastro.Endereco);				escrever.Write(cadastro.Idade);				escrever.Write(cadastro.Credito);				escrever.Close();			}			//Resetar objeto			cadastro = new Pessoa();			using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))			{				cadastro.Nome = ler.ReadString();				cadastro.Endereco = ler.ReadString();				cadastro.Idade = ler.ReadInt32();				cadastro.Credito = ler.ReadDecimal();				//Imprimir dados na tela				Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);				Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);				Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);				Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);			}			Console.ReadKey();		}	}	class Pessoa	{		public string Nome { get; set; }		public string Endereco { get; set; }		public int Idade { get; set; }		public decimal Credito { get; set; }	}}">
+    <meta itemprop="headline" content="Query Compileda no EntityFrameworkCore 2.0">
+    <meta itemprop="description" content="Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implemente no EF Core 2.0, que é a EF.CompileQuery.Aqui está o link:https://imasters.com.br/linguagens/asp/query-compiled-no-entityframeworkcore-2-0/">
     <meta itemprop="datePublished" content="August 01, 2017">
     
 
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">Dados Binário em .Net Core
+          <h1 class="page__title" itemprop="headline">Query Compileda no EntityFrameworkCore 2.0
 </h1>
           
             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
@@ -320,7 +314,7 @@
 
 
 
-  1 minute read
+  less than 1 minute read
 </p>
           
         </header>
@@ -328,77 +322,10 @@
 
       <section class="page__content" itemprop="text">
         
-        <p>Boa noite,
-Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Core.
-Ué e nas versões anteriores não faz?!
-Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.</p>
+        <p>Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implemente no EF Core 2.0, que é a EF.CompileQuery.
+Aqui está o link:</p>
 
-<p>O FUTURO É .NET CORE!</p>
-
-<p>É simples e aplicável a versões anteriores do .Net Framework.</p>
-
-<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
-<span class="k">using</span> <span class="nn">System.IO</span><span class="p">;</span>
-
-<span class="k">namespace</span> <span class="nn">CriaLerArquivoBinario</span>
-<span class="p">{</span>
-	<span class="k">class</span> <span class="nc">Program</span>
-	<span class="p">{</span>
-		<span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
-		<span class="p">{</span>
-			<span class="kt">var</span> <span class="n">arquivo</span> <span class="p">=</span> <span class="n">AppContext</span><span class="p">.</span><span class="n">BaseDirectory</span> <span class="p">+</span> <span class="s">"Exemplo.bin"</span><span class="p">;</span>
-			<span class="k">if</span> <span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Exists</span><span class="p">(</span><span class="n">arquivo</span><span class="p">))</span>
-				<span class="n">File</span><span class="p">.</span><span class="nf">Delete</span><span class="p">((</span><span class="n">arquivo</span><span class="p">));</span>
-
-			<span class="kt">var</span> <span class="n">cadastro</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Pessoa</span>
-			<span class="p">{</span>
-				<span class="n">Nome</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
-				<span class="n">Endereco</span> <span class="p">=</span> <span class="s">"Avenida de Teste"</span><span class="p">,</span>
-				<span class="n">Idade</span> <span class="p">=</span> <span class="m">28</span><span class="p">,</span>
-				<span class="n">Credito</span> <span class="p">=</span> <span class="m">8000</span><span class="n">m</span>
-			<span class="p">};</span>
-
-			<span class="c1">//Gravar no arquivo!</span>
-			<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">escrever</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BinaryWriter</span><span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="n">arquivo</span><span class="p">,</span> <span class="n">FileMode</span><span class="p">.</span><span class="n">Create</span><span class="p">)))</span>
-			<span class="p">{</span>
-				<span class="n">escrever</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Nome</span><span class="p">);</span>
-				<span class="n">escrever</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Endereco</span><span class="p">);</span>
-				<span class="n">escrever</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Idade</span><span class="p">);</span>
-				<span class="n">escrever</span><span class="p">.</span><span class="nf">Write</span><span class="p">(</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Credito</span><span class="p">);</span>
-				<span class="n">escrever</span><span class="p">.</span><span class="nf">Close</span><span class="p">();</span>
-			<span class="p">}</span>
-
-			<span class="c1">//Resetar objeto</span>
-			<span class="n">cadastro</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Pessoa</span><span class="p">();</span>
-
-			<span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">ler</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">BinaryReader</span><span class="p">(</span><span class="n">File</span><span class="p">.</span><span class="nf">Open</span><span class="p">(</span><span class="n">arquivo</span><span class="p">,</span> <span class="n">FileMode</span><span class="p">.</span><span class="n">Open</span><span class="p">)))</span>
-			<span class="p">{</span>
-				<span class="n">cadastro</span><span class="p">.</span><span class="n">Nome</span> <span class="p">=</span> <span class="n">ler</span><span class="p">.</span><span class="nf">ReadString</span><span class="p">();</span>
-				<span class="n">cadastro</span><span class="p">.</span><span class="n">Endereco</span> <span class="p">=</span> <span class="n">ler</span><span class="p">.</span><span class="nf">ReadString</span><span class="p">();</span>
-				<span class="n">cadastro</span><span class="p">.</span><span class="n">Idade</span> <span class="p">=</span> <span class="n">ler</span><span class="p">.</span><span class="nf">ReadInt32</span><span class="p">();</span>
-				<span class="n">cadastro</span><span class="p">.</span><span class="n">Credito</span> <span class="p">=</span> <span class="n">ler</span><span class="p">.</span><span class="nf">ReadDecimal</span><span class="p">();</span>
-
-				<span class="c1">//Imprimir dados na tela</span>
-				<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome....: </span><span class="p">{</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Nome</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
-				<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Endereço: </span><span class="p">{</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Endereco</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
-				<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Idade...: </span><span class="p">{</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Idade</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
-				<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Crédito.: </span><span class="p">{</span><span class="n">cadastro</span><span class="p">.</span><span class="n">Credito</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
-
-			<span class="p">}</span>
-			<span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
-		<span class="p">}</span>
-	<span class="p">}</span>
-
-	<span class="k">class</span> <span class="nc">Pessoa</span>
-	<span class="p">{</span>
-		<span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-		<span class="k">public</span> <span class="kt">string</span> <span class="n">Endereco</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-		<span class="k">public</span> <span class="kt">int</span> <span class="n">Idade</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-		<span class="k">public</span> <span class="kt">decimal</span> <span class="n">Credito</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
-	<span class="p">}</span>
-<span class="p">}</span>
-
-</code></pre></div></div>
+<p><a href="https://imasters.com.br/linguagens/asp/query-compiled-no-entityframeworkcore-2-0/">https://imasters.com.br/linguagens/asp/query-compiled-no-entityframeworkcore-2-0/</a></p>
 
         
       </section>
@@ -419,7 +346,11 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     
       
       
-      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#entityframeworkcore" class="page__taxonomy-item" rel="tag">EntityFrameworkCore</a>
     
     </span>
   </p>
@@ -454,7 +385,7 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
       <section class="page__share">
   
 
-  <a href="https://twitter.com/intent/tweet?text=Dados+Bin%C3%A1rio+em+.Net+Core%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinarionetcore%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Query+Compileda+no+EntityFrameworkCore+2.0%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinarionetcore%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
   <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinarionetcore%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
@@ -467,7 +398,8 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
       
   <nav class="pagination">
     
-      <a href="#" class="pagination--pager disabled">Previous</a>
+      <a href="http://localhost:4000/csharp/compressaodados/" class="pagination--pager" title="Compressão de Dados
+">Previous</a>
     
     
       <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" class="pagination--pager" title="EntityFrameworkCore For FirebirdSQL
@@ -521,6 +453,65 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     
     <h2 class="archive__item-title" itemprop="headline">
       
+        <a href="http://localhost:4000/csharp/sqlinjection/" rel="permalink">Query Compileda no EntityFrameworkCore 2.0
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Olá pessoal!
+
+Isso não é um ARTIGO, é uma dica.
+
+Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.
+
+Muitos sites e sis...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/querycompilada/" rel="permalink">Dados Binário em .Net Core
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Boa noite,
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
         <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" rel="permalink">EntityFrameworkCore For FirebirdSQL
 </a>
       
@@ -537,33 +528,6 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     <p class="archive__item-excerpt" itemprop="description">#EntityFrameworkCore For FirebirdSQL#
 
 Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/csharp/binarionetcore/" rel="permalink">Dados Binário em .Net Core
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Boa noite,
-Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados Binário estruturado em C# .NET Cor...</p>
   </article>
 </div>
         

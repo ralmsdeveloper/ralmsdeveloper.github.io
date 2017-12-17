@@ -1,0 +1,673 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Query Compileda no EntityFrameworkCore 2.0 - Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:title" content="Query Compileda no EntityFrameworkCore 2.0">
+
+
+  <link rel="canonical" href="http://localhost:4000/csharp/sqlinjection/">
+  <meta property="og:url" content="http://localhost:4000/csharp/sqlinjection/">
+
+
+
+  <meta property="og:description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-08-01T00:00:00-03:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Rafael Almeida",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="https://ralms.net" >Sobre</a>
+            </li>
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Follow</button>
+    <ul class="author__urls social-icons">
+      
+
+      
+        <li>
+          <a href="https://ralmsdeveloper.github.io" itemprop="url">
+            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Website
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Query Compileda no EntityFrameworkCore 2.0">
+    <meta itemprop="description" content="Olá pessoal!Isso não é um ARTIGO, é uma dica.Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!Saiba a forma correta de usar o FromSql no EFCore!namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            //Aqui consigo apagar todos dados de minha tabela            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método incorreto! vulnerável                         &quot;where firstname=&#39;&quot; + criterioConsultaSqlInjection + &quot;&#39;&quot;).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.namespace SQLInjectionEFCore{    class Program    {        static void Main(string[] args)        {            var cx = new Context();            cx.Database.EnsureCreated();            Console.WriteLine(&quot;Inserindo registros!&quot;);            cx.Author.Add(new Author            {                 FirstName = &quot;Rafael&quot;,                 LastName = &quot;Almeida&quot;,                 Date = DateTime.Now            });            cx.SaveChanges();            //Consulta Normal            var criterioConsulta = &quot;Rafael&quot;;            var consultaNormal = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author where firstname=&#39;&quot; + criterioConsulta + &quot;&#39;&quot;).ToList();            if (consultaNormal.Any())                Console.WriteLine($&quot;Nome: {consultaNormal.First().FirstName}&quot;);            //Consultar com SQL Injection            var criterioConsultaSqlInjection = &quot;Rafael&#39;;delete from author;--&quot;;            var consultaNormalSqlInjection = cx.Author				.AsNoTracking()                .FromSql(&quot;select * from author &quot; +                         //Método Correto! (Faz o tratamento do SQL Injection)                         &quot;where firstname=@p0&quot;, criterioConsultaSqlInjection).ToList();            if (consultaNormalSqlInjection.Any())                Console.WriteLine($&quot;Nome: {consultaNormalSqlInjection.First().FirstName}&quot;);            Console.ReadKey();        }    }}">
+    <meta itemprop="datePublished" content="August 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Query Compileda no EntityFrameworkCore 2.0
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p>Olá pessoal!</p>
+
+<p>Isso não é um ARTIGO, é uma dica.</p>
+
+<p>Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.</p>
+
+<p>Muitos sites e sistemas sofrem ataques diariamente em seus banco de dados por falha de segurança em seus sistemas.</p>
+
+<p>Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a injeção de SQL via URL em sites vulneráveis.</p>
+
+<p>Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)</p>
+
+<p>Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!</p>
+
+<p>Saiba a forma correta de usar o FromSql no EFCore!</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">SQLInjectionEFCore</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">cx</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+            <span class="n">cx</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Inserindo registros!"</span><span class="p">);</span>
+            <span class="n">cx</span><span class="p">.</span><span class="n">Author</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Author</span>
+            <span class="p">{</span>
+                 <span class="n">FirstName</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">,</span>
+                 <span class="n">LastName</span> <span class="p">=</span> <span class="s">"Almeida"</span><span class="p">,</span>
+                 <span class="n">Date</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span>
+            <span class="p">});</span>
+            <span class="n">cx</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+            <span class="c1">//Consulta Normal</span>
+            <span class="kt">var</span> <span class="n">criterioConsulta</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">consultaNormal</span> <span class="p">=</span> <span class="n">cx</span><span class="p">.</span><span class="n">Author</span>
+				<span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">FromSql</span><span class="p">(</span><span class="s">"select * from author where firstname='"</span> <span class="p">+</span> <span class="n">criterioConsulta</span> <span class="p">+</span> <span class="s">"'"</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">consultaNormal</span><span class="p">.</span><span class="nf">Any</span><span class="p">())</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome: </span><span class="p">{</span><span class="n">consultaNormal</span><span class="p">.</span><span class="nf">First</span><span class="p">().</span><span class="n">FirstName</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="c1">//Consultar com SQL Injection</span>
+            <span class="c1">//Aqui consigo apagar todos dados de minha tabela</span>
+            <span class="kt">var</span> <span class="n">criterioConsultaSqlInjection</span> <span class="p">=</span> <span class="s">"Rafael';delete from author;--"</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">consultaNormalSqlInjection</span> <span class="p">=</span> <span class="n">cx</span><span class="p">.</span><span class="n">Author</span>
+				<span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">FromSql</span><span class="p">(</span><span class="s">"select * from author "</span> <span class="p">+</span>
+                         <span class="c1">//Método incorreto! vulnerável</span>
+                         <span class="s">"where firstname='"</span> <span class="p">+</span> <span class="n">criterioConsultaSqlInjection</span> <span class="p">+</span> <span class="s">"'"</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">consultaNormalSqlInjection</span><span class="p">.</span><span class="nf">Any</span><span class="p">())</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome: </span><span class="p">{</span><span class="n">consultaNormalSqlInjection</span><span class="p">.</span><span class="nf">First</span><span class="p">().</span><span class="n">FirstName</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Observe que nesse segundo exemplo eu passo o critério de consulta por parâmetro, dessa forma eu asseguro a integridade de minhas informações e da consulta.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">SQLInjectionEFCore</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">cx</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Context</span><span class="p">();</span>
+            <span class="n">cx</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Inserindo registros!"</span><span class="p">);</span>
+            <span class="n">cx</span><span class="p">.</span><span class="n">Author</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Author</span>
+            <span class="p">{</span>
+                 <span class="n">FirstName</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">,</span>
+                 <span class="n">LastName</span> <span class="p">=</span> <span class="s">"Almeida"</span><span class="p">,</span>
+                 <span class="n">Date</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span>
+            <span class="p">});</span>
+            <span class="n">cx</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+            <span class="c1">//Consulta Normal</span>
+            <span class="kt">var</span> <span class="n">criterioConsulta</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">consultaNormal</span> <span class="p">=</span> <span class="n">cx</span><span class="p">.</span><span class="n">Author</span>
+				<span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">FromSql</span><span class="p">(</span><span class="s">"select * from author where firstname='"</span> <span class="p">+</span> <span class="n">criterioConsulta</span> <span class="p">+</span> <span class="s">"'"</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">consultaNormal</span><span class="p">.</span><span class="nf">Any</span><span class="p">())</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome: </span><span class="p">{</span><span class="n">consultaNormal</span><span class="p">.</span><span class="nf">First</span><span class="p">().</span><span class="n">FirstName</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="c1">//Consultar com SQL Injection</span>
+            <span class="kt">var</span> <span class="n">criterioConsultaSqlInjection</span> <span class="p">=</span> <span class="s">"Rafael';delete from author;--"</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">consultaNormalSqlInjection</span> <span class="p">=</span> <span class="n">cx</span><span class="p">.</span><span class="n">Author</span>
+				<span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">FromSql</span><span class="p">(</span><span class="s">"select * from author "</span> <span class="p">+</span>
+                         <span class="c1">//Método Correto! (Faz o tratamento do SQL Injection)</span>
+                         <span class="s">"where firstname=@p0"</span><span class="p">,</span> <span class="n">criterioConsultaSqlInjection</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">consultaNormalSqlInjection</span><span class="p">.</span><span class="nf">Any</span><span class="p">())</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome: </span><span class="p">{</span><span class="n">consultaNormalSqlInjection</span><span class="p">.</span><span class="nf">First</span><span class="p">().</span><span class="n">FirstName</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#entityframeworkcore" class="page__taxonomy-item" rel="tag">EntityFrameworkCore</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-08-01T00:00:00-03:00">August 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Query+Compileda+no+EntityFrameworkCore+2.0%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fsqlinjection%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/csharp/querycompilada/" class="pagination--pager" title="Dados Binário em .Net Core
+">Previous</a>
+    
+    
+      <a href="http://localhost:4000/csharp/csharp-novidade/" class="pagination--pager" title="Novidade C# 7.3, o que vem por ai?
+">Next</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/querycompilada/" rel="permalink">Dados Binário em .Net Core
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Boa noite,
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" rel="permalink">EntityFrameworkCore For FirebirdSQL
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">#EntityFrameworkCore For FirebirdSQL#
+
+Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/binarionetcore/" rel="permalink">Query Compileda no EntityFrameworkCore 2.0
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  less than 1 minute read
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Recentemente publiquei um arquivo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função que foi implement...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>
