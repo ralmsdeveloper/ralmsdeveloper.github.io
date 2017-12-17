@@ -1,5 +1,5 @@
 ﻿---
-title: "Query Compileda no EntityFrameworkCore 2.0"
+title: "Query Compilada no EntityFrameworkCore 2.0"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
