@@ -14,7 +14,7 @@ title_separator          : "-"
 name                     : "Rafael Almeida"
 description              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
 url                      : http://www.ralms.net
-baseurl                  : # the subpath of your site, e.g. "/blog"
+baseurl                  : "./"
 repository               : ralmsdeveloper/blog
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
@@ -187,6 +187,7 @@ timezone: # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
 
 # Plugins (previously gems:)
 plugins:
+  - jekyll-remote-theme
   - jekyll-paginate
   - jekyll-sitemap
   - jekyll-gist
@@ -252,5 +253,3 @@ defaults:
       comments: # true
       share: true
       related: true
-
-remote_theme: "mmistakes/minimal-mistakes"
