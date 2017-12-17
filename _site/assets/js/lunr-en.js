@@ -11,11 +11,29 @@ var idx = lunr(function () {
   
   
     idx.add({
+      title: "Dados Binário em .Net Core",
+      excerpt: "Boa noite, Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler...",
+      categories: ["CSharp"],
+      tags: ["CSharp"],
+      id: 0
+    });
+    
+  
+    idx.add({
+      title: "EntityFrameworkCore For FirebirdSQL",
+      excerpt: "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
+      categories: ["Provider"],
+      tags: ["CSharp","NetStandard","EntityFrameworkCore"],
+      id: 1
+    });
+    
+  
+    idx.add({
       title: "Novidade C# 7.3, o que vem por ai?",
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
       categories: ["CSharp"],
       tags: ["CSharp"],
-      id: 0
+      id: 2
     });
     
   
@@ -27,6 +45,28 @@ var store = [
   
     
     
+    
+      
+      {
+        "title": "Dados Binário em .Net Core",
+        "url": "http://localhost:4000/csharp/binarionetcore/",
+        "excerpt": "Boa noite, Vendo tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "EntityFrameworkCore For FirebirdSQL",
+        "url": "http://localhost:4000/provider/provider-firebirdsql-efcore/",
+        "excerpt": "#EntityFrameworkCore For FirebirdSQL# Com enorme prazer que venho informar que hoje existe o EntityframworkCore.FirebirdSQL disponível, tomei a iniciativa e criei...",
+        "teaser":
+          
+            null
+          
+      },
     
       
       {
