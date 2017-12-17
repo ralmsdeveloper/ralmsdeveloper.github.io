@@ -15,16 +15,17 @@ Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, 
 agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,
 incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#"*. (Microsoft)
 
-Como citado acima podemos criar procedimento em .NET que seram interpretado pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.
+Como citado acima podemos criar procedimentos em .NET que serão interpretados pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.
 Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).
 
-Em algums casos (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.
+Em alguns casos o procedimento criado para (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.
 E por que usar?! Eu utilizo pra tratar informações grandes do lado **client** antes mesmo de devolver o retorno pra o usuário.
 Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.
 
 Vamos criar nosso projeto e veremos em prática isso.
 
-Antes de Tudo Vamos Criar Nosso Banco de Teste
+Antes de tudo vamos criar nosso banco de teste.
+
 Execute o script abaixo que criei pra nosso exemplo:
 Só pra controle estaremos usando o **SQL SERVER**
 
