@@ -10,6 +10,8 @@ tags:
   - EntityFrameworkCore
 ---
 
+![01]({{ site.url }}{{ site.baseurl }}/assets/images/firebird.png)
+
 **EntityFrameworkCore For FirebirdSQL**
 
 Lançamento EntityFrameworkCore for FirebirdSQL
