@@ -1,5 +1,5 @@
 ﻿---
-title: "EntityFrameworkCore For FirebirdSQL"
+title: "EntityFrameworkCore.FirebirdSQL  2.0.9"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
@@ -49,4 +49,5 @@ protected override void OnModelCreating(ModelBuilder modelo)
 Nuget: [https://www.nuget.org/packages?q=EntityFrameworkCore.FirebirdSQL](https://www.nuget.org/packages?q=EntityFrameworkCore.FirebirdSQL)
 
 Ou se preferir instale pelo console em seu projeto!
+
 `Install-Package EntityFrameworkCore.FirebirdSQL -Version 2.0.9`
