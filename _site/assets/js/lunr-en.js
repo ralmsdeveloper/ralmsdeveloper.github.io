@@ -137,11 +137,20 @@ var idx = lunr(function () {
     
   
     idx.add({
+      title: "Carregando instâncias do SQL Server",
+      excerpt: "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
+      categories: ["CSharp","SQL Server"],
+      tags: ["CSharp"],
+      id: 14
+    });
+    
+  
+    idx.add({
       title: "O básico do LINQ",
       excerpt: "Nesse pequeno post iremos conhecer um pouco de LINQ Um pouco de história Introdução ao LINQ Conhecendo métodos do LINQ...",
       categories: ["LINQ"],
       tags: ["LINQ"],
-      id: 14
+      id: 15
     });
     
   
@@ -302,6 +311,17 @@ var store = [
         "title": "Novidade C# 7.3, o que vem por ai?",
         "url": "http://localhost:4000/csharp/csharp-novidade/",
         "excerpt": "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "Carregando instâncias do SQL Server",
+        "url": "http://localhost:4000/csharp/sql%20server/carregarinstancia/",
+        "excerpt": "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
         "teaser":
           
             null
