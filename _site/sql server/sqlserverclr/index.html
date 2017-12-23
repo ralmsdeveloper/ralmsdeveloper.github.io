@@ -24,7 +24,7 @@
 
 
 
-<meta name="description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimento em .NET que seram interpretado pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em algums casos (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de Tudo Vamos Criar Nosso Banco de TesteExecute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
+<meta name="description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimentos em .NET que serão interpretados pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em alguns casos o procedimento criado para (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de tudo vamos criar nosso banco de teste.Execute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
 
 
 
@@ -41,7 +41,7 @@
 
 
 
-  <meta property="og:description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimento em .NET que seram interpretado pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em algums casos (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de Tudo Vamos Criar Nosso Banco de TesteExecute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
+  <meta property="og:description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimentos em .NET que serão interpretados pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em alguns casos o procedimento criado para (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de tudo vamos criar nosso banco de teste.Execute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
 
 
 
@@ -68,7 +68,7 @@
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2017-08-01T00:00:00-03:00">
+  <meta property="article:published_time" content="2017-11-01T00:00:00-02:00">
 
 
 
@@ -186,20 +186,24 @@
     
     
       <p class="author__bio" itemprop="description">
-        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Creator of EntityFrameworkCore for FirebirdSQL, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
       </p>
     
   </div>
 
   <div class="author__urls-wrapper">
-    <button class="btn btn--inverse">Follow</button>
+    <button class="btn btn--inverse">Acompanhe em</button>
     <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
       
 
       
         <li>
           <a href="https://ralmsdeveloper.github.io" itemprop="url">
-            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Website
+            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Site
           </a>
         </li>
       
@@ -294,8 +298,8 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="Usando CLR no SQL Server">
-    <meta itemprop="description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimento em .NET que seram interpretado pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em algums casos (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de Tudo Vamos Criar Nosso Banco de TesteExecute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
-    <meta itemprop="datePublished" content="August 01, 2017">
+    <meta itemprop="description" content="NET Framework CLR + SQL Server“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Windows.Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, tipos definidos pelo usuário, funções definidas pelo usuário,agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”. (Microsoft)Como citado acima podemos criar procedimentos em .NET que serão interpretados pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).Em alguns casos o procedimento criado para (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.E por que usar?! Eu utilizo pra tratar informações grandes do lado client antes mesmo de devolver o retorno pra o usuário.Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.Vamos criar nosso projeto e veremos em prática isso.Antes de tudo vamos criar nosso banco de teste.Execute o script abaixo que criei pra nosso exemplo:Só pra controle estaremos usando o SQL SERVERCREATE DATABASE BancoTeste; go   USE BancoTeste;go     SP_CONFIGURE &#39;clr enabled&#39;,1 RECONFIGURE WITH OVERRIDE; GORECONFIGURE; GOALTER DATABASE BancoTeste SET TRUSTWORTHY ON  GO CREATE TABLE NossaTabela(  id int primary key identity not null,  descricao varchar(50));goinsert into NossaTabela(descricao) values(&#39;Teste Descricao 01&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 02&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 03&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 04&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 05&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 06&#39;);insert into NossaTabela(descricao) values(&#39;Teste Descricao 07&#39;);GOUsando o Microsoft Visual Studio, podemos criar um projeto de banco de dados do SQL Server.Ao adicionar um item SQL CLR C# Stored Procedure ao projeto, podemos criar um procedimento armazenado CLR.Aqui está a class pra quem não quiser digitar 🙂using System.Data.SqlClient;using Microsoft.SqlServer.Server;public partial class StoredProcedures{  [SqlProcedure]  public static void ListarTabelaCLR()  {    using (var con = new SqlConnection(&quot;context connection=true&quot;))    {      con.Open();      using (var cmd = new SqlCommand(&quot;select * from NossaTabela&quot;, con))      {        var reader = cmd.ExecuteReader();        SqlContext.Pipe.Send(reader);      }    }  }}Compile o Projeto (CTRL + SHIFT + B)Feito isso rode o script abaixo no banco que criamos logo acima.IF(EXISTS(select * from sys.objects where name = &#39;ListarTabelaCLR&#39;))      exec(&#39;DROP PROCEDURE ListarTabelaCLR&#39;);  GO  IF (EXISTS(select * from sys.assemblies where name = &#39;MinhaClr&#39;))  BEGIN       exec(&#39;DROP ASSEMBLY MinhaClr&#39;);  END  goCREATE ASSEMBLY MinhaClr FROM &#39;R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll&#39; with PERMISSION_SET =UNSAFE;goCREATE PROCEDURE [dbo].[ListarTabelaCLR]  AS EXTERNAL NAME [MinhaClr].[StoredProcedures].[ListarTabelaCLR]  goObservações:Lembre de substituir R:\RafaelNuvem\GitHub\ProjetosComunidade\ClrCSharp\MinhaClr.dll pelo diretório onde compilou seu projeto!o comando SP_CONFIGURE ‘clr habilitado’ , 1 habilita no SQL Server a Integração do CLR.O comando ALTER DATABASE BancoTeste SET TRUSTWORTHY ON irá autorizar a integração com assemblies de terceiros.Vamos agora testar nossa CLR.Espero que goste 🙂 até a próxima…">
+    <meta itemprop="datePublished" content="November 01, 2017">
     
 
     <div class="page__inner-wrap">
@@ -309,7 +313,7 @@
 
 
 
-  2 minute read
+  2 minuto(s) de leitura
 </p>
           
         </header>
@@ -324,17 +328,18 @@ Isso significa que você pode agora gravar procedimentos armazenados, gatilhos, 
 agregações definidas pelo usuário e funções de streaming com valor de tabela, usando qualquer linguagem do .NET Framework,
 incluindo o Microsoft Visual Basic .NET e o Microsoft Visual C#”</em>. (Microsoft)</p>
 
-<p>Como citado acima podemos criar procedimento em .NET que seram interpretado pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.
+<p>Como citado acima podemos criar procedimentos em .NET que serão interpretados pela CLR no SQL Server, dessa forma teremos um gatilho, função ou uma procedure compilada em uma linguagem como o C#.
 Não necessariamente ficamos limitados ao C#, mais podemos usar qualquer outra que seja suportada pelo .NET Framework, exemplo (VB.Net).</p>
 
-<p>Em algums casos (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.
+<p>Em alguns casos o procedimento criado para (CLR) pode chegar a ser mais rápido que as próprias instruções T-SQL.
 E por que usar?! Eu utilizo pra tratar informações grandes do lado <strong>client</strong> antes mesmo de devolver o retorno pra o usuário.
 Por exemplo eu faço um select no banco, manipulo essas informações e só então devolvo o resultado formatado com as informações que foram manipuladas, um caso prático clientes que geram SPED FISCAL, Ele poderá reunir essas informações via select, fazer os ajustes e devolver para um DataReader(no nosso Caso .NET 🙂) as informações já processadas para serem gravadas em um Arquivo.</p>
 
 <p>Vamos criar nosso projeto e veremos em prática isso.</p>
 
-<p>Antes de Tudo Vamos Criar Nosso Banco de Teste
-Execute o script abaixo que criei pra nosso exemplo:
+<p>Antes de tudo vamos criar nosso banco de teste.</p>
+
+<p>Execute o script abaixo que criei pra nosso exemplo:
 Só pra controle estaremos usando o <strong>SQL SERVER</strong></p>
 
 <div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">DATABASE</span> <span class="n">BancoTeste</span><span class="p">;</span> 
@@ -444,11 +449,11 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
     
       
       
-      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
+      <a href="http://localhost:4000/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/tags/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
+      <a href="http://localhost:4000/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
     
     </span>
   </p>
@@ -464,44 +469,46 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
   
 
   <p class="page__taxonomy">
-    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categories: </strong>
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
     <span itemprop="keywords">
     
       
       
-      <a href="http://localhost:4000/categories/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
+      <a href="http://localhost:4000/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
     
     </span>
   </p>
 
 
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Updated:</strong> <time datetime="2017-08-01T00:00:00-03:00">August 01, 2017</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-11-01T00:00:00-02:00">November 01, 2017</time></p>
         
       </footer>
 
       <section class="page__share">
   
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
 
-  <a href="https://twitter.com/intent/tweet?text=Usando+CLR+no+SQL+Server%20http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Usando+CLR+no+SQL+Server%20http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Share on LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fsql%2520server%2Fsqlserverclr%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/csharp/sqlinjection/" class="pagination--pager" title="SQL Injection EntityFrameworkCore
-">Previous</a>
+      <a href="http://localhost:4000/provider/ordenarcoluna/" class="pagination--pager" title="Ordem das colunas no EF Core 2.1
+">Anterior</a>
     
     
       <a href="http://localhost:4000/csharp/csharp-novidade/" class="pagination--pager" title="Novidade C# 7.3, o que vem por ai?
-">Next</a>
+">Próxima</a>
     
   </nav>
 
@@ -513,8 +520,43 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
   
   
     <div class="page__related">
-      <h4 class="page__related-title">You May Also Enjoy</h4>
+      <h4 class="page__related-title">Talvez você goste também</h4>
       <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linq/basicolinq/" rel="permalink">O básico do LINQ
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  6 minuto(s) de leitura
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nesse pequeno post iremos conhecer um pouco de LINQ
+
+
+  Um pouco de história
+  Introdução ao LINQ
+  Conhecendo métodos do LINQ
+  Expressões
+
+
+Um pouco de his...</p>
+  </article>
+</div>
         
           
 
@@ -535,7 +577,7 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
 
 
 
-  1 minute read
+  1 minuto(s) de leitura
 </p>
     
     <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
@@ -551,7 +593,7 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/csharp/sqlinjection/" rel="permalink">SQL Injection EntityFrameworkCore
+        <a href="http://localhost:4000/provider/ordenarcoluna/" rel="permalink">Ordem das colunas no EF Core 2.1
 </a>
       
     </h2>
@@ -561,16 +603,14 @@ o comando <strong>SP_CONFIGURE ‘clr habilitado’ , 1</strong> habilita no SQL
 
 
 
-  1 minute read
+  1 minuto(s) de leitura
 </p>
     
-    <p class="archive__item-excerpt" itemprop="description">Olá pessoal!
+    <p class="archive__item-excerpt" itemprop="description">
 
-Isso não é um ARTIGO, é uma dica.
-
-Hoje quero falar sobre um assunto bastante pertinente a segurança que é o SQL Injection.
-
-Muitos sites e sis...</p>
+Hoje tenho uma ótima noticia para você usuário do EFCore. 
+Acabei de compilar os fontes do EFCore e já se encontra com o que muitos desejavam.
+Vale lembrar...</p>
   </article>
 </div>
         
@@ -583,7 +623,7 @@ Muitos sites e sis...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/csharp/querycompilada/" rel="permalink">Dados Binário em .Net Core
+        <a href="http://localhost:4000/csharp/populardados/" rel="permalink">Popular Dados (EF Core 2.1)
 </a>
       
     </h2>
@@ -593,41 +633,13 @@ Muitos sites e sis...</p>
 
 
 
-  1 minute read
+  4 minuto(s) de leitura
 </p>
     
-    <p class="archive__item-excerpt" itemprop="description">Boa noite,
-Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET...</p>
-  </article>
-</div>
-        
-          
+    <p class="archive__item-excerpt" itemprop="description">
 
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/provider/provider-firebirdsql-efcore/" rel="permalink">EntityFrameworkCore For FirebirdSQL
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  less than 1 minute read
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">EntityFrameworkCore For FirebirdSQL
-
-Lançamento EntityFrameworkCore for FirebirdSQL
-
-Com enorme prazer que venho informar que hoje o EntityframworkCore.Fireb...</p>
+Fala pessoal tudo bem?!
+Estou fazendo mais esse pequeno post para mostrar mais um novo recurso que será disponibilizado na versão 2.1 do EntityframeworkCor...</p>
   </article>
 </div>
         
@@ -649,6 +661,8 @@ Com enorme prazer que venho informar que hoje o EntityframworkCore.Fireb...</p>
         <div class="page__footer-follow">
   <ul class="social-icons">
     
+      <li><strong>Acompanhe em</strong></li>
+    
     
     
     
@@ -660,7 +674,7 @@ Com enorme prazer que venho informar que hoje o EntityframworkCore.Fireb...</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2017 Rafael Almeida. Powered by <a href="https://jekyllrb.com" rel="nofollow">Jekyll</a> &amp; <a href="https://mademistakes.com/work/minimal-mistakes-jekyll-theme/" rel="nofollow">Minimal Mistakes</a>.</div>
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida.</div>
 
       </footer>
     </div>

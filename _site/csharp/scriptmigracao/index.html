@@ -1,0 +1,723 @@
+<!doctype html>
+<!--
+  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
+  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
+  Free for personal and commercial use under the MIT license
+  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
+-->
+<html lang="pt" class="no-js">
+  <head>
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+
+
+
+
+
+
+
+
+
+<title>Script Migração – EF Core - Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!Bom quando o EF Core gera as migrações as mesmas ficam embutidas na aplicação, então para os que quiserem ter mais esse controle é bem simples!Vamos imaginar o seguinte cenário.Temos essas duas classes que se transformaram em tabelas:public class Pessoa{    [Key]    public long Id { get; set; }    public string Nome { get; set; }    public string SobreNome { get; set; }    public DateTime DataNascimento { get; set; }    public virtual ICollection&lt;Endereco&gt; Enderecos { get; set; }}public class Endereco{    [Key]    public long Id { get; set; }    public string Cidade { get; set; }    public string Estado { get; set; }    public long PessoaId { get; set; }    public virtual Pessoa Pessoa { get; set; }} Abra o Console de pacotes e gere sua migração:Add-Migration -name MigracaoInicialVale lembrar que precisamos do pacote: Microsoft.EntityFrameworkCore.ToolsFeito isso em meu exemplo eu terei essa migração:using Microsoft.EntityFrameworkCore.Metadata;using Microsoft.EntityFrameworkCore.Migrations;using System;using System.Collections.Generic;namespace ScriptMigracao.Migrations{    public partial class MigracaoInicial : Migration    {        protected override void Up(MigrationBuilder migrationBuilder)        {            migrationBuilder.CreateTable(                name: &quot;Pessoas&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    DataNascimento = table.Column&lt;DateTime&gt;(type: &quot;datetime2&quot;, nullable: false),                    Nome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    SobreNome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Pessoas&quot;, x =&gt; x.Id);                });            migrationBuilder.CreateTable(                name: &quot;Enderecos&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    Cidade = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    Estado = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    PessoaId = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Enderecos&quot;, x =&gt; x.Id);                    table.ForeignKey(                        name: &quot;FK_Enderecos_Pessoas_PessoaId&quot;,                        column: x =&gt; x.PessoaId,                        principalTable: &quot;Pessoas&quot;,                        principalColumn: &quot;Id&quot;,                        onDelete: ReferentialAction.Cascade);                });            migrationBuilder.CreateIndex(                name: &quot;IX_Enderecos_PessoaId&quot;,                table: &quot;Enderecos&quot;,                column: &quot;PessoaId&quot;);        }        protected override void Down(MigrationBuilder migrationBuilder)        {            migrationBuilder.DropTable(                name: &quot;Enderecos&quot;);            migrationBuilder.DropTable(                name: &quot;Pessoas&quot;);        }    }}Agora vem a mágica… como transformar isso em SQL?!Simples…A interface IMigrator faz esse milagre pra gente!using (var db = new TestContext()){    var scriptMigracao = db.GetService&lt;IMigrator&gt;().GenerateScript();    // Agora é só gravar o retorno em algum arquivo ou em um banco    // use a imaginação ou sua necessidade.}Meu arquivo gerado foi esse como base nas informações acima:IF OBJECT_ID(N&#39;__EFMigrationsHistory&#39;) IS NULLBEGIN    CREATE TABLE [__EFMigrationsHistory] (        [MigrationId] nvarchar(150) NOT NULL,        [ProductVersion] nvarchar(32) NOT NULL,        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])    );END;GOCREATE TABLE [Pessoas] (    [Id] bigint NOT NULL IDENTITY,    [DataNascimento] datetime2 NOT NULL,    [Nome] nvarchar(max) NULL,    [SobreNome] nvarchar(max) NULL,    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id]));GOCREATE TABLE [Enderecos] (    [Id] bigint NOT NULL IDENTITY,    [Cidade] nvarchar(max) NULL,    [Estado] nvarchar(max) NULL,    [PessoaId] bigint NOT NULL,    CONSTRAINT [PK_Enderecos] PRIMARY KEY ([Id]),    CONSTRAINT [FK_Enderecos_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id]) ON DELETE CASCADE);GOCREATE INDEX [IX_Enderecos_PessoaId] ON [Enderecos] ([PessoaId]);GOINSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])VALUES (N&#39;20171015213303_MigracaoInicial&#39;, N&#39;2.0.0-rtm-26452&#39;);GO">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:title" content="Script Migração – EF Core">
+
+
+  <link rel="canonical" href="http://localhost:4000/csharp/scriptmigracao/">
+  <meta property="og:url" content="http://localhost:4000/csharp/scriptmigracao/">
+
+
+
+  <meta property="og:description" content="Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!Bom quando o EF Core gera as migrações as mesmas ficam embutidas na aplicação, então para os que quiserem ter mais esse controle é bem simples!Vamos imaginar o seguinte cenário.Temos essas duas classes que se transformaram em tabelas:public class Pessoa{    [Key]    public long Id { get; set; }    public string Nome { get; set; }    public string SobreNome { get; set; }    public DateTime DataNascimento { get; set; }    public virtual ICollection&lt;Endereco&gt; Enderecos { get; set; }}public class Endereco{    [Key]    public long Id { get; set; }    public string Cidade { get; set; }    public string Estado { get; set; }    public long PessoaId { get; set; }    public virtual Pessoa Pessoa { get; set; }} Abra o Console de pacotes e gere sua migração:Add-Migration -name MigracaoInicialVale lembrar que precisamos do pacote: Microsoft.EntityFrameworkCore.ToolsFeito isso em meu exemplo eu terei essa migração:using Microsoft.EntityFrameworkCore.Metadata;using Microsoft.EntityFrameworkCore.Migrations;using System;using System.Collections.Generic;namespace ScriptMigracao.Migrations{    public partial class MigracaoInicial : Migration    {        protected override void Up(MigrationBuilder migrationBuilder)        {            migrationBuilder.CreateTable(                name: &quot;Pessoas&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    DataNascimento = table.Column&lt;DateTime&gt;(type: &quot;datetime2&quot;, nullable: false),                    Nome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    SobreNome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Pessoas&quot;, x =&gt; x.Id);                });            migrationBuilder.CreateTable(                name: &quot;Enderecos&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    Cidade = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    Estado = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    PessoaId = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Enderecos&quot;, x =&gt; x.Id);                    table.ForeignKey(                        name: &quot;FK_Enderecos_Pessoas_PessoaId&quot;,                        column: x =&gt; x.PessoaId,                        principalTable: &quot;Pessoas&quot;,                        principalColumn: &quot;Id&quot;,                        onDelete: ReferentialAction.Cascade);                });            migrationBuilder.CreateIndex(                name: &quot;IX_Enderecos_PessoaId&quot;,                table: &quot;Enderecos&quot;,                column: &quot;PessoaId&quot;);        }        protected override void Down(MigrationBuilder migrationBuilder)        {            migrationBuilder.DropTable(                name: &quot;Enderecos&quot;);            migrationBuilder.DropTable(                name: &quot;Pessoas&quot;);        }    }}Agora vem a mágica… como transformar isso em SQL?!Simples…A interface IMigrator faz esse milagre pra gente!using (var db = new TestContext()){    var scriptMigracao = db.GetService&lt;IMigrator&gt;().GenerateScript();    // Agora é só gravar o retorno em algum arquivo ou em um banco    // use a imaginação ou sua necessidade.}Meu arquivo gerado foi esse como base nas informações acima:IF OBJECT_ID(N&#39;__EFMigrationsHistory&#39;) IS NULLBEGIN    CREATE TABLE [__EFMigrationsHistory] (        [MigrationId] nvarchar(150) NOT NULL,        [ProductVersion] nvarchar(32) NOT NULL,        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])    );END;GOCREATE TABLE [Pessoas] (    [Id] bigint NOT NULL IDENTITY,    [DataNascimento] datetime2 NOT NULL,    [Nome] nvarchar(max) NULL,    [SobreNome] nvarchar(max) NULL,    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id]));GOCREATE TABLE [Enderecos] (    [Id] bigint NOT NULL IDENTITY,    [Cidade] nvarchar(max) NULL,    [Estado] nvarchar(max) NULL,    [PessoaId] bigint NOT NULL,    CONSTRAINT [PK_Enderecos] PRIMARY KEY ([Id]),    CONSTRAINT [FK_Enderecos_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id]) ON DELETE CASCADE);GOCREATE INDEX [IX_Enderecos_PessoaId] ON [Enderecos] ([PessoaId]);GOINSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])VALUES (N&#39;20171015213303_MigracaoInicial&#39;, N&#39;2.0.0-rtm-26452&#39;);GO">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-10-15T01:00:00-02:00">
+
+
+
+
+
+
+
+
+  <script type="application/ld+json">
+    {
+      "@context" : "http://schema.org",
+      "@type" : "Person",
+      "name" : "Rafael Almeida",
+      "url" : "http://localhost:4000",
+      "sameAs" : null
+    }
+  </script>
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<!-- insert favicons. use http://realfavicongenerator.net/ -->
+
+<!-- end custom head snippets -->
+  </head>
+
+  <body class="layout--single">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+        </ul>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Creator of EntityFrameworkCore for FirebirdSQL, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+        <li>
+          <a href="https://ralmsdeveloper.github.io" itemprop="url">
+            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Site
+          </a>
+        </li>
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Script Migração – EF Core">
+    <meta itemprop="description" content="Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!Bom quando o EF Core gera as migrações as mesmas ficam embutidas na aplicação, então para os que quiserem ter mais esse controle é bem simples!Vamos imaginar o seguinte cenário.Temos essas duas classes que se transformaram em tabelas:public class Pessoa{    [Key]    public long Id { get; set; }    public string Nome { get; set; }    public string SobreNome { get; set; }    public DateTime DataNascimento { get; set; }    public virtual ICollection&lt;Endereco&gt; Enderecos { get; set; }}public class Endereco{    [Key]    public long Id { get; set; }    public string Cidade { get; set; }    public string Estado { get; set; }    public long PessoaId { get; set; }    public virtual Pessoa Pessoa { get; set; }} Abra o Console de pacotes e gere sua migração:Add-Migration -name MigracaoInicialVale lembrar que precisamos do pacote: Microsoft.EntityFrameworkCore.ToolsFeito isso em meu exemplo eu terei essa migração:using Microsoft.EntityFrameworkCore.Metadata;using Microsoft.EntityFrameworkCore.Migrations;using System;using System.Collections.Generic;namespace ScriptMigracao.Migrations{    public partial class MigracaoInicial : Migration    {        protected override void Up(MigrationBuilder migrationBuilder)        {            migrationBuilder.CreateTable(                name: &quot;Pessoas&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    DataNascimento = table.Column&lt;DateTime&gt;(type: &quot;datetime2&quot;, nullable: false),                    Nome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    SobreNome = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Pessoas&quot;, x =&gt; x.Id);                });            migrationBuilder.CreateTable(                name: &quot;Enderecos&quot;,                columns: table =&gt; new                {                    Id = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                        .Annotation(&quot;SqlServer:ValueGenerationStrategy&quot;, SqlServerValueGenerationStrategy.IdentityColumn),                    Cidade = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    Estado = table.Column&lt;string&gt;(type: &quot;nvarchar(max)&quot;, nullable: true),                    PessoaId = table.Column&lt;long&gt;(type: &quot;bigint&quot;, nullable: false)                },                constraints: table =&gt;                {                    table.PrimaryKey(&quot;PK_Enderecos&quot;, x =&gt; x.Id);                    table.ForeignKey(                        name: &quot;FK_Enderecos_Pessoas_PessoaId&quot;,                        column: x =&gt; x.PessoaId,                        principalTable: &quot;Pessoas&quot;,                        principalColumn: &quot;Id&quot;,                        onDelete: ReferentialAction.Cascade);                });            migrationBuilder.CreateIndex(                name: &quot;IX_Enderecos_PessoaId&quot;,                table: &quot;Enderecos&quot;,                column: &quot;PessoaId&quot;);        }        protected override void Down(MigrationBuilder migrationBuilder)        {            migrationBuilder.DropTable(                name: &quot;Enderecos&quot;);            migrationBuilder.DropTable(                name: &quot;Pessoas&quot;);        }    }}Agora vem a mágica… como transformar isso em SQL?!Simples…A interface IMigrator faz esse milagre pra gente!using (var db = new TestContext()){    var scriptMigracao = db.GetService&lt;IMigrator&gt;().GenerateScript();    // Agora é só gravar o retorno em algum arquivo ou em um banco    // use a imaginação ou sua necessidade.}Meu arquivo gerado foi esse como base nas informações acima:IF OBJECT_ID(N&#39;__EFMigrationsHistory&#39;) IS NULLBEGIN    CREATE TABLE [__EFMigrationsHistory] (        [MigrationId] nvarchar(150) NOT NULL,        [ProductVersion] nvarchar(32) NOT NULL,        CONSTRAINT [PK___EFMigrationsHistory] PRIMARY KEY ([MigrationId])    );END;GOCREATE TABLE [Pessoas] (    [Id] bigint NOT NULL IDENTITY,    [DataNascimento] datetime2 NOT NULL,    [Nome] nvarchar(max) NULL,    [SobreNome] nvarchar(max) NULL,    CONSTRAINT [PK_Pessoas] PRIMARY KEY ([Id]));GOCREATE TABLE [Enderecos] (    [Id] bigint NOT NULL IDENTITY,    [Cidade] nvarchar(max) NULL,    [Estado] nvarchar(max) NULL,    [PessoaId] bigint NOT NULL,    CONSTRAINT [PK_Enderecos] PRIMARY KEY ([Id]),    CONSTRAINT [FK_Enderecos_Pessoas_PessoaId] FOREIGN KEY ([PessoaId]) REFERENCES [Pessoas] ([Id]) ON DELETE CASCADE);GOCREATE INDEX [IX_Enderecos_PessoaId] ON [Enderecos] ([PessoaId]);GOINSERT INTO [__EFMigrationsHistory] ([MigrationId], [ProductVersion])VALUES (N&#39;20171015213303_MigracaoInicial&#39;, N&#39;2.0.0-rtm-26452&#39;);GO">
+    <meta itemprop="datePublished" content="October 15, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Script Migração – EF Core
+</h1>
+          
+            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minuto(s) de leitura
+</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://localhost:4000/assets/images/efcore.png" alt="01" /></p>
+
+<p>Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script das migrações que fazemos no fabuloso Entity Framework Core, Ué? se ele já gera o controle de versionamento, por que eu gravar?!
+Bom quando o EF Core gera as migrações as mesmas ficam embutidas na aplicação, então para os que quiserem ter mais esse controle é bem simples!</p>
+
+<p>Vamos imaginar o seguinte cenário.</p>
+
+<p>Temos essas duas classes que se transformaram em tabelas:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Pessoa</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Key</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">SobreNome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">DataNascimento</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">virtual</span> <span class="n">ICollection</span><span class="p">&lt;</span><span class="n">Endereco</span><span class="p">&gt;</span> <span class="n">Enderecos</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Endereco</span>
+<span class="p">{</span>
+    <span class="p">[</span><span class="n">Key</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">long</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Cidade</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Estado</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">long</span> <span class="n">PessoaId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="k">virtual</span> <span class="n">Pessoa</span> <span class="n">Pessoa</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span> 
+</code></pre></div></div>
+
+<p>Abra o Console de pacotes e gere sua migração:
+<code class="highlighter-rouge">Add-Migration -name MigracaoInicial</code></p>
+
+<p>Vale lembrar que precisamos do pacote: <strong>Microsoft.EntityFrameworkCore.Tools</strong>
+Feito isso em meu exemplo eu terei essa migração:</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore.Metadata</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore.Migrations</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">namespace</span> <span class="nn">ScriptMigracao.Migrations</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">partial</span> <span class="k">class</span> <span class="nc">MigracaoInicial</span> <span class="p">:</span> <span class="n">Migration</span>
+    <span class="p">{</span>
+        <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Up</span><span class="p">(</span><span class="n">MigrationBuilder</span> <span class="n">migrationBuilder</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">migrationBuilder</span><span class="p">.</span><span class="nf">CreateTable</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">:</span> <span class="s">"Pessoas"</span><span class="p">,</span>
+                <span class="n">columns</span><span class="p">:</span> <span class="n">table</span> <span class="p">=&gt;</span> <span class="k">new</span>
+                <span class="p">{</span>
+                    <span class="n">Id</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"bigint"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">false</span><span class="p">)</span>
+                        <span class="p">.</span><span class="nf">Annotation</span><span class="p">(</span><span class="s">"SqlServer:ValueGenerationStrategy"</span><span class="p">,</span> <span class="n">SqlServerValueGenerationStrategy</span><span class="p">.</span><span class="n">IdentityColumn</span><span class="p">),</span>
+                    <span class="n">DataNascimento</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="n">DateTime</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"datetime2"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">false</span><span class="p">),</span>
+                    <span class="n">Nome</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"nvarchar(max)"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">true</span><span class="p">),</span>
+                    <span class="n">SobreNome</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"nvarchar(max)"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">true</span><span class="p">)</span>
+                <span class="p">},</span>
+                <span class="n">constraints</span><span class="p">:</span> <span class="n">table</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+                    <span class="n">table</span><span class="p">.</span><span class="nf">PrimaryKey</span><span class="p">(</span><span class="s">"PK_Pessoas"</span><span class="p">,</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+                <span class="p">});</span>
+            <span class="n">migrationBuilder</span><span class="p">.</span><span class="nf">CreateTable</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">:</span> <span class="s">"Enderecos"</span><span class="p">,</span>
+                <span class="n">columns</span><span class="p">:</span> <span class="n">table</span> <span class="p">=&gt;</span> <span class="k">new</span>
+                <span class="p">{</span>
+                    <span class="n">Id</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"bigint"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">false</span><span class="p">)</span>
+                        <span class="p">.</span><span class="nf">Annotation</span><span class="p">(</span><span class="s">"SqlServer:ValueGenerationStrategy"</span><span class="p">,</span> <span class="n">SqlServerValueGenerationStrategy</span><span class="p">.</span><span class="n">IdentityColumn</span><span class="p">),</span>
+                    <span class="n">Cidade</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"nvarchar(max)"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">true</span><span class="p">),</span>
+                    <span class="n">Estado</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"nvarchar(max)"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">true</span><span class="p">),</span>
+                    <span class="n">PessoaId</span> <span class="p">=</span> <span class="n">table</span><span class="p">.</span><span class="n">Column</span><span class="p">&lt;</span><span class="kt">long</span><span class="p">&gt;(</span><span class="n">type</span><span class="p">:</span> <span class="s">"bigint"</span><span class="p">,</span> <span class="n">nullable</span><span class="p">:</span> <span class="k">false</span><span class="p">)</span>
+                <span class="p">},</span>
+                <span class="n">constraints</span><span class="p">:</span> <span class="n">table</span> <span class="p">=&gt;</span>
+                <span class="p">{</span>
+                    <span class="n">table</span><span class="p">.</span><span class="nf">PrimaryKey</span><span class="p">(</span><span class="s">"PK_Enderecos"</span><span class="p">,</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Id</span><span class="p">);</span>
+                    <span class="n">table</span><span class="p">.</span><span class="nf">ForeignKey</span><span class="p">(</span>
+                        <span class="n">name</span><span class="p">:</span> <span class="s">"FK_Enderecos_Pessoas_PessoaId"</span><span class="p">,</span>
+                        <span class="n">column</span><span class="p">:</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">PessoaId</span><span class="p">,</span>
+                        <span class="n">principalTable</span><span class="p">:</span> <span class="s">"Pessoas"</span><span class="p">,</span>
+                        <span class="n">principalColumn</span><span class="p">:</span> <span class="s">"Id"</span><span class="p">,</span>
+                        <span class="n">onDelete</span><span class="p">:</span> <span class="n">ReferentialAction</span><span class="p">.</span><span class="n">Cascade</span><span class="p">);</span>
+                <span class="p">});</span>
+            <span class="n">migrationBuilder</span><span class="p">.</span><span class="nf">CreateIndex</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">:</span> <span class="s">"IX_Enderecos_PessoaId"</span><span class="p">,</span>
+                <span class="n">table</span><span class="p">:</span> <span class="s">"Enderecos"</span><span class="p">,</span>
+                <span class="n">column</span><span class="p">:</span> <span class="s">"PessoaId"</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Down</span><span class="p">(</span><span class="n">MigrationBuilder</span> <span class="n">migrationBuilder</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">migrationBuilder</span><span class="p">.</span><span class="nf">DropTable</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">:</span> <span class="s">"Enderecos"</span><span class="p">);</span>
+            <span class="n">migrationBuilder</span><span class="p">.</span><span class="nf">DropTable</span><span class="p">(</span>
+                <span class="n">name</span><span class="p">:</span> <span class="s">"Pessoas"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Agora vem a mágica… como transformar isso em SQL?!
+Simples…
+A interface IMigrator faz esse milagre pra gente!</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">TestContext</span><span class="p">())</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">scriptMigracao</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">GetService</span><span class="p">&lt;</span><span class="n">IMigrator</span><span class="p">&gt;().</span><span class="nf">GenerateScript</span><span class="p">();</span>
+    <span class="c1">// Agora é só gravar o retorno em algum arquivo ou em um banco</span>
+    <span class="c1">// use a imaginação ou sua necessidade.</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Meu arquivo gerado foi esse como base nas informações acima:</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">IF</span> <span class="n">OBJECT_ID</span><span class="p">(</span><span class="n">N</span><span class="s1">'__EFMigrationsHistory'</span><span class="p">)</span> <span class="k">IS</span> <span class="k">NULL</span>
+<span class="k">BEGIN</span>
+    <span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">__EFMigrationsHistory</span><span class="p">]</span> <span class="p">(</span>
+        <span class="p">[</span><span class="n">MigrationId</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">150</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+        <span class="p">[</span><span class="n">ProductVersion</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+        <span class="k">CONSTRAINT</span> <span class="p">[</span><span class="n">PK___EFMigrationsHistory</span><span class="p">]</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">([</span><span class="n">MigrationId</span><span class="p">])</span>
+    <span class="p">);</span>
+<span class="k">END</span><span class="p">;</span>
+<span class="k">GO</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">Pessoas</span><span class="p">]</span> <span class="p">(</span>
+    <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="n">bigint</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">DataNascimento</span><span class="p">]</span> <span class="n">datetime2</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">Nome</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">SobreNome</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">CONSTRAINT</span> <span class="p">[</span><span class="n">PK_Pessoas</span><span class="p">]</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">([</span><span class="n">Id</span><span class="p">])</span>
+<span class="p">);</span>
+<span class="k">GO</span>
+<span class="k">CREATE</span> <span class="k">TABLE</span> <span class="p">[</span><span class="n">Enderecos</span><span class="p">]</span> <span class="p">(</span>
+    <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="n">bigint</span> <span class="k">NOT</span> <span class="k">NULL</span> <span class="k">IDENTITY</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">Cidade</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">Estado</span><span class="p">]</span> <span class="n">nvarchar</span><span class="p">(</span><span class="k">max</span><span class="p">)</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="p">[</span><span class="n">PessoaId</span><span class="p">]</span> <span class="n">bigint</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">CONSTRAINT</span> <span class="p">[</span><span class="n">PK_Enderecos</span><span class="p">]</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">([</span><span class="n">Id</span><span class="p">]),</span>
+    <span class="k">CONSTRAINT</span> <span class="p">[</span><span class="n">FK_Enderecos_Pessoas_PessoaId</span><span class="p">]</span> <span class="k">FOREIGN</span> <span class="k">KEY</span> <span class="p">([</span><span class="n">PessoaId</span><span class="p">])</span> <span class="k">REFERENCES</span> <span class="p">[</span><span class="n">Pessoas</span><span class="p">]</span> <span class="p">([</span><span class="n">Id</span><span class="p">])</span> <span class="k">ON</span> <span class="k">DELETE</span> <span class="k">CASCADE</span>
+<span class="p">);</span>
+<span class="k">GO</span>
+<span class="k">CREATE</span> <span class="k">INDEX</span> <span class="p">[</span><span class="n">IX_Enderecos_PessoaId</span><span class="p">]</span> <span class="k">ON</span> <span class="p">[</span><span class="n">Enderecos</span><span class="p">]</span> <span class="p">([</span><span class="n">PessoaId</span><span class="p">]);</span>
+<span class="k">GO</span>
+<span class="k">INSERT</span> <span class="k">INTO</span> <span class="p">[</span><span class="n">__EFMigrationsHistory</span><span class="p">]</span> <span class="p">([</span><span class="n">MigrationId</span><span class="p">],</span> <span class="p">[</span><span class="n">ProductVersion</span><span class="p">])</span>
+<span class="k">VALUES</span> <span class="p">(</span><span class="n">N</span><span class="s1">'20171015213303_MigracaoInicial'</span><span class="p">,</span> <span class="n">N</span><span class="s1">'2.0.0-rtm-26452'</span><span class="p">);</span>
+<span class="k">GO</span>
+</code></pre></div></div>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/#entityframeworkcore" class="page__taxonomy-item" rel="tag">EntityFrameworkCore</a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-10-15T01:00:00-02:00">October 15, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Script+Migra%C3%A7%C3%A3o+%E2%80%93+EF+Core%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fscriptmigracao%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fscriptmigracao%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fscriptmigracao%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fscriptmigracao%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/provider/efcorefirebirdv209/" class="pagination--pager" title="EntityFrameworkCore.FirebirdSQL  2.0.9
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/csharp/populardados/" class="pagination--pager" title="Popular Dados (EF Core 2.1)
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/linq/basicolinq/" rel="permalink">O básico do LINQ
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  6 minuto(s) de leitura
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Nesse pequeno post iremos conhecer um pouco de LINQ
+
+
+  Um pouco de história
+  Introdução ao LINQ
+  Conhecendo métodos do LINQ
+  Expressões
+
+
+Um pouco de his...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minuto(s) de leitura
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/sql%20server/sqlserverclr/" rel="permalink">Usando CLR no SQL Server
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minuto(s) de leitura
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">NET Framework CLR + SQL Server
+
+“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Window...</p>
+  </article>
+</div>
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/provider/ordenarcoluna/" rel="permalink">Ordem das colunas no EF Core 2.1
+</a>
+      
+    </h2>
+    
+      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minuto(s) de leitura
+</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Hoje tenho uma ótima noticia para você usuário do EFCore. 
+Acabei de compilar os fontes do EFCore e já se encontra com o que muitos desejavam.
+Vale lembrar...</p>
+  </article>
+</div>
+        
+      </div>
+    </div>
+  
+</div>
+
+    </div>
+
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2017 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+
+
+
+
+
+  </body>
+</html>

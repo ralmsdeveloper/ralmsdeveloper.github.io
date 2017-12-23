@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_posts"
+    "\\_posts",
+    "\\_site\\page2"
   ],
-  "SelectedNode": "\\_posts\\2017-08-01-binarionetcore.md",
+  "SelectedNode": "\\.travis.yml",
   "PreviewInSolutionExplorer": false
 }
