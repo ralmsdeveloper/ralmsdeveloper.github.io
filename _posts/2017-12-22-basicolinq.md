@@ -23,7 +23,7 @@ Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, pod
 Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉
 
 ## Introdução ao LINQ
-Vamos entender um pouco como realmente o LINQ funciona, vamos escrever nosso primeiro exemplo básico, manipulando informações de uma string.
+Vamos entender um pouco como realmente o LINQ funciona, criaremos agora nosso primeiro exemplo básico, manipulando informações de uma string.
 
 ```csharp
 //  String com palavras
