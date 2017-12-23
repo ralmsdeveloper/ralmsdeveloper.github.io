@@ -19,7 +19,7 @@ tags:
 ## Um pouco de história
 
 O LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. 
-Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a **IEnumerable**, ou a uma interface genérica **IEnumerable<T>**.
+Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a **IEnumerable**, ou a uma interface genérica IEnumerable<<T>>.
 Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉
 
 ## Introdução ao LINQ
@@ -169,12 +169,13 @@ namespace Linq
     }
 }
 ```
-Até aqui tudo bem certo?! Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ. 
+Até aqui tudo bem certo?! 
 
+Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.
 
 ## Métodos de Extensão do LINQ
 
-**O que são métodos de extensões? **
+**O que são métodos de extensões?**
 
 **Resposta:** Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.
 
