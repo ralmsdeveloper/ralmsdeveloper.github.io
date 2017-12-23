@@ -49,13 +49,13 @@ namespace RecuperandoInstanciasSQLServer
 
         private void btnCarregar_Click(object sender, EventArgs e)
         {
-			// Carregar instâncias disponíveis na rede
+            // Carregar instâncias disponíveis na rede
             var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();
 
-			//Limpar o combo de instâncias
+            //Limpar o combo de instâncias
             cbInstancias.Items.Clear();
 
-			// Percorrer e adicionar as instâncias no combo
+            // Percorrer e adicionar as instâncias no combo
             foreach (DataRow info in instancias.Rows)
             {
                 // Nome do computador
@@ -78,15 +78,15 @@ namespace RecuperandoInstanciasSQLServer
             {
                 cbBancos.Items.Clear();
 
-				// Aqui é um extra, onde iremos exibir os bancos disponíveis para
-				// a instância selecionada
+                // Aqui é um extra, onde iremos exibir os bancos disponíveis para
+                // a instância selecionada
                 var stringConexao = $"Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;";
                 using (var conn = new SqlConnection(stringConexao))
                 {
                     conn.Open();
                     using (var cmd = conn.CreateCommand())
                     {
-						// Consultar os bancos disponíveis
+                        // Consultar os bancos disponíveis
                         cmd.CommandText = "SELECT name FROM sys.databases";
                         var bancos = cmd.ExecuteReader();
 
