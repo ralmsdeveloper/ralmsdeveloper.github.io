@@ -1,6 +1,6 @@
 ﻿---
 title: "Passo a passo Asp.NET Core (básico)"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Asp.Net Core
