@@ -8,11 +8,12 @@
   Free for personal and commercial use under the MIT license
   https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
 -->
-<html lang="{{ site.locale | slice: 0,2 | default: "en" }}" class="no-js">
-  <head>
+<html lang="{{ site.locale | slice: 0,2 | default: "pt-BR" }}" class="no-js">
+<head>
     {% include head.html %}
     {% include head/custom.html %}
-  </head>
+    <script id="dsq-count-scr" src="//ralmsdeveloper.disqus.com/count.js" async></script>
+</head>
 
   <body class="layout--{{ page.layout | default: layout.layout }}{% if page.classes or layout.classes %}{{ page.classes | default: layout.classes | join: ' ' | prepend: ' ' }}{% endif %}">
 
