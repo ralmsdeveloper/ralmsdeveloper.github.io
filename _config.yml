@@ -11,8 +11,8 @@ title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
 description              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
-url                      : https://ralmsdeveloper.github.io
-baseurl                  : # the subpath of your site, e.g. "/blog"
+url                      : "https://ralmsdeveloper.github.io"
+baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
