@@ -1,8 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_posts"
+    "\\_includes\\comments-providers",
+    "\\_includes\\footer",
+    "\\_includes\\head",
+    "\\_layouts"
   ],
-  "SelectedNode": "\\_config.yml",
+  "SelectedNode": "\\_layouts\\default.html",
   "PreviewInSolutionExplorer": false
 }
