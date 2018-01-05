@@ -1,5 +1,5 @@
 ﻿---
-title: "Compressão de Dados"
+title: "Comprimindo Dados"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
@@ -21,7 +21,7 @@ Isso é valido para quem precisar armazenar bytes de uma imagem por exemplo, ou 
 O Exemplo abaixo compactar uma informação que é passada como string e devolve em Byte ou vice-versa.
 
 ```csharp
-public static class Compressao
+public static class Comprimir
 {
     private static void CopiaOsBytes(Stream origem, Stream destino)
     {
