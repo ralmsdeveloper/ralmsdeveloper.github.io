@@ -8,6 +8,7 @@ tags:
   - LINQ
 ---
 
+![01]({{ site.url }}{{ site.baseurl }}/assets/images/linq.jpg)
 
 ## Nesse pequeno post iremos conhecer um pouco de LINQ
 
