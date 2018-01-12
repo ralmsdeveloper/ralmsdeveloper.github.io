@@ -220,7 +220,7 @@ Aqui abaixo está um link com todos o métodos da classe **System.Linq.Enumerabl
 [https://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspx](https://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspx)
 
 
-Bem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo! 
+Bem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!
 
 ## Criar Expressões
 
@@ -279,27 +279,27 @@ namespace Linq
             // em um método.
             var pessoas1 = listadePessoas.Where(p => p.Codigo > 1);
 
-		    // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo 
-			// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.
-           
+            // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo
+            // será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.
+
             // Função básica em lambda
-			Func<Pessoa, bool> pessoaFunc = p => p.Codigo > 1;
-     
-			// Utilizando a função criada acima
+            Func<Pessoa, bool> pessoaFunc = p => p.Codigo > 1;
+
+            // Utilizando a função criada acima
             var pessoas2 = listadePessoas.Where(pessoaFunc);
 
-			// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.
+            // Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.
 
             // Expressão básica
             Expression<Func<Pessoa, bool>> pessoaExpression = p => p.Codigo > 1;
 
-			 // Compilando a expressão e utilizando.
+            // Compilando a expressão e utilizando.
             var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());
 
             Console.ReadKey();
         }
     }
-} 
+}
 ```
 
 Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse [Aqui](https://docs.microsoft.com/pt-br/dotnet/csharp/programming-guide/statements-expressions-operators/lambda-expressions)
