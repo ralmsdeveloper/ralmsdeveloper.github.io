@@ -1,6 +1,6 @@
 ﻿---
 title: "Carregando instâncias do SQL Server"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - CSharp

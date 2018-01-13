@@ -1,6 +1,6 @@
 ﻿---
 title: "Query Compilada no EntityFrameworkCore 2.0"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - CSharp

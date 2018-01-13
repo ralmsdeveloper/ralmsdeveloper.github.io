@@ -1,6 +1,6 @@
 ﻿---
 title: "EntityFrameworkCore For FirebirdSQL"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Provider

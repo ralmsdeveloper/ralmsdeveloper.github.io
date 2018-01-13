@@ -1,6 +1,6 @@
 ﻿---
 title: "Injeção de Dependência Asp.Net Core 2 (Razor)"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Razor

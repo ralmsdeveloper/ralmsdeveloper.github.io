@@ -1,6 +1,6 @@
 ﻿---
 title: "Usando CLR no SQL Server"
-comments: false
+comments: true
 excerpt_separator: "Ler mais"
 categories:
   - SQL Server
