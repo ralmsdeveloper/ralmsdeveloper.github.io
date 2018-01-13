@@ -8,7 +8,7 @@ tags:
   - News
 ---
 
-## A Microsoft estará realizando a Maratona de Bots apartir do 15/01/2018
+## A Microsoft estará realizando a Maratona de Bots a partir do 15/01/2018
 
 ![01]({{ site.url }}{{ site.baseurl }}/assets/images/maratonabot.png)
 
