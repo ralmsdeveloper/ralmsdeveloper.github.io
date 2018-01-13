@@ -8,16 +8,21 @@ tags:
   - News
 ---
 
-## A partir do dia 15/01/2018 a Microsoft estará realizando a Maratona de Bots
+## A Microsoft estará realizando a Maratona de Bots apartir do 15/01/2018
 
 ![01]({{ site.url }}{{ site.baseurl }}/assets/images/maratonabot.png)
 
 
-A Maratona Bots é um evento 100% online e gratuito.
+A Maratona Bots 100% online e gratuito.
 
-Nele você terá acesso a um conteúdo desenvolvido por MVPs e profissionais da Microsoft e aprenderá a desenvolver agentes de conversação interativos e inteligentes.
+## O curso
+Este treinamento proporciona os conhecimentos necessários para desenvolver agentes de conversação interativos e inteligentes.
 
-O treinamento introduz ao desenvolvimento de bots, utilizando o Bot Framework, consumo de API de Dados e integração com Cognitive Services, a plataforma de inteligência da Microsoft. Junte-se à comunidade e entre no universo dos bots! 
+O treinamento introduz ao desenvolvimento de bots, utilizando o Bot Framework, consumo de API de Dados e integração com Cognitive Services, a plataforma de inteligência da Microsoft.
+
+
+## Audiência
+Este curso é destinado a pessoas com conhecimentos em C# ou Node.js e que queiram começar a desenvolver bots multi-plataforma utilizando o Bot Framework.
 
 Inscreva-se: [https://aka.ms/maratonabots](https://aka.ms/maratonabots)
 
