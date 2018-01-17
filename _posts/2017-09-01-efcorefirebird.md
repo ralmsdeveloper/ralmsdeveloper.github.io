@@ -10,10 +10,11 @@ tags:
 
 ## Básico Razor  + EntityFramworkCore 2.0
 
-
 Olá pessoal tudo bem?!
 
 Resolvi escrever esse pequeno post sobre **Razor** para os iniciantes no mundo Asp.Net CORE!!!
+
+**ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTES**
 
 **Razor Page** é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.
 
@@ -22,7 +23,7 @@ Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual S
 Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos o
 provedor que desenvolvi para o **EntityFramework Core** que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.
 
-Além disso, quero dizer que o projeto é open source, e está disponivel em no [github](http://github.com/ralmsdeveloper)
+Além disso, quero dizer que o projeto é open source, e está disponivel no [Github](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
 
 
 Sem mais delongas vamos por a mão na massa.
@@ -61,13 +62,13 @@ Estarei mostrando como fazer isso aqui no exemplo abaixo.
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/07.png)
 
 
-**Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.**
+Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.
 
 Crie uma pasta chamada **Models** com dois arquivos .cs **"Grupo.cs e Produto.cs"**
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/11_PASTA_MODELS.png)
 
-Vamos criar as Classes que iremos utilizar: **Grupo e Produto**
+Vamos criar as classes que iremos utilizar e que servirão como nossas tabelas posteriormente: **Grupo e Produto**
 
 ```csharp
 using System.ComponentModel;
@@ -105,7 +106,8 @@ namespace CadastroDeProduto.Models
 ```
 
 Vamos criar nossas **Razor Pages**?!
-Crie duas Pasta dentro da pasta **Pages**, uma com o nome **Grupo** e outra **Produto**.
+
+Pois bem crie duas pastas dentro da pasta **Pages**, uma com o nome **Grupo** e outra **Produto**.
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/10_DIRETORIO_PAGES_GRUPO_PRODUTO.png)
 
@@ -126,7 +128,7 @@ pasta **Produto**.
 
 No final deveremos ter algo assim:
 
-<img class="alignnone  wp-image-145" src="http://blog.ralms.net/wp-content/uploads/2017/09/08-1.png" alt="" width="686" height="535" />
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/08-1.png)
 
 Esses são os códigos de cada arquivos:
 
@@ -516,7 +518,7 @@ namespace CadastroDeProduto.Pages.Grupo
             }
             catch (DbUpdateConcurrencyException)
             {
-                
+
             }
 
             return RedirectToPage("./Index");
@@ -533,7 +535,7 @@ namespace CadastroDeProduto.Pages.Grupo
 **ARQUIVOS PRODUTOS**
 
 Index.cshtml/Index.cshtml.cs:
-```html  
+```html
 @page
 @model CadastroDeProduto.Pages.Produto.IndexModel
 @{
