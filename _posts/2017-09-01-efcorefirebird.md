@@ -11,15 +11,21 @@ tags:
 ## Básico Razor  + EntityFramworkCore 2.0
 
 
-Olá Pessoal Resolvi escrever esse post sobre Razor para iniciantes no mundo .Net Core, Razor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de cenários focados em páginas web mais fácil e mais produtiva.
+Olá pessoal tudo bem?!
 
-Nesse exemplo estou utilizando o .NET Core 2.0.0, e a versão do Visual Studio 2017 mais atualizada.
+Resolvi escrever esse post sobre **Razor** para os iniciantes no mundo .Net Core.
 
-Nesse exemplo estaremos usando Firebird como Banco de dados, e para conectar usaremos um
+Razor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de cenários focados em páginas web mais fácil e mais produtiva.
+
+Nesse exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.
+
+Estaremos usando FirebirdSQL como Banco de dados principal para este exemplo, e para conectar usaremos um
 conector que desenvolvi para o EntityFrameworkCore que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.
 
 
-Sem mais delongas vamos por a mão na massa. "É SIMPLES, MAIS DIRETO!!!"
+Sem mais delongas vamos por a mão na massa. Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.
+
+**"É simples, porém util!"**
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/01.png)
 
@@ -29,26 +35,31 @@ Sem mais delongas vamos por a mão na massa. "É SIMPLES, MAIS DIRETO!!!"
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/04.png)
 
-<strong>Para ver o projeto rodando execute:</strong> <em>CTRL + F5</em>
 
-<img class="alignnone wp-image-135" src="http://blog.ralms.net/wp-content/uploads/2017/09/05.png" alt="" width="687" height="496" />
+## Para ver o projeto rodando execute: CTRL + F5
 
-&nbsp;
 
-<strong>Precisamos adicionar os seguintes Pacotes:</strong>
-<em> (Microsoft.EntityFrameworkCore e o EntityFrameworkCore.FirebirdSql)</em>
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/05.png)
 
-Como mostro no exemplo abaixo.
+**Precisamos adicionar os seguintes Pacotes:**
 
-<img class="alignnone wp-image-136" src="http://blog.ralms.net/wp-content/uploads/2017/09/06.png" alt="" width="686" height="545" />
+ - Microsoft.EntityFrameworkCore
+ - EntityFrameworkCore.FirebirdSql
 
-<img class="alignnone wp-image-137" src="http://blog.ralms.net/wp-content/uploads/2017/09/07.png" alt="" width="681" height="542" />
 
-<strong>Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.</strong>
+Mostro aqui no exemplo abaixo.
 
-Crie uma pasta chamada <em><strong>Models</strong></em> com dois arquivos .cs <em><strong>"Grupo.cs e Produto.cs"</strong></em>
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/06.png)
 
-<img class="alignnone  wp-image-141" src="http://blog.ralms.net/wp-content/uploads/2017/09/11_PASTA_MODELS.png" alt="" width="691" height="526" />
+
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/07.png)
+
+
+**Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.**
+
+Crie uma pasta chamada **Models** com dois arquivos .cs **"Grupo.cs e Produto.cs"**
+
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/11_PASTA_MODELS.png)
 
 Vamos criar as Classes que iremos utilizar: <em><strong>Grupo e Produto</strong></em>.
 
@@ -1084,7 +1095,10 @@ namespace CadastroDeProdutos
 
 ```
 
-<br><strong><em>Estrutura de Diretórios do Projeto</em></strong><br>
+
+<strong><em>Estrutura de Diretórios do Projeto</em></strong><br>
 
 <img src="http://blog.ralms.net/wp-content/uploads/2017/09/EstruturaGeral.png" alt="" width="682" class="alignnone size-full wp-image-147" />
+
+Pessoal 
 
