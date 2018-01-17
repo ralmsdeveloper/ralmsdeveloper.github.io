@@ -1,14 +1,14 @@
 ﻿---
-title: "Maratona de Bots"
+title: "Razor + EntityFramework Core 2.0"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - News
+  - Razor
 tags:
-  - News
+  - Razor
 ---
 
-## Básico Razor
+## Básico Razor  + EntityFramworkCore 2.0
 
 
 Olá Pessoal Resolvi escrever esse post sobre Razor para iniciantes no mundo .Net Core, Razor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de cenários focados em páginas web mais fácil e mais produtiva.
@@ -52,46 +52,42 @@ Crie uma pasta chamada <em><strong>Models</strong></em> com dois arquivos .cs <e
 
 Vamos criar as Classes que iremos utilizar: <em><strong>Grupo e Produto</strong></em>.
 
-[csharp]
+```csharp
 using System.ComponentModel;
 
 namespace CadastroDeProduto.Models
 {
     public class Grupo
     {
-	    public int Id { get; set; }
-		 
-	    public string Descricao { get; set; }
-	}
+        public int Id { get; set; }
+
+        public string Descricao { get; set; }
+    }
 }
+```
 
-
-[/csharp]
-
-[csharp]
+```csharp
 using System.ComponentModel;
-using System.ComponentModel.DataAnnotations; 
+using System.ComponentModel.DataAnnotations;
 
 namespace CadastroDeProduto.Models
 {
-	public class Produto
-	{
-		public int Id { get; set; }
+    public class Produto
+    {
+        public int Id { get; set; }
 
-		[StringLength(100)] 
-		public string DescricaoProduto { get; set; }
+        [StringLength(100)]
+        public string DescricaoProduto { get; set; }
 
-		public decimal Valor { get; set; }
+        public decimal Valor { get; set; }
 
-		public int Quantidade { get; set; }
+        public int Quantidade { get; set; }
 
-		public int GrupoId { get; set; }
-		public virtual Grupo Grupo { get; set; }
-	}
+        public int GrupoId { get; set; }
+        public virtual Grupo Grupo { get; set; }
+    }
 }
-
-
-[/csharp]
+```
 
 Vamos criar nossas "<em><strong>Razor Pages</strong></em>", crie duas Pasta dentro da pasta "<em><strong>Pages</strong></em>", uma
 com o nome <strong><em>Grupo</em></strong> e outra <em><strong>Produto</strong></em>.
@@ -122,7 +118,7 @@ Esses são os códigos de cada arquivos:
 <strong>ARQUIVOS GRUPO</strong>
 
 Index.cshtml/Index.cshtml.cs:
-[html]
+```html
 @page
 @model CadastroDeProduto.Pages.Grupo.IndexModel
 @{
@@ -157,10 +153,9 @@ Index.cshtml/Index.cshtml.cs:
 }
     </tbody>
 </table>
+```
 
-[/html]
-
-[csharp]
+```csharp
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CadastroDeProdutos;
@@ -186,12 +181,10 @@ namespace CadastroDeProduto.Pages.Grupo
         }
     }
 }
-
-
-[/csharp]
+```
 
 Create.cshtml/Create.cshtml.cs:
-[html]
+```html
 @page
 @model CadastroDeProduto.Pages.Grupo.CreateModel
 
@@ -220,12 +213,9 @@ Create.cshtml/Create.cshtml.cs:
 <div>
     <a asp-page="Index">Voltar para Lista</a>
 </div>
- 
+```
 
-
-[/html]
-
-[csharp]
+```csharp
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
@@ -264,10 +254,10 @@ namespace CadastroDeProduto.Pages.Grupo
         }
     }
 }
-[/csharp]
+```
 
 Delete.cshtml/Delete.cshtml.cs:
-[html]
+```html
 @page
 @model CadastroDeProduto.Pages.Grupo.DeleteModel
 
@@ -289,17 +279,16 @@ Delete.cshtml/Delete.cshtml.cs:
             @Html.DisplayFor(model => model.Grupo.Descricao)
         </dd>
     </dl>
-    
+
     <form method="post">
         <input type="hidden" asp-for="Grupo.Id" />
         <input type="submit" value="Excluir" class="btn btn-default" /> |
         <a asp-page="./Index">Voltar para Lista</a>
     </form>
 </div>
+```
 
-[/html]
-
-[csharp]
+```csharp
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -355,12 +344,10 @@ namespace CadastroDeProduto.Pages.Grupo
         }
     }
 }
-
-
-[/csharp]
+```
 
 Details.cshtml/Details.cshtml.cs:
-[html]
+```html
 @page
 @model CadastroDeProduto.Pages.Grupo.DetailsModel
 
@@ -386,9 +373,9 @@ Details.cshtml/Details.cshtml.cs:
     <a asp-page="./Index">Voltar para Lista</a>
 </div>
 
-[/html]
+```
 
-[csharp]
+```csharp
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -427,10 +414,10 @@ namespace CadastroDeProduto.Pages.Grupo
 }
 
 
-[/csharp]
+```
 
 Edit.cshtml/Edit.cshtml.cs:
-[html]
+```html
 @page
 @model CadastroDeProduto.Pages.Grupo.EditModel
 
@@ -460,9 +447,9 @@ Edit.cshtml/Edit.cshtml.cs:
     <a asp-page="./Index">Voltar para Lista</a>
 </div> 
 
-[/html]
+```
 
-[csharp]
+```csharp
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -523,7 +510,7 @@ namespace CadastroDeProduto.Pages.Grupo
 }
 
 
-[/csharp]
+```
 
 &nbsp;<br>
 
@@ -531,7 +518,7 @@ namespace CadastroDeProduto.Pages.Grupo
 <strong>ARQUIVOS PRODUTO</strong>
 
 Index.cshtml/Index.cshtml.cs:
-[html]  
+```html  
 @page
 @model CadastroDeProduto.Pages.Produto.IndexModel
 @{
@@ -585,9 +572,9 @@ Index.cshtml/Index.cshtml.cs:
     </tbody>
 </table>
 
-[/html]
+```
 
-[csharp] 
+```csharp 
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using CadastroDeProdutos;
@@ -614,10 +601,10 @@ namespace CadastroDeProduto.Pages.Produto
     }
 }
  
-[/csharp]
+```
 
 Create.cshtml/Create.cshtml.cs:
-[html] 
+```html 
 @page
 @model CadastroDeProduto.Pages.Produto.CreateModel
 
@@ -658,9 +645,9 @@ Create.cshtml/Create.cshtml.cs:
 <div>
     <a asp-page="./Index">Voltar para Lista</a> 
 </div> 
-[/html]
+```
 
-[csharp] 
+```csharp 
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
@@ -701,10 +688,10 @@ namespace CadastroDeProduto.Pages.Produto
         }
     }
 }
-[/csharp]
+```
 
 Delete.cshtml/Delete.cshtml.cs:
-[html] 
+```html 
 @page
 @model CadastroDeProduto.Pages.Produto.DeleteModel
 
@@ -751,9 +738,9 @@ Delete.cshtml/Delete.cshtml.cs:
     </form>
 </div>
 
-[/html]
+```
 
-[csharp] 
+```csharp 
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
@@ -811,10 +798,10 @@ namespace CadastroDeProduto.Pages.Produto
     }
 }
 
-[/csharp]
+```
 
 Details.cshtml/Details.cshtml.cs:
-[html] 
+```html 
 @page
 @model CadastroDeProduto.Pages.Produto.DetailsModel
 
@@ -859,9 +846,9 @@ Details.cshtml/Details.cshtml.cs:
     <a asp-page="./Index">Voltar para Lista</a>
 </div>
 
-[/html]
+```
 
-[csharp] 
+```csharp 
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
@@ -874,7 +861,7 @@ namespace CadastroDeProduto.Pages.Produto
     {
         private readonly ExemploContext _context;
 
-		public DetailsModel(ExemploContext context)
+        public DetailsModel(ExemploContext context)
         {
             _context = context;
         }
@@ -899,10 +886,10 @@ namespace CadastroDeProduto.Pages.Produto
     }
 }
 
-[/csharp]
+```
 
 Edit.cshtml/Edit.cshtml.cs:
-[html] 
+```html 
 @page
 @model CadastroDeProduto.Pages.Produto.EditModel
 
@@ -945,9 +932,9 @@ Edit.cshtml/Edit.cshtml.cs:
     <a asp-page="./Index">Voltar para Lista</a>
 </div>
 
-[/html]
+```
 
-[csharp] 
+```csharp 
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
@@ -1010,13 +997,13 @@ namespace CadastroDeProduto.Pages.Produto
     }
 }
 
-[/csharp]
+```
 
 &nbsp;<br>
 
 
 <strong><em>Arquivo Startup.cs</em></strong><br>
-[csharp]
+```csharp
 using CadastroDeProdutos;
 using EntityFrameworkCore.FirebirdSql.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -1037,15 +1024,15 @@ namespace CadastroDeProduto
 
         public void ConfigureServices(IServiceCollection services)
         {
-	        var connectionString =  $"User=SYSDBA;Password=masterkey;Database=localhost:{System.IO.Directory.GetCurrentDirectory()}\\CadastroProduto.fdb;" +
-									"DataSource=localhost;Port=3050;Dialect=3;ServerType=0";
+            var connectionString =  $"User=SYSDBA;Password=masterkey;Database=localhost:{System.IO.Directory.GetCurrentDirectory()}\\CadastroProduto.fdb;" +
+                                    "DataSource=localhost;Port=3050;Dialect=3;ServerType=0";
 
-			services.AddEntityFrameworkFirebird()
-					.AddDbContext<ExemploContext>(options => options.UseFirebird(connectionString));
+            services.AddEntityFrameworkFirebird()
+                    .AddDbContext<ExemploContext>(options => options.UseFirebird(connectionString));
 
-			services.AddMvc(); 
+            services.AddMvc(); 
         }
-		 
+         
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -1070,35 +1057,34 @@ namespace CadastroDeProduto
     }
 }
 
-[/csharp]
+```
 
 <strong><em>Arquivo ExemploContext.cs</em></strong><br>
 
-[csharp] 
+```csharp 
 
 using CadastroDeProduto.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace CadastroDeProdutos
 {
-	public sealed class ExemploContext : DbContext
-	{
-		public ExemploContext(DbContextOptions<ExemploContext> options)
-			: base(options)
-		{
-			Database.EnsureCreated();
-		}
+    public sealed class ExemploContext : DbContext
+    {
+        public ExemploContext(DbContextOptions<ExemploContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
 
-		public DbSet<Produto> Produto { get; set; }
-		public DbSet<Grupo> Grupo { get; set; }
-	}
+        public DbSet<Produto> Produto { get; set; }
+        public DbSet<Grupo> Grupo { get; set; }
+    }
 }
 
 
-[/csharp]
+```
 
 <br><strong><em>Estrutura de Diretórios do Projeto</em></strong><br>
-&nbsp; 
+
 <img src="http://blog.ralms.net/wp-content/uploads/2017/09/EstruturaGeral.png" alt="" width="682" class="alignnone size-full wp-image-147" />
-&nbsp;
-&nbsp;
+
