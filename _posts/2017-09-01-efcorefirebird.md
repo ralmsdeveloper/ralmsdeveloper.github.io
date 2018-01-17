@@ -5,7 +5,7 @@ excerpt_separator: "Ler mais"
 categories:
   - Razor
 tags:
-  - Razor
+  - Razor, Asp.NET
 ---
 
 ## Básico Razor  + EntityFramworkCore 2.0
@@ -13,19 +13,25 @@ tags:
 
 Olá pessoal tudo bem?!
 
-Resolvi escrever esse post sobre **Razor** para os iniciantes no mundo .Net Core.
+Resolvi escrever esse pequeno post sobre **Razor** para os iniciantes no mundo Asp.Net CORE!!!
 
-Razor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de cenários focados em páginas web mais fácil e mais produtiva.
+**Razor Page** é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.
 
-Nesse exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.
+Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.
 
-Estaremos usando FirebirdSQL como Banco de dados principal para este exemplo, e para conectar usaremos um
-conector que desenvolvi para o EntityFrameworkCore que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.
+Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos o
+provedor que desenvolvi para o **EntityFramework Core** que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.
+
+Além disso, quero dizer que o projeto é open source, e está disponivel em no [github](http://github.com/ralmsdeveloper)
 
 
-Sem mais delongas vamos por a mão na massa. Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.
+Sem mais delongas vamos por a mão na massa.
+
+Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.
 
 **"É simples, porém util!"**
+
+Sendo assim com seu Visual Studio aberto, siga os passos abaixo!
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/01.png)
 
@@ -36,7 +42,7 @@ Sem mais delongas vamos por a mão na massa. Neste tutotial resolvi fazer passo-
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/04.png)
 
 
-## Para ver o projeto rodando execute: CTRL + F5
+**Para ver o projeto rodando execute: CTRL + F5**
 
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/05.png)
@@ -47,7 +53,7 @@ Sem mais delongas vamos por a mão na massa. Neste tutotial resolvi fazer passo-
  - EntityFrameworkCore.FirebirdSql
 
 
-Mostro aqui no exemplo abaixo.
+Estarei mostrando como fazer isso aqui no exemplo abaixo.
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/06.png)
 
@@ -61,7 +67,7 @@ Crie uma pasta chamada **Models** com dois arquivos .cs **"Grupo.cs e Produto.cs
 
 ![01](http://blog.ralms.net/wp-content/uploads/2017/09/11_PASTA_MODELS.png)
 
-Vamos criar as Classes que iremos utilizar: <em><strong>Grupo e Produto</strong></em>.
+Vamos criar as Classes que iremos utilizar: **Grupo e Produto**
 
 ```csharp
 using System.ComponentModel;
@@ -71,7 +77,6 @@ namespace CadastroDeProduto.Models
     public class Grupo
     {
         public int Id { get; set; }
-
         public string Descricao { get; set; }
     }
 }
@@ -91,7 +96,6 @@ namespace CadastroDeProduto.Models
         public string DescricaoProduto { get; set; }
 
         public decimal Valor { get; set; }
-
         public int Quantidade { get; set; }
 
         public int GrupoId { get; set; }
@@ -100,25 +104,25 @@ namespace CadastroDeProduto.Models
 }
 ```
 
-Vamos criar nossas "<em><strong>Razor Pages</strong></em>", crie duas Pasta dentro da pasta "<em><strong>Pages</strong></em>", uma
-com o nome <strong><em>Grupo</em></strong> e outra <em><strong>Produto</strong></em>.
+Vamos criar nossas **Razor Pages**?!
+Crie duas Pasta dentro da pasta **Pages**, uma com o nome **Grupo** e outra **Produto**.
 
-<img class="alignnone  wp-image-142" src="http://blog.ralms.net/wp-content/uploads/2017/09/10_DIRETORIO_PAGES_GRUPO_PRODUTO.png" alt="" width="674" height="514" />
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/10_DIRETORIO_PAGES_GRUPO_PRODUTO.png)
 
-Dentro de cada pasta iremos criar nossos arquivos "<em><strong>Razor  Page</strong></em>"
+Dentro de cada pasta iremos criar nossos arquivos **Razor Page**
 
-Para criar o arquivo clique com o Direto do Mouse Sobre a <em>Pasta Grupo/Adicionar/Novo Item.</em>
+Para criar o arquivo clique com o direto do mouse sobre a pasta **Grupo** depois Adicionar->Novo Item.
 
-<img class="alignnone  wp-image-143" src="http://blog.ralms.net/wp-content/uploads/2017/09/09_CREATE_NEW_RAZOR.png" alt="" width="677" height="521" />
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/09_CREATE_NEW_RAZOR.png)
 
-Nosso primeiro arquivo Será o <em><strong>Index.cshtml</strong></em> como a imagem ilustrada abaixo.
+Nosso primeiro arquivo será o **Index.cshtml** como a imagem ilustrada abaixo.
 
-<img class="alignnone  wp-image-144" src="http://blog.ralms.net/wp-content/uploads/2017/09/12_PAGINA_INDEX_EXEMPLO.png" alt="" width="682" height="473" />
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/12_PAGINA_INDEX_EXEMPLO.png)
 
 Criada a primeira página repita o mesmo procedimento para as seguintes.
 
 <em>Create,Delete,Details,Edit</em> feito isso crie os mesmos arquivos dentro da
-pasta <strong>Produto</strong>.
+pasta **Produto**.
 
 No final deveremos ter algo assim:
 
@@ -126,7 +130,7 @@ No final deveremos ter algo assim:
 
 Esses são os códigos de cada arquivos:
 
-<strong>ARQUIVOS GRUPO</strong>
+**ARQUIVOS GRUPO**
 
 Index.cshtml/Index.cshtml.cs:
 ```html
@@ -523,10 +527,10 @@ namespace CadastroDeProduto.Pages.Grupo
 
 ```
 
-&nbsp;<br>
+<br>
 
 
-<strong>ARQUIVOS PRODUTO</strong>
+**ARQUIVOS PRODUTOS**
 
 Index.cshtml/Index.cshtml.cs:
 ```html  
@@ -654,16 +658,16 @@ Create.cshtml/Create.cshtml.cs:
 </div>
 
 <div>
-    <a asp-page="./Index">Voltar para Lista</a> 
-</div> 
+    <a asp-page="./Index">Voltar para Lista</a>
+</div>
 ```
 
-```csharp 
+```csharp
 using System.Threading.Tasks;
 using CadastroDeProdutos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering; 
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace CadastroDeProduto.Pages.Produto
 {
@@ -1000,7 +1004,7 @@ namespace CadastroDeProduto.Pages.Produto
             }
             catch (DbUpdateConcurrencyException)
             {
-                
+
             }
 
             return RedirectToPage("./Index");
@@ -1010,7 +1014,7 @@ namespace CadastroDeProduto.Pages.Produto
 
 ```
 
-&nbsp;<br>
+<br>
 
 
 <strong><em>Arquivo Startup.cs</em></strong><br>
@@ -1041,9 +1045,9 @@ namespace CadastroDeProduto
             services.AddEntityFrameworkFirebird()
                     .AddDbContext<ExemploContext>(options => options.UseFirebird(connectionString));
 
-            services.AddMvc(); 
+            services.AddMvc();
         }
-         
+
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
@@ -1070,9 +1074,9 @@ namespace CadastroDeProduto
 
 ```
 
-<strong><em>Arquivo ExemploContext.cs</em></strong><br>
+**Arquivo ExemploContext.cs**
 
-```csharp 
+```csharp
 
 using CadastroDeProduto.Models;
 using Microsoft.EntityFrameworkCore;
@@ -1096,9 +1100,9 @@ namespace CadastroDeProdutos
 ```
 
 
-<strong><em>Estrutura de Diretórios do Projeto</em></strong><br>
+**Estrutura de Diretórios do Projeto**
 
 <img src="http://blog.ralms.net/wp-content/uploads/2017/09/EstruturaGeral.png" alt="" width="682" class="alignnone size-full wp-image-147" />
 
-Pessoal 
+Obrigado pela leitura, e um forte abraço!
 
