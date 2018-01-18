@@ -8,6 +8,9 @@ tags:
   - Razor, Asp.NET
 ---
 
+
+![01](http://blog.ralms.net/wp-content/uploads/2017/09/razorpage.png)
+
 ## Básico Razor  + EntityFramworkCore 2.0
 
 Olá pessoal tudo bem?!
@@ -16,11 +19,11 @@ Resolvi escrever esse pequeno post sobre **Razor** para os iniciantes no mundo A
 
 **ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTES**
 
-**Razor Page** é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.
+**Razor Page** é uma nova engine do **ASP.NET Core MVC** que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.
 
-Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.
+Nesse nosso exemplo estou utilizando o **Asp.Net Core 2.0**, e a versão do Visual Studio 2017 mais atualizada.
 
-Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos o
+Estaremos usando também o **FirebirdSQL** como Banco de dados principal, e para conectar usaremos o
 provedor que desenvolvi para o **EntityFramework Core** que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.
 
 Além disso, quero dizer que o projeto é open source, e está disponivel no [Github](https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL)
