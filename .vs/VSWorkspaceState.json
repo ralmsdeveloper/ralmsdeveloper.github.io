@@ -1,13 +1,13 @@
 {
   "ExpandedNodes": [
     "",
-    "\\assets",
-    "\\assets\\images",
-    "\\_includes",
-    "\\_includes\\comments-providers",
-    "\\_includes\\footer",
-    "\\_posts"
+    "\\_includes\\head",
+    "\\_sass",
+    "\\_sass\\minimal-mistakes",
+    "\\_sass\\minimal-mistakes\\vendor",
+    "\\_sass\\minimal-mistakes\\vendor\\font-awesome",
+    "\\_site\\razor"
   ],
-  "SelectedNode": "\\_posts\\2017-09-01-efcorefirebird.md",
+  "SelectedNode": "\\_sass\\minimal-mistakes\\vendor\\font-awesome\\_screen-reader.scss",
   "PreviewInSolutionExplorer": false
 }
