@@ -8,11 +8,15 @@ tags:
   - Configuração
 ---
 
+![01]({{site.url}}{{site.baseurl}}/assets/images/visualstudio.jpg)
+
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr>
 
-Irei mostrar aqui como configurar seu Visual Studio para baixar os pacotes do 
-Asp.Net Core e Entity Framework Core em Desenvolvimento, assim você poderá fazer testes com as compilações noturna do projeto.
+<div style="text-align: justify;">
+Irei mostrar aqui como configurar seu <strong>Visual Studio</strong> para baixar os pacotes do 
+<strong>Asp.Net Core</strong> e <strong>Entity Framework Core</strong> em Desenvolvimento, assim você poderá fazer testes com as compilações noturna do projeto.
+</div>
 
 ## Configurando repositório
 
@@ -23,3 +27,5 @@ Asp.Net Core e Entity Framework Core em Desenvolvimento, assim você poderá faz
 ## Selecionando repositório
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/utilizandorepositorio.gif)
+
+Abraços e até o próximo!
