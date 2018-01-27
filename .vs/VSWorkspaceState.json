@@ -3,11 +3,8 @@
     "",
     "\\assets",
     "\\assets\\images",
-    "\\_posts",
-    "\\_sass\\minimal-mistakes",
-    "\\_sass\\minimal-mistakes\\vendor",
-    "\\_sass\\minimal-mistakes\\vendor\\font-awesome"
+    "\\_posts"
   ],
-  "SelectedNode": "\\assets\\js",
+  "SelectedNode": "\\assets\\images\\order01.png",
   "PreviewInSolutionExplorer": false
 }
