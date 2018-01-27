@@ -1,13 +1,13 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_includes\\head",
-    "\\_sass",
+    "\\assets",
+    "\\assets\\images",
+    "\\_posts",
     "\\_sass\\minimal-mistakes",
     "\\_sass\\minimal-mistakes\\vendor",
-    "\\_sass\\minimal-mistakes\\vendor\\font-awesome",
-    "\\_site\\razor"
+    "\\_sass\\minimal-mistakes\\vendor\\font-awesome"
   ],
-  "SelectedNode": "\\_sass\\minimal-mistakes\\vendor\\font-awesome\\_screen-reader.scss",
+  "SelectedNode": "\\assets\\js",
   "PreviewInSolutionExplorer": false
 }
