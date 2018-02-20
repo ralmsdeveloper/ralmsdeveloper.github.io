@@ -31,19 +31,32 @@ Para aqueles que estão familiarizados com ORACLE, abra o prompt de comando e ex
 sqlplus.exe / as sysdba
 ```
 Execute os comandos abaixo, pode trocar <strong>ralms</strong> por um nome desejável.<br>
+
+<strong>Criando o banco</strong><br>
 ```sql
 CREATE PLUGGABLE DATABASE ralms
    ADMIN USER ralms_admin IDENTIFIED BY ralms_admin
    ROLES = (DBA)
    FILE_NAME_CONVERT = ('\pdbseed\', '\pdb_ralms_01\');
 
+```
+<strong>Deixar o banco acessível</strong><br>
+```sql
 ALTER PLUGGABLE DATABASE ralms OPEN;
+```
 
+<strong>Deslogar do sysdba</strong><br>
+```sql
+quit
+```
 
+<strong>Conectar com o usuário criado</strong><br>
+```sql
 sqlplus ralms_admin/ralms_admin@127.0.0.1:1521/ralms
-
+```
+<strong>Aplicar permissões ao usuário</strong><br>
+```sql
 GRANT UNLIMITED TABLESPACE TO ralms_admin;
-
 ```
 ## Requisitos
 Acesse <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore/tree/Dev1989/samples/OracleProvider" alt="">AQUI</a> e veja alguns procedimentos que o time do Entity Framework Core solicita para testes do projeto.
