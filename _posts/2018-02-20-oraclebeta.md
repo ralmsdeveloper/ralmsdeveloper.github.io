@@ -19,10 +19,11 @@ Mas você pode baixar no link abaixo.<br>
 <a href="http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html" alt="">http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html</a>
 </div>
 <br>
-Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Core!<br>
-Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno BUG quando usamos parâmetros em um comando.<br>
+<div style="text-align: justify;">
+Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Core. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno BUG quando usamos parâmetros em um comando.<br>
+</div>
 ## Como consegui reproduzir?!<br>
-<strong>Criei um pequeno projeto de testes.</strong><br>
+Criei um pequeno projeto de testes para fazer os testes básicos.<br>
 
 ## Criando ambiente de teste
 Para aqueles que estão familiarizados com ORACLE, abra o prompt de comando e execute o comando abaixo, dentro da pasta BIN, onde seu ORACLE foi instalado.
