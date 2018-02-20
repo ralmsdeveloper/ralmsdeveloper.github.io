@@ -63,21 +63,21 @@ namespace OracleTestesNetCore
         {
             new OracleParameter
             {
-                    OracleDbType = OracleDbType.Varchar2,
-                    ParameterName="DESCRICAO",
-                    Value = "DESCRICAO TESTE"
+                OracleDbType = OracleDbType.Varchar2,
+                ParameterName="DESCRICAO",
+                Value = "DESCRICAO TESTE"
             },
             new OracleParameter
             {
-                    OracleDbType = OracleDbType.Decimal,
-                    ParameterName="VALOR",
-                    Value = 25.99m
+                OracleDbType = OracleDbType.Decimal,
+                ParameterName="VALOR",
+                Value = 25.99m
             },
             new OracleParameter
             {
-                    OracleDbType = OracleDbType.Date,
-                    ParameterName="DATA",
-                    Value = DateTime.Now
+                OracleDbType = OracleDbType.Date,
+                ParameterName="DATA",
+                Value = DateTime.Now
             }
         };
 
@@ -206,8 +206,10 @@ END;");
 <br>
 ## BUG
 O teste <strong>Inserir_Parametro_Um_Por_Um</strong> falha!<br>
+<div style="text-align: justify;">
 Em uma análise pessoal, acredito que existe um método interno que não está se comportando da forma correta, ou seja, quando utilizado o <strong>Parameters.Add</strong> pela primeira vez funciona normalmente, mais a partir da segunda gera uma exceção, mesmo criando uma nova instancia da conexão. 
 Ele está armazenando e não está limpando a coleção ao destruir o objeto, causando a seguinte exceção:<br>
+</div>
 <strong>"OracleParameter object is already contained in a collection"</strong>
 <br><br>
 ## Solução
