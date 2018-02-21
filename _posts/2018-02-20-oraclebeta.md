@@ -20,10 +20,10 @@ Mas você pode baixar no link abaixo.<br>
 </div>
 <br>
 <div style="text-align: justify;">
-Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Core. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno BUG quando usamos parâmetros em um comando.<br>
+Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Core. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno <strong>BUG</strong> quando usamos parâmetros em um comando.<br>
 </div>
 ## Como consegui reproduzir?!<br>
-Criei um pequeno projeto de testes para fazer os testes básicos.<br>
+Criei um pequeno projeto para fazer os testes básicos.<br>
 
 ## Criando ambiente de teste
 <div style="text-align: justify;">
