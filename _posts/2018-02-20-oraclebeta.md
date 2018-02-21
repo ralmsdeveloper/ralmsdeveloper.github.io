@@ -26,7 +26,9 @@ Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Co
 Criei um pequeno projeto de testes para fazer os testes básicos.<br>
 
 ## Criando ambiente de teste
+<div style="text-align: justify;">
 Para aqueles que estão familiarizados com ORACLE, abra o prompt de comando e execute o comando abaixo, dentro da pasta BIN, onde seu ORACLE foi instalado.
+</div>
 ```sql
 sqlplus.exe / as sysdba
 ```
