@@ -1,5 +1,5 @@
 ﻿---
-title: "Oracle .NET Core Beta"
+title: "Oracle Data Provider for .NET Core"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
@@ -14,13 +14,13 @@ categories:
 ## Minhas primeiras impressões
 
 <div style="text-align: justify;">
-Recentemente a Oracle divulgou a primeira versão Beta do Provider para .NET Core, os binários ainda não estão disponíveis no NUGET.<br>
+Recentemente a Oracle divulgou a primeira versão do <strong>Oracle Data Provider for .NET Core (Beta)</strong>, os binários ainda não estão disponíveis no NUGET.<br>
 Mas você pode baixar no link abaixo.<br>
 <a href="http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html" alt="">http://www.oracle.com/technetwork/topics/dotnet/downloads/odpnetcorebeta-4077982.html</a>
 </div>
 <br>
 <div style="text-align: justify;">
-Quero compartilhar com você meu primeiro contato com o <strong>Oracle Beta para .Net Core</strong>. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno <strong>BUG</strong> quando adicionamos parâmetros únicos(um-a-um).<br>
+Quero compartilhar com você meu primeiro contato com o <strong>Oracle Data Provider for .NET Core (Beta)</strong>. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno <strong>BUG</strong> quando adicionamos parâmetros únicos(um-a-um).<br>
 </div>
 ## Como consegui reproduzir?!<br>
 Criei um pequeno projeto para fazer os testes básicos.<br>
