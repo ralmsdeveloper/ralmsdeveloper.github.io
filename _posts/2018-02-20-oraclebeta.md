@@ -229,6 +229,9 @@ Ele está armazenando e não está limpando a coleção ao destruir o objeto, ca
 ## Solução
 A solução é usar o <strong>Parameters.AddRange</strong> para suprir temporariamente esse pequeno BUG. já que está funcionando perfeitamente!
 <br><br>
-<strong>Considerações:</strong><br>Parabéns ORACLE, já foi uma grande iniciativa, esperamos o provider no NUGET!
+<div class="notice">
+ <strong>Considerações:</strong><br>Parabéns ORACLE, já foi uma grande iniciativa, esperamos o provider no NUGET!
+</div>
+
 <br><br>
 Pessoal, fico por aqui <strong>forte abraço!</strong>
