@@ -20,7 +20,7 @@ Mas você pode baixar no link abaixo.<br>
 </div>
 <br>
 <div style="text-align: justify;">
-Quero compartilhar com você meu primeiro contato com o Oracle Beta para .Net Core. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno <strong>BUG</strong> quando usamos parâmetros em um comando.<br>
+Quero compartilhar com você meu primeiro contato com o <strong>Oracle Beta para .Net Core</strong>. Praticamente todos recursos estão disponíveis, pelo menos todos que pude testar, mas encontrei um pequeno <strong>BUG</strong> quando adicionamos parâmetros únicos(um-a-um).<br>
 </div>
 ## Como consegui reproduzir?!<br>
 Criei um pequeno projeto para fazer os testes básicos.<br>
