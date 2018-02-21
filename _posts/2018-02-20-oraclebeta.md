@@ -32,7 +32,7 @@ sqlplus.exe / as sysdba
 ```
 Execute os comandos abaixo, pode trocar <strong>ralms</strong> por um nome desejável.<br>
 
-<strong>Criando o banco</strong><br>
+<strong>Criando o banco e usuário</strong><br>
 ```sql
 CREATE PLUGGABLE DATABASE ralms
    ADMIN USER ralms_admin IDENTIFIED BY ralms_admin
@@ -227,6 +227,6 @@ Ele está armazenando e não está limpando a coleção ao destruir o objeto, ca
 ## Solução
 A solução é usar o <strong>Parameters.AddRange</strong> para suprir temporariamente esse pequeno BUG. já que está funcionando perfeitamente!
 <br><br>
-<strong>Considerações:</strong> Parabéns ORACLE, já foi uma grande iniciativa, esperamos o provider no NUGET!
+<strong>Considerações:</strong><br>Parabéns ORACLE, já foi uma grande iniciativa, esperamos o provider no NUGET!
 <br><br>
 Pessoal, fico por aqui <strong>forte abraço!</strong>
