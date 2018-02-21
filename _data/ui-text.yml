@@ -40,8 +40,8 @@ en: &DEFAULT_EN
   comment_success_msg        : "Thanks for your comment! It will show on the site once it has been approved."
   comment_error_msg          : "Sorry, there was an error with your submission. Please make sure all required fields have been completed and try again."
   loading_label              : "Loading..."
-  search_placeholder_text    : "Enter your search term..."
-  results_found              : "Result(s) found"
+  search_placeholder_text    : "Digite o que está pesquisando..."
+  results_found              : "Resultado(s) Entcontado(s)"
 en-US:
   <<: *DEFAULT_EN
 en-CA:
@@ -268,6 +268,8 @@ pt-BR:
   comment_success_msg        : "Obrigado pelo seu comentário! Ele aparecerá no site assim que for aprovado."
   comment_error_msg          : "Desculpe, ocorreu um erro no envio. Por favor verifique se todos os campos obrigatórios foram preenchidos e tente novamente."
   loading_label              : "Carregando..."
+  search_placeholder_text    : "Digite o que está pesquisando..."
+  results_found              : "Resultado(s) Entcontado(s)"
 
 # Italian
 # -----------------
