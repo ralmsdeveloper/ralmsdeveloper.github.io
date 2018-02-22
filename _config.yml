@@ -10,7 +10,7 @@ locale                   : "pt-BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
-description              : "Microsoft Certified Professional, Sênior Developer .NET, Software Engineer and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
+description              : "Microsoft Certified Professional,Engenheiro de Sistemas e paixonado por C#, Contribuidor em algums projetos no Github, Contribuidor MSDN Brasil, Fundador do Developers Sergipe."
 url                      : "https://ralmsdeveloper.github.io"
 baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
@@ -88,7 +88,7 @@ analytics:
 author:
   name             : "Rafael Almeida"
   avatar           : /assets/images/bio.jpg
-  bio              : "Microsoft Certified Professional, Sênior Developer .NET, Software Engineer and Passionate on C #, Creator of EntityFrameworkCore for FirebirdSQL, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
+  bio              : "Microsoft Certified Professional,Engenheiro de Sistemas e paixonado por C#, Contribuidor em algums projetos no Github, Contribuidor MSDN Brasil, Fundador do Developers Sergipe."
   location         : "Sergipe-Brasil"
   email            : ralms@ralms.net
   uri              : https://ralmsdeveloper.github.io
