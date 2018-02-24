@@ -21,7 +21,7 @@ Estarei mostrando um exemplo prático e o mais utilizado por hackers que é a in
 
 Em meu exemplo estou usando o EntityFramework Core 2.0 (The best!)
 
-Nesse primeiro exemplo o método de consulta está “INCORRETO” vulnerável a ataques/falhas!
+Nesse primeiro exemplo o método de consulta está "INCORRETO" vulnerável a ataques/falhas!
 
 Saiba a forma correta de usar o FromSql no EFCore!
 
