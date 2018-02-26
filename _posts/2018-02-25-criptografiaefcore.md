@@ -98,7 +98,7 @@ public class ExemploContext : DbContext
 ```
 <div class="notice--warning">
  <strong>Observação:</strong><br>
- A partir da versão 2.1* temos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar a informações no banco de dados e como ele irá ler a informações também.
+ A partir da versão 2.1* teremos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar as informações no banco de dados e como ele irá ler a informações também.
 </div>
 ## Nosso Programs.cs
 ```csharp
