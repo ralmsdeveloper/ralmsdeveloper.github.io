@@ -24,8 +24,8 @@ Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que
 <br>
 ## Criptografia usando EF Core
 <div style="text-align: justify;">
-Até que isso seja resolvido da forma mais adequada, estarei mostrando como armazenar e ler seus dados criptografados usando EF Core. Iremos
-usar uma criptografia básica como exemplo.<br>
+Até que isso seja resolvido da forma mais adequada, estarei mostrando como armazenar e ler seus dados criptografados usando EF Core.
+<br><br>usar uma criptografia básica como exemplo.<br><br>
 Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
 </div>
 <br>
@@ -166,7 +166,7 @@ class Program
 <br>
 ## Veja como foi gravado no banco
 Após persistir as informações observe que os valores da coluna <strong>Informacoes</strong> foram criptografadas automaticamente.
-<br>
+<br><br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
 
 ## Leitura dos dados
