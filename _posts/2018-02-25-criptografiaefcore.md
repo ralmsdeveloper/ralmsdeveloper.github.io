@@ -113,19 +113,19 @@ class Program
 
             var dados = new[]
             {
-            new Teste
-            {
-                Informacoes = "Informação 01"
-            },
-            new Teste
-            {
-                Informacoes = "Informação 02"
-            },
-                new Teste
-            {
-                Informacoes = "Informação 03"
-            }
-        };
+				new Teste
+				{
+					Informacoes = "Informação 01"
+				},
+				new Teste
+				{
+					Informacoes = "Informação 02"
+				},
+					new Teste
+				{
+					Informacoes = "Informação 03"
+				}
+			};
 
             db.Set<Teste>().AddRange(dados);
             db.SaveChanges();
