@@ -16,20 +16,22 @@ toc_label: "Começando"
 ## Proteção de dados
 
 <div style="text-align: justify;">
-Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a proteção de dados. O link sobre a lei está <a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">AQUI</a>.<br>
-Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que forneça suporte para o <strong>SQL sempre criptografado</strong>, se você tiver interesse em acompanhar o progresso, está sendo rastreado aqui:
+Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a proteção de dados. O link sobre a lei está <a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">AQUI</a>.<br><br>
+Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que forneça suporte para o <strong>SQL sempre criptografado</strong>, se você tiver interesse em acompanhar o progresso, acesse a URL abaixo, onde está sendo rastreado.
 <a href="https://github.com/aspnet/EntityFrameworkCore/issues/9193" alt="">https://github.com/aspnet/EntityFrameworkCore/issues/9193</a><br>
 
 </div>
 <br>
 ## Criptografia usando EF Core
 Até que isso seja resolvido da forma mais adequada, estarei mostrando como armazenar e ler seus dados criptografados usando EF Core. Iremos
-usar uma criptografia básica como exemplo.
+usar uma criptografia básica como exemplo.<br>
+Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
 <br>
 ## Classe criptografia
 ```csharp
 public class Criptografia
 {
+    // Nossa frase secreta
     private static byte[] _chave = Encoding.UTF8.GetBytes("#ef");
 
     public static string Encrypt(string texto)
@@ -94,7 +96,7 @@ public class ExemploContext : DbContext
 ```
 <div class="notice--warning">
  <strong>Observação:</strong><br>
- A partir da versão 2.1* temos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar a informações no banco de dados e como ele irá ler a informação também.
+ A partir da versão 2.1* temos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar a informações no banco de dados e como ele irá ler a informações também.
 </div>
 ## Nosso Programs.cs
 ```csharp
@@ -109,19 +111,19 @@ class Program
 
             var dados = new[]
             {
+            new Teste
+            {
+                Informacoes = "Informação 01"
+            },
+            new Teste
+            {
+                Informacoes = "Informação 02"
+            },
                 new Teste
-                {
-                    Informacoes = "Informação 01"
-                },
-                new Teste
-                {
-                    Informacoes = "Informação 02"
-                },
-                new Teste
-                {
-                    Informacoes = "Informação 03"
-                }
-            };
+            {
+                Informacoes = "Informação 03"
+            }
+        };
 
             db.Set<Teste>().AddRange(dados);
             db.SaveChanges();
@@ -131,9 +133,27 @@ class Program
                 .AsNoTracking()
                 .ToList();
 
+            // Leitura feita pelo EF Core
+            Console.WriteLine("Leitura EF Core:");
+
             foreach (var reg in registros)
             {
                 Console.WriteLine($"{reg.Id}-{reg.Informacoes}");
+            }
+
+            // Leitura feita via ADO.NET
+            Console.WriteLine("\nLeitura ADO.NET:");
+            using (var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
+                db.Database.OpenConnection();
+                cmd.CommandText = "SELECT [Id],[Informacoes] FROM [Teste]";
+                using (var ler = cmd.ExecuteReader())
+                {
+                    while (ler.Read())
+                    {
+                        Console.WriteLine($"{ler.GetInt32(0)}-{ler.GetString(1)}");
+                    }
+                }
             }
         }
 
@@ -142,9 +162,13 @@ class Program
 }
 ```
 <br>
-## O que temos?
+## Veja como foi gravado no banco
 Após persistir as informações observe que os valores foram criptografados:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
+
+## Leitura dos dados
+Veja que as informações carregadas pelo EF Core, automaticamente fez a descriptografia dos dados, pelo motivo de termos mapeado nossa propriedade usando o HasConversion, já quando fizemos a leitura usando o ADO ele simplesmente nos devolveu as informações criptografadas de forma fiel ao banco.
+![01]({{site.url}}{{site.baseurl}}/assets/images/leituraadonet.PNG)
 
 <br>
 Pessoal, fico por aqui <strong>#dica!</strong>
