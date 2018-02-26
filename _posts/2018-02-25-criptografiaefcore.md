@@ -180,6 +180,9 @@ Veja que as informações carregadas pelo EF Core, automaticamente são descript
  <strong>Próximo artigo:</strong><br>
  Estarei criando um exemplo e mostrando como utilizar com propriedades customizadas por atributos.
 </div>
-
+<br>
+Url projeto: <a href="https://github.com/ralmsdeveloper/ExemplosArtigos" alt="">https://github.com/ralmsdeveloper/ExemplosArtigos</a>
 <br>
 Pessoal, fico por aqui <strong>#dica!</strong>
+
+
