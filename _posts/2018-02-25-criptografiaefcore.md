@@ -16,9 +16,8 @@ toc_label: "Começando"
 ## Proteção de dados
 
 <div style="text-align: justify;">
-Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a proteção de dados.<br>
-O link sobre a lei está <a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">AQUI</a>.<br>
-Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que forneça suporte para o <strong>SQL sempre criptografado</strong>, e você pode acompanhar as informações por essa URL:
+Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a proteção de dados. O link sobre a lei está <a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">AQUI</a>.<br>
+Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que forneça suporte para o <strong>SQL sempre criptografado</strong>, se você tiver interesse em acompanhar o progresso, está sendo rastreado aqui:
 <a href="https://github.com/aspnet/EntityFrameworkCore/issues/9193" alt="">https://github.com/aspnet/EntityFrameworkCore/issues/9193</a><br>
 
 </div>
@@ -94,7 +93,7 @@ public class ExemploContext : DbContext
 }
 ```
 <div class="notice--warning">
- <strong>Observação:</strong><br
+ <strong>Observação:</strong><br>
  A partir da versão 2.1* temos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar a informações no banco de dados e como ele irá ler a informação também.
 </div>
 ## Nosso Programs.cs
