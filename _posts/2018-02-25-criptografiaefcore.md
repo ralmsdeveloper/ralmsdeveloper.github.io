@@ -182,7 +182,7 @@ Veja que as informações carregadas pelo EF Core, automaticamente são descript
 </div>
 <br>
 Url projeto: <a href="https://github.com/ralmsdeveloper/ExemplosArtigos" alt="">https://github.com/ralmsdeveloper/ExemplosArtigos</a>
-<br>
-Pessoal, fico por aqui <strong>#dica!</strong>
+<br><br>
+Pessoal, fico por aqui <strong>#+1dica!</strong>
 
 
