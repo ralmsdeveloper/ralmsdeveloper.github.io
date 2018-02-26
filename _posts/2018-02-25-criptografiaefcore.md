@@ -1,0 +1,145 @@
+﻿---
+title: "Gravando informações criptografadas"
+comments: true
+excerpt_separator: "Ler mais"
+categories:
+  - Dica
+toc: true
+toc_label: "Começando"
+---
+
+![01]({{site.url}}{{site.baseurl}}/assets/images/efcoretopocriptografia.jpg)
+
+<center><strong>Fala pessoal, tudo bem?! 🔑 </strong></center>
+<hr>
+
+## Proteção de dados
+
+<div style="text-align: justify;">
+Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a criptografia de dados.<br>
+O link sobre a lei está aqui:<br>
+<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679</a><br>
+Foi aberto uma Issue sobre isso no projeto do EntityFramework Core, que você pode rastrear por essa URL:
+<a href="https://github.com/aspnet/EntityFrameworkCore/issues/9193" alt="">https://github.com/aspnet/EntityFrameworkCore/issues/9193</a><br>
+
+</div>
+<br>
+## Criptografia usando EF Core
+Até que isso seja resolvido da forma mais adequada, estarei mostrando como armazenar e ler seus dados criptografados usando EF Core. Iremos
+usar uma criptografia básica como exemplo.
+<br>
+## Classe criptografia
+```csharp
+public class Criptografia
+{
+    private static byte[] _chave = Encoding.UTF8.GetBytes("#ef");
+
+    public static string Encrypt(string texto)
+    {
+        using (var hashProvider = new MD5CryptoServiceProvider())
+        {
+            var encriptar = new TripleDESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Key = hashProvider.ComputeHash(_chave),
+                Padding = PaddingMode.PKCS7
+            };
+
+            using (var transforme = encriptar.CreateEncryptor())
+            {
+                var dados = Encoding.UTF8.GetBytes(texto);
+                return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));
+            }
+        }
+    }
+
+    public static string Decrypt(string texto)
+    {
+        using (var hashProvider = new MD5CryptoServiceProvider())
+        {
+            var descriptografar = new TripleDESCryptoServiceProvider
+            {
+                Mode = CipherMode.ECB,
+                Key = hashProvider.ComputeHash(_chave),
+                Padding = PaddingMode.PKCS7
+            };
+
+            using (var transforme = descriptografar.CreateDecryptor())
+            {
+                var dados = Convert.FromBase64String(texto.Replace(" ", "+"));
+                return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));
+            }
+        }
+    }
+}
+```
+
+## Nosso DBContext
+```csharp
+public class ExemploContext : DbContext
+{
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.UseSqlServer(@"Data Source=.\Sistemas;Initial Catalog=TesteCriptografia;Integrated Security=True");
+        optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Teste>(p=>
+        {
+            p.Property(x => x.Informacoes)
+                .HasConversion(v => Criptografia.Encrypt(v), v => Criptografia.Decrypt(v));
+        });
+    }
+}
+```
+
+## Nosso Programs.cs
+```csharp
+class Program
+{
+    static void Main(string[] args)
+    {
+        using (var db = new ExemploContext())
+        {
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            var dados = new[]
+            {
+                new Teste
+                {
+                    Informacoes = "Informação 01"
+                },
+                new Teste
+                {
+                    Informacoes = "Informação 02"
+                }
+            };
+
+            db.Set<Teste>().AddRange(dados);
+            db.SaveChanges();
+
+            var registros = db
+                .Set<Teste>()
+                .AsNoTracking()
+                .ToList();
+
+            foreach (var reg in registros)
+            {
+                Console.WriteLine($"{reg.Id}-{reg.Informacoes}");
+            }
+        }
+
+        Console.ReadKey();
+    }
+}
+```
+<br>
+## O que temos?
+Após persistir as informações observe que os valores foram criptografados:
+![02]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.png)
+
+<br>
+Pessoal, fico por aqui <strong>#dica!</strong>
