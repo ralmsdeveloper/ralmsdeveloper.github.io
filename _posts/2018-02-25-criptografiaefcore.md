@@ -166,6 +166,7 @@ class Program
 <br>
 ## Veja como foi gravado no banco
 Após persistir as informações observe que os valores da coluna <strong>Informacoes</strong> foram criptografadas automaticamente.
+<br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
 
 ## Leitura dos dados
@@ -174,6 +175,11 @@ Veja que as informações carregadas pelo EF Core, automaticamente são descript
 </div>
 <br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/leituraadonet.PNG)
+
+<div class="notice--success">
+ <strong>Próximo artigo:</strong><br>
+ Estarei criando um exemplo e mostrando como utilizar com propriedades customizadas por atributos.
+</div>
 
 <br>
 Pessoal, fico por aqui <strong>#dica!</strong>
