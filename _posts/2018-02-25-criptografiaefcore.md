@@ -16,10 +16,9 @@ toc_label: "Começando"
 ## Proteção de dados
 
 <div style="text-align: justify;">
-Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a criptografia de dados.<br>
-O link sobre a lei está aqui:<br>
-<a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679</a><br>
-Foi aberto uma Issue sobre isso no projeto do EntityFramework Core, que você pode rastrear por essa URL:
+Esses dias estava lendo algo sobre uma lei de proteção de dados que foi estabelecida pelo parlamento Europeu, no que se refere a proteção de dados.<br>
+O link sobre a lei está <a href="http://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX%3A32016R0679" alt="">AQUI</a>.<br>
+Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que forneça suporte para o <strong>SQL sempre criptografado</strong>, e você pode acompanhar as informações por essa URL:
 <a href="https://github.com/aspnet/EntityFrameworkCore/issues/9193" alt="">https://github.com/aspnet/EntityFrameworkCore/issues/9193</a><br>
 
 </div>
@@ -94,7 +93,10 @@ public class ExemploContext : DbContext
     }
 }
 ```
-
+<div class="notice--warning">
+ <strong>Observação:</strong><br
+ A partir da versão 2.1* temos o método <strong>HasConversion</strong> que podemos utilizar pra escrever conversões personalizadas, ou seja, podemos dizer como o EF irá gravar a informações no banco de dados e como ele irá ler a informação também.
+</div>
 ## Nosso Programs.cs
 ```csharp
 class Program
@@ -115,6 +117,10 @@ class Program
                 new Teste
                 {
                     Informacoes = "Informação 02"
+                },
+                new Teste
+                {
+                    Informacoes = "Informação 03"
                 }
             };
 
@@ -139,7 +145,7 @@ class Program
 <br>
 ## O que temos?
 Após persistir as informações observe que os valores foram criptografados:
-![02]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
 
 <br>
 Pessoal, fico por aqui <strong>#dica!</strong>
