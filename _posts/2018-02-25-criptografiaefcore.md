@@ -23,9 +23,11 @@ Foi aberto uma Issue sobre isso no projeto do <strong>EF Core</strong>, para que
 </div>
 <br>
 ## Criptografia usando EF Core
+<div style="text-align: justify;">
 Até que isso seja resolvido da forma mais adequada, estarei mostrando como armazenar e ler seus dados criptografados usando EF Core. Iremos
 usar uma criptografia básica como exemplo.<br>
 Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
+</div>
 <br>
 ## Classe criptografia
 ```csharp
@@ -167,7 +169,10 @@ Após persistir as informações observe que os valores foram criptografados:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
 
 ## Leitura dos dados
+<div style="text-align: justify;">
 Veja que as informações carregadas pelo EF Core, automaticamente fez a descriptografia dos dados, pelo motivo de termos mapeado nossa propriedade usando o HasConversion, já quando fizemos a leitura usando o ADO ele simplesmente nos devolveu as informações criptografadas de forma fiel ao banco.
+</div>
+
 ![01]({{site.url}}{{site.baseurl}}/assets/images/leituraadonet.PNG)
 
 <br>
