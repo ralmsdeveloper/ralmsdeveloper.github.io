@@ -165,12 +165,12 @@ class Program
 ```
 <br>
 ## Veja como foi gravado no banco
-Após persistir as informações observe que os valores foram criptografados:
+Após persistir as informações observe que os valores da coluna <strong>Informacoes</strong> foram criptografadas automaticamente.
 ![01]({{site.url}}{{site.baseurl}}/assets/images/informacaogravadasnobanco.PNG)
 
 ## Leitura dos dados
 <div style="text-align: justify;">
-Veja que as informações carregadas pelo EF Core, automaticamente são descriptografadas, pelo motivo de termos mapeado nossa propriedade usando o <strong>HasConversion</strong>, já quando fizemos a leitura usando o ADO ele simplesmente nos devolveu as informações criptografadas de forma fiel ao banco.
+Veja que as informações carregadas pelo EF Core, automaticamente são descriptografadas, pelo motivo de termos mapeado nossa propriedade usando o <strong>HasConversion</strong>, já quando fazemos a leitura usando o <strong>ADO</strong> ele simplesmente nos devolve as informações criptografadas de forma fiel ao banco.
 </div>
 <br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/leituraadonet.PNG)
