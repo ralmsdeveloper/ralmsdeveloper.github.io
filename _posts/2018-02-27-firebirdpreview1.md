@@ -7,7 +7,7 @@ categories:
 toc_label: "Começando"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/preview1firebird.jpg)
+![01]({{site.url}}{{site.baseurl}}/assets/images/preview1firebird.png)
 
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr>
