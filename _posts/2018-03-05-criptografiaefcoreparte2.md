@@ -188,7 +188,7 @@ Observe que filtrei todas minhas propriedades customizadas com meu atributo cham
 </div>
 <br>
 <div style="text-align: justify;">
-Se não informarmos o <strong>UsePropertyAccessMode(PropertyAccessMode)</strong>  para o <strong>EntityFrameworkCore</strong>, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.<br>
+Se não informarmos o <strong>UsePropertyAccessMode (PropertyAccessMode)</strong>  para o <strong>EntityFrameworkCore</strong>, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.<br>
 </div>
 <div class="notice--success">
 <strong>Documentação SetPropertyAccessMode:</strong>  <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.metadata.propertyaccessmode" alt="">Aqui</a>
