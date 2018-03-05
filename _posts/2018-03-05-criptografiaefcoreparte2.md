@@ -183,10 +183,17 @@ class Program
 <br>
 
 <div class="notice--success">
- <strong>Considerações:</strong><br>
- Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
- <strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
+<strong>Considerações:</strong><br>
+Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
+<strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
 </div>
+
+<div class="notice--success">
+<strong>System.FormatException:</strong><br>
+A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.
+</div>
+
+
 ## Impacto na performance?
 <div style="text-align: justify;">
 Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o de fazer a <strong>criptografia e o de descriptografar</strong> que envolve cálculos mais complexos dependendo do algoritmo usado.<br><br>
@@ -200,7 +207,7 @@ Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 
 | 1 Registro     | 00:00:00.0026146 | 00:00:00.0032140 |
 
 <div style="text-align: justify;">
-Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, porém para quem trabalha fazer inserts com escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: Performance ou segurança?<br>
+Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br>
 Para mim os dois tem que trabalhar juntos!!!<br>
 Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.
 </div>
