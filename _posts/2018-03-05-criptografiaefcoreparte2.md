@@ -187,7 +187,41 @@ class Program
 Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
 <strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
 </div>
+<br>
+Se não informarmos o UsePropertyAccessMode(PropertyAccessMode)  para o EntityFrameworkCore, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.<br>
 
+Por exemplo se cometar o seguinte trecho de código:
+```csharp
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    modelBuilder.Entity<Teste>();
+
+    \\foreach (var entidade in modelBuilder.Model.GetEntityTypes())
+    \\{
+    \\    foreach (var propriedade in entidade.GetProperties())
+    \\    {
+    \\        var atributos = propriedade
+    \\            .PropertyInfo
+    \\           .GetCustomAttributes(typeof(EncripatarAttribute), false);
+	\\
+    \\       if (atributos.Any())
+    \\        {
+    \\           propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);
+    \\       }
+    \\    }
+   \\ }
+}
+```
+E tentar ler a propriedade informações:
+```csharp
+    var informacao = db
+        .Set<Teste>()
+        .AsNoTracking()
+        .First().Informacoes;
+```
+Teremos a seguinte exceção:
 <div class="notice--success">
 <strong>System.FormatException:</strong><br>
 A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.
