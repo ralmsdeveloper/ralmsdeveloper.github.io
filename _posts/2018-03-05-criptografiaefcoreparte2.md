@@ -196,33 +196,33 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<Teste>();
+    modelBuilder.Entity<TesteCriptografado>();
+    modelBuilder.Entity<TesteDescriptografado>();
 
-    \\foreach (var entidade in modelBuilder.Model.GetEntityTypes())
-    \\{
-    \\    foreach (var propriedade in entidade.GetProperties())
-    \\    {
-    \\        var atributos = propriedade
-    \\            .PropertyInfo
-    \\           .GetCustomAttributes(typeof(EncripatarAttribute), false);
-	\\
-    \\       if (atributos.Any())
-    \\        {
-    \\           propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);
-    \\       }
-    \\    }
-   \\ }
+    //foreach (var entidade in modelBuilder.Model.GetEntityTypes())
+    //{
+    //    foreach (var propriedade in entidade.GetProperties())
+    //    {
+    //        var atributos = propriedade
+    //            .PropertyInfo
+    //            .GetCustomAttributes(typeof(EncripatarAttribute), false);
+
+    //        if (atributos.Any())
+    //        {
+    //            propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);
+    //        }
+    //    }
+    //}
 }
 ```
 E tentar ler a propriedade informações:
 ```csharp
-    var informacao = db
-        .Set<Teste>()
-        .AsNoTracking()
-        .First().Informacoes;
+var lerInformacao = db
+    .Set<TesteCriptografado>()
+    .First().Informacoes;
 ```
 Teremos a seguinte exceção:
-<div class="notice--success">
+<div class="notice--danger">
 <strong>System.FormatException:</strong><br>
 A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.
 </div>
