@@ -8,14 +8,12 @@ toc: true
 toc_label: "Começando"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/efcoretopocriptografia2.jpg)
+![01]({{site.url}}{{site.baseurl}}/assets/images/efcoretopocriptografiaparte2.jpg)
 
 <center><strong>Fala pessoal, tudo bem?! 🔑 </strong></center>
 <hr>
-
 No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">http://ralms.net/dica/criptografiaefcore/</a> eu mostrei como criptografar dados no EF Core usando <strong>HasConversion.</strong>
 
-<br>
 ## Criptografia usando EF Core
 <div style="text-align: justify;">
 Nesse artigo mostro como criptografar informações que usam uma anotação customizada.<br>
@@ -184,7 +182,7 @@ class Program
 }
 ```
 <br>
-##  
+
 <div class="notice--success">
  <strong>Considerações:</strong><br>
  Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
