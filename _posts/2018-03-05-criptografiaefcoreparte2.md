@@ -196,8 +196,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
     base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<TesteCriptografado>();
-    modelBuilder.Entity<TesteDescriptografado>();
+    modelBuilder.Entity<Teste>();
 
     //foreach (var entidade in modelBuilder.Model.GetEntityTypes())
     //{
@@ -240,9 +239,14 @@ Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 
 | 1000 Registros | 00:00:00.1962283 | 00:00:00.3485831 |
 | 1 Registro     | 00:00:00.0026146 | 00:00:00.0032140 |
 
+
+| Total registros | Tempo leitura normal | Tempo leitura criptografado |
+| --- | --- | --- |
+| 1000 Registros | 00:00:00.0239231 | 00:00:00.0241933 |
+
 <div style="text-align: justify;">
-Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br>
-Para mim os dois tem que trabalhar juntos!!!<br>
+Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, o tempo de leitura de (1000 registros) é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br>
+Para mim os dois tem que trabalhar juntos!!!<br><br>
 Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.
 </div>
 <br>
