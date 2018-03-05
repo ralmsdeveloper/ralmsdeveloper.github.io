@@ -16,10 +16,9 @@ No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">h
 ## Criptografia usando EF Core
 <div style="text-align: justify;">
 Nesse artigo mostro como criptografar informações que usam uma anotação customizada.<br>
-<br><br>Classe de criptografia é a mesma do artigo anterior.<br><br>
+<br>Classe de criptografia é a mesma do artigo anterior.<br><br>
 Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
 </div>
-
 ## Classe criptografia
 ```csharp
 public class Criptografia
@@ -214,7 +213,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
     //}
 }
 ```
-E tentar ler a propriedade informações:
+E tentar ler a propriedade <strong>Informacoes</strong>:
 ```csharp
 var lerInformacao = db
     .Set<TesteCriptografado>()
@@ -245,7 +244,7 @@ Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 
 | 1000 Registros | 00:00:00.0239231 | 00:00:00.0241933 |
 
 <div style="text-align: justify;">
-Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, o tempo de leitura de (1000 registros) é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br>
+Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, o tempo de leitura de <strong>(1000 registros)</strong> é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br>
 Para mim os dois tem que trabalhar juntos!!!<br><br>
 Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.
 </div>
