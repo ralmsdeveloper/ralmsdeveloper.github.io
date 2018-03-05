@@ -180,20 +180,17 @@ class Program
 }
 ```
 <br>
-
 <div class="notice--success">
 <strong>Considerações:</strong><br>
 Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
 <strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
 </div>
-<br>
 <div style="text-align: justify;">
 Se não informarmos o <strong>UsePropertyAccessMode</strong>  para o <strong>EntityFrameworkCore</strong>, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.<br>
 </div>
 <div class="notice--success">
 <strong>Documentação SetPropertyAccessMode:</strong>  <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.metadata.propertyaccessmode" alt="">Aqui</a>
 </div>
-
 Por exemplo se cometar o seguinte trecho de código:
 ```csharp
 protected override void OnModelCreating(ModelBuilder modelBuilder)
