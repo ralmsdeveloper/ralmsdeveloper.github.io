@@ -197,13 +197,14 @@ Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 
 | Total registros | Tempo gravar normal | Tempo gravar criptografado |
 | --- | --- | --- |
 | 1000 Registros | 00:00:00.1962283 | 00:00:00.3485831 |
-| 1 Registro | 00:00:00.0026146 | 00:00:00.0032140 |
+| 1 Registro     | 00:00:00.0026146 | 00:00:00.0032140 |
+
 <div style="text-align: justify;">
 Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, porém para quem trabalha fazer inserts com escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: Performance ou segurança?<br>
 Para mim os dois tem que trabalhar juntos!!!<br>
 Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.
 </div>
-
+<br>
 Url projeto: <a href="https://github.com/ralmsdeveloper/ExemplosArtigos" alt="">https://github.com/ralmsdeveloper/ExemplosArtigos</a>
 <br><br>
 Pessoal, fico por aqui <strong>#+1dica!</strong>
