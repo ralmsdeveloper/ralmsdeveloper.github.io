@@ -187,15 +187,18 @@ class Program
  Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
  <strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
 </div>
-<br>
 ## Impacto na performance?
-Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o criptografar/”descriptografar“ que envolve cálculos mais complexos dependendo do algoritmo usado.
-Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 1000 registros obtive o seguinte resultado:
+<div style="text-align: justify;">
+Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o <strong>criptografar/”descriptografar“</strong> que envolve cálculos mais complexos dependendo do algoritmo usado.<br>
+Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo <strong>1000 registros</strong> obtive o seguinte resultado:
+</div>
+<br>
 
 | Tempo Gravar Normal | Tempo Gravar Criptografado |
 | --- | --- |
 | 00:00:00.1962283 | 00:00:00.3485831 |
 
+<br>
 
 Url projeto: <a href="https://github.com/ralmsdeveloper/ExemplosArtigos" alt="">https://github.com/ralmsdeveloper/ExemplosArtigos</a>
 <br><br>
