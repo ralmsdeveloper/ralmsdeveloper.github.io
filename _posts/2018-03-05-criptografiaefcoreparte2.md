@@ -13,10 +13,9 @@ toc_label: "Começando"
 <center><strong>Fala pessoal, tudo bem?! 🔑 </strong></center>
 <hr>
 No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">http://ralms.net/dica/criptografiaefcore/</a> eu mostrei como criptografar dados no EF Core usando <strong>HasConversion.</strong>
-## Criptografia usando EF Core
+## Criptografia usando EF Core (Annotation)
 <div style="text-align: justify;">
-Nesse artigo mostro como criptografar informações que usam uma anotação customizada.<br>
-<br>Classe de criptografia é a mesma do artigo anterior.<br><br>
+Classe de criptografia é a mesma do artigo anterior.<br><br>
 Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
 </div><br>
 Veja como criptografar dados usando propriedades customizadas com <strong>Annotation.</strong>
