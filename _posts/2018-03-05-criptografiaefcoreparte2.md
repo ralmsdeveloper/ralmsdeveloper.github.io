@@ -18,8 +18,8 @@ No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">h
 Nesse artigo mostro como criptografar informações que usam uma anotação customizada.<br>
 <br>Classe de criptografia é a mesma do artigo anterior.<br><br>
 Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
-</div>
-veja como criptografar dados usando propriedades customizadas com <strong>Annotation.</strong>
+</div><br>
+Veja como criptografar dados usando propriedades customizadas com <strong>Annotation.</strong>
 ## Nossa Classe criptografia
 ```csharp
 public class Criptografia
