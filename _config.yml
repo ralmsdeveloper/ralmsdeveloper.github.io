@@ -12,7 +12,7 @@ locale                   : "pt_BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
-description              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
+description              : "Microsoft MVP, MCP, Software Engineer at FortBit and Passionate on C#, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
 url                      : http://www.ralms.net
 baseurl                  : "./"
 repository               : ralmsdeveloper/blog
@@ -85,7 +85,7 @@ analytics:
 author:
   name             : "Rafael Almeida"
   avatar           : /assets/images/bio.jpg
-  bio              : "Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
+  bio              : "Microsoft MVP, MCP, Software Engineer at FortBit and Passionate on C#, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe."
   location         : "Sergipe-Brasil"
   email            : ralms@ralms.net
   uri              :
