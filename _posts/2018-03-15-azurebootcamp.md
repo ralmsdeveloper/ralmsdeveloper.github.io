@@ -19,10 +19,7 @@ https://www.sympla.com.br/azure-bootcamp-2018---sergipe__26…
 🏁Local:<br>
 Universidade Federal de Sergipe Campus Itabaiana <br>
 Itabaiana, SE<br><br>
-
 Acesse no página no face [Aqui](https://www.facebook.com/events/2045905485650664/)<br><br>
- 
-
 #mvpbuzz #mvpbr #mvp #developerssergipe #share <br><br>
 
 
