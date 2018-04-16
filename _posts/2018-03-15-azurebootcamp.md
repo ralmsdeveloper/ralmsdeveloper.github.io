@@ -14,7 +14,7 @@ Iremos apresentar muitas novidades no mundo open source e as tecnologias mais ut
 <br>
 </div>
 Então faça sua inscrição agora mesmo.<br>
-https://www.sympla.com.br/azure-bootcamp-2018---sergipe__26…
+[https://www.sympla.com.br/azure-bootcamp-2018---sergipe__260364](https://www.sympla.com.br/azure-bootcamp-2018---sergipe__260364)
 
 🏁Local:<br>
 Universidade Federal de Sergipe Campus Itabaiana <br>
