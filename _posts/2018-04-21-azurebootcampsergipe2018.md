@@ -8,7 +8,16 @@ categories:
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
 <div style="text-align: justify;">
+Global Azure Bootcamp2018 - Sergipe
+Univerdidade Federal de Sergipe
 
+Foi uma manhã maravilhosa, um evento show, mesmo como muitas dificuldades como a chuva forte em nossa cidade, muita gente compareceu!
+
+Fico muito feliz em palestrar para essa turma, cheia de espectativas e sonhos, assim como um dia sonhei, me sinto realizado e fazer um evento de tecnologia nivel global em nosso estado, mostrar o que há de melhor no mercado de TI, e claro criar demos ao VIVO, pra levantar o astral da galera.
+
+Quero agradecer a UFS por disponibilizar o auditório maravilhoso assim como seus colaboradores. 
+
+Resumindo: Foi lindo, foi show, amei e que venha 2019!
 
 </div> 
 
@@ -16,6 +25,7 @@ categories:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/azure/azure01.jpg)
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/eventoazurebootcamp2018/principal.jpg) 
- 
+
+{% include gallery caption="This is a sample gallery with **Markdown support**." %}
 
  #mvpbuzz #mvpbr #mvp #developerssergipe #share <br><br>
