@@ -15,7 +15,7 @@ Nosso primeiro DevTalk iremos contar com a presença do Claudenir Andrade (Micro
 <br /><br />
 Claudenir é autor do primeiro livro de automação comercial no Brasil – “Automação Comercial com VB.Net
  e C#” e em conjunto com o Governo Brasileiro definiu o SCU – Set de Comandos Único para os ECFs brasileiros.
- <br />
+ <br /><br />
  </div> 
 
 <div style="text-align: justify;">
