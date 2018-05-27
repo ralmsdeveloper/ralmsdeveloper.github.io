@@ -19,11 +19,11 @@ Claudenir é autor do primeiro livro de automação comercial no Brasil – “A
  </div> 
 
 <div style="text-align: justify;">
-Data: 29/05/2018 
-Horário: 21:00h
-Link: <a href="https://youtu.be/KJppx1k6CBQ" alt="">https://youtu.be/KJppx1k6CBQ</a>
+Data: 29/05/2018  <br />
+Horário: 21:00h <br />
+Link: <a href="https://youtu.be/KJppx1k6CBQ" alt="">https://youtu.be/KJppx1k6CBQ</a> <br /> <br />
 
-Então inscreva-se em nosso canal e venha participar, conto com vocês. 
+Então inscreva-se em nosso canal e venha participar, conto com vocês.  <br /> <br />
 </div> 
 
 
