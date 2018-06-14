@@ -1,5 +1,5 @@
 ﻿---
-title: "Fluent API ou Annotation, Quem tem mais moral?"
+title: "With NOLOCK & DateDIFF"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
@@ -13,17 +13,18 @@ toc_label: "Começando"
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr>
 
-## Dica EF Core
-
+## Extensão para EntityFramework Core
 <div style="text-align: justify;">
-Exatamente dia 02/06/2018 02:00 AM, em um quarto de hotel de São Paulo, surge uma conversa bem legal sobre e como implementar o WITH NOLOCK(um hint bem usado para consultas)
-juntamente com um amigo discutimos o porquê?! Então comecei a codificar algumas coisas, e foi onde surgiu a extensão para o EntityFramework Core “WITH (NOLOCK)”.
+Exatamente dia <strong>02/06/2018 02:00 AM</strong>, em um quarto de hotel de São Paulo, surge uma conversa bem legal sobre e como implementar o WITH NOLOCK(um hint bem usado para consultas)
+juntamente com um amigo discutimos o porquê?! Então comecei a codificar algumas coisas, e foi onde surgiu a extensão para o EntityFramework Core <strong>“WITH (NOLOCK)”</strong>.
 <br><br>
-Juntamente com a extensão do WithNoLock, também temos outras como a tradução do DATEDIFF para SQL Server.
-
+Juntamente com a extensão do WithNoLock, também temos outras como a tradução do <strong>DATEDIFF</strong> para SQL Server.
 </div>
 <br>
- 
+## Os bits estão disponíveis em:
+Nuget: <a href="https://www.nuget.org/packages/Ralms.EntityFrameworkCore.Extensions/1.0.3">@Nuget-Ralms.EntityFrameworkCore.Extensions</a><br>
+Github: <a href="https://github.com/ralmsdeveloper/Ralms.EntityFrameworkCore.Extensions">@Github-Ralms.EntityFrameworkCore.Extensions</a><br>
+
 ## Vejamos como habilitar utilizar o WithNoLock:
 ```csharp
 public class SampleContext : DbContext
@@ -72,9 +73,6 @@ FROM [Blogs] AS [p]
 WHERE DATEDIFF(day, GETDATE(), [p].[Date]) < 50
 ``` 
 
-<br> 
-## Links
-Nuget: <a href="https://www.nuget.org/packages/Ralms.EntityFrameworkCore.Extensions/1.0.3">@Nuget-Ralms.EntityFrameworkCore.Extensions</a><br>
-Github: <a href="https://github.com/ralmsdeveloper/Ralms.EntityFrameworkCore.Extensions">@Github-Ralms.EntityFrameworkCore.Extensions</a><br>
+<br>  
 <br><br>
 Pessoal, fico por aqui <strong>#dica!</strong>
