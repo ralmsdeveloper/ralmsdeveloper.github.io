@@ -71,8 +71,6 @@ var list = _db
 SELECT [p].[Id], [p].[Date], [p].[Name]
 FROM [Blogs] AS [p]
 WHERE DATEDIFF(day, GETDATE(), [p].[Date]) < 50
-``` 
-
-<br>  
+```   
 <br><br>
-Pessoal, fico por aqui <strong>#dica!</strong>
+Pessoal, fico por aqui <strong>#efcore</strong>
