@@ -25,7 +25,7 @@ Juntamente com a extensão do WithNoLock, também temos outras como a tradução
 Nuget: <a href="https://www.nuget.org/packages/Ralms.EntityFrameworkCore.Extensions/1.0.3">@Nuget-Ralms.EntityFrameworkCore.Extensions</a><br>
 Github: <a href="https://github.com/ralmsdeveloper/Ralms.EntityFrameworkCore.Extensions">@Github-Ralms.EntityFrameworkCore.Extensions</a><br>
 
-## Vejamos como habilitar utilizar o WithNoLock:
+## Vejamos como habilitar & utilizar o WithNoLock:
 ```csharp
 public class SampleContext : DbContext
 {
