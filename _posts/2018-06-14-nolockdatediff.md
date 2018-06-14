@@ -66,7 +66,8 @@ var list = _db
     .Where(p => EFCore.DateDiff(DatePart.day, DateTimeOffset.Now, p.Date) < 50) 
     .ToList();
 ```
-
+<br>
+<strong>Output SQL:</strong>
 ```sql
 SELECT [p].[Id], [p].[Date], [p].[Name]
 FROM [Blogs] AS [p]
