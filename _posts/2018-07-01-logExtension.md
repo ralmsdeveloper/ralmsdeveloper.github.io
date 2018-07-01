@@ -119,10 +119,6 @@ E iremos ver um exemplo básico de como podemos construir um log manipulável, �
 ## Log Customizado
 Agora a coisa começa a ficar melhor... :), vamos criar uma classe com a seguinte estrutura:
 <br>
-<strong>Variável que irá armazenar os logs.</strong>
-```csharp
-public static IList<string> Logs = new List<string>();
-```
 <strong>Classe responsável por fazer a manipulação do log.</strong>
 ```csharp
 private class CustomLoggerProvider : ILoggerProvider
@@ -153,6 +149,9 @@ private class CustomLoggerProvider : ILoggerProvider
     public void Dispose() { }
 }
 ```
+<strong>Observações:</strong><br>
+existe uma variavel <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não exportar ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.
+
 <strong>Nosso contexto completo ficou assim:</strong>
 ```csharp
 public class SampleContext : DbContext
