@@ -331,4 +331,4 @@ WHERE [p].[Id] > 0
 
 
 <br><br>
-Pessoal, fico por aqui <strong>#efcore</strong>
+Pessoal, fico por aqui <strong>#efcore #mvp #mvpbr #mvpbuzz</strong>
