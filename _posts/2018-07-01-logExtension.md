@@ -55,6 +55,7 @@ Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 ## Registro de Logs:
 <div class="notice--success">
 <strong>Considerações:</strong><br>
+Para usar alguma das opções acima, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
 Alguns dos principais registros de Logs são:
 </div>
 <br> 
@@ -69,42 +70,45 @@ Alguns dos principais registros de Logs são:
 Você pode ver mais informações sobre as opções apresentadas aqui:<br>
 <a href="https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging" target="_BLACK">https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging</a> <br>
 que por sinal é uma excelente documentação.<br>
-<strong>Observação</strong> para usar usar alguma das opções acima, tem que instalar, são pacotes seperados, então requer uma instalação.
 </div>
-<br> 
-## Vejamos como habilitar & utilizar o WithNoLock:
-
+## Mão na massa
+Vamos agora ver como utilizar alguns deles.<br>
+*Primeiramento o Console*<br>
+O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar, veja o exemplo:
 ```csharp
-public class SampleContext : DbContext
-{
-    public DbSet<Blog> Blogs { get; set; }
-
-    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-    {
-        optionsBuilder
-            .UseSqlServer("Server=(localdb)\\mssqllocaldb;Database=SampleExtension;Integrated Security=True;")
-            .RalmsExtendFunctions();
-    }
-
-    protected override void OnModelCreating(ModelBuilder modelo)
-    {
-        modelo.EnableSqlServerDateDIFF();
-    }
-}
+optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());
 ```
-<strong>Como Utilizar:</strong>
+<strong>Completo:</strong>
 ```csharp
-var query = _db
-    .Blogs
-    .WithNoLock() // Anotação do With (NoLock)
-    .ToList();  
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+{
+    var strConexao = "..."; 
+    optionsBuilder.UseSqlServer(strConexao); 
+    optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()); // <----------
+}
 ```
 <br>
 <strong>Output SQL:</strong>
 <br>
 ```sql
-SELECT [p].[Id], [p].[Date], [p].[Name]
-FROM [Blogs] AS [p] WITH (NOLOCK)  
+info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
+      Entity Framework Core 2.1.1-rtm-30846 initialized 'SampleContext' using provider 'Microsoft.EntityFrameworkCore.SqlServer' with options: None
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (146ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = 'BASE TABLE') SELECT 1 ELSE SELECT 0
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (62ms) [Parameters=[@p0='?' (DbType = DateTime2), @p1='?' (Size = 4000)], CommandType='Text', CommandTimeout='30']
+      SET NOCOUNT ON;
+      INSERT INTO [Blogs] ([Date], [Name])
+      VALUES (@p0, @p1);
+      SELECT [Id]
+      FROM [Blogs]
+      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+      Executed DbCommand (15ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+      SELECT [p].[Id], [p].[Date], [p].[Name]
+      FROM [Blogs] AS [p]
+      WHERE [p].[Id] > 0
 ``` 
 
 ## Usando o DATEDIFF
