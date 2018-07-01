@@ -331,6 +331,6 @@ static void Main(string[] args)
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1" target="_BLACK">DatabaseDependencies</a><br>
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1" target="_BLACK">RelationalQueryModelVisitor</a><br>
 <br><br>
-Click <a href="https://github.com/ralmsdeveloper/artigolog" target="_BLACK">aqui</a><br> para acessar os fontes no github!
+Click <a href="https://github.com/ralmsdeveloper/artigolog" target="_BLACK">aqui</a> para acessar os fontes no github!
 <br><br>
 Pessoal, fico por aqui <strong>#efcore #mvp #mvpbr #mvpbuzz</strong>
