@@ -1,5 +1,5 @@
 ﻿---
-title: "Logs e Projeções SQL"
+title: "Logs e Output SQL"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
@@ -52,7 +52,7 @@ public class SampleContext : DbContext
 }
 ```
 Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
-## Registro de Logs:
+## Registro de Logs
 <div class="notice--success">
 <strong>Considerações:</strong><br>
 Para usar alguma das opções acima, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
@@ -110,15 +110,129 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       FROM [Blogs] AS [p]
       WHERE [p].[Id] > 0
 ``` 
-
-## Usando o DATEDIFF
-```csharp
-var list = _db
-    .Blogs
-    .Where(p => EFCore.DateDiff(DatePart.day, DateTimeOffset.Now, p.Date) < 50) 
-    .ToList();
-```
+Muito simples não é?!<br>
+Certo mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?<br>
+Resp: <strong>SIM</strong><br>
+E iremos ver um exemplo básico de como podemos construir um log manipulável. é um exemplo básico!
+## Log Customizado
+Agora a coisa começa a ficar melhor... :), vamos criar uma classe com a seguinte estrutura:
 <br>
+Variável que irá armazenas o log.
+```csharp
+public static IList<string> Logs = new List<string>();
+```
+```csharp
+private class CustomLoggerProvider : ILoggerProvider
+{
+    public ILogger CreateLogger(string categoryName) => new SampleLogger(); 
+
+    private class SampleLogger : ILogger
+    {
+        public void Log<TState>(
+            LogLevel logLevel, 
+            EventId eventId, 
+            TState state, 
+            Exception exception,
+            Func<TState, Exception, string> formatter)
+        {
+            if (eventId.Id == RelationalEventId.CommandExecuting.Id)
+            {
+                var log = formatter(state, exception);
+                Logs.Add(log); 
+            }
+        }
+
+        public bool IsEnabled(LogLevel logLevel) => true;
+
+        public IDisposable BeginScope<TState>(TState state) => null;
+    }
+
+    public void Dispose() { }
+}
+```
+*Nosso contexto completo ficou assim:*
+```csharp
+public class SampleContext : DbContext
+{
+    public SampleContext()
+    {
+        if (Logs == null)
+        {
+            this.GetService<ILoggerFactory>().AddProvider(new CustomLoggerProvider());
+            Logs = new List<string>();
+        }
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        var sqlConnectionStringBuilder = "Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;";
+        optionsBuilder.UseSqlServer(sqlConnectionStringBuilder); 
+        base.OnConfiguring(optionsBuilder);
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Blog>();
+    }
+
+    public static IList<string> Logs = null;
+
+    private class CustomLoggerProvider : ILoggerProvider
+    {
+        public ILogger CreateLogger(string categoryName) => new SampleLogger();
+
+        private class SampleLogger : ILogger
+        {
+            public void Log<TState>(
+                LogLevel logLevel,
+                EventId eventId,
+                TState state,
+                Exception exception,
+                Func<TState, Exception, string> formatter)
+            {
+                if (eventId.Id == RelationalEventId.CommandExecuting.Id)
+                {
+                    var log = formatter(state, exception);
+                    Logs.Add(log);
+                }
+            }
+
+            public bool IsEnabled(LogLevel logLevel) => true;
+
+            public IDisposable BeginScope<TState>(TState state) => null;
+        }
+
+        public void Dispose() { }
+    }
+}
+```
+*Exemplo*
+```csharp
+static void Main(string[] args)
+{
+    using(var db = new SampleContext())
+    {
+        db.Database.EnsureCreated();
+        db.Set<Blog>().Add(new Blog
+        {
+            Name = "Rafael Almeida",
+            Date = DateTime.Now
+        });
+        db.SaveChanges();
+
+        db.Set<Blog>().Where(p=>p.Id > 0).ToList();
+    }
+
+	// Recuperar o log dos comandos executados
+    foreach (var log in SampleContext.Logs)
+    {
+        Console.WriteLine(log);
+    }
+    Console.ReadKey();
+}
+```
+Essa classe é tudo que precisamos para criar uma instância para <strong>ILogger</strong>, onde é feito todo rastreamento das querys, falando de forma genérica.<br>
+Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exporta através do <strong>ILoggerFactory</strong>, da seguinte maneira. 
 <strong>Output SQL:</strong>
 ```sql
 SELECT [p].[Id], [p].[Date], [p].[Name]
