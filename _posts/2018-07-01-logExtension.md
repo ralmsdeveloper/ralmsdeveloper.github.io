@@ -323,14 +323,10 @@ SELECT [p].[Id], [p].[Date], [p].[Name]
 FROM [Blogs] AS [p]
 WHERE [p].[Id] > 0
 ```
-<br><br>
 ## Referências
 <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore" target="_BLACK">EF Core</a><br>
-
 <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler" target="_BLACK">QueryCompiler</a><br>
-
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1" target="_BLACK">DatabaseDependencies</a><br>
-
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1" target="_BLACK">RelationalQueryModelVisitor</a><br>
 <br><br>
 Click <a href="https://github.com/ralmsdeveloper/artigolog" target="_BLACK">aqui</a><br> para baixar o projeto desse artigo no github!
