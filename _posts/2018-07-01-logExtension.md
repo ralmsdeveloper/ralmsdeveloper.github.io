@@ -56,7 +56,7 @@ Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 <div class="notice--success">
 <strong>Considerações:</strong><br>
 Para usar alguma das opções abaixo, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
-Alguns dos principais registros de Logs são:
+Alguns dos principais registros de Logs são:<br><br>
 
 <strong>Microsoft.Extensions.Logging.Console</strong><br> Um agente de log de console simples.<br><br>
 <strong>Microsoft.Extensions.Logging.AzureAppServices:</strong><br>Serviços de aplicativo do Azure oferece suporte a 'Logs de diagnóstico' e recursos de fluxo de Log.<br><br>
