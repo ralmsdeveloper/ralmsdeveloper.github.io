@@ -65,9 +65,6 @@ Alguns dos principais registros de Logs são:<br><br>
 <strong>Microsoft.Extensions.Logging.EventSource</strong><br>Dá suporte a EventSource/EventListener.<br><br>
 <strong>Microsoft.Extensions.Logging.TraceSource</strong><br>Logs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent().<br><br>
 </div>
-<br> 
-
-
 <div class="notice--success"> 
 Você pode ver mais informações sobre as opções apresentadas aqui:<br>
 <a href="https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging" target="_BLACK">https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging</a> <br>
@@ -75,7 +72,7 @@ que por sinal é uma excelente documentação.<br>
 </div>
 ## Mão na massa
 Vamos agora ver como utilizar alguns deles.<br>
-*Primeiramento o Console*<br>
+<b>Primeiramente o Console</b>
 O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar, veja o exemplo:
 ```csharp
 optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());
