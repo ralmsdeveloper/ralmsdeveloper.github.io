@@ -150,7 +150,7 @@ private class CustomLoggerProvider : ILoggerProvider
 }
 ```
 <strong>Observações:</strong><br>
-existe uma variavel <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não exportar ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.
+existe uma variável <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não exportar ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.
 
 <strong>Nosso contexto completo ficou assim:</strong>
 ```csharp
@@ -208,7 +208,7 @@ public class SampleContext : DbContext
     }
 }
 ```
-Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das querys, falando de forma genérica. já que podemos fazer N coisas!<br>
+Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das query's, mas claro falando de forma genérica, já que podemos fazer N coisas!<br>
 Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exposta através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.
 ```csharp
 this.GetService<ILoggerFactory>().AddProvider(new CustomLoggerProvider());
