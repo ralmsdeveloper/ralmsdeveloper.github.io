@@ -332,7 +332,7 @@ WHERE [p].[Id] > 0
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1" target="_BLACK">DatabaseDependencies</a><br>
 
 <a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1" target="_BLACK">RelationalQueryModelVisitor</a><br>
-
-
+<br><br>
+Click <a href="https://github.com/ralmsdeveloper/artigolog" target="_BLACK">aqui</a><br> para baixar o projeto desse artigo no github!
 <br><br>
 Pessoal, fico por aqui <strong>#efcore #mvp #mvpbr #mvpbuzz</strong>
