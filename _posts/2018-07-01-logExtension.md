@@ -55,16 +55,18 @@ Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 ## Registro de Logs
 <div class="notice--success">
 <strong>Considerações:</strong><br>
-Para usar alguma das opções acima, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
+Para usar alguma das opções abaixo, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
 Alguns dos principais registros de Logs são:
-</div>
-<br> 
+
 <strong>Microsoft.Extensions.Logging.Console</strong><br> Um agente de log de console simples.<br><br>
 <strong>Microsoft.Extensions.Logging.AzureAppServices:</strong><br>Serviços de aplicativo do Azure oferece suporte a 'Logs de diagnóstico' e recursos de fluxo de Log.<br><br>
 <strong>Microsoft.Extensions.Logging.Debug</strong><br>Logs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().<br><br>
 <strong>Microsoft.Extensions.Logging.EventLog</strong><br>Registros de log de eventos do Windows.<br><br>
 <strong>Microsoft.Extensions.Logging.EventSource</strong><br>Dá suporte a EventSource/EventListener.<br><br>
 <strong>Microsoft.Extensions.Logging.TraceSource</strong><br>Logs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent().<br><br>
+</div>
+<br> 
+
 
 <div class="notice--success"> 
 Você pode ver mais informações sobre as opções apresentadas aqui:<br>
