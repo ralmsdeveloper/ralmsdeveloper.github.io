@@ -72,10 +72,13 @@ que por sinal é uma excelente documentação.<br>
 </div>
 ## Mão na massa
 Vamos agora ver como utilizar alguns deles.<br>
-<b>Primeiramente o Console</b>
-O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar, veja o exemplo:
+<b>Primeiramente o Console</b><br />
+O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.
+O pacote <b><i>Microsoft.Extensions.Logging.Console</i></b> disponibiliza um método de extensão <b>AddConsole</b> para o <b>LoggerFactory</b><br>
+Veja um exemplo simples de fazer isso!
 ```csharp
-optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());
+var logConsole = new LoggerFactory().AddConsole();
+optionsBuilder.UseLoggerFactory(logConsole);
 ```
 <strong>Completo:</strong>
 ```csharp
