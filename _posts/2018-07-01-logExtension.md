@@ -209,7 +209,7 @@ public class SampleContext : DbContext
 }
 ```
 Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das query's, mas claro falando de forma genérica, já que podemos fazer N coisas!<br>
-Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a (DI) injeção de dependência exposta através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.
+Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.
 ```csharp
 this.GetService<ILoggerFactory>().AddProvider(new CustomLoggerProvider());
 ```
