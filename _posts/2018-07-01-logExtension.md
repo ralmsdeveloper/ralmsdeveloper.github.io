@@ -1,5 +1,5 @@
 ﻿---
-title: "Logs e Tradução SQL"
+title: "Logs e Geração SQL de Consulta LINQ"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
