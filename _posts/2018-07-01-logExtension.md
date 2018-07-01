@@ -314,6 +314,7 @@ static void Main(string[] args)
 ```
 <br>
 <strong>Output SQL</strong>
+```sql
 SELECT [p].[Id], [p].[Date], [p].[Name]
 FROM [Blogs] AS [p]
 WHERE [p].[Id] > 0
