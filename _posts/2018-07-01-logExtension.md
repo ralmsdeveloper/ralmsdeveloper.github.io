@@ -208,9 +208,13 @@ public class SampleContext : DbContext
 }
 ```
 Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das querys, falando de forma genérica. já que podemos fazer N coisas!<br>
-Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exporta através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.<br><br>
-
-<strong>Nosso exemplo</strong>
+Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exposta através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.
+```csharp
+this.GetService<ILoggerFactory>().AddProvider(new CustomLoggerProvider());
+```
+Como foi mostrado no exemplo completo acima!
+<br>
+<strong>Nosso exemplo de uso</strong>
 ```csharp
 static void Main(string[] args)
 {
@@ -273,15 +277,15 @@ public static class RalmsExtensionSql
         where T : class
     {
         var queryCompiler = _queryCompiler.GetValue(queryable.Provider) as IQueryCompiler;
-        var queryModel = (_queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator).ParseQuery(queryable.Expression);
-        var queryCompilationContextFactory 
+        var queryModelGen = _queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator;
+        var queryCompilationContextFactory
             = ((DatabaseDependencies)_dependencies.GetValue(_database.GetValue(queryCompiler)))
                 .QueryCompilationContextFactory;
 
         var queryCompilationContext = queryCompilationContextFactory.Create(false);
         var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();
 
-        modelVisitor.CreateQueryExecutor<T>(queryModel);
+        modelVisitor.CreateQueryExecutor<T>(queryModelGen.ParseQuery(queryable.Expression));
 
         return modelVisitor
             .Queries
