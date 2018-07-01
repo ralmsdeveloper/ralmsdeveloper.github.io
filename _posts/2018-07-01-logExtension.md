@@ -322,7 +322,7 @@ static void Main(string[] args)
 ```
 <br>
 <strong>Veja o exemplo</strong>
-![01]({{site.url}}{{site.baseurl}}/assets/images/toSql.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/toSql.PNG)
  
 ## Referências
 <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore" target="_BLACK">EF Core</a><br>
