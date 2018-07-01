@@ -238,9 +238,10 @@ static void Main(string[] args)
 
 ## Vamos criar nossa Extensão
 Sabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.<br><br>
-O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com a extensão “GenerateCreateScript”.<br><br>
+O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com a extensão <strong>“GenerateCreateScript”</strong>.<br><br>
 Mas iremos construir nossa próprio gerador SQL com base em um consulta LINQ.<br><br>
 Como sempre falo, <strong>System.Reflection</strong> SEMPRE, SEMPRE!!!<br>
+<br>
 <strong>Veja nossa classe completa</strong>
 ```csharp
 public static class RalmsExtensionSql
@@ -289,6 +290,7 @@ public static class RalmsExtensionSql
     }
 }
 ```
+<br>
 <strong>Exemplo de uso</strong>
 ```csharp
 static void Main(string[] args)
@@ -303,12 +305,29 @@ static void Main(string[] args)
         });
         db.SaveChanges(); 
 
-		// Gerar/Projetar o SQL 
+        // Gerar/Projetar o SQL 
         var strSQL = db.Set<Blog>().Where(p => p.Id > 0).ToSql();
     } 
 
     Console.ReadKey();
 }
 ```
+<br>
+<strong>Output SQL</strong>
+SELECT [p].[Id], [p].[Date], [p].[Name]
+FROM [Blogs] AS [p]
+WHERE [p].[Id] > 0
+```
+<br><br>
+## Referências
+EF Core:<br>
+https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore
+QueryCompiler:<br>
+https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler
+DatabaseDependencies:<br>
+https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1
+RelationalQueryModelVisitor:<br>
+https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1
+
 <br><br>
 Pessoal, fico por aqui <strong>#efcore</strong>
