@@ -320,14 +320,14 @@ WHERE [p].[Id] > 0
 ```
 <br><br>
 ## Referências
-EF Core:<br>
-https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore
-QueryCompiler:<br>
-https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler
-DatabaseDependencies:<br>
-https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1
-RelationalQueryModelVisitor:<br>
-https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1
+<a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore" target="_BLACK">EF Core</a><br>
+
+<a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler" target="_BLACK">QueryCompiler</a><br>
+
+<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1" target="_BLACK">DatabaseDependencies</a><br>
+
+<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1" target="_BLACK">RelationalQueryModelVisitor</a><br>
+
 
 <br><br>
 Pessoal, fico por aqui <strong>#efcore</strong>
