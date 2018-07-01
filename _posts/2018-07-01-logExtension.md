@@ -90,7 +90,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 }
 ```
 <br>
-<strong>Output SQL:</strong>
+<strong>Output SQL de meu aplicativo console:</strong>
 <br>
 ```sql
 info: Microsoft.EntityFrameworkCore.Infrastructure[10403]
@@ -114,8 +114,8 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
 ``` 
 Muito simples não é?!<br>
 Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?<br>
-Resp: <strong>SIM</strong><br>
-E iremos ver um exemplo básico de como podemos construir um log manipulável. é um exemplo básico!
+Resposta: <strong>SIM</strong><br><br>
+E iremos ver um exemplo básico de como podemos construir um log manipulável, é um exemplo básico, mas você terá uma ideia de como construir algo mais complexo para sua aplicação!
 ## Log Customizado
 Agora a coisa começa a ficar melhor... :), vamos criar uma classe com a seguinte estrutura:
 <br>
