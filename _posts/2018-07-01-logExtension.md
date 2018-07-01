@@ -21,7 +21,6 @@ um controle de tudo ou quase tudo que acontece no banco. é imprescindível que 
 O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico <strong>SQL Server Profiler</strong>, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.
 <br><br>
 Enfim, iremos apresentar aqui 2 opções de Logs e criaremos uma extensão para projetar o SQL de uma consulta LINQ.
- 
 </div>
 <br>
 ## Estrutura de nosso projeto
@@ -41,7 +40,7 @@ public class SampleContext : DbContext
 { 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        var sqlConnectionStringBuilder = "Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;"; 
+        var sqlConnectionStringBuilder = "Server=(localdb)\\mssqllocaldb;Database=ExemploArtigo;Integrated Security=True;"; 
         optionsBuilder.UseSqlServer(sqlConnectionStringBuilder); 
         base.OnConfiguring(optionsBuilder);
     }
@@ -54,18 +53,25 @@ public class SampleContext : DbContext
 ```
 Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 ## Registro de Logs:
-
-Alguns dos principais registros de Logs são:<br>
+<div class="notice--success">
+<strong>Considerações:</strong><br>
+Alguns dos principais registros de Logs são:
+</div>
+<br> 
 <strong>Microsoft.Extensions.Logging.Console</strong><br> Um agente de log de console simples.<br><br>
 <strong>Microsoft.Extensions.Logging.AzureAppServices:</strong><br>Serviços de aplicativo do Azure oferece suporte a 'Logs de diagnóstico' e recursos de fluxo de Log.<br><br>
 <strong>Microsoft.Extensions.Logging.Debug</strong><br>Logs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().<br><br>
 <strong>Microsoft.Extensions.Logging.EventLog</strong><br>Registros de log de eventos do Windows.<br><br>
 <strong>Microsoft.Extensions.Logging.EventSource</strong><br>Dá suporte a EventSource/EventListener.<br><br>
-<strong>Microsoft.Extensions.Logging.TraceSource</strong><br>ogs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent().<br><br>
+<strong>Microsoft.Extensions.Logging.TraceSource</strong><br>Logs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent().<br><br>
+
+<div class="notice--success"> 
 Você pode ver mais informações sobre as opções apresentadas aqui:<br>
 <a href="https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging" target="_BLACK">https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging</a> <br>
-que por sinal é uma excelente documentação.
-
+que por sinal é uma excelente documentação.<br>
+<strong>Observação</strong> para usar usar alguma das opções acima, tem que instalar, são pacotes seperados, então requer uma instalação.
+</div>
+<br> 
 ## Vejamos como habilitar & utilizar o WithNoLock:
 
 ```csharp
