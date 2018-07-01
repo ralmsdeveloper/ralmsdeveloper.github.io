@@ -86,7 +86,7 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 {
     var strConexao = "..."; 
     optionsBuilder.UseSqlServer(strConexao); 
-    optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole()); // <----------
+    optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());
 }
 ```
 <br>
