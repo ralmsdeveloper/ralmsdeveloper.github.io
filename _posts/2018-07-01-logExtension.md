@@ -321,12 +321,9 @@ static void Main(string[] args)
 }
 ```
 <br>
-<strong>Output SQL</strong>
-```sql
-SELECT [p].[Id], [p].[Date], [p].[Name]
-FROM [Blogs] AS [p]
-WHERE [p].[Id] > 0
-```
+<strong>Veja o exemplo</strong>
+![01]({{site.url}}{{site.baseurl}}/assets/images/toSql.png)
+ 
 ## Referências
 <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore" target="_BLACK">EF Core</a><br>
 <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler" target="_BLACK">QueryCompiler</a><br>
