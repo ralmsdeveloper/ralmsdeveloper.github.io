@@ -1,5 +1,5 @@
 ﻿---
-title: "Logs e Output SQL"
+title: "Logs e Tradução SQL"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
