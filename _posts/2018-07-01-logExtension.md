@@ -240,7 +240,7 @@ static void Main(string[] args)
 Sabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.<br><br>
 O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com a extensão “GenerateCreateScript”.<br><br>
 Mas iremos construir nossa próprio gerador SQL com base em um consulta LINQ.<br><br>
-Como sempre falo, <strong>System.Reflection</strong> SEMPRE, SEMPRE!!!
+Como sempre falo, <strong>System.Reflection</strong> SEMPRE, SEMPRE!!!<br>
 <strong>Veja nossa classe completa</strong>
 ```csharp
 public static class RalmsExtensionSql
@@ -287,6 +287,27 @@ public static class RalmsExtensionSql
             .FirstOrDefault()
             .ToString();
     }
+}
+```
+<strong>Exemplo de uso</strong>
+```csharp
+static void Main(string[] args)
+{
+    using (var db = new SampleContext())
+    { 
+        db.Database.EnsureCreated();
+        db.Set<Blog>().Add(new Blog
+        {
+            Name = "Rafael Almeida",
+            Date = DateTime.Now
+        });
+        db.SaveChanges(); 
+
+		// Gerar/Projetar o SQL 
+        var strSQL = db.Set<Blog>().Where(p => p.Id > 0).ToSql();
+    } 
+
+    Console.ReadKey();
 }
 ```
 <br><br>
