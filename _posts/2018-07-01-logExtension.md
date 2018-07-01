@@ -111,16 +111,17 @@ info: Microsoft.EntityFrameworkCore.Database.Command[20101]
       WHERE [p].[Id] > 0
 ``` 
 Muito simples não é?!<br>
-Certo mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?<br>
+Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?<br>
 Resp: <strong>SIM</strong><br>
 E iremos ver um exemplo básico de como podemos construir um log manipulável. é um exemplo básico!
 ## Log Customizado
 Agora a coisa começa a ficar melhor... :), vamos criar uma classe com a seguinte estrutura:
 <br>
-Variável que irá armazenas o log.
+<strong>Variável que irá armazenar os logs.</strong>
 ```csharp
 public static IList<string> Logs = new List<string>();
 ```
+<strong>Classe responsável por fazer a manipulação do log.</strong>
 ```csharp
 private class CustomLoggerProvider : ILoggerProvider
 {
@@ -150,7 +151,7 @@ private class CustomLoggerProvider : ILoggerProvider
     public void Dispose() { }
 }
 ```
-*Nosso contexto completo ficou assim:*
+<strong>Nosso contexto completo ficou assim:</strong>
 ```csharp
 public class SampleContext : DbContext
 {
@@ -206,7 +207,10 @@ public class SampleContext : DbContext
     }
 }
 ```
-*Exemplo*
+Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das querys, falando de forma genérica. já que podemos fazer N coisas!<br>
+Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exporta através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.<br><br>
+
+<strong>Nosso exemplo</strong>
 ```csharp
 static void Main(string[] args)
 {
@@ -231,13 +235,59 @@ static void Main(string[] args)
     Console.ReadKey();
 }
 ```
-Essa classe é tudo que precisamos para criar uma instância para <strong>ILogger</strong>, onde é feito todo rastreamento das querys, falando de forma genérica.<br>
-Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar a API exporta através do <strong>ILoggerFactory</strong>, da seguinte maneira. 
-<strong>Output SQL:</strong>
-```sql
-SELECT [p].[Id], [p].[Date], [p].[Name]
-FROM [Blogs] AS [p]
-WHERE DATEDIFF(day, GETDATE(), [p].[Date]) < 50
-```   
+
+## Vamos criar nossa Extensão
+Sabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.<br><br>
+O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com a extensão “GenerateCreateScript”.<br><br>
+Mas iremos construir nossa próprio gerador SQL com base em um consulta LINQ.<br><br>
+Como sempre falo, <strong>System.Reflection</strong> SEMPRE, SEMPRE!!!
+<strong>Veja nossa classe completa</strong>
+```csharp
+public static class RalmsExtensionSql
+{
+    private static readonly TypeInfo _queryCompilerTypeInfo = typeof(QueryCompiler).GetTypeInfo();
+
+    private static readonly FieldInfo _queryCompiler
+        = typeof(EntityQueryProvider)
+            .GetTypeInfo()
+            .DeclaredFields
+            .Single(x => x.Name == "_queryCompiler"); 
+
+    private static readonly FieldInfo _queryModelGenerator
+        = _queryCompilerTypeInfo
+            .DeclaredFields
+            .Single(x => x.Name == "_queryModelGenerator");
+
+    private static readonly FieldInfo _database = _queryCompilerTypeInfo
+        .DeclaredFields
+        .Single(x => x.Name == "_database");
+
+    private static readonly PropertyInfo _dependencies
+        = typeof(Database)
+            .GetTypeInfo()
+            .DeclaredProperties
+            .Single(x => x.Name == "Dependencies");
+
+    public static string ToSql<T>(this IQueryable<T> queryable)
+        where T : class
+    {
+        var queryCompiler = _queryCompiler.GetValue(queryable.Provider) as IQueryCompiler;
+        var queryModel = (_queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator).ParseQuery(queryable.Expression);
+        var queryCompilationContextFactory 
+            = ((DatabaseDependencies)_dependencies.GetValue(_database.GetValue(queryCompiler)))
+                .QueryCompilationContextFactory;
+
+        var queryCompilationContext = queryCompilationContextFactory.Create(false);
+        var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();
+
+        modelVisitor.CreateQueryExecutor<T>(queryModel);
+
+        return modelVisitor
+            .Queries
+            .FirstOrDefault()
+            .ToString();
+    }
+}
+```
 <br><br>
 Pessoal, fico por aqui <strong>#efcore</strong>
