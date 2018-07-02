@@ -245,7 +245,7 @@ static void Main(string[] args)
 
 ## Vamos criar nossa Extensão
 Sabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.<br><br>
-O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com a extensão <strong>“GenerateCreateScript”</strong> exemplo:
+O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com o método de extensão <strong>GenerateCreateScript</strong> disponibilizado pelo próprio EF Core, veja o exemplo abaixo:
 ```csharp
 var scriptBanco = db.Database.GenerateCreateScript();
 ```
