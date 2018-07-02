@@ -254,11 +254,13 @@ Como sempre falo, <strong>System.Reflection</strong> I LOVE, SEMPRE, SEMPRE!!!<b
 Com algumas magias usando <b>Reflection</b> podemos fazer a recuperação de algumas informações serializadas que estão em memória.
 
 ## Algumas informações para você
+<div class="notice--warning">
 <b>EntityQueryProvider (IQueryCompiler)</b><br>
 Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.<br>
 <b>DatabaseDependencies (IQueryCompiler)</b><br>
 Classe de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.<br>
 Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.<br>
+</div>
 <strong>Veja nossa classe completa</strong>
 ```csharp
 public static class RalmsExtensionSql
