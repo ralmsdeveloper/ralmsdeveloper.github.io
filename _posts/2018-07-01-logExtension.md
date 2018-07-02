@@ -20,7 +20,7 @@ o controle de tudo ou quase tudo que acontece no banco. é imprescindível que n
 <br><br>
 O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico <strong>SQL Server Profiler</strong>, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.
 <br><br>
-Enfim, iremos apresentar aqui 2 opções de Logs e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).
+Iremos apresentar aqui 2 opções de Logs (1-Log no console do aplicativo, 2-Log em uma variável) e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).
 </div>
 ## Estrutura de nosso projeto
 **Class Blog**
