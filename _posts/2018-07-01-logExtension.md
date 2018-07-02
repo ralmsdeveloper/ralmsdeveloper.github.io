@@ -249,9 +249,9 @@ O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dado
 ```csharp
 var scriptBanco = db.Database.GenerateCreateScript();
 ```
-Mas iremos construir nosso próprio gerador SQL com base em uma consulta LINQ.<br>
-<b>Obervação:</b>Nossa extensão será para uma consulta do tipo <b>IQueryable</b><br>
-Como sempre falo, <strong>System.Reflection</strong> SEMPRE, SEMPRE!!!<br>
+Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ to tipo <b>IQueryable</b>.<br><br>
+
+Como sempre falo, <strong>System.Reflection</strong> I LOVE, SEMPRE, SEMPRE!!!<br>
 <br>
 <strong>Veja nossa classe completa</strong>
 ```csharp
