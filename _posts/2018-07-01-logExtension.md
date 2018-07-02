@@ -56,8 +56,8 @@ Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 ## Registro de Logs
 <div class="notice--success">
 <strong>Considerações:</strong><br>
-Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.<br>
-Alguns dos principais registros de Logs são:<br><br>
+Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.<br><br>
+<strong>Alguns dos principais registros de Logs são:</strong><br><br>
 
 <strong>Microsoft.Extensions.Logging.Console</strong><br> Um agente de log de console simples.<br><br>
 <strong>Microsoft.Extensions.Logging.AzureAppServices:</strong><br>Serviços de aplicativo do Azure oferece suporte a 'Logs de diagnóstico' e recursos de fluxo de Log.<br><br>
@@ -74,7 +74,7 @@ que por sinal é uma excelente documentação.<br>
 ## Mão na massa
 Vamos agora ver como utilizar alguns deles.<br>
 <b>Primeiramente o Console</b><br />
-O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.
+O que o <b><i>AddConsole</i></b> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.
 
 O pacote <b><i>Microsoft.Extensions.Logging.Console</i></b> disponibiliza um método de extensão <b>AddConsole</b> para o <b>LoggerFactory</b><br>
 Veja um exemplo simples de fazer isso!
