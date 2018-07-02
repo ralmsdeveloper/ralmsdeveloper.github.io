@@ -51,11 +51,12 @@ public class SampleContext : DbContext
     }
 }
 ```
+
 Até aqui tudo bem, temos já o principal para continuar com nosso artigo.
 ## Registro de Logs
 <div class="notice--success">
 <strong>Considerações:</strong><br>
-Para usar alguma das opções abaixo, tem que instalar, são pacotes seperados, então requer uma instalação.<br>
+Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.<br>
 Alguns dos principais registros de Logs são:<br><br>
 
 <strong>Microsoft.Extensions.Logging.Console</strong><br> Um agente de log de console simples.<br><br>
@@ -74,6 +75,7 @@ que por sinal é uma excelente documentação.<br>
 Vamos agora ver como utilizar alguns deles.<br>
 <b>Primeiramente o Console</b><br />
 O que o <i>Microsoft.Extensions.Logging.Console</i> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.
+
 O pacote <b><i>Microsoft.Extensions.Logging.Console</i></b> disponibiliza um método de extensão <b>AddConsole</b> para o <b>LoggerFactory</b><br>
 Veja um exemplo simples de fazer isso!
 ```csharp
@@ -150,7 +152,7 @@ private class CustomLoggerProvider : ILoggerProvider
 }
 ```
 <strong>Observações:</strong><br>
-existe uma variável <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não exportar ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.
+existe uma variável <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não expor ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.
 
 <strong>Nosso contexto completo ficou assim:</strong>
 ```csharp
