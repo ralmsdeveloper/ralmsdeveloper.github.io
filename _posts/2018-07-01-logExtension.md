@@ -8,7 +8,7 @@ toc: true
 toc_label: "Começando"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/efcoretopo.jpg)
+![01]({{site.url}}{{site.baseurl}}/assets/images/topoefnew.jpg)
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr>
