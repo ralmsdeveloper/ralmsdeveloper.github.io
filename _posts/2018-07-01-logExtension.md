@@ -252,6 +252,7 @@ var scriptBanco = db.Database.GenerateCreateScript();
 Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ tipo <b>Queryable</b>.<br><br>
 Como sempre falo, <strong>System.Reflection</strong> I LOVE, SEMPRE, SEMPRE!!!<br>
 <br>
+Com algumas magias usando <b>Reflection</b> podemos fazer a recuperação de algumas informações serializadas que estão em memória. 
 <strong>Veja nossa classe completa</strong>
 ```csharp
 public static class RalmsExtensionSql
