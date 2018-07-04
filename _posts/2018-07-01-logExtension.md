@@ -209,7 +209,7 @@ public class SampleContext : DbContext
     }
 }
 ```
-Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das query's, mas claro falando de forma genérica, já que podemos fazer N coisas!<br>
+Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das query's, mas claro falando de forma genérica, já que podemos fazer "N" coisas!<br>
 Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.
 ```csharp
 this.GetService<ILoggerFactory>().AddProvider(new CustomLoggerProvider());
@@ -257,7 +257,7 @@ Com algumas magias usando <b>Reflection</b> podemos fazer a recuperação de alg
 <div class="notice--warning">
 <b>EntityQueryProvider (IQueryCompiler)</b><br>
 Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.<br><br>
-<b>DatabaseDependencies (IQueryCompiler)</b><br>
+<b>DatabaseDependencies</b><br>
 Classe de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.<br>
 Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.<br>
 </div>
