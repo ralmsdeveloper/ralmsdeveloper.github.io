@@ -16,7 +16,7 @@ baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
-words_per_minute         : 150
+words_per_minute         : 80
 comments:
   provider               : disqus # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
   disqus:
