@@ -68,9 +68,6 @@ gallery:
   - url: /assets/images/igniteorlando/foto22.jpg
     image_path: /assets/images/igniteorlando/foto22.jpg
     alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto23.jpg
-    image_path: /assets/images/igniteorlando/foto23.jpg
-    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto24.jpg
     image_path: /assets/images/igniteorlando/foto24.jpg
     alt: "Microsoft Ignite 2018"
@@ -95,9 +92,6 @@ gallery:
   - url: /assets/images/igniteorlando/foto31.jpg
     image_path: /assets/images/igniteorlando/foto31.jpg
     alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto32.jpg
-    image_path: /assets/images/igniteorlando/foto32.jpg
-    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto33.jpg
     image_path: /assets/images/igniteorlando/foto33.jpg
     alt: "Microsoft Ignite 2018"
@@ -116,9 +110,6 @@ gallery:
   - url: /assets/images/igniteorlando/foto38.jpg
     image_path: /assets/images/igniteorlando/foto38.jpg
     alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto39.jpg
-    image_path: /assets/images/igniteorlando/foto39.jpg
-    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto40.jpg
     image_path: /assets/images/igniteorlando/foto40.jpg
     alt: "Microsoft Ignite 2018"
@@ -128,14 +119,8 @@ gallery:
   - url: /assets/images/igniteorlando/foto42.jpg
     image_path: /assets/images/igniteorlando/foto42.jpg
     alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto43.jpg
-    image_path: /assets/images/igniteorlando/foto43.jpg
-    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto44.jpg
     image_path: /assets/images/igniteorlando/foto44.jpg
-    alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto45.jpg
-    image_path: /assets/images/igniteorlando/foto45.jpg
     alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto46.jpg
     image_path: /assets/images/igniteorlando/foto46.jpg
@@ -148,9 +133,6 @@ gallery:
     alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto49.jpg
     image_path: /assets/images/igniteorlando/foto49.jpg
-    alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto50.jpg
-    image_path: /assets/images/igniteorlando/foto50.jpg
     alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto51.jpg
     image_path: /assets/images/igniteorlando/foto51.jpg
@@ -179,9 +161,6 @@ gallery:
   - url: /assets/images/igniteorlando/foto59.jpg
     image_path: /assets/images/igniteorlando/foto59.jpg
     alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto60.jpg
-    image_path: /assets/images/igniteorlando/foto60.jpg
-    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto61.jpg
     image_path: /assets/images/igniteorlando/foto61.jpg
     alt: "Microsoft Ignite 2018"
@@ -198,6 +177,10 @@ gallery:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/igniteorlando/foto3.jpg)
 <div style="text-align: justify;">
 Foi uma semana maravilhosa, um evento show, reunindo diversos especialistas do mundo, olhamos para o que há de melhor no mundo de tecnologia.
+<br>
+Minha experiencia com o MS Ignite foi fantástica, além das palestras o que mais impactou em mim foi o NETWORK com o time da Microsoft, tive a oportunidade de conhecer pessoas incríveis, pessoas que eu tenho admiração e respeito, e poder conversar com eles e trocar ideias não tem preço pra isso.
+<br> 
+Bom foi minha primeira vez mais gostei bastante!
 <br><br> 
 Aos meus amigos <a href="https://www.linkedin.com/in/claudenirandrade/" target="_black">Claudenir Andrade</a> e <a href="https://www.linkedin.com/in/cdssoftware/" target="_black">Carlos dos Santos</a> meus agradecimentos por tudo, não seria a mesma coisa sem vocês.
 <br><br>
