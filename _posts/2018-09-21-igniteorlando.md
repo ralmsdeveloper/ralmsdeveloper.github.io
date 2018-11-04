@@ -5,48 +5,48 @@ excerpt_separator: "Ler mais"
 categories:
   - Evento
 gallery:
-  - url: /assets/images/igniteorlando/foto1.jpg
-  image_path: /assets/images/igniteorlando/foto1.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto2.jpg
-  image_path: /assets/images/igniteorlando/foto2.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto3.jpg
-  image_path: /assets/images/igniteorlando/foto3.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto4.jpg
-  image_path: /assets/images/igniteorlando/foto4.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto5.jpg
-  image_path: /assets/images/igniteorlando/foto5.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto6.jpg
-  image_path: /assets/images/igniteorlando/foto6.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto7.jpg
-  image_path: /assets/images/igniteorlando/foto7.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto8.jpg
-  image_path: /assets/images/igniteorlando/foto8.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto9.jpg
-  image_path: /assets/images/igniteorlando/foto9.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto11.jpg
-  image_path: /assets/images/igniteorlando/foto11.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto12.jpg
-  image_path: /assets/images/igniteorlando/foto12.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto13.jpg
-  image_path: /assets/images/igniteorlando/foto13.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto14.jpg
-  image_path: /assets/images/igniteorlando/foto14.jpg
-  alt: "Microsoft Ignite 2018"
-  - url: /assets/images/igniteorlando/foto15.jpg
-  image_path: /assets/images/igniteorlando/foto15.jpg
-  alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto1.jpg
+	image_path: /assets/images/igniteorlando/foto1.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto2.jpg
+	image_path: /assets/images/igniteorlando/foto2.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto3.jpg
+	image_path: /assets/images/igniteorlando/foto3.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto4.jpg
+	image_path: /assets/images/igniteorlando/foto4.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto5.jpg
+	image_path: /assets/images/igniteorlando/foto5.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto6.jpg
+	image_path: /assets/images/igniteorlando/foto6.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto7.jpg
+	image_path: /assets/images/igniteorlando/foto7.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto8.jpg
+	image_path: /assets/images/igniteorlando/foto8.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto9.jpg
+	image_path: /assets/images/igniteorlando/foto9.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto11.jpg
+	image_path: /assets/images/igniteorlando/foto11.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto12.jpg
+	image_path: /assets/images/igniteorlando/foto12.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto13.jpg
+	image_path: /assets/images/igniteorlando/foto13.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto14.jpg
+	image_path: /assets/images/igniteorlando/foto14.jpg
+	alt: "Microsoft Ignite 2018"
+	- url: /assets/images/igniteorlando/foto15.jpg
+	image_path: /assets/images/igniteorlando/foto15.jpg
+	alt: "Microsoft Ignite 2018"
 	- url: /assets/images/igniteorlando/foto16.jpg
 	image_path: /assets/images/igniteorlando/foto16.jpg
 	alt: "Microsoft Ignite 2018"
@@ -216,4 +216,4 @@ Link do evento:<br>
 
 {% include gallery caption="Fotos do Evento" %}
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite #linqsolucoes<br><br>
