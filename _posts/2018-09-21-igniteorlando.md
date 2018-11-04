@@ -177,7 +177,7 @@ gallery:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/igniteorlando/foto3.jpg)
 <div style="text-align: justify;">
 Foi uma semana maravilhosa, um evento show, reunindo diversos especialistas do mundo, olhamos para o que há de melhor no mundo de tecnologia.
-<br>
+<br><br> 
 Minha experiencia com o MS Ignite foi fantástica, além das palestras o que mais impactou em mim foi o NETWORK com o time da Microsoft, tive a oportunidade de conhecer pessoas incríveis, pessoas que eu tenho admiração e respeito, e poder conversar com eles e trocar ideias não tem preço pra isso.
 <br> 
 Bom foi minha primeira vez mais gostei bastante!
