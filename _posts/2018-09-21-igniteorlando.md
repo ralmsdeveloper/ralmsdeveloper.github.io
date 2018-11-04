@@ -32,6 +32,9 @@ gallery:
   - url: /assets/images/igniteorlando/foto9.jpg
     image_path: /assets/images/igniteorlando/foto9.jpg
     alt: "Microsoft Ignite 2018"
+  - url: /assets/images/igniteorlando/foto10.jpg
+    image_path: /assets/images/igniteorlando/foto10.jpg
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto11.jpg
     image_path: /assets/images/igniteorlando/foto11.jpg
     alt: "Microsoft Ignite 2018"
