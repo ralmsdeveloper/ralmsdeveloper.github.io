@@ -7,55 +7,55 @@ categories:
 gallery:
   - url: /assets/images/igniteorlando/foto1.jpg
     image_path: /assets/images/igniteorlando/foto1.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto2.jpg
     image_path: /assets/images/igniteorlando/foto2.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto3.jpg
     image_path: /assets/images/igniteorlando/foto3.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto4.jpg
     image_path: /assets/images/igniteorlando/foto4.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto5.jpg
     image_path: /assets/images/igniteorlando/foto5.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto6.jpg
     image_path: /assets/images/igniteorlando/foto6.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto7.jpg
     image_path: /assets/images/igniteorlando/foto7.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto8.jpg
     image_path: /assets/images/igniteorlando/foto8.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto9.jpg
     image_path: /assets/images/igniteorlando/foto9.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto10.jpg
     image_path: /assets/images/igniteorlando/foto10.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto11.jpg
     image_path: /assets/images/igniteorlando/foto11.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto12.jpg
     image_path: /assets/images/igniteorlando/foto12.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto13.jpg
     image_path: /assets/images/igniteorlando/foto13.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto14.jpg
     image_path: /assets/images/igniteorlando/foto14.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto15.jpg
     image_path: /assets/images/igniteorlando/foto15.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto16.jpg
     image_path: /assets/images/igniteorlando/foto16.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
   - url: /assets/images/igniteorlando/foto17.jpg
     image_path: /assets/images/igniteorlando/foto17.jpg
-    alt: "Visual Studio Summit 2018"
+    alt: "Microsoft Ignite 2018"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
