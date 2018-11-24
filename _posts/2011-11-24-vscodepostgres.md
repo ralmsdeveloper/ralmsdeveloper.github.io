@@ -70,7 +70,7 @@ Então estava procurando uma alternativa leve e clean, já que utilizo o PGAdmin
 <div class="notice--warning"> 
 <strong>Observação:</strong><br>
 Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
-<div>
+</div>
 <br>
 
 <div class="notice--success">
