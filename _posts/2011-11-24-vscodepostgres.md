@@ -55,10 +55,10 @@ Hoje iremos falar do <strong>Visual Studio Code</strong> o fantástico editor de
 <br>
 <div class="notice--warning">
 <strong>FYI:</strong><br>
-Quero falar que para mim <strong>Reflection/Lambda/Expression/Expression Tree & Linq</strong> são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.
+
 </div>
 
- 
+ ![01]({{site.url}}{{site.baseurl}}/assets/images/igniteorlando/foto1.jpg) 
  {% include gallery caption="Imagens do Artigo" %}
 
  #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite #linqsolucoes<br><br>
