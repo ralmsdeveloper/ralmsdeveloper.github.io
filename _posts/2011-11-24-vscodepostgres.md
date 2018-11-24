@@ -5,44 +5,44 @@ excerpt_separator: "Ler mais"
 categories:
   - Dica
 gallery:
-  - url: /assets/images/vscodepostgresql01/01.PNG
-    image_path: /assets/images/vscodepostgresql01/01.PNG
+  - url: /assets/images/vscodepostgresql01/01.jpg
+    image_path: /assets/images/vscodepostgresql01/01.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/02.PNG
-    image_path: /assets/images/vscodepostgresql01/02.PNG
+  - url: /assets/images/vscodepostgresql01/02.jpg
+    image_path: /assets/images/vscodepostgresql01/02.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/03.PNG
-    image_path: /assets/images/vscodepostgresql01/03.PNG
+  - url: /assets/images/vscodepostgresql01/03.jpg
+    image_path: /assets/images/vscodepostgresql01/03.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/04.PNG
-    image_path: /assets/images/vscodepostgresql01/04.PNG
+  - url: /assets/images/vscodepostgresql01/04.jpg
+    image_path: /assets/images/vscodepostgresql01/04.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/05.PNG
-    image_path: /assets/images/vscodepostgresql01/05.PNG
+  - url: /assets/images/vscodepostgresql01/05.jpg
+    image_path: /assets/images/vscodepostgresql01/05.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/06.PNG
-    image_path: /assets/images/vscodepostgresql01/06.PNG
+  - url: /assets/images/vscodepostgresql01/06.jpg
+    image_path: /assets/images/vscodepostgresql01/06.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/07.PNG
-    image_path: /assets/images/vscodepostgresql01/07.PNG
+  - url: /assets/images/vscodepostgresql01/07.jpg
+    image_path: /assets/images/vscodepostgresql01/07.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/08.PNG
-    image_path: /assets/images/vscodepostgresql01/08.PNG
+  - url: /assets/images/vscodepostgresql01/08.jpg
+    image_path: /assets/images/vscodepostgresql01/08.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/09.PNG
-    image_path: /assets/images/vscodepostgresql01/09.PNG
+  - url: /assets/images/vscodepostgresql01/09.jpg
+    image_path: /assets/images/vscodepostgresql01/09.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/10.PNG
-    image_path: /assets/images/vscodepostgresql01/10.PNG
+  - url: /assets/images/vscodepostgresql01/10.jpg
+    image_path: /assets/images/vscodepostgresql01/10.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/11.PNG
-    image_path: /assets/images/vscodepostgresql01/11.PNG
+  - url: /assets/images/vscodepostgresql01/11.jpg
+    image_path: /assets/images/vscodepostgresql01/11.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/12.PNG
-    image_path: /assets/images/vscodepostgresql01/12.PNG
+  - url: /assets/images/vscodepostgresql01/12.jpg
+    image_path: /assets/images/vscodepostgresql01/12.jpg
     alt: "Imagem Artigo"
-  - url: /assets/images/vscodepostgresql01/13.png
-    image_path: /assets/images/vscodepostgresql01/13.png
+  - url: /assets/images/vscodepostgresql01/13.jpg
+    image_path: /assets/images/vscodepostgresql01/13.jpg
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgres.jpg)
