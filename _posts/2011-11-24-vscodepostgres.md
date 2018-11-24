@@ -8,15 +8,13 @@ toc: true
 toc_label: "Começando"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/logomicrosoftnet.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgres.jpg)
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr>
 
 
 Hoje iremos falar do <strong>Visual Studio Code</strong> o fantástico editor de código!<br />
-<strong>Reflection/Lambda/Expression/Expression Tree & Linq</strong>, escrever artigos é um hobby, como também é muito gratificante compartilhar conhecimento e impactar pessoas nesse mundo vasto de TI, meus dias são geralmente muito corrido, então sempre que me sobra um tempinho procuro escrever algo. 
-Antes de mais nada quero dizer que esses artigos iniciais serão básicos e introdutório, ao decorrer das próximas séries iremos crescendo a complexidade e nos aprofundando mais no assunto.
 <br>
 <div class="notice--warning">
 <strong>FYI:</strong><br>
@@ -24,18 +22,18 @@ Quero falar que para mim <strong>Reflection/Lambda/Expression/Expression Tree & 
 </div>
 
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/01.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/02.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/03.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/04.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/05.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/06.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/07.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/08.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/09.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/10.png) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/11.png)
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/12.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/01.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/02.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/03.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/04.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/05.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/06.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/07.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/08.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/09.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/10.PNG) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/11.PNG)
+![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/12.PNG)
 ![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/13.png)
 
 
