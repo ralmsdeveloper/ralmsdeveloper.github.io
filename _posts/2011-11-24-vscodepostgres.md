@@ -60,7 +60,9 @@ O <strong>Visual Studio Code</strong> ou simplesmente <strong>VSCODE</strong>
 não é apenas um editor de código!
 </div>
 <div style="text-align: justify;">
-Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente venho trabalhando em alguns projetos usando o <strong>PostgreSQL</strong> como banco de dados, eu acho que a iniciativa do PGAdmin maravilhosa, mas infelizmente as vezes dá umas travadas, além do consumo absurdo de memória.<br>
+Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br>
+Certo e por que o artigo?!<br>
+Pois bem... eu venho trabalhando em alguns projetos usando o <strong>PostgreSQL</strong> como banco de dados, eu acredito que a iniciativa do PGAdmin é simplesmente maravilhosa, mas infelizmente as vezes dá umas travadas do nada, além do consumo absurdo de memória, mas não estou aqui pra falar sobre isso.<br>
 <br>
 Então estava procurando uma alternativa leve e clean, já que utilizo o PGAdmin apenas para fazer consultas e testes, então um "dia desses" meu amigo <strong>Carlos Santos</strong> estava fazendo uma demonstração de como gerenciar o SQL Server pelo VSCode, achei incrível a extensão criada pela Microsoft, nem sempre precisamos extrair todo poder que o <strong>SQL Server Management</strong> nos oferece, corri atrás de uma solução alternativa para fazer minhas consultas para PostgreSQL diretamente na IDE do VSCODE, e para minha maior surpresa existe uma extensão magnifica, rápida e muito leve, fiquei tão feliz que resolvi mostrar aqui nesse post como instalar, sim claro para aqueles que não conhece ela ainda!
 </div>
