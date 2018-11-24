@@ -18,23 +18,33 @@ Como criar nossa estrutura usando SnakeCase com <strong>EF Core?!</strong><br />
 Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>EntityFramework Core + PostgreSQL.</strong><br />
 Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
+
+## PascalCase 
+<div style="text-align: justify;">
+ Isso significa que a primeira letra de cada palavra no nome é maiúscula. 
+ No caso de Pascal, se existe um acrônimo na palavra, somente a primeira letra desse acrônimo deve ser maiúscula.<br />
+<strong>Exemplo:</strong> 
+</div>
+```csharp
+BlogRafael = "www.ralms.net";
+```
+<br> 
 
 ## CamelCase
 
 <div style="text-align: justify;">
-Com Camel Case, a primeira letra da primeira palavra no identificador é 
-minúscula, e todas as palavras subsequentes usam maiúsculas e minúsculas:<br />
-<strong>Exemplo:</strong>
+É o mesmo que o caso do Pascal Case, mas a primeira letra da primeira palavra é minúscula.<br />
+<strong>Exemplo:</strong> 
+</div>
 ```csharp
 blogRafael = "www.ralms.net";
 ```
-</div>
 <br>
-## PascalCase
 
+## SnakeCase 
 <div style="text-align: justify;">
-Com Pascal Case, a primeira letra de cada palavra no identificador é maiúscula, o restante em minúsculas e mesclada sem espaço<br />
+Com Snake Case, a primeira letra de cada palavra no identificador é maiúscula, o restante em minúsculas e mesclada sem espaço<br />
 <strong>Exemplo:</strong>
 ```csharp
 BlogRafael = "www.ralms.net";
