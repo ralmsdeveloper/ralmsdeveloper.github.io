@@ -58,10 +58,8 @@ Mesma regra do <strong>SnakeCase</strong>, única diferença é em vez de usar "
 blog-rafael = "www.ralms.net";
 Blog-Rafael = "www.ralms.net";
 ```
-
-<center>
-# Vamos codar?!
-</center>
+ 
+# Vamos codar?! 
 <strong>O que me levou a escrever esse artigo?</strong>
 <div style="text-align: justify;">
 Foi a necessidade que eu tive e a improdutividade de ficar digitando (" aspas duplas) em torno do campos em minhas consultas <strong>PostgreSQL</strong>, isso mesmo
@@ -119,6 +117,55 @@ public static class LinqSnakeCase
 }
 ```
  
+# Veja como ficou nosso SampleContext
+```csharp
+using Microsoft.EntityFrameworkCore;
+using System;
+
+namespace SnakeCase
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (var db = new SampleContext())
+            {
+                var script = db.Database.GenerateCreateScript();
+            }  
+        }
+    }
+
+    public sealed class SampleContext : DbContext
+    {
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            if (!optionsBuilder.IsConfigured)
+            {
+                optionsBuilder.UseNpgsql(
+                    "Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake", 
+                    _ => _.EnableRetryOnFailure());
+            }
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelo)
+        {
+            modelo.Entity<TestSnakeCase>();
+
+            // Aqui está nossa mágica!
+            modelo.ToSnakeNames();
+        }
+    }
+
+    public class TestSnakeCase
+    {
+        public int Id { get; set; }
+        public int CodigoIBGE { get; set; }
+        public string NomeCompleto { get; set; } 
+        public int AnoNascimento { get; set; }
+        public DateTime DataCadastro { get; set; }
+    }
+}
+```
 <div class="notice--success">
 <strong>
  Pessoal fico por aqui e um forte abraço! 😄 
