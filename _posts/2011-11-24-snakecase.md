@@ -19,12 +19,26 @@ Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>Ent
 Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png)
+
+## CamelCase
+
 <div style="text-align: justify;">
-Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br><br>
-Certo e por que o artigo?!<br>
-Pois bem... eu venho trabalhando em alguns projetos usando o <strong>PostgreSQL</strong> como banco de dados, eu acredito que a iniciativa do PGAdmin é simplesmente maravilhosa, mas infelizmente as vezes dá umas travadas do nada, além do consumo absurdo de memória, mas não estou aqui pra falar sobre isso.<br>
+Com Camel Case, a primeira letra da primeira palavra no identificador é 
+minúscula, e todas as palavras subsequentes usam maiúsculas e minúsculas:<br />
+<strong>Exemplo:</strong>
+```csharp
+blogRafael = "www.ralms.net";
+```
+</div>
 <br>
-Então estava procurando uma alternativa leve e clean, já que utilizo o PGAdmin apenas para fazer consultas e testes, então um "dia desses" meu amigo <strong>Carlos Santos</strong> estava fazendo uma demonstração de como fazer consultas para SQL Server no <strong>VSCODE</strong>, achei incrível a extensão criada pela Microsoft, nem sempre precisamos extrair todo poder que o <strong>SQL Server Management</strong> nos oferece, corri atrás de uma solução alternativa para fazer minhas consultas para PostgreSQL diretamente na IDE do VSCODE, e para minha maior surpresa existe uma extensão magnifica, rápida e muito leve, fiquei tão feliz que resolvi mostrar aqui nesse post como instalar, sim claro para aqueles que não conhece ela ainda!
+## PascalCase
+
+<div style="text-align: justify;">
+Com Pascal Case, a primeira letra de cada palavra no identificador é maiúscula, o restante em minúsculas e mesclada sem espaço<br />
+<strong>Exemplo:</strong>
+```csharp
+BlogRafael = "www.ralms.net";
+```
 </div>
 <br>
 <div class="notice--warning"> 
