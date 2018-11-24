@@ -40,13 +40,25 @@ blogRafael = "www.ralms.net";
 ```  
 ## SnakeCase 
 <div style="text-align: justify;">
-Com Snake Case, a primeira letra de cada palavra no identificador é maiúscula, o restante em minúsculas e mesclada sem espaço<br />
+Bom esse termo é bem legal e foi estabelecido por <strong>Jack Dahlgren</strong>, em 2002 quando trabalhava na Intel
+esse não tem uma definição especifica quando se trata em deixar as letras do identificador <strong>maiúsculo</strong> ou <strong>minúsculo</strong>, basicamente a regra pra ele é colocar um "_" entre as palavras do identificador.<br />
 <strong>Exemplo:</strong>
 ```csharp
-BlogRafael = "www.ralms.net";
+blog_rafael = "www.ralms.net";
+Blog_Rafael = "www.ralms.net";
 ```
-</div>
-<br>
+</div> 
+
+## SpinalCase 
+<div style="text-align: justify;">
+Mesma regra do <strong>SnakeCase</strong>, única diferença é em vez de usar "_", passaremos a utilizar "-".<br />
+<strong>Exemplo:</strong>
+```csharp
+blog-rafael = "www.ralms.net";
+Blog-Rafael = "www.ralms.net";
+```
+</div> 
+
 <div class="notice--warning"> 
 <strong>Observação:</strong><br>
 Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
