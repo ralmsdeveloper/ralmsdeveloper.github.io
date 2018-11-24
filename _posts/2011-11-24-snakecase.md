@@ -117,7 +117,7 @@ public static class LinqSnakeCase
 }
 ```
  
-# Veja como ficou nosso SampleContext
+## Veja como ficou nosso SampleContext
 ```csharp
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -130,6 +130,7 @@ namespace SnakeCase
         {
             using (var db = new SampleContext())
             {
+                // Nossa saída SQL
                 var script = db.Database.GenerateCreateScript();
             }  
         }
@@ -165,6 +166,18 @@ namespace SnakeCase
         public DateTime DataCadastro { get; set; }
     }
 }
+```
+
+## Nossa saída SQL
+```sql
+CREATE TABLE test_snake_case (
+    id serial NOT NULL,
+    codigo_ibge integer NOT NULL,
+    nome_completo text NULL,
+    ano_nascimento integer NOT NULL,
+    data_cadastro timestamp without time zone NOT NULL,
+    CONSTRAINT pk_test_snake_case PRIMARY KEY (id)
+);
 ```
 <div class="notice--success">
 <strong>
