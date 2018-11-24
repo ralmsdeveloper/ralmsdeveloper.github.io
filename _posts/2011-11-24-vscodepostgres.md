@@ -67,9 +67,10 @@ Pois bem... eu venho trabalhando em alguns projetos usando o <strong>PostgreSQL<
 Então estava procurando uma alternativa leve e clean, já que utilizo o PGAdmin apenas para fazer consultas e testes, então um "dia desses" meu amigo <strong>Carlos Santos</strong> estava fazendo uma demonstração de como gerenciar o SQL Server pelo VSCode, achei incrível a extensão criada pela Microsoft, nem sempre precisamos extrair todo poder que o <strong>SQL Server Management</strong> nos oferece, corri atrás de uma solução alternativa para fazer minhas consultas para PostgreSQL diretamente na IDE do VSCODE, e para minha maior surpresa existe uma extensão magnifica, rápida e muito leve, fiquei tão feliz que resolvi mostrar aqui nesse post como instalar, sim claro para aqueles que não conhece ela ainda!
 </div>
 <br>
+<div class="notice--warning"> 
 <strong>Observação:</strong><br>
-como vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
-<br>
+Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
+<div>
 <br>
 
 <div class="notice--success">
