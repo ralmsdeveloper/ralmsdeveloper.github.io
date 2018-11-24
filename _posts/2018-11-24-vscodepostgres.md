@@ -60,7 +60,7 @@ O <strong>Visual Studio Code</strong> ou simplesmente <strong>VSCODE</strong>
 não é apenas só um simples editor de código, para saber mais sobre o <strong>VSCODE</strong> visite a página oficial do projeto em: <a href="https://code.visualstudio.com/" target="_BLANK" alt="">https://code.visualstudio.com/</a>
 </div>
 <div style="text-align: justify;">
-Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br>
+Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br><br>
 Certo e por que o artigo?!<br>
 Pois bem... eu venho trabalhando em alguns projetos usando o <strong>PostgreSQL</strong> como banco de dados, eu acredito que a iniciativa do PGAdmin é simplesmente maravilhosa, mas infelizmente as vezes dá umas travadas do nada, além do consumo absurdo de memória, mas não estou aqui pra falar sobre isso.<br>
 <br>
