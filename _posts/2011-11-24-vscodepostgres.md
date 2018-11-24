@@ -57,7 +57,7 @@ Hoje iremos falar do <strong>Visual Studio Code + Postgresql</strong> o fantást
 <div class="notice--warning">
 <strong>FYI:</strong><br>
 O <strong>Visual Studio Code</strong> ou simplesmente <strong>VSCODE</strong> 
-não é apenas um editor de código, se quiser saber mais sobre o VSCODE visite a página oficial: <a href="https://code.visualstudio.com/" alt="">https://code.visualstudio.com/</a>
+não é apenas um editor de código, se quiser saber mais sobre o VSCODE visite a página oficial: <a href="https://code.visualstudio.com/" target="_BLANK" alt="">https://code.visualstudio.com/</a>
 </div>
 <div style="text-align: justify;">
 Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br>
