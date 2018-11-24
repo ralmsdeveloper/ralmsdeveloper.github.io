@@ -82,4 +82,6 @@ Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a 
  
  {% include gallery caption="Imagens do Artigo" %}
 
+ Pessoal fico por aqui e um forte abraço! 😄 <br>
+
  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #linqsolucoes<br><br>
