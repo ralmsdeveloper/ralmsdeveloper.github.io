@@ -25,7 +25,7 @@ Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos có
 ## PascalCase 
 <div style="text-align: justify;">
 Usando Pascal Case em nosso código significa que a primeira letra de cada palavra para o identificador deverá ser maiúscula.<br />
-<strong>Exemplo:</strong> 
+<strong style="color: green">Exemplo:</strong> 
 </div>
 ```csharp
 BlogRafael = "www.ralms.net";
@@ -33,7 +33,7 @@ BlogRafael = "www.ralms.net";
 ## CamelCase 
 <div style="text-align: justify;">
 É o mesmo que o caso do Pascal Case, porém a primeira letra da primeira palavra é minúscula.<br />
-<strong>Exemplo:</strong> 
+<strong  style="color: green">Exemplo:</strong> 
 </div>
 ```csharp
 blogRafael = "www.ralms.net";
@@ -42,22 +42,22 @@ blogRafael = "www.ralms.net";
 <div style="text-align: justify;">
 Bom esse termo é bem legal e foi estabelecido por <strong>Jack Dahlgren</strong>, em 2002 quando trabalhava na Intel
 esse não tem uma definição especifica quando se trata em deixar as letras do identificador <strong>maiúsculo</strong> ou <strong>minúsculo</strong>, basicamente a regra pra ele é colocar um "_" entre as palavras do identificador.<br />
-<strong>Exemplo:</strong>
+<strong style="color: green">Exemplo:</strong>
+</div> 
 ```csharp
 blog_rafael = "www.ralms.net";
 Blog_Rafael = "www.ralms.net";
 ```
-</div> 
 
 ## SpinalCase 
 <div style="text-align: justify;">
-Mesma regra do <strong>SnakeCase</strong>, única diferença é em vez de usar "_", passaremos a utilizar "-".<br />
-<strong>Exemplo:</strong>
+Mesma regra do <strong>SnakeCase</strong>, única diferença é em vez de usar "_", passaremos a utilizar "-" como separador de palavras.<br />
+<strong style="color: green">Exemplo:</strong>
+</div> 
 ```csharp
 blog-rafael = "www.ralms.net";
 Blog-Rafael = "www.ralms.net";
 ```
-</div> 
 
 <div class="notice--warning"> 
 <strong>Observação:</strong><br>
