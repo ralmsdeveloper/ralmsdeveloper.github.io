@@ -9,17 +9,16 @@ categories:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcorecsharp.png)
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
-<hr>
-
-
+<hr> 
 Como criar nossa estrutura usando SnakeCase com <strong>EF Core?!</strong><br />
 <br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/camelsnakecase.jpg)
 <div class="notice--warning">
 <strong>FYI:</strong><br>
-O <strong>Visual Studio Code</strong> ou simplesmente <strong>VSCODE</strong> 
-não é apenas só um simples editor de código, para saber mais sobre o <strong>VSCODE</strong> visite a página oficial do projeto em: <a href="https://code.visualstudio.com/" target="_BLANK" alt="">https://code.visualstudio.com/</a>
+Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>EntityFramework Core + PostgreSQL.</strong><br />
+Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
 </div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png)
 <div style="text-align: justify;">
 Isso mesmo, com a facilidade de criarmos extensões para ele, o mesmo tornou-se um dos maiores aliados para desenvolvedores de software, eu ultimamente tenho utilizado bastante o VSCode!<br><br>
 Certo e por que o artigo?!<br>
