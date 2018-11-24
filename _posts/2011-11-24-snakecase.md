@@ -20,28 +20,24 @@ Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos có
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
 
+# ResumidãO!
+
 ## PascalCase 
 <div style="text-align: justify;">
- Isso significa que a primeira letra de cada palavra no nome é maiúscula. 
- No caso de Pascal, se existe um acrônimo na palavra, somente a primeira letra desse acrônimo deve ser maiúscula.<br />
+Usando Pascal Case em nosso código significa que a primeira letra de cada palavra para o identificador deverá ser maiúscula.<br />
 <strong>Exemplo:</strong> 
 </div>
 ```csharp
 BlogRafael = "www.ralms.net";
-```
-<br> 
-
-## CamelCase
-
+``` 
+## CamelCase 
 <div style="text-align: justify;">
-É o mesmo que o caso do Pascal Case, mas a primeira letra da primeira palavra é minúscula.<br />
+É o mesmo que o caso do Pascal Case, porém a primeira letra da primeira palavra é minúscula.<br />
 <strong>Exemplo:</strong> 
 </div>
 ```csharp
 blogRafael = "www.ralms.net";
-```
-<br>
-
+```  
 ## SnakeCase 
 <div style="text-align: justify;">
 Com Snake Case, a primeira letra de cada palavra no identificador é maiúscula, o restante em minúsculas e mesclada sem espaço<br />
