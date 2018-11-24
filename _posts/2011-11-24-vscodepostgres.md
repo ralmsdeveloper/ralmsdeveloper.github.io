@@ -53,6 +53,7 @@ gallery:
 
 Hoje iremos falar do <strong>Visual Studio Code + Postgresql</strong> o fantástico editor de código, considerado um dos melhores editores de código multiplataforma e open source!<br />
 <br>
+![01]({{site.url}}{{site.baseurl}}/assets/images/vsc1.gif)
 <div class="notice--warning">
 <strong>FYI:</strong><br>
 O <strong>Visual Studio Code</strong> ou simplesmente <strong>VSCODE</strong> 
@@ -78,4 +79,4 @@ como vale ressaltar que ela é bem limitada apenas a execução de query, nada d
  
  {% include gallery caption="Imagens do Artigo" %}
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite #linqsolucoes<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #linqsolucoes<br><br>
