@@ -4,8 +4,45 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Dica
-toc: true
-toc_label: "Começando"
+gallery:
+  - url: /assets/images/vscodepostgresql01/01.PNG
+    image_path: /assets/images/vscodepostgresql01/01.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/02.PNG
+    image_path: /assets/images/vscodepostgresql01/02.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/03.PNG
+    image_path: /assets/images/vscodepostgresql01/03.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/04.PNG
+    image_path: /assets/images/vscodepostgresql01/04.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/05.PNG
+    image_path: /assets/images/vscodepostgresql01/05.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/06.PNG
+    image_path: /assets/images/vscodepostgresql01/06.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/07.PNG
+    image_path: /assets/images/vscodepostgresql01/07.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/08.PNG
+    image_path: /assets/images/vscodepostgresql01/08.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/09.PNG
+    image_path: /assets/images/vscodepostgresql01/09.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/10.PNG
+    image_path: /assets/images/vscodepostgresql01/10.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/11.PNG
+    image_path: /assets/images/vscodepostgresql01/11.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/12.PNG
+    image_path: /assets/images/vscodepostgresql01/12.PNG
+    alt: "Imagem Artigo"
+  - url: /assets/images/vscodepostgresql01/13.png
+    image_path: /assets/images/vscodepostgresql01/13.png
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgres.jpg)
@@ -21,255 +58,7 @@ Hoje iremos falar do <strong>Visual Studio Code</strong> o fantástico editor de
 Quero falar que para mim <strong>Reflection/Lambda/Expression/Expression Tree & Linq</strong> são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.
 </div>
 
+ 
+ {% include gallery caption="Imagens do Artigo" %}
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/01.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/02.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/03.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/04.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/05.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/06.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/07.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/08.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/09.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/10.PNG) 
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/11.PNG)
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/12.PNG)
-![01]({{site.url}}{{site.baseurl}}/assets/images/vscodepostgresql01/13.png)
-
-
-
-
-Vamos falar aqui um pouquinho sobre Reflection de forma introdutória, e nos próximos artigos iremos apresentar mais sobre.<br>
-<strong>•	Lambda Expression</strong><br>
-<strong>•	Expression</strong><br>
-<strong>•	Expresssion Tree</strong><br><br>
-Antes “de mais nada”, vamos usar a classe <strong>Aluno</strong> como base para exemplos que serão apresentados aqui, estrutura da classe:
-```csharp
-public class Aluno
-{
-    public Guid Id { get; set; }
-    public string Nome { get; set; }
-    public int Idade { get; set; }
-    private DateTime Data { get; set; }
-
-    public void SetAluno(Guid id, string nome, int idade)
-    {
-        Id = id;
-        Nome = nome;
-        Idade = idade;
-    }
-}
-```
-## 1 – Reflection
-
-Poderiamos falar sobre Reflection por muito tempo aqui, mais isso fica para os próximos artigos, já que estamos apenas iniciando nossa série!<br>
-<strong>O que é Reflection?</strong><br>
-Reflection ou Reflexão e uma implementação dentro do .NET onde consegue obter informações dos metadados em tempo de execução, de forma dinâmica. Como por exemplo ler o tipo de dados de uma propriedade e até invocar métodos.<br>
-<strong>Considerações finais sobre Reflection.</strong><br>
-Não é recomendado usar/invocar um método de classe que por design-design você já tem o método disponível, isso se torna trivial e não faz muito sentido.
-## 2 -  typeof 
-O uso do typeof é um dos mais utilizados quando queremos obter informações de algo em tempo de execução.
-Exemplo:
-```csharp
-// Recuperar o nome
-var nome = typeof(Aluno).Name;
-// Recuperar o nome completo (Namespace + object)
-var nomeCompleto = typeof(Aluno).FullName;
-// Namespace
-var nameSpace = typeof(Aluno).Namespace;
-```
-## 3 - GetType
-O uso do GetType se define da mesma forma que o <strong>typeof</strong>, exceto que as informações que serão recuperadas são de uma instancia.
-Exemplo:
-```csharp
-// Variável / Instância 
-var aluno = new Aluno();
-// Recuperar o nome
-var nome = aluno.GetType().Name;
-// Recuperar o nome completo (Namespace + object)
-var nomeCompleto = aluno.GetType().FullName;
-// Namespace
-var nameSpace = aluno.GetType().Namespace;
-```
-## 4 - Reflection + Linq 
-Vamos usar o Assembly aqui para fazer uma varredura em tempo de execução e recuperar as classes que contém o nome “Aluno”.<br>
-<strong>A classe Assembly</strong> de forma resumida nos fornece possibilidades de obter basicamente tudo existente em nosso assembly como classes, métodos e propriedades, é ai onde entra o Linq para nos ajudar de forma mais elegante e com mais qualidade.
-Exemplo:
-```csharp
-var types = Assembly
-    .GetExecutingAssembly()
-    .GetTypes()
-    .Where(p => p.Name.Contains("Aluno"));
-
-foreach (var type in types)
-{
-    Console.WriteLine($"Nome..: {type.Name}");
-    Console.WriteLine($"Classe: {type.IsClass}");
-}
-```
-## 5 - Recuperar propriedades da classe
-Veja como é simples recuperar as propriedades de uma classe usando Reflection, o método <strong>GetProperties()</strong> nos devolve um array do tipo <strong>PropertyInfo[]</strong> que contém todas propriedades da classe, que por sua vez contém todas informações da propriedade como nome e tipo.
-<br>
-Exemplo:
-```csharp
-var propriedades = typeof(Aluno).GetProperties();
-foreach (var propriedade in propriedades)
-{
-    Console.WriteLine($"Nome...: {propriedade.Name}");
-    Console.WriteLine($"Tipo...: {propriedade.PropertyType}"); 
-} 
-```
- ![01]({{site.url}}{{site.baseurl}}/assets/images/reflectionserie/reflection03.PNG)
-## 6 - Invocando método com Reflection 
-A classe <strong>Type</strong> nos formece vários métodos para trabalhar em tempo de execução, um deles é o <strong>GetMethod</strong> que no retorna um <strong>MethodInfo</strong>, que por sua vez nos permite invocar um método de uma classe, o método pode ser Estático ou Não!
-Vamos ver um exemplo de como usufruir dessa funcionalidade.
-Exemplo:
-```csharp
-MethodInfo setMetodo = typeof(Aluno).GetMethod("SetAluno");
-var parametros = new object[] { Guid.NewGuid(), "Rafael", 29 };
-var obj = new Aluno();
-setMetodo.Invoke(obj, parametros); 
-// Se o método da classe for estático a chamada o invoke ficaria assim:
-// setMetodo.Invoke(null, parametros); 
-```
-![01]({{site.url}}{{site.baseurl}}/assets/images/reflectionserie/reflection01.png)
-
-## 7 – Performance
-Vamos testar a performance usando <strong>Invoke</strong> vs <strong>Method</strong> da classe.
-Exemplo:
-```csharp
-MethodInfo setMetodo = typeof(Aluno).GetMethod("SetAluno");
-var parametros = new object[] { Guid.NewGuid(), "Rafael", 29 };
-var obj = new Aluno(); 
-var interacoes = 10000;
-
-var watch = new Stopwatch();
-watch.Start();
-for (int i = 0; i < interacoes; i++)
-{
-    setMetodo.Invoke(obj, parametros);
-}
-watch.Stop();
-Console.WriteLine($"Invoke.......: {watch.Elapsed}");
-
-var idAluno = Guid.NewGuid();
-var nomeAluno = "Rafael";
-var idadeAluno = 29;
-
-watch.Restart();
-for (int i = 0; i < interacoes; i++)
-{
-    obj.SetAluno(idAluno, nomeAluno, idadeAluno);
-}
-watch.Stop();
-Console.WriteLine($"Metodo Classe: {watch.Elapsed}");
-```
-Resultado:
- ![01]({{site.url}}{{site.baseurl}}/assets/images/reflectionserie/reflection02.PNG)
-
-Como falei anteriormente a utilização do <strong>“Invoke”</strong> não é para qualquer situação, principalmente pelos fanáticos por performance como eu, embora seu valor seja tão precioso dentro de todo ecossistema .NET.
-
-<div class="notice--success">
-<strong>Considerações:</strong><br>
-Este artigo foi apenas o primeiro passo para série completa que está por vir, iremos iniciar com o básico e iremos evoluir para o complexo, espero que gostem, deixem sugestões do que gostariam de ver nos próximos, algum exemplo do dia-a-dia de vocês.
-</div>
-## 8 - Exemplo completo
-```csharp
-using System;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-
-namespace ExemploLinqReflection
-{
-    public class Aluno
-    {   
-        public Guid Id { get; set; }
-        public string Nome { get; set; }
-        public int Idade { get; set; }
-        private DateTime Data { get; set; }
-
-        public void SetAluno(Guid id, string nome, int idade)
-        {
-            Id = id;
-            Nome = nome;
-            Idade = idade;
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            ////Recuperar o nome
-            //var nome = typeof(Aluno).Name;
-            //// Recuperar o nome completo (Namespace + object)
-            //var nomeCompleto = typeof(Aluno).FullName;
-            //// Namespace
-            //var nameSpace = typeof(Aluno).Namespace;
-
-            var aluno = new Aluno();
-            // Recuperar o nome
-            var nome = aluno.GetType().Name;
-            // Recuperar o nome completo (Namespace + object)
-            var nomeCompleto = aluno.GetType().FullName;
-            // Namespace
-            var nameSpace = aluno.GetType().Namespace;
-
-            var types = Assembly
-                .GetExecutingAssembly()
-                .GetTypes()
-                .Where(p => p.Name.Contains("Aluno"));
-
-            foreach (var type in types)
-            {
-                Console.WriteLine($"Nome..: {type.Name}");
-                Console.WriteLine($"Classe: {type.IsClass}");
-            }
-
-            // Recuperar propriedades da class
-            var propriedades = typeof(Aluno).GetProperties();
-            foreach (var propriedade in propriedades)
-            {
-                Console.WriteLine($"Nome...: {propriedade.Name}");
-                Console.WriteLine($"Tipo...: {propriedade.PropertyType}"); 
-            } 
-
-            MethodInfo setMetodo = typeof(Aluno).GetMethod("SetAluno");
-            var parametros = new object[] { Guid.NewGuid(), "Rafael", 29 };
-            var obj = new Aluno();
-            setMetodo.Invoke(obj, parametros);
-
-            var interacoes = 10000;
-
-            var watch = new Stopwatch();
-            watch.Start();
-            for (int i = 0; i < interacoes; i++)
-            {
-                setMetodo.Invoke(obj, parametros);
-            }
-            watch.Stop();
-            Console.WriteLine($"Invoke.......: {watch.Elapsed}");
-
-            var idAluno = Guid.NewGuid();
-            var nomeAluno = "Rafael";
-            var idadeAluno = 29;
-
-            watch.Restart();
-            for (int i = 0; i < interacoes; i++)
-            {
-                obj.SetAluno(idAluno, nomeAluno, idadeAluno);
-            }
-            watch.Stop();
-            Console.WriteLine($"Metodo Classe: {watch.Elapsed}");
-
-            Console.ReadKey();
-        }
-    }
-}
-
-```
-## Referências
-<a href="https://docs.microsoft.com/pt-br/dotnet/framework/reflection-and-codedom/reflection" target="_BLACK">Reflection</a><br>
-<br><br> 
-Pessoal, fico por aqui <strong>#reflection #mvp #mvpbr #mvpbuzz #serieralms</strong>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite #linqsolucoes<br><br>
