@@ -19,9 +19,9 @@ Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>Ent
 Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
-
-# ResumidãO!
-
+<center>
+# ResumidÃO!
+</center>
 ## PascalCase 
 <div style="text-align: justify;">
 Usando Pascal Case em nosso código significa que a primeira letra de cada palavra para o identificador deverá ser maiúscula.<br />
@@ -40,8 +40,8 @@ blogRafael = "www.ralms.net";
 ```  
 ## SnakeCase 
 <div style="text-align: justify;">
-Bom esse termo é bem legal e foi estabelecido por <strong>Jack Dahlgren</strong>, em 2002 quando trabalhava na Intel
-esse não tem uma definição especifica quando se trata em deixar as letras do identificador <strong>maiúsculo</strong> ou <strong>minúsculo</strong>, basicamente a regra pra ele é colocar um "_" entre as palavras do identificador.<br />
+Bom esse termo é bem legal e foi estabelecido por <strong>Jack Dahlgren</strong>, em 2002 quando trabalhava na Intel,
+esse caso em especial, não tem uma definição especifica quando se trata em deixar as letras do identificador <strong>maiúsculo</strong> ou <strong>minúsculo</strong>, basicamente a regra pra ele é colocar um "_" entre as palavras do identificador.<br />
 <strong style="color: green">Exemplo:</strong>
 </div> 
 ```csharp
@@ -59,23 +59,71 @@ blog-rafael = "www.ralms.net";
 Blog-Rafael = "www.ralms.net";
 ```
 
-<div class="notice--warning"> 
-<strong>Observação:</strong><br>
-Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
+<center>
+# Vamos codar?!
+</center>
+<strong>O que me levou a escrever esse artigo?</strong>
+<div style="text-align: justify;">
+Foi a necessidade que eu tive e a improdutividade de ficar digitando (" aspas duplas) em torno do campos em minhas consultas <strong>PostgreSQL</strong>, isso mesmo
+sempre escrevi toda estrutura do meu banco via <strong>Script</strong>, mas eu quero usar todo recurso que o <strong>EntityFramwork Core</strong> me proporciona, o EFCore por Design
+cria os o nomes de tabelas e campos por reflection, isso significa que se tiver uma propriedade <strong>PascalCase</strong>, da mesma forma será atribuido o nome a este,
+existe a possibilidade de usarmos propriedades de sombras(ou Fluent API), mas esse é o trabalho que eu não gostaria de fazer e nem me procupar. <br>
+<br>
+E foi por isso que escrevi essa pequena adptação(Extensão) para nosso <strong>ModelBuilder</strong>
+</div>
+```csharp
+public static class LinqSnakeCase
+{ 
+    public static void ToSnakeNames(this ModelBuilder modelBuilder)
+    {
+        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        {
+            entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
+
+            foreach (var property in entity.GetProperties())
+            {
+                property.Relational().ColumnName = property
+                    .Relational()
+                    .ColumnName
+                    .ToSnakeCase();
+            }
+
+            foreach (var key in entity.GetKeys())
+            {
+                key.Relational().Name = key.Relational().Name.ToSnakeCase(); 
+            }
+
+            foreach (var key in entity.GetForeignKeys())
+            {
+                key.Relational().Name = key.Relational().Name.ToSnakeCase();
+            }
+
+            foreach (var index in entity.GetIndexes())
+            {
+                index.Relational().Name = index.Relational().Name.ToSnakeCase();
+            }
+        }
+    }
+
+    private static string ToSnakeCase(this string name)
+    {
+        return string.IsNullOrWhiteSpace(name)
+            ? name
+            : Regex.Replace(
+                name, 
+                @"([a-z0-9])([A-Z])", 
+                "$1_$2", 
+                RegexOptions.Compiled,
+                TimeSpan.FromSeconds(1)).ToLower(); 
+    }
+}
+```
+ 
+<div class="notice--success">
+<strong>
+ Pessoal fico por aqui e um forte abraço! 😄 
+ </strong>
 </div> 
 
-<strong>Ponto positivo</strong>:<br />
-A maior vantagem de utilizar extensões para fazer consultas em banco de dados como SQL Server ou PostgreSQL é sem dúvida a produtividade, pois não necessita de sair da IDE para executar sua query, e nem abrir um novo processo que pode chegar a consumir mais 300MB de memória. 
-
-<div class="notice--success">
-<strong>Fiz um passo a passo, siga-o e desfrute dessa maravilha!</strong>
-</div>
-
-
- 
- 
- {% include gallery caption="Imagens do Artigo" %}
-
- Pessoal fico por aqui e um forte abraço! 😄 <br>
 
  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #linqsolucoes<br><br>
