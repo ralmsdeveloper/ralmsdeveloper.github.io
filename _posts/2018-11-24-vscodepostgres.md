@@ -71,6 +71,10 @@ Então estava procurando uma alternativa leve e clean, já que utilizo o PGAdmin
 <strong>Observação:</strong><br>
 Como nem tudo é tão perfeito, vale ressaltar que ela é bem limitada apenas a execução de query, nada de backup, nada de algo mais hard, ela é exatamente pra resolver os problemas mais trivias!
 </div> 
+
+<strong>Ponto positivo</strong>:<br />
+A maior vantagem de utilizar extensões para fazer consultas em banco de dados como SQL Server ou PostgreSQL é sem dúvida a produtividade, pois não necessita de sair da IDE para executar sua query, e nem abrir um novo processo que pode chegar a consumir mais 300MB de memória. 
+
 <div class="notice--success">
 <strong>Fiz um passo a passo, siga-o e desfrute dessa maravilha!</strong>
 </div>
