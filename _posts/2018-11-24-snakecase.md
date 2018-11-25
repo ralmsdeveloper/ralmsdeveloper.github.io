@@ -67,7 +67,7 @@ sempre escrevi toda estrutura de meu banco com um <strong>DDL</strong> bem esque
 cria os nomes de tabelas e campos por reflection, isso significa que se tiver uma propriedade <strong>PascalCase</strong>, da mesma forma será atribuido o nome a este,
 existe a possibilidade de usarmos propriedades de sombras(ou Fluent API), mas esse é o trabalho que eu não gostaria de fazer e nem me procupar. <br>
 <br>
-Cada um tem sua forma de dar uma nomeclatura em seus projetos, para banco de dados eu gosto de utilizar <strong>SnakeCase</strong>, 
+Cada um tem sua forma de aplicar nomeclaturas em seus projetos, quando se trata banco de dados eu gosto de utilizar <strong>SnakeCase</strong>, 
 acredito que é muito mais legível a leitura e suporte.<br />
 <br>
 E foi por isso que escrevi essa pequena extensão para nosso <strong>ModelBuilder</strong>, tudo isso por que o <strong>SQL Server</strong> não se importa com maiúsculas e minúsculas para nomes de colunas e tabelas, cenário muito diferente para <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
