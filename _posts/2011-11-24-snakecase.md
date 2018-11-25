@@ -67,8 +67,8 @@ sempre escrevi toda estrutura do meu banco com um <strong>DDL</strong> bem esque
 cria os o nomes de tabelas e campos por reflection, isso significa que se tiver uma propriedade <strong>PascalCase</strong>, da mesma forma será atribuido o nome a este,
 existe a possibilidade de usarmos propriedades de sombras(ou Fluent API), mas esse é o trabalho que eu não gostaria de fazer e nem me procupar. <br>
 <br>
-E foi por isso que escrevi essa pequena adptação(Extensão) para nosso <strong>ModelBuilder</strong>, tudo isso por que o <strong>SQL Server</strong> não importa maiúsculas e minúsculas para nomes de colunas e tabelas, coisa muito diferente do <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
-mas aqui está a solução para isso!
+E foi por isso que escrevi essa pequena extensão para nosso <strong>ModelBuilder</strong>, tudo isso por que o <strong>SQL Server</strong> não importa maiúsculas e minúsculas para nomes de colunas e tabelas, coisa muito diferente do <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
+mas aqui está a solução para isso, e <strong>VIVA REGEX</strong>!
 </div>
 ```csharp
 public static class LinqSnakeCase
