@@ -19,9 +19,9 @@ Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>Ent
 Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
-<center>
-# ResumidÃO!
-</center>
+ 
+# ResumidÃO! 
+
 ## PascalCase 
 <div style="text-align: justify;">
 Usando Pascal Case em nosso código significa que a primeira letra de cada palavra para o identificador deverá ser maiúscula.<br />
