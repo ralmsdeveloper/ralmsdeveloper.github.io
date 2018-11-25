@@ -10,13 +10,13 @@ locale                   : "pt-BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
-description              : "CEO Linq Soluções, Microsoft MVP, MCP, MCC, Desenvolvedor Sênior e apaixonado por C#, Contribuo com projetos no Github.<br>Fundador do Developers Sergipe.<br> Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
+description              : "CEO <a href='http://linqsolucoes.com.br' alt='Linq Soluções'>Linq Soluções</a>, Microsoft MVP, MCP, MCC, Desenvolvedor Sênior e apaixonado por C#, Contribuo com projetos no Github.<br>Fundador do Developers Sergipe.<br> Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
 url                      : "https://ralmsdeveloper.github.io"
 baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 # breadcrumbs            : false # true, false (default)
-words_per_minute         : 80
+words_per_minute         : 50
 comments:
   provider               : disqus # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "custom"
   disqus:
