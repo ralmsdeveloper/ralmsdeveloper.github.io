@@ -10,7 +10,7 @@ categories:
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr> 
-Como fazer convenções de nomenclatura usando <strong>SnakeCase</strong> + <strong>EF Core?!</strong><br />
+Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> para o <strong>EntityFramework Core!</strong><br />
 <br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/camelsnakecase.jpg)
 <div class="notice--warning">
