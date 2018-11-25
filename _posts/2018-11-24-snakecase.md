@@ -20,7 +20,9 @@ Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos có
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
  
+
 # ResumidÃO! 
+
 
 ## PascalCase 
 <div style="text-align: justify;">
