@@ -62,7 +62,7 @@ Blog-Rafael = "www.ralms.net";
 # Vamos codar?! 
 <strong>O que me levou a escrever esse artigo?</strong>
 <div style="text-align: justify;">
-Foi a necessidade que eu tive e a improdutividade de ficar digitando uma aspas em torno dos campos e tabelas em minhas consultas <strong>PostgreSQL</strong>, isso mesmo
+Foi a necessidade que eu tive e a improdutividade de ficar digitando aspas em torno dos campos e tabelas em minhas consultas <strong>PostgreSQL</strong>, isso mesmo
 sempre escrevi toda estrutura do meu banco com um <strong>DDL</strong> bem esquematizado, mas eu quero usar todo recurso que o <strong>EntityFramwork Core</strong> me proporciona, o EFCore por Design
 cria os o nomes de tabelas e campos por reflection, isso significa que se tiver uma propriedade <strong>PascalCase</strong>, da mesma forma será atribuido o nome a este,
 existe a possibilidade de usarmos propriedades de sombras(ou Fluent API), mas esse é o trabalho que eu não gostaria de fazer e nem me procupar. <br>
