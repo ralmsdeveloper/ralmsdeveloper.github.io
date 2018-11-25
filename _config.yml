@@ -10,7 +10,7 @@ locale                   : "pt-BR"
 title                    : "Ralms.NET"
 title_separator          : "-"
 name                     : "Rafael Almeida"
-description              : "Microsoft MVP, MCP, Engenheiro de Sistemas e apaixonado por C#, Contribuo com projetos no Github e MSDN Brasil.<br>Fundador do Developers Sergipe.<br> Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
+description              : "CEO Linq Soluções, Microsoft MVP, MCP, MCC, Desenvolvedor Sênior e apaixonado por C#, Contribuo com projetos no Github.<br>Fundador do Developers Sergipe.<br> Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
 url                      : "https://ralmsdeveloper.github.io"
 baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
