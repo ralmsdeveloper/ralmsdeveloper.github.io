@@ -74,8 +74,9 @@ Cada um tem sua forma de aplicar nomeclaturas em seus projetos, quando se trata 
 acredito que é muito mais legível a leitura e suporte.<br />
 <br>
 E foi por isso que escrevi essa pequena extensão para nosso <strong>ModelBuilder</strong>, tudo isso por que aqueles que vem do <strong>SQL Server</strong> sabe que ele não se <strong>importa</strong> com maiúsculas e minúsculas para nomes de colunas e tabelas, cenário muito diferente para <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
-mas aqui está a solução para isso, e <strong>VIVA REGEX</strong>!<br />
+mas aqui está a solução para isso, e então com alguns pequenos ajustes e uma simples função Regex, serei mais feliz 😄, <strong>VIVA REGEX</strong>!<br />
 </div>
+<br />
 ```csharp
 public static class LinqSnakeCase
 { 
