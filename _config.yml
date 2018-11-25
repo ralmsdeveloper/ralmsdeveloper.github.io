@@ -88,7 +88,7 @@ analytics:
 author:
   name             : "Rafael Almeida"
   avatar           : /assets/images/bio.png
-  bio              : "CEO Linq Soluções, Microsoft MVP, MCP, MCC, Senior Software Developer e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
+  bio              : "CEO Linq Solu&ccedil;&otilde;es, Microsoft MVP, MCP, MCC, Senior Software Developer e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do EntityFrameworkCore.FirebirdSQL."
   location         : "Sergipe-Brasil"
   email            : ralms@ralms.net
   uri              : www.linqsolucoes.com.br
