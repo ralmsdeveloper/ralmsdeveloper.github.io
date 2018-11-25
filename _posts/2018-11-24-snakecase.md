@@ -1,5 +1,5 @@
 ﻿---
-title: "EF Core - SnakeCase"
+title: "EntityFramework Core - SnakeCase"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
@@ -34,7 +34,7 @@ BlogRafael = "www.ralms.net";
 ``` 
 ## CamelCase 
 <div style="text-align: justify;">
-É o mesmo que o caso do Pascal Case, porém a primeira letra da primeira palavra é minúscula.<br />
+É o mesmo caso do Pascal Case, porém a primeira letra da primeira palavra é minúscula.<br />
 <strong  style="color: green">Exemplo:</strong> 
 </div>
 ```csharp
@@ -64,15 +64,16 @@ Blog-Rafael = "www.ralms.net";
 # Vamos codar?! 
 <strong>O que me levou a escrever esse artigo?</strong>
 <div style="text-align: justify;">
-Foi a necessidade que eu tive e a improdutividade de ficar digitando aspas em torno dos campos e tabelas em minhas consultas <strong>PostgreSQL</strong>, isso mesmo
-sempre escrevi toda estrutura de meu banco com um <strong>DDL</strong> bem esquematizado, mas eu queria usar todo recurso que o <strong>EntityFramwork Core</strong> me proporciona, o EFCore por Design
+Foi a necessidade que eu tive e a improdutividade de ficar digitando aspas em torno dos campos e tabelas em minhas consultas <strong>PostgreSQL</strong>, isso mesmo,
+eu sempre escrevi toda estrutura de meu banco com um <strong>DDL</strong> bem esquematizado.<br>
+<br>Mas eu queria usar todo recurso que o <strong>EntityFramwork Core</strong> me proporciona, o EFCore por Design
 cria os nomes de tabelas e campos por reflection, isso significa que se tiver uma propriedade <strong>PascalCase</strong>, da mesma forma será atribuido o nome a este,
 existe a possibilidade de usarmos propriedades de sombras(ou Fluent API), mas esse é o trabalho que eu não gostaria de fazer e nem me procupar. <br>
 <br>
 Cada um tem sua forma de aplicar nomeclaturas em seus projetos, quando se trata banco de dados eu gosto de utilizar <strong>SnakeCase</strong>, 
 acredito que é muito mais legível a leitura e suporte.<br />
 <br>
-E foi por isso que escrevi essa pequena extensão para nosso <strong>ModelBuilder</strong>, tudo isso por que o <strong>SQL Server</strong> não se importa com maiúsculas e minúsculas para nomes de colunas e tabelas, cenário muito diferente para <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
+E foi por isso que escrevi essa pequena extensão para nosso <strong>ModelBuilder</strong>, tudo isso por que aqueles que vem do <strong>SQL Server</strong> sabe que ele não se <strong>importa</strong> com maiúsculas e minúsculas para nomes de colunas e tabelas, cenário muito diferente para <strong>PostgreSQL</strong> que faz distinção entre maiúsculas e minúsculas,
 mas aqui está a solução para isso, e <strong>VIVA REGEX</strong>!<br />
 </div>
 ```csharp
