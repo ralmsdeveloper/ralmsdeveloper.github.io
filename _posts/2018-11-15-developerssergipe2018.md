@@ -50,6 +50,42 @@ gallery:
   - url: /assets/images/devse2018/dev3.jpg
     image_path: /assets/images/devse2018/dev3.jpg
     alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev16.jpg
+    image_path: /assets/images/devse2018/dev16.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev17.jpg
+    image_path: /assets/images/devse2018/dev17.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev20.jpg
+    image_path: /assets/images/devse2018/dev20.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev21.jpg
+    image_path: /assets/images/devse2018/dev21.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev22.jpg
+    image_path: /assets/images/devse2018/dev22.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev24.jpg
+    image_path: /assets/images/devse2018/dev24.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev25.jpg
+    image_path: /assets/images/devse2018/dev25.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev26.jpg
+    image_path: /assets/images/devse2018/dev26.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev29.jpg
+    image_path: /assets/images/devse2018/dev29.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev30.jpg
+    image_path: /assets/images/devse2018/dev30.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev31.jpg
+    image_path: /assets/images/devse2018/dev31.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev32.jpg
+    image_path: /assets/images/devse2018/dev32.jpg
+    alt: "Developers Sergipe Summit 2018"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
@@ -66,7 +102,7 @@ Obrigado ao GDG Aracaju pelo convite especial!
 <br>
 </div>  
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/dev2.jpg) 
+![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/2.jpg) 
 
 {% include gallery caption="Fotos do Evento" %}
 
