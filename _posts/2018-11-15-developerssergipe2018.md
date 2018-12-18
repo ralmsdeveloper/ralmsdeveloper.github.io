@@ -86,6 +86,60 @@ gallery:
   - url: /assets/images/devse2018/dev32.jpg
     image_path: /assets/images/devse2018/dev32.jpg
     alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev35.jpg
+    image_path: /assets/images/devse2018/dev35.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev36.jpg
+    image_path: /assets/images/devse2018/dev36.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev43.jpg
+    image_path: /assets/images/devse2018/dev43.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev45.jpg
+    image_path: /assets/images/devse2018/dev45.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev47.jpg
+    image_path: /assets/images/devse2018/dev47.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev48.jpg
+    image_path: /assets/images/devse2018/dev48.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev50.jpg
+    image_path: /assets/images/devse2018/dev50.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev52.jpg
+    image_path: /assets/images/devse2018/dev52.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev53.jpg
+    image_path: /assets/images/devse2018/dev53.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev54.jpg
+    image_path: /assets/images/devse2018/dev54.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev55.jpg
+    image_path: /assets/images/devse2018/dev55.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev56.jpg
+    image_path: /assets/images/devse2018/dev56.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev57.jpg
+    image_path: /assets/images/devse2018/dev57.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev59.jpg
+    image_path: /assets/images/devse2018/dev59.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev60.jpg
+    image_path: /assets/images/devse2018/dev60.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev61.jpg
+    image_path: /assets/images/devse2018/dev61.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev62.jpg
+    image_path: /assets/images/devse2018/dev62.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev63.jpg
+    image_path: /assets/images/devse2018/dev63.jpg
+    alt: "Developers Sergipe Summit 2018"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
