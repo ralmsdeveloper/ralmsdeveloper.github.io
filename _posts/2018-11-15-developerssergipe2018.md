@@ -205,6 +205,7 @@ No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido e
 <br> 
 <br><br> 
 Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!
+![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
 <br><br>
  
 <br>
@@ -214,4 +215,4 @@ Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!
 
 {% include gallery caption="Fotos do Evento" %}
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #msignite #linqsolucoes #gdgaracaju<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #linqsolucoes<br><br>
