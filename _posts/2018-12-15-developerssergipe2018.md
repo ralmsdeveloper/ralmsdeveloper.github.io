@@ -208,6 +208,7 @@ No dia 15/12/2018 realizamos o primeiro Developers Sergipe Summit, em nosso quer
 Enfim foi uma experiencia muito boa, a galera com uma energia sem igual, parabéns pessoal para vocês, e iremos firmar essa marca em nosso estado, iremos procurar lideres de comunidades a se juntar a nós, muitos planos para 2019.
 <br><br> 
 Aqui vai uma palavra(homenagem) pra meus amigos palestrantes, entendedores entenderão <strong>PRONTO! 😄</strong>
+<br><br> 
 </div>   
 ![02]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
 <br><br><br>
