@@ -5,37 +5,55 @@ excerpt_separator: "Ler mais"
 categories:
   - Evento
 gallery:
+  - url: /assets/images/devse2018/1.jpg
+    image_path: /assets/images/devse2018/1.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/2.jpg
+    image_path: /assets/images/devse2018/2.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/3.jpg
+    image_path: /assets/images/devse2018/3.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/4.jpg
+    image_path: /assets/images/devse2018/4.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/5.jpg
+    image_path: /assets/images/devse2018/5.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/6.jpg
+    image_path: /assets/images/devse2018/6.jpg
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev4.jpg
     image_path: /assets/images/devse2018/dev4.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev5.jpg
     image_path: /assets/images/devse2018/dev5.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev6.jpg
     image_path: /assets/images/devse2018/dev6.jpg
-    alt: "Microsoft Ignite 2018"
-  - url: /assets/images/devse2018/dev7.jpg
-    image_path: /assets/images/devse2018/dev7.jpg
-    alt: "Microsoft Ignite 2018"
-  - url: /assets/images/devse2018/dev8.jpg
-    image_path: /assets/images/devse2018/dev8.jpg
-    alt: "Microsoft Ignite 2018"
-  - url: /assets/images/devse2018/dev9.jpg
-    image_path: /assets/images/devse2018/dev9.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev71.jpg
+    image_path: /assets/images/devse2018/dev71.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev72.jpg
+    image_path: /assets/images/devse2018/dev72.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev73.jpg
+    image_path: /assets/images/devse2018/dev73.jpg
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev10.jpg
     image_path: /assets/images/devse2018/dev10.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev11.jpg
     image_path: /assets/images/devse2018/dev11.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev3.jpg
     image_path: /assets/images/devse2018/dev3.jpg
-    alt: "Microsoft Ignite 2018"
+    alt: "Developers Sergipe Summit 2018"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
-![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/dev1.jpg)
+![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/principal.jpg)
 <div style="text-align: justify;">
 <center>Developers Sergipe Summit 2018</center>
 <br><br> 
