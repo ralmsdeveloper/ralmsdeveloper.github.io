@@ -41,8 +41,8 @@ gallery:
   - url: /assets/images/devse2018/dev73.jpg
     image_path: /assets/images/devse2018/dev73.jpg
     alt: "Developers Sergipe Summit 2018"
-  - url: /assets/images/devse2018/dev10.jpg
-    image_path: /assets/images/devse2018/dev10.jpg
+  - url: /assets/images/devse2018/dev88.jpg
+    image_path: /assets/images/devse2018/dev88.jpg
     alt: "Developers Sergipe Summit 2018"
   - url: /assets/images/devse2018/dev11.jpg
     image_path: /assets/images/devse2018/dev11.jpg
