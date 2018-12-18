@@ -204,15 +204,12 @@ gallery:
 No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido estado de Sergipe, aqui no nordeste, impactamos aproximadamente 500 pessoas, Uall, isso foi fantástico.
 <br> 
 <br><br> 
-Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!<br>
-![02]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
-<br><br>
- 
-<br>
 </div>  
-
+<strong>Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!</strong>
+![02]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
+<br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/2.jpg) 
 
 {% include gallery caption="Fotos do Evento" %}
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #linqsolucoes<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share <a href="https://linqsolucoes.com.br" alt="">#linqsolucoes</a><br><br>
