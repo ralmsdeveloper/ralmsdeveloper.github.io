@@ -215,4 +215,9 @@ Enfim foi uma experiencia muito boa, a galera com uma energia sem igual, parabé
 
 {% include gallery caption="Fotos do Evento" %}
 
+
+<div class="notice--success">
+Pessoal fico por aqui e um forte abraço! 😄
+</div>
+
  #mvpbuzz #mvpbr #mvp #developerssergipe #share <a href="https://linqsolucoes.com.br" alt="">#linqsolucoes</a><br><br>
