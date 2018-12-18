@@ -202,8 +202,8 @@ gallery:
 <center>Developers Sergipe Summit 2018</center>
 <br><br> 
 No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido estado de Sergipe, aqui no nordeste, impactamos aproximadamente 500 pessoas, Uall, isso foi fantástico.
-<br>
- Quero agradecer a todos meus amigos MVP's que aceitaram meu convite e tornou esse evento perfeito, não foi fácil, mas impactamos de forma positiva nossa comunidade aqui em Sergipe, quero em 2019 realizar um evento superando todas as expectativas, mantendo a qualidade e excelência para nosso público.
+<br><br>
+ Quero agradecer a todos meus amigos MVP's que aceitaram meu convite e tornou esse evento perfeito, não foi fácil, mas impactamos de forma positiva nossa comunidade aqui em <strong>Sergipe</strong>, quero em 2019 realizar um evento superando todas as expectativas, mantendo a qualidade e excelência para nosso público.
 <br> 
 <br><br> 
 </div>   
