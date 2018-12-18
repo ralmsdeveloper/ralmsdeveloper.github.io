@@ -140,6 +140,60 @@ gallery:
   - url: /assets/images/devse2018/dev63.jpg
     image_path: /assets/images/devse2018/dev63.jpg
     alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev65.jpg
+    image_path: /assets/images/devse2018/dev65.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev66.jpg
+    image_path: /assets/images/devse2018/dev66.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev67.jpg
+    image_path: /assets/images/devse2018/dev67.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev69.jpg
+    image_path: /assets/images/devse2018/dev69.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev70.jpg
+    image_path: /assets/images/devse2018/dev70.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev71.jpg
+    image_path: /assets/images/devse2018/dev71.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev72.jpg
+    image_path: /assets/images/devse2018/dev72.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev73.jpg
+    image_path: /assets/images/devse2018/dev73.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev74.jpg
+    image_path: /assets/images/devse2018/dev74.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev75.jpg
+    image_path: /assets/images/devse2018/dev75.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev78.jpg
+    image_path: /assets/images/devse2018/dev78.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev80.jpg
+    image_path: /assets/images/devse2018/dev80.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev81.jpg
+    image_path: /assets/images/devse2018/dev81.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev82.jpg
+    image_path: /assets/images/devse2018/dev82.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev83.jpg
+    image_path: /assets/images/devse2018/dev83.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev89.jpg
+    image_path: /assets/images/devse2018/dev89.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev90.jpg
+    image_path: /assets/images/devse2018/dev90.jpg
+    alt: "Developers Sergipe Summit 2018"
+  - url: /assets/images/devse2018/dev97.jpg
+    image_path: /assets/images/devse2018/dev97.jpg
+    alt: "Developers Sergipe Summit 2018"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
@@ -150,7 +204,7 @@ gallery:
 No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido estado de Sergipe, aqui no nordeste, impactamos aproximadamente 500 pessoas, Uall, isso foi fantástico.
 <br> 
 <br><br> 
-Obrigado ao GDG Aracaju pelo convite especial!
+Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!
 <br><br>
  
 <br>
