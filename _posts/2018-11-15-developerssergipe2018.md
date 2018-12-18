@@ -205,7 +205,7 @@ No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido e
 <br> 
 <br><br> 
 Obrigado especial a todos patrocinadores e aqueles que apoiaram nosso projeto!
-![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
+![02]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
 <br><br>
  
 <br>
