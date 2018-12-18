@@ -207,6 +207,7 @@ No 15/12/2018 realizamos o primeiro Developer Sergipe Summit, em nosso querido e
 </div>   
 ![02]({{site.url}}{{site.baseurl}}/assets/images/devse2018/patrocinadores.jpg)
 <br><br><br>
+#Galeria de Fotos
 ![01]({{site.url}}{{site.baseurl}}/assets/images/devse2018/2.jpg) 
 
 {% include gallery caption="Fotos do Evento" %}
