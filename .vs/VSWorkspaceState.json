@@ -1,8 +1,12 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_posts"
+    "\\_data",
+    "\\_includes",
+    "\\_includes\\footer",
+    "\\_includes\\head",
+    "\\_layouts"
   ],
-  "SelectedNode": "\\_posts\\2018-11-24-vscodepostgres.md",
+  "SelectedNode": "\\_includes\\read-time.html",
   "PreviewInSolutionExplorer": false
 }
