@@ -43,9 +43,9 @@ public class SampleDbContext : DbContext
 ```
 ## What's
 
-Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente nosso onModelCreating é bastante chato!!!<br>
+Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente no <strong>onModelCreating</strong> é bastante chato!!!<br>
 
-Pois bem, existe uma forma de burlar isso então teríamos que escrever um pouco de código, mas isso seria uma única vez.
+Pois bem, existe uma forma de burlar isso, então teríamos que escrever um pouco de código, mas isso seria uma única vez.
 ```csharp
 public class SampleDbContext : DbContext
 {
@@ -90,7 +90,8 @@ public class SampleDbContext : DbContext
 }
 ```
 ## Então isso foi resolvido
-Como falei anteriormente, na versão EFCore 2.2 saiu uma nova feature que resolve tudo isso, ficou mais clean, pouco código e tudo resolvido, veja com uma simples configuração como tudo faz mais sentido.
+Como falei anteriormente, na versão EFCore 2.2 saiu uma nova feature que resolve tudo isso, ficou mais clean, 
+pouco código e tudo resolvido, veja que agora tudo faz mais sentido, graças ao <strong>ApplyConfigurationsFromAssembly</strong>.
 Exemplo:
 ```csharp
 public class SampleDbContext : DbContext
@@ -106,5 +107,10 @@ public class SampleDbContext : DbContext
         modelBuilder.ApplyConfigurationsFromAssembly(assembly);
     }
 }
+```
+<div class="notice--warning">
+<strong>FYI:</strong><br>
+O método <strong>ApplyConfigurationsFromAssembly</strong> aceita 2 parâmetros o primeiro é o assembly onde ele fará a varredura das interfaces de configuração via <Strong>Reflection</Strong>, o segundo é um predicado onde você pode dizer quais configurações serão aplicadas.
+</div>
 <br><br> 
 Pessoal, fico por aqui <strong>#mvp #mvpbr #mvpbuzz #efcore</strong>
