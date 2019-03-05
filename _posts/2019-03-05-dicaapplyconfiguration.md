@@ -14,7 +14,7 @@ toc_label: "Começando"
 <hr>
 
 
-Bom essa dica pode lhe ajudar a eliminar boa parte de código de sua aplicação, em especial de seu **DbContext**
+Bom essa dica pode lhe ajudar a eliminar uma boa parte de código de sua aplicação, em especial de seu **Context**
 <br>
 <div class="notice--warning">
 <strong>FYI:</strong><br>
@@ -43,7 +43,7 @@ public class SampleDbContext : DbContext
 ```
 ## What's
 
-Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente no <strong>onModelCreating</strong> é bastante chato, e podemos esquecer rss 😏!!!<br>
+Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente no <strong>onModelCreating</strong>,.., é bastante chato, e podemos esquecer rss 😏!!!<br>
 
 Pois bem, existe uma forma de burlar isso, então teríamos que escrever um pouco de código, mas isso seria uma única vez.
 ```csharp
