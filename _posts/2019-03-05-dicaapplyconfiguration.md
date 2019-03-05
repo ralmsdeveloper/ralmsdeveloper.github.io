@@ -18,7 +18,7 @@ Bom essa dica pode lhe ajudar a eliminar boa parte de código de sua aplicação
 <br>
 <div class="notice--warning">
 <strong>FYI:</strong><br>
-Esta nova funcionalidade que irei apresentar foi uma das novas funcionalidades implementadas e que saiu na versão do EntityFramework Core 2.2.
+Esta nova funcionalidade que irei apresentar foi uma das features implementadas e que saiu na versão do EntityFramework Core 2.2.
 </div>
 Sem mais delongas vamos ao que interessa, antes do EntityFramework Core 2.2 sair do forno, uma das opções de aplicar as configurações de nossas entidades era da seguinte forma:
 ```csharp
@@ -43,7 +43,7 @@ public class SampleDbContext : DbContext
 ```
 ## What's
 
-Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente no <strong>onModelCreating</strong> é bastante chato!!!<br>
+Pois é, isso é muito doloroso, imagine um sistema complexo, onde existe inúmeras entidades, toda vez que criar uma ter que aplicar manualmente no <strong>onModelCreating</strong> é bastante chato, e podemos esquecer rss 😏!!!<br>
 
 Pois bem, existe uma forma de burlar isso, então teríamos que escrever um pouco de código, mas isso seria uma única vez.
 ```csharp
@@ -91,7 +91,7 @@ public class SampleDbContext : DbContext
 ```
 ## Então isso foi resolvido
 Como falei anteriormente, na versão EFCore 2.2 saiu uma nova feature que resolve tudo isso, ficou mais clean, 
-pouco código e tudo resolvido, veja que agora tudo faz mais sentido, graças ao <strong>ApplyConfigurationsFromAssembly</strong>.
+pouco código e tudo resolvido, veja que agora tudo faz mais sentido, graças ao <strong>ApplyConfigurationsFromAssembly</strong>.<br>
 Exemplo:
 ```csharp
 public class SampleDbContext : DbContext
@@ -110,7 +110,7 @@ public class SampleDbContext : DbContext
 ```
 <div class="notice--warning">
 <strong>FYI:</strong><br>
-O método <strong>ApplyConfigurationsFromAssembly</strong> aceita 2 parâmetros o primeiro é o assembly onde ele fará a varredura das interfaces de configuração via <Strong>Reflection</Strong>, o segundo é um predicado onde você pode dizer quais configurações serão aplicadas.
+O método <strong>ApplyConfigurationsFromAssembly</strong> aceita 2 parâmetros, o primeiro é um <strong>Assembly</strong>, a partir dele o método fará a varredura das interfaces de configuração via <strong>Reflection</strong>, o segundo é um predicado onde você pode dizer quais configurações serão aplicadas.
 </div>
 <br><br> 
 Pessoal, fico por aqui <strong>#mvp #mvpbr #mvpbuzz #efcore</strong>
