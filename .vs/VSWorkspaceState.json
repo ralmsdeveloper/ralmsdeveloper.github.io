@@ -1,12 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_data",
-    "\\_includes",
-    "\\_includes\\footer",
-    "\\_includes\\head",
-    "\\_layouts"
+    "\\_posts"
   ],
-  "SelectedNode": "\\_includes\\read-time.html",
+  "SelectedNode": "\\_posts\\2019-03-05-dicaapplyconfiguration.md",
   "PreviewInSolutionExplorer": false
 }
