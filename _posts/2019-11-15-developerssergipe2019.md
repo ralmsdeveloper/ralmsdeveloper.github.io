@@ -194,6 +194,72 @@ gallery:
   - url: /assets/images/devse2019/evento (62).jpeg
     image_path: /assets/images/devse2019/evento (62).jpeg
     alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (63).jpeg
+    image_path: /assets/images/devse2019/evento (63).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (64).jpeg
+    image_path: /assets/images/devse2019/evento (65).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (66).jpeg
+    image_path: /assets/images/devse2019/evento (66).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (67).jpeg
+    image_path: /assets/images/devse2019/evento (67).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (68).jpeg
+    image_path: /assets/images/devse2019/evento (68).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (69).jpeg
+    image_path: /assets/images/devse2019/evento (69).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (70).jpeg
+    image_path: /assets/images/devse2019/evento (70).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (71).jpeg
+    image_path: /assets/images/devse2019/evento (71).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (72).jpeg
+    image_path: /assets/images/devse2019/evento (72).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (73).jpeg
+    image_path: /assets/images/devse2019/evento (73).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (74).jpeg
+    image_path: /assets/images/devse2019/evento (74).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (75).jpeg
+    image_path: /assets/images/devse2019/evento (75).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (76).jpeg
+    image_path: /assets/images/devse2019/evento (76).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (77).jpeg
+    image_path: /assets/images/devse2019/evento (77).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (78).jpeg
+    image_path: /assets/images/devse2019/evento (78).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (79).jpeg
+    image_path: /assets/images/devse2019/evento (79).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (80).jpeg
+    image_path: /assets/images/devse2019/evento (80).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (81).jpeg
+    image_path: /assets/images/devse2019/evento (81).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (82).jpeg
+    image_path: /assets/images/devse2019/evento (82).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (83).jpeg
+    image_path: /assets/images/devse2019/evento (83).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (84).jpeg
+    image_path: /assets/images/devse2019/evento (84).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (85).jpeg
+    image_path: /assets/images/devse2019/evento (85).jpeg
+    alt: "Developers Sergipe Summit 2019"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
@@ -205,9 +271,18 @@ No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit, em
 <br><br>
  Quero agradecer a todos meus amigos palestrantes e todos que participaram da organização que aceitaram meu convite e tornou esse evento tão lindo, não foi fácil, mas impactamos de forma positiva nossa comunidade aqui em <strong>Sergipe</strong>, quero em 2020 realizar um evento superando todas as expectativas, mantendo a qualidade e excelência para nosso público.
 <br><br>
-Enfim foi uma experiencia muito boa, a galera com uma energia sem igual, parabéns pessoal para vocês, e iremos firmar essa marca em nosso estado, iremos procurar lideres de comunidades a se juntar a nós, muitos planos para <strong>2020</strong>.
+ Que galera fantástica, era um feriado, e simplesmente lotou, aqui fica nosso carinho a todos que se fizeram presentes neste dia!!!
+<br><br>
+Enfim foi uma experiência muito boa, a galera com uma energia sem igual, parabéns pessoal para vocês, e iremos tentar sempre elevar a régua da qualidade, iremos procurar lideres de comunidades que assim queira juntar-se a nós, muitos planos para <strong>2020</strong>.
 <br><br> 
-Aqui vai uma palavra(homenagem) pra meus amigos palestrantes, entendedores entenderão <strong>PRONTO! 😄</strong>
+Aqui vai uma palavra pra meus amigos palestrantes, <strong>GRATIDÃO E MEU MUITO OBRIGADO! 😄</strong>
+<br><br> 
+
+<div class="notice--success">
+"Se quer ir rápido, vá sozinho. Se quer ir longe, vá em grupo." <br>
+Provérbio Africano 😄
+</div>
+
 <br><br> 
 </div>   
 ![02]({{site.url}}{{site.baseurl}}/assets/images/devse2019/apoio.JPG)
