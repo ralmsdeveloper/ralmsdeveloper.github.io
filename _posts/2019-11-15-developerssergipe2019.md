@@ -305,7 +305,7 @@ Provérbio Africano 😄
 </div>   
 ![02]({{site.url}}{{site.baseurl}}/assets/images/devse2019/apoio.JPG)
 <br><br><br>
-# Materias das palestras
+# PPT das palestras
 <a href="https://speakerdeck.com/khaosdoctor/escalabilidade-de-servicos-com-kubernetes" target="_BLANK" alt="">Lucas Santos - kubernetes</a><br>
 <a href="https://www.slideshare.net/igoravl/devops-em-grandes-empresas-mito-ou-realidade" target="_BLANK" alt="">Igor Abade - DevOps</a><br>
 
