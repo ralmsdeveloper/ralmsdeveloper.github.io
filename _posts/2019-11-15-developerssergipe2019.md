@@ -308,9 +308,10 @@ Provérbio Africano 😄
 # PPT das palestras
 <a href="https://speakerdeck.com/khaosdoctor/escalabilidade-de-servicos-com-kubernetes" target="_BLANK" alt="">Lucas Santos - kubernetes</a><br>
 <a href="https://www.slideshare.net/igoravl/devops-em-grandes-empresas-mito-ou-realidade" target="_BLANK" alt="">Igor Abade - DevOps</a><br>
+<a href="https://github.com/carloscds/dotnetconfsample" target="_BLANK" alt="">Carlos dos Santos - NETStandard</a><br>
+<a href="http://bit.ly/js-recognise-people-erickwendel" target="_BLANK" alt="">Erick Wendel - JS</a><br>
 
-
-br><br>
+<br>
 # Galeria de Fotos
 ![01]({{site.url}}{{site.baseurl}}/assets/images/devse2019/1.jpg) 
 
