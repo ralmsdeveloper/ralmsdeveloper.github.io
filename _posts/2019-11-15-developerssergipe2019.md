@@ -1,5 +1,5 @@
 ﻿---
-title: "Developers Sergipe 2019"
+title: "Developers Sergipe Summit 2019"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
