@@ -260,6 +260,18 @@ gallery:
   - url: /assets/images/devse2019/evento (85).jpeg
     image_path: /assets/images/devse2019/evento (85).jpeg
     alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (86).jpeg
+    image_path: /assets/images/devse2019/evento (86).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (87).jpeg
+    image_path: /assets/images/devse2019/evento (87).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (88).jpeg
+    image_path: /assets/images/devse2019/evento (88).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (89).jpeg
+    image_path: /assets/images/devse2019/evento (89).jpeg
+    alt: "Developers Sergipe Summit 2019"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
