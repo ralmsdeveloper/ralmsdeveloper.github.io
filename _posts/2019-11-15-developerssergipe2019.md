@@ -272,6 +272,12 @@ gallery:
   - url: /assets/images/devse2019/evento (89).jpeg
     image_path: /assets/images/devse2019/evento (89).jpeg
     alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (90).jpeg
+    image_path: /assets/images/devse2019/evento (90).jpeg
+    alt: "Developers Sergipe Summit 2019"
+  - url: /assets/images/devse2019/evento (91).jpeg
+    image_path: /assets/images/devse2019/evento (91).jpeg
+    alt: "Developers Sergipe Summit 2019"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
@@ -279,15 +285,15 @@ gallery:
 <div style="text-align: justify;">
 <center>Developers Sergipe Summit 2019</center>
 <br><br> 
-No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit, em nosso querido estado de Sergipe, aqui no nordeste, sala lotada e pessoal com um interação surreal, Uall, isso foi fantástico.
+No dia <strong>15/11/2018</strong> realizamos a segunda edição do Developers Sergipe Summit, em nosso querido estado de <strong>Sergipe</strong>, aqui no nordeste, sala lotada e pessoal com um interação surreal, Uall, isso foi fantástico.
 <br><br>
- Quero agradecer a todos meus amigos palestrantes e todos que participaram da organização que aceitaram meu convite e tornou esse evento tão lindo, não foi fácil, mas impactamos de forma positiva nossa comunidade aqui em <strong>Sergipe</strong>, quero em 2020 realizar um evento superando todas as expectativas, mantendo a qualidade e excelência para nosso público.
+ Quero agradecer a todos meus amigos palestrantes e todos que participaram da organização que aceitaram meu convite, e tornou esse evento tão lindo, não foi fácil, mas impactamos de forma positiva nossa comunidade aqui no <strong>Nordeste</strong>, quero em 2020 realizar um evento superando todas as expectativas, mantendo a qualidade e excelência para nosso público.
 <br><br>
  Que galera fantástica, era um feriado, e simplesmente lotou, aqui fica nosso carinho a todos que se fizeram presentes neste dia!!!
 <br><br>
 Enfim foi uma experiência muito boa, a galera com uma energia sem igual, parabéns pessoal para vocês, e iremos tentar sempre elevar a régua da qualidade, iremos procurar lideres de comunidades que assim queira juntar-se a nós, muitos planos para <strong>2020</strong>.
 <br><br> 
-Aqui vai uma palavra para meus amigos palestrantes, participantes e toda organização: <strong>GRATIDÃO</strong> e meu muito obrigado!
+Novamente aqui vai uma palavra para meus amigos palestrantes, participantes e toda organização: <strong>GRATIDÃO</strong> e meu muito obrigado!
 <br><br> 
 
 <div class="notice--success">
@@ -299,6 +305,12 @@ Provérbio Africano 😄
 </div>   
 ![02]({{site.url}}{{site.baseurl}}/assets/images/devse2019/apoio.JPG)
 <br><br><br>
+# Materias das palestras
+<a href="https://speakerdeck.com/khaosdoctor/escalabilidade-de-servicos-com-kubernetes" target="_BLANK" alt="">Lucas Santos - kubernetes</a><br>
+<a href="https://www.slideshare.net/igoravl/devops-em-grandes-empresas-mito-ou-realidade" target="_BLANK" alt="">Igor Abade - DevOps</a><br>
+
+
+br><br>
 # Galeria de Fotos
 ![01]({{site.url}}{{site.baseurl}}/assets/images/devse2019/1.jpg) 
 
