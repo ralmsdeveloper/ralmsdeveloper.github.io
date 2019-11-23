@@ -287,7 +287,7 @@ No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit, em
 <br><br>
 Enfim foi uma experiência muito boa, a galera com uma energia sem igual, parabéns pessoal para vocês, e iremos tentar sempre elevar a régua da qualidade, iremos procurar lideres de comunidades que assim queira juntar-se a nós, muitos planos para <strong>2020</strong>.
 <br><br> 
-Aqui vai uma palavra para meus amigos palestrantes, participantes e toda organização: <strong>GRATIDÃO</strong> e meu muito obrigado!</strong>
+Aqui vai uma palavra para meus amigos palestrantes, participantes e toda organização: <strong>GRATIDÃO</strong> e meu muito obrigado!
 <br><br> 
 
 <div class="notice--success">
