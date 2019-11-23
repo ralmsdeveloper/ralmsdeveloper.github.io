@@ -8,196 +8,196 @@ gallery:
   - url: /assets/images/devse2019/1.jpg
     image_path: /assets/images/devse2019/1.jpg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: "/assets/images/devse2019/evento (1).jpeg"
+    image_path: "/assets/images/devse2019/evento (1).jpeg"
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (2).jpg
-    image_path: /assets/images/devse2019/evento (2).jpg
+  - url: /assets/images/devse2019/evento (2).jpeg
+    image_path: /assets/images/devse2019/evento (2).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (3).jpg
-    image_path: /assets/images/devse2019/evento (3).jpg
+  - url: /assets/images/devse2019/evento (3).jpeg
+    image_path: /assets/images/devse2019/evento (3).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (4).jpg
-    image_path: /assets/images/devse2019/evento (4).jpg
+  - url: /assets/images/devse2019/evento (4).jpeg
+    image_path: /assets/images/devse2019/evento (4).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (5).jpg
-    image_path: /assets/images/devse2019/evento (5).jpg
+  - url: /assets/images/devse2019/evento (5).jpeg
+    image_path: /assets/images/devse2019/evento (5).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (6).jpeg
+    image_path: /assets/images/devse2019/evento (6).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (7).jpeg
+    image_path: /assets/images/devse2019/evento (7).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (8).jpeg
+    image_path: /assets/images/devse2019/evento (8).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (9).jpeg
+    image_path: /assets/images/devse2019/evento (9).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (10).jpeg
+    image_path: /assets/images/devse2019/evento (10).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (11).jpeg
+    image_path: /assets/images/devse2019/evento (11).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (12).jpeg
+    image_path: /assets/images/devse2019/evento (12).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (13).jpeg
+    image_path: /assets/images/devse2019/evento (13).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (14).jpeg
+    image_path: /assets/images/devse2019/evento (14).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (15).jpeg
+    image_path: /assets/images/devse2019/evento (15).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (16).jpeg
+    image_path: /assets/images/devse2019/evento (16).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/dev20.jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (17).jpeg
+    image_path: /assets/images/devse2019/evento (17).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (18).jpeg
+    image_path: /assets/images/devse2019/evento (18).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (19).jpeg
+    image_path: /assets/images/devse2019/evento (19).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (20).jpeg
+    image_path: /assets/images/devse2019/evento (20).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (21).jpeg
+    image_path: /assets/images/devse2019/evento (21).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (22).jpeg
+    image_path: /assets/images/devse2019/evento (22).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (23).jpeg
+    image_path: /assets/images/devse2019/evento (23).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (24).jpeg
+    image_path: /assets/images/devse2019/evento (24).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (25).jpeg
+    image_path: /assets/images/devse2019/evento (25).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (26).jpeg
+    image_path: /assets/images/devse2019/evento (26).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (227).jpeg
+    image_path: /assets/images/devse2019/evento (27).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (28).jpeg
+    image_path: /assets/images/devse2019/evento (28).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (29).jpeg
+    image_path: /assets/images/devse2019/evento (29).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (30).jpeg
+    image_path: /assets/images/devse2019/evento (30).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (31).jpeg
+    image_path: /assets/images/devse2019/evento (31).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (32).jpeg
+    image_path: /assets/images/devse2019/evento (32).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (33).jpeg
+    image_path: /assets/images/devse2019/evento (33).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (34).jpeg
+    image_path: /assets/images/devse2019/evento (34).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (35).jpeg
+    image_path: /assets/images/devse2019/evento (35).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/dev54.jpg
-    image_path: /assets/images/devse2019/dev54.jpg
+  - url: /assets/images/devse2019/evento (36).jpeg
+    image_path: /assets/images/devse2019/evento (36).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (37).jpeg
+    image_path: /assets/images/devse2019/evento (37).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (38).jpeg
+    image_path: /assets/images/devse2019/evento (38).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (39).jpeg
+    image_path: /assets/images/devse2019/evento (39).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (40).jpeg
+    image_path: /assets/images/devse2019/evento (40).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (41).jpeg
+    image_path: /assets/images/devse2019/evento (41).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (42).jpeg
+    image_path: /assets/images/devse2019/evento (42).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (43).jpeg
+    image_path: /assets/images/devse2019/evento (43).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (44).jpeg
+    image_path: /assets/images/devse2019/evento (44).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (45).jpeg
+    image_path: /assets/images/devse2019/evento (45).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (46).jpeg
+    image_path: /assets/images/devse2019/evento (46).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (47).jpeg
+    image_path: /assets/images/devse2019/evento (47).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (48).jpeg
+    image_path: /assets/images/devse2019/evento (48).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (49).jpeg
+    image_path: /assets/images/devse2019/evento (49).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (50).jpeg
+    image_path: /assets/images/devse2019/evento (50).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (51).jpeg
+    image_path: /assets/images/devse2019/evento (51).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (52).jpeg
+    image_path: /assets/images/devse2019/evento (52).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (53).jpeg
+    image_path: /assets/images/devse2019/evento (53).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (54).jpeg
+    image_path: /assets/images/devse2019/evento (54).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (55).jpeg
+    image_path: /assets/images/devse2019/evento (55).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (56).jpeg
+    image_path: /assets/images/devse2019/evento (56).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (57).jpeg
+    image_path: /assets/images/devse2019/evento (57).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (58).jpeg
+    image_path: /assets/images/devse2019/evento (58).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (59).jpeg
+    image_path: /assets/images/devse2019/evento (59).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (60).jpeg
+    image_path: /assets/images/devse2019/evento (60).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (61).jpeg
+    image_path: /assets/images/devse2019/evento (61).jpeg
     alt: "Developers Sergipe Summit 2019"
-  - url: /assets/images/devse2019/evento (1).jpg
-    image_path: /assets/images/devse2019/evento (1).jpg
+  - url: /assets/images/devse2019/evento (62).jpeg
+    image_path: /assets/images/devse2019/evento (62).jpeg
     alt: "Developers Sergipe Summit 2019"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
-![01]({{site.url}}{{site.baseurl}}/assets/images/devse2019/principal.jpg)
+![01]({{site.url}}{{site.baseurl}}/assets/images/devse2019/evento (12).jpeg)
 <div style="text-align: justify;">
 <center>Developers Sergipe Summit 2019</center>
 <br><br> 
