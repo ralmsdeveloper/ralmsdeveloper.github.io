@@ -310,7 +310,7 @@ Provérbio Africano 😄
 <a href="https://www.slideshare.net/igoravl/devops-em-grandes-empresas-mito-ou-realidade" target="_BLANK" alt="">Igor Abade - DevOps</a><br>
 <a href="https://github.com/carloscds/dotnetconfsample" target="_BLANK" alt="">Carlos dos Santos - NETStandard</a><br>
 <a href="http://bit.ly/js-recognise-people-erickwendel" target="_BLANK" alt="">Erick Wendel - JS</a><br>
-<a href="https://github.com/davcouto/developersSergipeSummit2019/blob/master/DevelopersSergipeSummit2019_SQLServer2019.pdf" target="_BLANK" alt="">David - SQL Server 2019</a><br>
+<a href="https://github.com/davcouto/developersSergipeSummit2019/blob/master/DevelopersSergipeSummit2019_SQLServer2019.pdf" target="_BLANK" alt="">David Couto - SQL Server 2019</a><br>
 
 <br>
 # Galeria de Fotos
