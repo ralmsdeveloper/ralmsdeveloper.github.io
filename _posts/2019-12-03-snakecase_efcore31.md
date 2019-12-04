@@ -51,7 +51,7 @@ Então fiz um <b>DE-PARA</b> aqui do artigo anterior e o que mudou.
 </div>
 <br />
 # Até o EF 2.2 (old)
-Tinhamos os seguintes comportamento para acessar e alterar os metadados.
+Tinhamos o seguinte comportamento para acessar e alterar os metadados.
 
 ```csharp
 public static void ToSnakeNames(this ModelBuilder modelBuilder)
