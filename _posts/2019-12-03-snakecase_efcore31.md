@@ -19,6 +19,8 @@ Este artigo é uma versão atualizada de:
 <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
 http://ralms.net/dica/snakecase/
 </a>
+<br>
+O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
  
