@@ -62,8 +62,7 @@ public void ConfigureServices(IServiceCollection services)
 <div class="notice--success" style="text-align: justify;">
 Observe que agora temos uma propriedade <b>PropertyNamingPolicy</b> que substitui o antigo <b>NamingStrategy</b> do Newtonsoft, aqui é onde iremos começar a brincadeira, lembrando que esse assunto pode ir muito mais além, porém o foco é como resolver o cénario onde quero entregar os dados aplicando a nomenclatura SnakeCase.
 </div>  
-
-<br>
+<div style="text-align: justify;">
 JsonNamingPolicy é uma classe abstrata onde podemos sobreescrever o comportamente do método responsável por devolver os nomes
 das propriedades do objeto, então, irei criar uma classe onde iremos sobrescrever 1(um) método da classe <b>JsonNamingPolicy</b> o <b>ConvertName</b>.
 </div>
