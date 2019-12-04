@@ -11,9 +11,11 @@ categories:
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr> 
 ## Porque estamos aqui?
-Eu acredito que você já sabe, e se não sabendo, ficará agora, que a Microsoft escreveu seu proprio Serializador JSON que está no namespace <a href="https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/" target="_BLANK" alt="">
+Eu acredito que você já sabe, e se não sabe, ficará agora, que a Microsoft escreveu seu proprio Serializador JSON que está no namespace <a href="https://devblogs.microsoft.com/dotnet/try-the-new-system-text-json-apis/" target="_BLANK" alt="">
 System.Text.Json 
-</a>.
+</a>. 
+Como sempre a Microsoft vem trabalhando duro para entregar features sempre focadas em performance, sendo assim System.Text.Json foi escrito exatamente com esse objetivo, alocar menos memória e ser mais rápido.<br>
+<br>
 FYI: Se seu projeto é em .NET Core, você já vai ter acesso ao namespace/pacote que informei acima, caso você esteja usando 
 .NETStandard ou .NET Framework, você irá precisar instalar o pacote <a href="https://www.nuget.org/packages/System.Text.Json" target="_BLANK" alt="">System.Text.Json</a>.
 
