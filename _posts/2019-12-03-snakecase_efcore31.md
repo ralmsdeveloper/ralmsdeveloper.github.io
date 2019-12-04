@@ -179,18 +179,57 @@ CREATE TABLE test_snake_case (
 ```
 <br />
 # Veja as alterações na API de metadados
-| Antes  | Depois   |
-|---|---|---|---|---|
-| IEntityType.QueryFilter  | GetQueryFilter()  |
-| IEntityType.DefiningQuery  | GetDefiningQuery()  |
-| IProperty.IsShadowProperty  | IsShadowProperty()  |
-| IProperty.BeforeSaveBehavior  | GetBeforeSaveBehavior()  |
-| IProperty.AfterSaveBehavior  | GetAfterSaveBehavior()  |
-| IEntityType.Relational().TableName   | IEntityType.GetTableName()  |
-| IProperty.Relational().ColumnName  | IProperty.GetColumnName()  |
-| IKey.Relational().Name  | IKey.GetName()  |
-| IForeignKey.Relational().Name  | IForeignKey.GetConstraintName()  |
-| IIndex.Relational().Name  | IIndex.GetName()  |
+<table>
+  <thead>
+    <tr>
+      <th>Antes</th>
+      <th>Depois</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>IEntityType.QueryFilter</td>
+      <td>GetQueryFilter()</td>
+    </tr>
+     <tr>
+      <td>IEntityType.DefiningQuery</td>
+      <td>GetDefiningQuery()</td>
+    </tr>
+     <tr>
+      <td>IProperty.IsShadowProperty</td>
+      <td>IsShadowProperty()</td>
+    </tr>
+     <tr>
+      <td>IProperty.BeforeSaveBehavior</td>
+      <td>GetBeforeSaveBehavior()</td>
+    </tr>
+     <tr>
+      <td>IProperty.AfterSaveBehavior</td>
+      <td>GetAfterSaveBehavior()</td>
+    </tr>
+     <tr>
+      <td>IEntityType.Relational().TableName</td>
+      <td>IEntityType.GetTableName()</td>
+    </tr>
+
+    <tr>
+      <td>IProperty.Relational().ColumnName</td>
+      <td>IProperty.GetColumnName()</td>
+    </tr>
+    <tr>
+      <td>IKey.Relational().Name</td>
+      <td>IKey.GetName() </td>
+    </tr>
+    <tr>
+      <td>IForeignKey.Relational().Name</td>
+      <td>IForeignKey.GetConstraintName()</td>
+    </tr>
+    <tr>
+      <td>IIndex.Relational().Name</td>
+      <td>IIndex.GetName()</td>
+    </tr>
+  </tbody>
+</table>
   
 
 ## Código Completo!
