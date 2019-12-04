@@ -97,34 +97,29 @@ public void ConfigureServices(IServiceCollection services)
 ```json
 [
   {
-    "date": "2019-12-05T00:05:46.1518211-03:00",
-    "temperature_c": 17,
-    "temperature_f": 62,
-    "summary": "Freezing"
+    "birtday_date": "2019-12-05T00:21:37.7799448-03:00",
+    "full_name": "Heloysa",
+    "email": "ralms@ralms.net"
   },
   {
-    "date": "2019-12-06T00:05:46.1553261-03:00",
-    "temperature_c": 10,
-    "temperature_f": 49,
-    "summary": "Hot"
+    "birtday_date": "2019-12-06T00:21:37.7817476-03:00",
+    "full_name": "Thysbe",
+    "email": "ralms@ralms.net"
   },
   {
-    "date": "2019-12-07T00:05:46.1553333-03:00",
-    "temperature_c": -12,
-    "temperature_f": 11,
-    "summary": "Hot"
+    "birtday_date": "2019-12-07T00:21:37.781753-03:00",
+    "full_name": "Rafael",
+    "email": "ralms@ralms.net"
   },
   {
-    "date": "2019-12-08T00:05:46.1553337-03:00",
-    "temperature_c": 2,
-    "temperature_f": 35,
-    "summary": "Freezing"
+    "birtday_date": "2019-12-08T00:21:37.7817534-03:00",
+    "full_name": "Eduarda",
+    "email": "ralms@ralms.net"
   },
   {
-    "date": "2019-12-09T00:05:46.155334-03:00",
-    "temperature_c": 39,
-    "temperature_f": 102,
-    "summary": "Mild"
+    "birtday_date": "2019-12-09T00:21:37.7817536-03:00",
+    "full_name": "Heloysa",
+    "email": "ralms@ralms.net"
   }
 ]
 ```
