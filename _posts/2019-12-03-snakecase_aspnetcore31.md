@@ -62,7 +62,8 @@ public void ConfigureServices(IServiceCollection services)
 <br>
 Observe que agora temos uma propriedade <b>PropertyNamingPolicy</b> que substitui o antigo <b>NamingStrategy</b> do Newtonsoft, aqui é onde iremos começar a brincadeira, lembrando que esse assunto pode ir muito mais além, porém o foco é como resolver o cénario onde quero entregar os dados aplicando a nomenclatura SnakeCase.
 <br>
-Vamos lá então, irei criar uma classe onde iremos sobrescrever 1(um) método da classe <b>JsonNamingPolicy</b>.
+JsonNamingPolicy é uma classe abstrata onde podemos sobreescrever o comportamente do método responsável por devolver os nomes
+das propriedades do objeto, então, irei criar uma classe onde iremos sobrescrever 1(um) método da classe <b>JsonNamingPolicy</b> o <b>ConvertName</b>.
 
 ```csharp
 public class CustomPropertyNamingPolicy : JsonNamingPolicy
@@ -98,7 +99,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 ## Exemplo
-Para o exemplo desse curso, utilizamos a seguinte classe
+Para o exemplo deste artigo, utilizamos a seguinte classe:
 ```csharp
 public class Person
 {
