@@ -15,14 +15,17 @@ Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> para o <
 ![01]({{site.url}}{{site.baseurl}}/assets/images/camelsnakecase.jpg)
 <div class="notice--warning">
 <strong>FYI:</strong><br>
-Nosso <strong>objetivo</strong> aqui é mostrar uma solução para o <strong>EntityFramework Core + PostgreSQL.</strong><br />
-Basicamente existem 4 tipos de nomenclaturas que usamos para escrever nossos códigos: <strong>PascalCase, CamelCase, SnakeCase e SpinalCase</strong>, já que iremos abordar um assunto que se trata de um dos casos citados, nada mais justo do que resumir cada um deles.
+Este artigo é uma versão atualizada de:
+<a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
+http://ralms.net/dica/snakecase/
+</a>
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipocase.png) 
  
 
 # Veja esse artigo! 
-Quer ver um resumidão sobre <b>Naming Conventions</b>? acesse esse link:
+Quer ver um resumidão sobre <b>Naming Conventions</b>?</br>
+acesse esse link:
 <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
 http://ralms.net/dica/snakecase/
 </a>
@@ -31,14 +34,14 @@ http://ralms.net/dica/snakecase/
  
 # O que me levou a escrever esse artigo? 
 <div style="text-align: justify;">
-Não quero me prolongar aqui, dado que escrevi um artigo falando sobre minha real necessidade de 
-utilizar conversões de nomeclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi. 
+Não quero me prolongar aqui, dado as circunstâncias que já que escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi. 
 # O que mudou, Oops, aliás o que quebrou?
 Se observarmos <a href="https://semver.org/" target="_BLANK" alt="">semver</a> e olhar para o significado de <b>MAJOR</b>, podemos dizer
 quer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!
 <br>
 <br>
-Os métodos de extensão específicos do provedor sofreram alterações, o que eram propriedades agora são métodos.
+Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao <b>EF 3.0</b>,acessavamos as propriedades, agora os acessos para algumas dessas propriedades são por métodos,
+para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.
 <br />
 <br>
 Então fiz um <b>DE-PARA</b> aqui do artigo anterior e o que mudou.
