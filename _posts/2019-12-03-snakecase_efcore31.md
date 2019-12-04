@@ -35,9 +35,10 @@ http://ralms.net/dica/snakecase/
  
  
 # O que me levou a escrever esse artigo? 
-<div style="text-align: justify;">
 Não quero me prolongar aqui, dado as circunstâncias que já que escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi. 
+
 # O que mudou, Oops, aliás o que quebrou?
+<div style="text-align: justify;">
 Se observarmos <a href="https://semver.org/" target="_BLANK" alt="">semver</a> e olhar para o significado de <b>MAJOR</b>, podemos dizer
 quer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!
 <br>
