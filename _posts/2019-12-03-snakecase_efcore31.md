@@ -145,7 +145,11 @@ private static string ToSnakeCase(this string name)
             TimeSpan.FromSeconds(0.2)).ToLower();
 }
 ```
-
+<div class="notice--success">
+<strong>
+ Observe que não acessamos mais as propriedades diretamente, pois para alterar os metadados usamos: SetTableName, SetConstraintName, SetName. <b>SetName 😄 
+ </strong>
+</div> 
 
 ## Veja como ficou nosso SampleContext
 ```csharp
