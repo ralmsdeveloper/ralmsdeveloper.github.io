@@ -177,6 +177,21 @@ CREATE TABLE test_snake_case (
     CONSTRAINT pk_test_snake_case PRIMARY KEY (id)
 );
 ```
+<br />
+# Veja as alterações na API de metadados
+| Antes  | Depois   |
+|---|---|---|---|---|
+| IEntityType.QueryFilter  | GetQueryFilter()  |
+| IEntityType.DefiningQuery  | GetDefiningQuery()  |
+| IProperty.IsShadowProperty  | IsShadowProperty()  |
+| IProperty.BeforeSaveBehavior  | GetBeforeSaveBehavior()  |
+| IProperty.AfterSaveBehavior  | GetAfterSaveBehavior()  |
+| IEntityType.Relational().TableName   | IEntityType.GetTableName()  |
+| IProperty.Relational().ColumnName  | IProperty.GetColumnName()  |
+| IKey.Relational().Name  | IKey.GetName()  |
+| IForeignKey.Relational().Name  | IForeignKey.GetConstraintName()  |
+| IIndex.Relational().Name  | IIndex.GetName()  |
+  
 
 ## Código Completo!
 ```csharp
