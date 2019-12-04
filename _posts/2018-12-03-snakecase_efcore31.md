@@ -10,7 +10,7 @@ categories:
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr> 
-Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> para o <strong>EF Core 3.1;</strong><br />
+Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> de forma fácil para o <strong>Entity Framework Core 3.1</strong><br />
 <br>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/camelsnakecase.jpg)
 <div class="notice--warning">
@@ -40,7 +40,7 @@ Se observarmos <a href="https://semver.org/" target="_BLANK" alt="">semver</a> e
 quer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!
 <br>
 <br>
-Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao <b>EF 3.0</b>,acessavamos as propriedades, agora os acessos para algumas dessas propriedades são por métodos,
+Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao <b>EF 3.0</b>, acessavamos diretamente as propriedades, agora os acessos para algumas dessas propriedades são por métodos,
 para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.
 <br />
 <br>
@@ -49,50 +49,47 @@ Então fiz um <b>DE-PARA</b> aqui do artigo anterior e o que mudou.
 <br />
 # Até o EF 2.2 (old)
 ```csharp
-public static class LinqSnakeCase
-{ 
-    public static void ToSnakeNames(this ModelBuilder modelBuilder)
+public static void ToSnakeNames(this ModelBuilder modelBuilder)
+{
+    foreach (var entity in modelBuilder.Model.GetEntityTypes())
     {
-        foreach (var entity in modelBuilder.Model.GetEntityTypes())
+        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
+
+        foreach (var property in entity.GetProperties())
         {
-            entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();
+            property.Relational().ColumnName = property
+                .Relational()
+                .ColumnName
+                .ToSnakeCase();
+        }
 
-            foreach (var property in entity.GetProperties())
-            {
-                property.Relational().ColumnName = property
-                    .Relational()
-                    .ColumnName
-                    .ToSnakeCase();
-            }
+        foreach (var key in entity.GetKeys())
+        {
+            key.Relational().Name = key.Relational().Name.ToSnakeCase(); 
+        }
 
-            foreach (var key in entity.GetKeys())
-            {
-                key.Relational().Name = key.Relational().Name.ToSnakeCase(); 
-            }
+        foreach (var key in entity.GetForeignKeys())
+        {
+            key.Relational().Name = key.Relational().Name.ToSnakeCase();
+        }
 
-            foreach (var key in entity.GetForeignKeys())
-            {
-                key.Relational().Name = key.Relational().Name.ToSnakeCase();
-            }
-
-            foreach (var index in entity.GetIndexes())
-            {
-                index.Relational().Name = index.Relational().Name.ToSnakeCase();
-            }
+        foreach (var index in entity.GetIndexes())
+        {
+            index.Relational().Name = index.Relational().Name.ToSnakeCase();
         }
     }
+}
 
-    private static string ToSnakeCase(this string name)
-    {
-        return string.IsNullOrWhiteSpace(name)
-            ? name
-            : Regex.Replace(
-                name, 
-                @"([a-z0-9])([A-Z])", 
-                "$1_$2", 
-                RegexOptions.Compiled,
-                TimeSpan.FromSeconds(1)).ToLower(); 
-    }
+private static string ToSnakeCase(this string name)
+{
+    return string.IsNullOrWhiteSpace(name)
+        ? name
+        : Regex.Replace(
+            name, 
+            @"([a-z0-9])([A-Z])", 
+            "$1_$2", 
+            RegexOptions.Compiled,
+            TimeSpan.FromSeconds(0.2)).ToLower(); 
 }
 ```
 # Usando o EF 3.X (new)
@@ -139,7 +136,7 @@ private static string ToSnakeCase(this string name)
             @"([a-z0-9])([A-Z])",
             "$1_$2",
             RegexOptions.Compiled,
-            TimeSpan.FromSeconds(1)).ToLower();
+            TimeSpan.FromSeconds(0.2)).ToLower();
 }
 ```
 
@@ -264,7 +261,7 @@ namespace SnakeCase
                     @"([a-z0-9])([A-Z])",
                     "$1_$2",
                     RegexOptions.Compiled,
-                    TimeSpan.FromSeconds(1)).ToLower();
+                    TimeSpan.FromSeconds(0.2)).ToLower();
         }
     }
 
