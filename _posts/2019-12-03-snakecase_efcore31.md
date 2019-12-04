@@ -244,7 +244,7 @@ CREATE TABLE test_snake_case (
 </table>
 
 ## Performance
-1 - Em vez de usar Task<T> agora se usa <a href="https://docs.microsoft.com/pt-br/dotnet/api/system.threading.tasks.valuetask-1?view=netstandard-2.1" target="_BLANK" alt="">ValueTask<T></a> o que reduz o número de alocações de memória na pilha.
+1 - Em vez de usar Task<T> agora se usa <a href="https://docs.microsoft.com/pt-br/dotnet/api/system.threading.tasks.valuetask-1?view=netstandard-2.1" target="_BLANK" alt="">ValueTask</a> o que reduz o número de alocações de memória na pilha.
 <br>
 2 - Você poderia até não saber disso, mas quando acessavamos o método Entry() era disparado um DetectChanges() para todos objetos daquele contexto específico, agora isso não é mais uma verdade :) ualll!
 
