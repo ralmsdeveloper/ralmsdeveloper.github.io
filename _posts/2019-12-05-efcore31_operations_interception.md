@@ -14,7 +14,7 @@ categories:
 <div style="text-align: justify;">
 Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda operação de banco de dados, já que isso era possível no EF6, mas um dos engenheiros do 
 time do EF Core tornou isso possível para EFCore, Thanks <b>Arthur Vickers</b>, dito isso agora você pode alterar/otimizar a query que vai ser executada 
-no banco dados, sobrescrevendo os métodos da classe <b>DbCommandInterceptor</b> veja alguns dos métodos que você pode sobrescrever 
+no banco dados, sobrescrevendo os métodos da classe <b>DbCommandInterceptor</b>. Veja alguns dos métodos que você pode sobrescrever 
 e ser útil pra você.
 </div> 
 - NonQueryExecuted
