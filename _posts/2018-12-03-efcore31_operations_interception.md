@@ -72,7 +72,36 @@ public void ConfigureServices(IServiceCollection services)
 ## Montando um cenário de uso
 Sabendo como criar nosso interceptador e como usar, agora vamos pensar em um cenário, onde você gostaria de usar o <a href="https://docs.microsoft.com/pt-br/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-ver15" target="_BLANK" alt="">HINT NOLOCK</a> 
 já que isso ainda não é suportado nativamente pelo EF Core, pois bem aqui agente pode fazer um workaround.
+```csharp
+public class RalmsInterceptor : DbCommandInterceptor
+{
+    private static readonly Regex _tableAliasRegex =
+        new Regex(@"(?<tableAlias>FROM +(\[.*\]\.)?(\[.*\]) AS (\[.*\])(?! WITH \(NOLOCK\)))",
+            RegexOptions.Multiline | 
+            RegexOptions.IgnoreCase | 
+            RegexOptions.Compiled);
 
+    public override InterceptionResult<DbDataReader> ReaderExecuting(
+        DbCommand command,
+        CommandEventData eventData,
+        InterceptionResult<DbDataReader> result)
+    {
+        if (!command.CommandText.Contains("WITH (NOLOCK)"))
+        {
+            command.CommandText =
+                _tableAliasRegex.Replace(command.CommandText,
+                "${tableAlias} WITH (NOLOCK)");
+        }
+
+        return result;
+    }
+}
+```
+## Agora veja como o comando ficou
+```sql
+SELECT COUNT(*)
+FROM [People] AS [p] WITH (NOLOCK)
+```
 <br>
 Os fontes do exemplo usado está aqui:<br>
 <a href="https://github.com/ralmsdeveloper/EFCoreInterceptador" target="_BLANK" alt="">
