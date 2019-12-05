@@ -1,5 +1,5 @@
 ﻿---
-title: "Operations Interception - EF Core 3.1"
+title: "Interceptando comandos - EF Core 3.1"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
@@ -8,7 +8,7 @@ categories:
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcoreinterception.png)
 
-<center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
+<center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr> 
 ## Sonho realizado
 <div style="text-align: justify;">
