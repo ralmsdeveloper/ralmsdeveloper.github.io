@@ -23,15 +23,15 @@ e ser útil pra você.
 
 ## Vamos ver como isso funciona
 <div style="text-align: justify;">
-A implementação é bem simples, basta criar uma classe que herde de <b>DbCommandInterceptor</b> por exemplo:
+A implementação é bem simples, basta criar uma classe que herde de <b>DbCommandInterceptor</b>, por exemplo:
 </div> 
 ```csharp
 public class RalmsInterceptor : DbCommandInterceptor
 {
 }
 ```
-Vamos sobrescrever o método <b>ReaderExecuting</b>, isso significa que mesmo antes de enviar o comando para o servidor de banco de dados, 
-agente intercept e faça os ajustes que assim for necessário.
+Vamos sobrescrever o método <b>ReaderExecuting</b>, isso significa que mesmo antes de enviar o comando para o banco de dados, 
+podemos interceptar e fazer os ajustes que assim for necessário.
 ```csharp
 public class RalmsInterceptor : DbCommandInterceptor
 {
