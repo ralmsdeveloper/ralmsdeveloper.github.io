@@ -12,8 +12,15 @@ categories:
 <hr> 
 ## Sonho realizado
 <div style="text-align: justify;">
-Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda operação de banco de dados.
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda operação de banco de dados. Um do engenheiros do 
+time do EF Core tornou isso possível, Thanks <b>Arthir Vickers</b>, você pode alterar/otimizar a query que vai ser executada 
+no banco dados, sobrescrevendo os métodos da classe `DbCommandInterceptor` veja alguns dos métodos que você pode sobrescrever 
+e ser útil pra você.
 </div> 
+- NonQueryExecuted
+- ScalarExecuting
+- ReaderExecuting
+
 
 <br>
 Os fontes do exemplo usado está aqui:<br>
