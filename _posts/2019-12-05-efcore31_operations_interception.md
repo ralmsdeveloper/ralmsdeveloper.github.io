@@ -70,7 +70,7 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 ## Montando um cenário de uso
-Sabendo como criar nosso interceptador e como usar, agora vamos pensar em um cenário, onde você gostaria de usar o <a href="https://docs.microsoft.com/pt-br/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-ver15" target="_BLANK" alt="">HINT NOLOCK</a> 
+Sabendo como criar nosso interceptador e como usar, agora vamos pensar em um cenário onde você gostaria de usar o <a href="https://docs.microsoft.com/pt-br/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-ver15" target="_BLANK" alt="">HINT NOLOCK</a> 
 já que isso ainda não é suportado nativamente pelo EF Core, pois bem aqui agente pode fazer um workaround.
 ```csharp
 public class RalmsInterceptor : DbCommandInterceptor
@@ -97,9 +97,44 @@ public class RalmsInterceptor : DbCommandInterceptor
     }
 }
 ```
-## Agora veja como o comando ficou
+## Vamos testar?
+```csharp
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Interceptador.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class TestController : ControllerBase
+    {
+        private readonly RalmsContext _db;
+
+        public TestController( RalmsContext sampleContext)
+        {
+            _db = sampleContext;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            _ = _db.People.Count();
+            _ = _db.People.ToList();
+
+            return Ok();
+        }
+    }
+}
+```
+
+## Agora veja nossa query
 ```sql
+-- _db.People.Count();
 SELECT COUNT(*)
+FROM [People] AS [p] WITH (NOLOCK)
+
+-- _db.People.ToList();
+SELECT [p].[Id], [p].[City], [p].[FirstName], [p].[LastName]
 FROM [People] AS [p] WITH (NOLOCK)
 ```
 <br>
