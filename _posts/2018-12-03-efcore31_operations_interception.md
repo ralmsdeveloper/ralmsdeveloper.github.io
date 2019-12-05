@@ -13,14 +13,65 @@ categories:
 ## Sonho realizado
 <div style="text-align: justify;">
 Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda operação de banco de dados. Um do engenheiros do 
-time do EF Core tornou isso possível, Thanks <b>Arthir Vickers</b>, você pode alterar/otimizar a query que vai ser executada 
-no banco dados, sobrescrevendo os métodos da classe `DbCommandInterceptor` veja alguns dos métodos que você pode sobrescrever 
+time do EF Core tornou isso possível, Thanks <b>Arthur Vickers</b>, dito isso agora você pode alterar/otimizar a query que vai ser executada 
+no banco dados, sobrescrevendo os métodos da classe <b>DbCommandInterceptor</b> veja alguns dos métodos que você pode sobrescrever 
 e ser útil pra você.
 </div> 
 - NonQueryExecuted
 - ScalarExecuting
 - ReaderExecuting
 
+## Vamos ver como isso funciona
+<div style="text-align: justify;">
+A implementação é bem simples, basta criar uma classe que herde de <b>DbCommandInterceptor</b> por exemplo:
+</div> 
+```csharp
+public class RalmsInterceptor : DbCommandInterceptor
+{
+}
+```
+Vamos sobrescrever o método <b>ReaderExecuting</b>, isso significa que mesmo antes de enviar o comando para o servidor de banco de dados, 
+agente intercept e faça os ajustes que assim for necessário.
+```csharp
+public class RalmsInterceptor : DbCommandInterceptor
+{
+    public override InterceptionResult<DbDataReader> ReaderExecuting(
+        DbCommand command, 
+        CommandEventData eventData, 
+        InterceptionResult<DbDataReader> result)
+    {
+        //command.CommandText = ...
+        return result;
+    }
+}
+```
+## Como usar nosso pequeno Interceptador?
+Existem duas formas:<br>
+1 - Você pode adicionar diretamente em seu DbContext.
+```csharp
+public class RalmsContext : DbContext
+{
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseSqlServer(@"Server=(localdb)\mssqllocaldb;Database=EFCORE31;Trusted_Connection=True;")
+            .AddInterceptors(new RalmsInterceptor());
+    }
+}
+```
+2 - Ou/Em seu Services que basicamente é a mesma coisa
+```csharp
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddControllers();
+    services
+        .AddDbContext<RalmsContext>(p=>
+            p.AddInterceptors(new RalmsInterceptor()));
+}
+```
+## Montando um cenário de uso
+Sabendo como criar nosso interceptador e como usar, agora vamos pensar em um cenário, onde você gostaria de usar o <a href="https://docs.microsoft.com/pt-br/sql/t-sql/queries/hints-transact-sql-table?view=sql-server-ver15" target="_BLANK" alt="">HINT NOLOCK</a> 
+já que isso ainda não é suportado nativamente pelo EF Core, pois bem aqui agente pode fazer um workaround.
 
 <br>
 Os fontes do exemplo usado está aqui:<br>
