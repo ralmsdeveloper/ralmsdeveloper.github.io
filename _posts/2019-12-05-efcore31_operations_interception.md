@@ -46,7 +46,6 @@ public class RalmsInterceptor : DbCommandInterceptor
 }
 ```
 ## Como usar nosso pequeno Interceptador?
-Existem duas formas:<br>
 1 - Você pode adicionar diretamente em seu DbContext.
 ```csharp
 public class RalmsContext : DbContext
@@ -65,8 +64,9 @@ public void ConfigureServices(IServiceCollection services)
 {
     services.AddControllers();
     services
-        .AddDbContext<RalmsContext>(p=>
-            p.AddInterceptors(new RalmsInterceptor()));
+        .AddDbContext<RalmsContext>(p=>p
+            .UseSqlServer(@"Server=...")
+            .AddInterceptors(new RalmsInterceptor()));
 }
 ```
 ## Montando um cenário de uso
@@ -110,7 +110,7 @@ namespace Interceptador.Controllers
     {
         private readonly RalmsContext _db;
 
-        public TestController( RalmsContext sampleContext)
+        public TestController(RalmsContext sampleContext)
         {
             _db = sampleContext;
         }
@@ -150,4 +150,4 @@ https://github.com/ralmsdeveloper/EFCoreInterceptador
 </div> 
 
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore31 #netcore31 #aspnetcore<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #sqlserver #efcore31 #netcore31 #aspnetcore<br><br>
