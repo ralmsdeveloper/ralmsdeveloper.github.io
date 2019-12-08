@@ -45,7 +45,7 @@ public string ToSnakeCaseUsingRegex()
 ```
 # Método usando LINQ
 <div style="text-align: justify;">
-Não poderia passar por aqui sem falar da importancia no LINQ dentro do .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. 
+Não poderia passar por aqui sem falar da importancia do LINQ dentro do ecosistema .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. 
 O <b>LINQ</b> é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo <b>LINQ</b>.
 </div>
 ```csharp
@@ -62,8 +62,8 @@ public string ToSnakeCaseUsingLinq()
 ```
 # Método usando StringBuilder e Span<T>
 <div style="text-align: justify;">
-Aqui vamos começar a brincadeira com essa nova implementação da Microsoft, o <b>SPAN</b>, quando se fala em gerenciamento 
-de memória, lembre desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com <b>SPAN</b> e o <b>StringBuilder</b> para empilhar temporariamente nossos caracteres.
+Aqui vamos começar a brincadeira com essa nova implementação do .NET, o <b>SPAN</b>, quando se fala em gerenciamento 
+de memória, lembre-se desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com <b>SPAN</b> e o <b>StringBuilder</b> para empilhar temporariamente nossos caracteres.
 </div>
 ```csharp
 public string ToSnakeCaseUsingStringBuildAndSpan()
