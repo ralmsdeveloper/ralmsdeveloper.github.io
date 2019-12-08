@@ -178,7 +178,7 @@ Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-mag
 # O que aprendemos com isso?
 <div class="notice--warning" style="text-align: justify;">
 Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
-e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seu próprio método por ser uma boa.
+e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.
 </div> 
 <br>
 # Fontes
