@@ -116,41 +116,27 @@ public string ToSnakeCaseUsingStringBuildAndSpan()
 }
 ```
 # Resultado dos testes 
+Os testes foram realizando com 10, 100.000, 1.000.000 de interações.
+```
+------------------------------------------------------------------------
+UsingStringBuilderAndSpan       10              Tempo: 00:00:00.0025257
+UsingStringBuilderAndSpan       100_000         Tempo: 00:00:00.1162287
+UsingStringBuilderAndSpan       1_000_000       Tempo: 00:00:02.0734867
+------------------------------------------------------------------------
+UsingSpanOnBuffer       	      10              Tempo: 00:00:00.0004815
+UsingSpanOnBuffer       	      100_000         Tempo: 00:00:00.1087459
+UsingSpanOnBuffer       	      1_000_000       Tempo: 00:00:01.0008935
+------------------------------------------------------------------------
+UsingRegex      		            10              Tempo: 00:00:00.0606576
+UsingRegex      		            100_000         Tempo: 00:00:00.5761851
+UsingRegex      		            1_000_000       Tempo: 00:00:06.2264039
+------------------------------------------------------------------------
+UsingLinq       		            10              Tempo: 00:00:00.0089215
+UsingLinq       		            100_000         Tempo: 00:00:00.2520451
+UsingLinq       		            1_000_000       Tempo: 00:00:02.7254307
+------------------------------------------------------------------------
+```
 <br>
- <table>
-  <thead>
-    <tr>
-      <th>--</th>
-      <th>UsingStringBuilderAndSpan</th>
-      <th>UsingSpanOnBuffer</th>
-      <th>UsingRegex</th>
-      <th>UsingLinq</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>10</td>
-      <td>00:00:00.0025257</td>
-      <td>00:00:00.0004815</td>
-      <td>00:00:00.0606576</td>
-      <td>00:00:00.0089215</td>
-    </tr>
-     <tr>
-      <td>100_000</td>
-      <td>00:00:00.1162287</td>
-      <td>00:00:00.1087459</td>
-      <td>00:00:00.5761851</td>
-      <td>00:00:00.2520451</td>
-    </tr>
-     <tr>
-      <td>1_000_000</td>
-      <td>00:00:02.0734867</td>
-      <td>00:00:01.0008935</td>
-      <td>00:00:06.2264039</td>
-      <td>00:00:02.7254307</td>
-    </tr> 
-  </tbody>
-</table>
 
 # Benchmark
 ```
