@@ -136,8 +136,9 @@ UsingLinq                       10              Tempo: 00:00:00.0089215
                                 1_000_000       Tempo: 00:00:02.7254307
 ------------------------------------------------------------------------
 ```
-<br>
-
+Podemos observar que o <b>REGEX</b> teve a pior performance aqui, o <b>LINQ</b> me surpreendeu novamente 
+mostrando que ainda é muito eficiente em cenários críticos, os métodos que implementados usando <b>SPAN</b> tiveram a melhor performance.
+ 
 # Benchmark
 ```
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
@@ -154,7 +155,25 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 |               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B |
 |              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |
 ```
+Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
+e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
+# O que aprendemos com isso?
+<div class="notice--warning">
+<strong>
+Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
+e analise seu cenário, quanto mais crítico ele for mais a necessidade de performance você terá, pense fora da caixa.<br>
 
+</strong>
+</div> 
+<br>
+# Fontes
+Os fontes do exemplo usado está aqui:<br>
+<a href="https://github.com/ralmsdeveloper/performanceregex" target="_BLANK" alt="">
+https://github.com/ralmsdeveloper/performanceregex
+</a>
+
+
+<br>
 <div class="notice--success">
 <strong>
  Pessoal fico por aqui e um forte abraço! 😄 
