@@ -157,9 +157,10 @@ UsingLinq                 10              Tempo: 00:00:00.0089215
 ```
 <div style="text-align: justify;">
 Podemos observar que o <b>REGEX</b> teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa 
-mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas nos olhos, já o <b>LINQ</b> me surpreendeu novamente 
+mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas dos olhos, já o <b>LINQ</b> me surpreendeu novamente 
 mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando <b>SPAN</b> tiveram a melhor performance.
  </div>
+ <br />
 # Benchmark
 ```
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
@@ -177,13 +178,13 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 |              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |
 ```
 <div style="text-align: justify;">
-Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
+Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquanto o <b>LINQ</b> alocou apenas sua metade, 
 e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
 </div>
  <br>
 # Um pouco sobre Span<T>
 <div style="text-align: justify;">
-O <b>Span</b> é uma struct, o objetivo principal do team da Microsoft ter escrito é, diminuir o impacto na memória gerenciada(heap), e, para 
+O <b>Span</b> é uma struct, uma nova feature do .NET, o objetivo principal do team da .NET ter escrito é, diminuir o impacto na memória gerenciada(heap), e, para 
 eu não ser redundante tem um artigo muito legal do <b>Stephen Toub</b> 
 falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.<br /> 
 Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
