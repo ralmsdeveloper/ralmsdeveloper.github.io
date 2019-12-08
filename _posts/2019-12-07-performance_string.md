@@ -19,7 +19,10 @@ a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensan
 # Certo, e?
 <div style="text-align: justify;">
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
-ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.
+ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.<br>
+Eu sou fã do projeto <b>Newtonsoft</b> então fui estudar um pouco os fontes dele e me deparei com isso 
+<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve um estratégia para aumentar a performance na serealização, isso me motivou a criar alguns métodos que 
+estão aqui neste pequeno artigo.
 </div>
 <br>
 <br>
