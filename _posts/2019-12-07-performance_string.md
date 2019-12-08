@@ -165,13 +165,13 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 <div style="text-align: justify;">
 Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
 e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
- </div>
+</div>
  <br>
 # Um pouco sobre Span<T>
 <div style="text-align: justify;">
-O <b>Span<T></b> é uma struct, o objetivo principal do team da Microsoft ter escrito é, diminuir o impacto na memória gerenciada(heap), para eu não ser redundante tem um artigo muito legal do <b>Stephen Toub</b> 
-falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.
-<br />
+O <b>Span</b> é uma struct, o objetivo principal do team da Microsoft ter escrito é, diminuir o impacto na memória gerenciada(heap), para 
+eu não ser redundante tem um artigo muito legal do <b>Stephen Toub</b> 
+falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.<br /> 
 Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
 </div>
 <br>
