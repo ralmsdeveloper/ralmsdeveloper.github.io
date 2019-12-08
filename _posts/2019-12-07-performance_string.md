@@ -12,7 +12,7 @@ categories:
 <hr> 
 Curiosidade leva nos sempre a pensar fora da caixa!!!<br />
 No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
-a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensando e de quanto performatico era esse método.
+a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensando de quanto performatico era esse método.
 <br> 
 # Certo, e?
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
@@ -157,12 +157,15 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 ```
 Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
 e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
+# Um pouco sobre Span<T>
+O Span<T> é uma struct, o objetivo principal do team da Microsoft ter escrito, é diminuir o impacto na memória gerenciada(heap), tem um artigo muito legal do <b>Stephen Toub</b> 
+falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span. Fica dica de leitura:
+ <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
 # O que aprendemos com isso?
-<div class="notice--warning">
+<div class="notice--warning" style="text-align: justify;">
 <strong>
 Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
-e analise seu cenário, quanto mais crítico ele for mais a necessidade de performance você terá, pense fora da caixa.<br>
-
+e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seu próprio método por ser uma boa.
 </strong>
 </div> 
 <br>
