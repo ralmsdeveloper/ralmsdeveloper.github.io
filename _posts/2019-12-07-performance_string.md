@@ -21,10 +21,9 @@ a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensan
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
 ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.<br>
 Eu sou fã do projeto <b>Newtonsoft</b> então fui estudar um pouco os fontes dele e me deparei com isso 
-<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve um estratégia para aumentar a performance na serealização, isso me motivou a criar alguns métodos que 
+<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve uma estratégia para aumentar a performance na serialização, isso me motivou a criar alguns métodos que 
 estão aqui neste pequeno artigo.
 </div>
-<br>
 <br>
 Vamos começar?!<br>
 Veja os métodos que foram utilizados nos testes que executei.
@@ -167,14 +166,15 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
 e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
  </div>
+ <br>
 # Um pouco sobre Span<T>
 <div style="text-align: justify;">
 O Span<T> é uma struct, o objetivo principal do team da Microsoft ter escrito, é diminuir o impacto na memória gerenciada(heap), tem um artigo muito legal do <b>Stephen Toub</b> 
 falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.
 <br>
-Fica dica de leitura:
- <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
- </div>
+Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
+</div>
+ <br>
 # O que aprendemos com isso?
 <div class="notice--warning" style="text-align: justify;">
 Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
