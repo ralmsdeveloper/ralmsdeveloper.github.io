@@ -184,8 +184,8 @@ e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito
  <br>
 # Um pouco sobre Span<T>
 <div style="text-align: justify;">
-O <b>Span</b> é uma struct, uma nova feature do .NET, o objetivo principal do team da .NET ter escrito é, diminuir o impacto na memória gerenciada(heap), e, para 
-eu não ser redundante tem um artigo muito legal do <b>Stephen Toub</b> 
+O <b>Span</b> é uma struct, uma nova feature do .NET, o objetivo principal do team do .NET ter escrito é, diminuir o impacto na memória gerenciada, a heap, e, para 
+eu não ser muito redundante tem um artigo muito legal do <b>Stephen Toub</b> 
 falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.<br /> 
 Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
 </div>
