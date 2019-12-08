@@ -11,15 +11,20 @@ categories:
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr> 
 Curiosidade leva nos sempre a pensar fora da caixa!!!<br />
+<div style="text-align: justify;">
 No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
 a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensando de quanto performatico era esse método.
+</div>
 <br> 
 # Certo, e?
+<div style="text-align: justify;">
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
-ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>.
+ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.
+</div>
 <br>
 <br>
-Vamos começar os testes!!!
+Vamos começar?!<br>
+Veja os métodos que foram utilizados nos testes que executei.
 # Método usando Regex
 Esse foi o método usado no artigo citado acima.<br>
 ```csharp
@@ -137,7 +142,7 @@ UsingLinq                       10              Tempo: 00:00:00.0089215
 ------------------------------------------------------------------------
 ```
 Podemos observar que o <b>REGEX</b> teve a pior performance aqui, o <b>LINQ</b> me surpreendeu novamente 
-mostrando que ainda é muito eficiente em cenários críticos, os métodos que implementados usando <b>SPAN</b> tiveram a melhor performance.
+mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando <b>SPAN</b> tiveram a melhor performance.
  
 # Benchmark
 ```
@@ -155,18 +160,22 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 |               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B |
 |              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |
 ```
+<div style="text-align: justify;">
 Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquando o <b>LINQ</b> alocou apenas sua metade, 
 e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
+ </div>
 # Um pouco sobre Span<T>
+<div style="text-align: justify;">
 O Span<T> é uma struct, o objetivo principal do team da Microsoft ter escrito, é diminuir o impacto na memória gerenciada(heap), tem um artigo muito legal do <b>Stephen Toub</b> 
-falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span. Fica dica de leitura:
+falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.
+<br>
+Fica dica de leitura:
  <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
+ </div>
 # O que aprendemos com isso?
 <div class="notice--warning" style="text-align: justify;">
-<strong>
 Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
 e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seu próprio método por ser uma boa.
-</strong>
 </div> 
 <br>
 # Fontes
