@@ -13,21 +13,24 @@ categories:
 Curiosidade leva nos sempre a pensar fora da caixa!!!<br />
 <div style="text-align: justify;">
 No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
-a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensando de quanto performatico era esse método.
+a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.
 </div>
+<br />
 # Certo, e?
 <div style="text-align: justify;">
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
 ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.<br>
-Eu sou fã do projeto <b>Newtonsoft</b> então fui estudar um pouco os fontes dele e me deparei com isso 
-<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve uma estratégia para aumentar a performance na serialização, isso me motivou a criar alguns métodos que 
+<br />
+Eu sou fã do projeto <b>Newtonsoft</b> por muito tempo ele entregou com maestria o que prometia, então fui estudar um pouco os fontes dele e me deparei com isso 
+<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve uma estratégia para aumentar a performance na serialização, eu poderia
+ copiar esse método dele e fazer os testes que eu queria, mas, a minha experiência não seria a mesma, isso me motivou a criar alguns métodos que 
 estão aqui neste pequeno artigo.
 </div>
 <br>
 Vamos começar?!<br>
 Veja os métodos que foram utilizados nos testes que executei.
 # Método usando Regex
-Esse foi o método usado no artigo citado acima.<br>
+Esse foi o método usado no artigo citado acima. Simples e objetivo usando todo poder do Regex!
 ```csharp
 public string ToSnakeCaseUsingRegex()
 {
@@ -41,7 +44,8 @@ public string ToSnakeCaseUsingRegex()
 }
 ```
 # Método usando LINQ
-Não poderia passar por aqui sem falar da importancia no LINQ dentro do .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma.
+Não poderia passar por aqui sem falar da importancia no LINQ dentro do .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. 
+O <b>LINQ</b> é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo <b>LINQ</b>.
 ```csharp
 public string ToSnakeCaseUsingLinq()
 {
@@ -55,6 +59,8 @@ public string ToSnakeCaseUsingLinq()
 }
 ```
 # Método usando StringBuilder e Span<T>
+Aqui vamos começar a brincadeira com essa nova implementação da Microsoft, o <b>SPAN</b>, quando se fala em gerenciamento 
+de memória, lembre desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com <b>SPAN</b> e o <b>StringBuilder</b> para empilhar temporariamente nossos caracteres.
 ```csharp
 public string ToSnakeCaseUsingStringBuildAndSpan()
 {
@@ -81,6 +87,7 @@ public string ToSnakeCaseUsingStringBuildAndSpan()
 }
 ```
 # Método usando somente Span<T>
+Aqui vamos usar o <b>SPAN</b>, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres.
 ```csharp
  public string ToSnakeCaseUsingSpanOnBuffer()
 {
@@ -124,25 +131,26 @@ public string ToSnakeCaseUsingStringBuildAndSpan()
 # Resultado dos testes 
 Os testes foram realizando com 10, 100.000 e 1.000.000 de interações.
 ```
-------------------------------------------------------------------------
-UsingStringBuilderAndSpan       10              Tempo: 00:00:00.0025257
-                                100_000         Tempo: 00:00:00.1162287
-                                1_000_000       Tempo: 00:00:02.0734867
-------------------------------------------------------------------------
-UsingSpanOnBuffer               10              Tempo: 00:00:00.0004815
-                                100_000         Tempo: 00:00:00.1087459
-                                1_000_000       Tempo: 00:00:01.0008935
-------------------------------------------------------------------------
-UsingRegex                      10              Tempo: 00:00:00.0606576
-                                100_000         Tempo: 00:00:00.5761851
-                                1_000_000       Tempo: 00:00:06.2264039
-------------------------------------------------------------------------
-UsingLinq                       10              Tempo: 00:00:00.0089215
-                                100_000         Tempo: 00:00:00.2520451
-                                1_000_000       Tempo: 00:00:02.7254307
-------------------------------------------------------------------------
+-----------------------------------------------------------------
+UsingStringBuilderAndSpan 10              Tempo: 00:00:00.0025257
+                          100_000         Tempo: 00:00:00.1162287
+                          1_000_000       Tempo: 00:00:02.0734867
+-----------------------------------------------------------------
+UsingSpanOnBuffer         10              Tempo: 00:00:00.0004815
+                          100_000         Tempo: 00:00:00.1087459
+                          1_000_000       Tempo: 00:00:01.0008935
+-----------------------------------------------------------------
+UsingRegex                10              Tempo: 00:00:00.0606576
+                          100_000         Tempo: 00:00:00.5761851
+                          1_000_000       Tempo: 00:00:06.2264039
+-----------------------------------------------------------------
+UsingLinq                 10              Tempo: 00:00:00.0089215
+                          100_000         Tempo: 00:00:00.2520451
+                          1_000_000       Tempo: 00:00:02.7254307
+-----------------------------------------------------------------
 ```
-Podemos observar que o <b>REGEX</b> teve a pior performance aqui, o <b>LINQ</b> me surpreendeu novamente 
+Podemos observar que o <b>REGEX</b> teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa 
+mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas nos olhos, já o <b>LINQ</b> me surpreendeu novamente 
 mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando <b>SPAN</b> tiveram a melhor performance.
  
 # Benchmark
