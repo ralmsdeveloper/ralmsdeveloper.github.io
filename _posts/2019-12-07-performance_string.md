@@ -191,8 +191,8 @@ https://github.com/ralmsdeveloper/performanceregex
 <br>
 <div class="notice--success">
 <strong>
- Pessoal fico por aqui e um forte abraço! 😄 
- </strong>
+ Fico por aqui e um forte abraço! 😄 
+</strong>
 </div> 
 
 
