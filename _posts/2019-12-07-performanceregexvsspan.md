@@ -44,8 +44,10 @@ public string ToSnakeCaseUsingRegex()
 }
 ```
 # Método usando LINQ
+<div style="text-align: justify;">
 Não poderia passar por aqui sem falar da importancia no LINQ dentro do .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. 
 O <b>LINQ</b> é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo <b>LINQ</b>.
+</div>
 ```csharp
 public string ToSnakeCaseUsingLinq()
 {
@@ -59,8 +61,10 @@ public string ToSnakeCaseUsingLinq()
 }
 ```
 # Método usando StringBuilder e Span<T>
+<div style="text-align: justify;">
 Aqui vamos começar a brincadeira com essa nova implementação da Microsoft, o <b>SPAN</b>, quando se fala em gerenciamento 
 de memória, lembre desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com <b>SPAN</b> e o <b>StringBuilder</b> para empilhar temporariamente nossos caracteres.
+</div>
 ```csharp
 public string ToSnakeCaseUsingStringBuildAndSpan()
 {
@@ -87,7 +91,9 @@ public string ToSnakeCaseUsingStringBuildAndSpan()
 }
 ```
 # Método usando somente Span<T>
+<div style="text-align: justify;">
 Aqui vamos usar o <b>SPAN</b>, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres.
+</div>
 ```csharp
  public string ToSnakeCaseUsingSpanOnBuffer()
 {
@@ -149,10 +155,11 @@ UsingLinq                 10              Tempo: 00:00:00.0089215
                           1_000_000       Tempo: 00:00:02.7254307
 -----------------------------------------------------------------
 ```
+<div style="text-align: justify;">
 Podemos observar que o <b>REGEX</b> teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa 
 mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas nos olhos, já o <b>LINQ</b> me surpreendeu novamente 
 mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando <b>SPAN</b> tiveram a melhor performance.
- 
+ </div>
 # Benchmark
 ```
 BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
