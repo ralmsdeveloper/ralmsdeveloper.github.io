@@ -15,7 +15,6 @@ Curiosidade leva nos sempre a pensar fora da caixa!!!<br />
 No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
 a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão fiquei pensando de quanto performatico era esse método.
 </div>
-<br> 
 # Certo, e?
 <div style="text-align: justify;">
 Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
