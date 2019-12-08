@@ -169,12 +169,13 @@ e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito
  <br>
 # Um pouco sobre Span<T>
 <div style="text-align: justify;">
-O Span<T> é uma struct, o objetivo principal do team da Microsoft ter escrito, é diminuir o impacto na memória gerenciada(heap), tem um artigo muito legal do <b>Stephen Toub</b> 
+O <b>Span<T></b> é uma struct, o objetivo principal do team da Microsoft ter escrito é, diminuir o impacto na memória gerenciada(heap), para eu não ser redundante tem um artigo muito legal do <b>Stephen Toub</b> 
 falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.
-<br>
+<br />
 Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
 </div>
- <br>
+<br>
+
 # O que aprendemos com isso?
 <div class="notice--warning" style="text-align: justify;">
 Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
