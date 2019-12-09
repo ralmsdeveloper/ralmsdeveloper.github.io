@@ -7,10 +7,10 @@
 
 # Site Settings
 locale                   : "pt-BR"
-title                    : "Ralms.NET"
+title                    : "Ralms.NET - Performance, Arquitetura, EntityFrameworkCore, ASPNET Core, PostgreSQL, Kafka, Google PubSub, Engenharia"
 title_separator          : "-"
 name                     : "Rafael Almeida"
-description              : "CEO "
+description              : "EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Break Change Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase"
 url                      : "https://ralmsdeveloper.github.io"
 baseurl                  : ""# the subpath of your site, e.g. "/blog"
 repository               : ralmsdeveloper/blog
