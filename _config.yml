@@ -7,7 +7,7 @@
 
 # Site Settings
 locale                   : "pt-BR"
-title                    : "Ralms.NET - Performance, Arquitetura, EntityFrameworkCore, ASPNET Core, PostgreSQL, Kafka, Google PubSub, Engenharia"
+title                    : "Ralms.NET - Arquitetura, .NET Core, Performance e Acesso a dados"
 title_separator          : "-"
 name                     : "Rafael Almeida"
 description              : "EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Break Change Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase"
