@@ -35,7 +35,7 @@ http://ralms.net/dica/snakecase/
  
  
 # O que me levou a escrever esse artigo? 
-Não quero me prolongar aqui, dado as circunstâncias que já que escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi. 
+Não quero me prolongar aqui, dado que já escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi. 
 
 # O que mudou, Oops, aliás o que quebrou?
 <div style="text-align: justify;">
