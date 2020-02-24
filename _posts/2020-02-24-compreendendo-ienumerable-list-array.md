@@ -41,7 +41,8 @@ public interface IEnumerable<T> : IEnumerable
 <strong>
  Quando usar?<br />
 </strong>
-Quando você precisar apenas ler objetos de uma coleção.
+Quando você precisar apenas ler objetos de uma coleção.<br>
+<b>Exemplo:<b> aquelas consultinhas que você faz no banco e apenas serializa o resultado.
 </div> 
 
 ## Interface ICollection<`T`>
@@ -79,14 +80,14 @@ public interface IList<T> : ICollection<T>, IEnumerable<T>, IEnumerable
 <strong>
  Quando usar?<br />
 </strong>
-Quando precisar de tudo que existe no IColletion<`T`> e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.<br />
+Quando precisar de tudo que existe no IColletion<`T`> e tiver a necessidade de acessar diretamente um objeto de sua coleção por meio de um índice.<br />
 </div> 
 
 ```csharp
 var list = new List<string>{"A","B","C"};
 var item = list[2];
 ``` 
-O classe concreta `List<T>` sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do `IEnumerable<T>` que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.
+O classe genérica `List<T>` sempre terá todos objetos em memória, além de ser muito rica em métodos, dado esse cenário já podemos observar que seu comportamento é diferente do `IEnumerable<T>` que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.
 ## IEnumerable<`T`> vs List<`T`>  
 Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.
 ```csharp
@@ -142,7 +143,7 @@ Agora sim o retorno será exatamente:
  - ASPNETCORE
 
 Isso porque quando executo o `ToList()` ele imediatamente carrega os objetos para memória 
-e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o metódo `ToList()` não terá mais nenhum efeito sobre a mesma.
+e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o método `ToList()` não terá mais nenhum efeito sobre a mesma.
 
 ## Twitter
 <div class="notice--success">
