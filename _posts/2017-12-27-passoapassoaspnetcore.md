@@ -4,9 +4,9 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Asp.Net Core
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
   - Asp.Net Core
 ---
 

@@ -3,10 +3,10 @@ title: "Carregando instâncias do SQL Server"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
   - SQL Server
 tags:
-  - CSharp
+  - "C#"
 ---
 
 ## Carregando Instâncias do SQL SERVER

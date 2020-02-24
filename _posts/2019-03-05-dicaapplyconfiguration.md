@@ -4,6 +4,7 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Dica
+  - "Entity Framework Core"
 toc: true
 toc_label: "Começando"
 ---

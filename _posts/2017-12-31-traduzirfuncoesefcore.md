@@ -4,9 +4,9 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - EFCore
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
   - EFCore
 ---
 

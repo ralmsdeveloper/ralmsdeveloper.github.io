@@ -3,9 +3,9 @@ title: "SQL Injection EntityFrameworkCore"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
   - EntityFrameworkCore
 ---
 

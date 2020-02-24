@@ -4,6 +4,7 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Dica
+  - "ASPNET Core"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/JsonNamePolicy.png)

@@ -5,7 +5,7 @@ excerpt_separator: "Ler mais"
 categories:
   - SQL Server
 tags:
-  - CSharp
+  - "C#"
   - SQL Server
 ---
 NET Framework CLR + SQL Server

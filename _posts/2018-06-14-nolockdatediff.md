@@ -3,7 +3,8 @@ title: "With NOLOCK & DateDIFF"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - Dica
+  - Extensions
+  - "Entity Framework Core"
 toc: true
 toc_label: "Começando"
 ---

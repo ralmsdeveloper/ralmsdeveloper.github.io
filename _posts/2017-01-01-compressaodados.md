@@ -3,9 +3,9 @@ title: "Comprimindo Dados"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
 ---
 
 Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo.

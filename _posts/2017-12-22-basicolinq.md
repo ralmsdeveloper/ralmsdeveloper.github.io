@@ -3,9 +3,9 @@ title: "O básico do LINQ"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - LINQ
+  - "Linq"
 tags:
-  - LINQ
+  - "Linq"
 ---
 
 ![01]({{ site.url }}{{ site.baseurl }}/assets/images/linq.jpg)

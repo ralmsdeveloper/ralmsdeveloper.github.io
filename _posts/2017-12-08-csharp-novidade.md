@@ -3,9 +3,10 @@ title: "Novidade C# 7.3, o que vem por ai?"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
+  - "News"
 tags:
-  - CSharp
+  - "C#"
 ---
 
 Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, estarei algumas vezes falando algo sobre o mesmo.

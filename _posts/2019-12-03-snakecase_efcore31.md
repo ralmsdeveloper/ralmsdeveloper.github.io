@@ -4,6 +4,7 @@ comments: true
 excerpt_separator: "Ler mais"
 categories:
   - Dica
+  - "Entity Framework Core"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcorecsharp.png)

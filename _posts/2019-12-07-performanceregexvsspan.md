@@ -3,7 +3,9 @@ title: "Será que o Regex é rápido?"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - Dica
+  - Performance
+  - "Entity Framework Core"
+  - Regex
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/PerformanceRegex.png)

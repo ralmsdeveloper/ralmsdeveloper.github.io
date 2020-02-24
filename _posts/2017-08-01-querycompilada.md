@@ -3,9 +3,9 @@ title: "Query Compilada no EntityFrameworkCore 2.0"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
   - EntityFrameworkCore
 ---
 

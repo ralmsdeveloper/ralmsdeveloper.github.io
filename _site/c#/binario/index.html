@@ -20,7 +20,7 @@
 
 
 
-<meta name="description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
+<meta name="description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core usando C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
 
 
 
@@ -32,12 +32,12 @@
 <meta property="og:title" content="Dados Binário em .Net Core">
 
 
-  <link rel="canonical" href="http://localhost:4000/csharp/binario/">
-  <meta property="og:url" content="http://localhost:4000/csharp/binario/">
+  <link rel="canonical" href="http://localhost:4000/c%23/binario/">
+  <meta property="og:url" content="http://localhost:4000/c%23/binario/">
 
 
 
-  <meta property="og:description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
+  <meta property="og:description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core usando C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
 
 
 
@@ -302,7 +302,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="Dados Binário em .Net Core">
-    <meta itemprop="description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
+    <meta itemprop="description" content="Boa noite,Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core usando C#.Ué e nas versões anteriores não faz?!Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.O FUTURO É .NET CORE!É simples e aplicável a versões anteriores do .Net Framework.using System;using System.IO;namespace CriaLerArquivoBinario{    class Program    {        static void Main(string[] args)        {            var arquivo = AppContext.BaseDirectory + &quot;Exemplo.bin&quot;;            if (File.Exists(arquivo))			{			    File.Delete((arquivo));			}            var cadastro = new Pessoa            {                Nome = &quot;Rafael Almeida&quot;,                Endereco = &quot;Avenida de Teste&quot;,                Idade = 28,                Credito = 8000m            };            //Gravar no arquivo!            using (var escrever = new BinaryWriter(File.Open(arquivo, FileMode.Create)))            {                escrever.Write(cadastro.Nome);                escrever.Write(cadastro.Endereco);                escrever.Write(cadastro.Idade);                escrever.Write(cadastro.Credito);                escrever.Close();            }            //Resetar objeto            cadastro = new Pessoa();            using (var ler = new BinaryReader(File.Open(arquivo, FileMode.Open)))            {                cadastro.Nome = ler.ReadString();                cadastro.Endereco = ler.ReadString();                cadastro.Idade = ler.ReadInt32();                cadastro.Credito = ler.ReadDecimal();                //Imprimir dados na tela                Console.WriteLine($&quot;Nome....: {cadastro.Nome}&quot;);                Console.WriteLine($&quot;Endereço: {cadastro.Endereco}&quot;);                Console.WriteLine($&quot;Idade...: {cadastro.Idade}&quot;);                Console.WriteLine($&quot;Crédito.: {cadastro.Credito}&quot;);            }            Console.ReadKey();        }    }    class Pessoa    {        public string Nome { get; set; }        public string Endereco { get; set; }        public int Idade { get; set; }        public decimal Credito { get; set; }    }}">
     <meta itemprop="datePublished" content="August 01, 2017">
     
 
@@ -326,7 +326,7 @@
       <section class="page__content" itemprop="text">
         
         <p>Boa noite,
-Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core C#.
+Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e ler dados binário estruturado em .NET Core usando C#.
 Ué e nas versões anteriores não faz?!
 Sim faz, a intenção aqui é mostrar que esse recurso também está em conformidade com o belíssimo trabalho que a Microsoft vem realizando.</p>
 
@@ -418,7 +418,7 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     
       
       
-      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+      <a href="http://localhost:4000/tags/" class="page__taxonomy-item" rel="tag"></a>
     
     </span>
   </p>
@@ -439,7 +439,7 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     
       
       
-      <a href="http://localhost:4000/categories/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+      <a href="http://localhost:4000/categories/" class="page__taxonomy-item" rel="tag"></a>
     
     </span>
   </p>
@@ -455,13 +455,13 @@ Sim faz, a intenção aqui é mostrar que esse recurso também está em conformi
     <h4 class="page__share-title">Compartilhe em</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=Dados+Bin%C3%A1rio+em+.Net+Core%20http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinario%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=Dados+Bin%C3%A1rio+em+.Net+Core%20http%3A%2F%2Flocalhost%3A4000%2Fc%2523%2Fbinario%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
-  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinario%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fc%2523%2Fbinario%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
-  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinario%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fc%2523%2Fbinario%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
 
-  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcsharp%2Fbinario%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fc%2523%2Fbinario%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
 </section>
 
 
@@ -531,7 +531,7 @@ Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de come
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+        <a href="http://localhost:4000/performance/entity%20framework%20core/regex/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
 </a>
       
     </h2>
@@ -566,7 +566,7 @@ a nomenclatura snake-...</p>
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+        <a href="http://localhost:4000/dica/entity%20framework%20core/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
 </a>
       
     </h2>
@@ -600,7 +600,7 @@ Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de 
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+        <a href="http://localhost:4000/dica/entity%20framework%20core/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
 </a>
       
     </h2>
@@ -686,8 +686,8 @@ Este artigo é uma...</p>
     
 <script>
     var disqus_config = function () {
-      this.page.url = "http://localhost:4000/csharp/binario/";
-      this.page.identifier = "/csharp/binario";
+      this.page.url = "http://localhost:4000/c%23/binario/";
+      this.page.identifier = "/c%23/binario";
     };
     (function() {
       var d = document, s = d.createElement('script');

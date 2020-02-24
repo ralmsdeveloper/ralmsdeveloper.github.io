@@ -6,4 +6,4 @@ classes: wide
 
 Minhas palestras:
 
-| Date       | Titulo da palest                                                     | Evento                               | Slide | Vídeo |
+| Date       | Titulo da palestra                                                     | Evento                               | Slide | Vídeo |

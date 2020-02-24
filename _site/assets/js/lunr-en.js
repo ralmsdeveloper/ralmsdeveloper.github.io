@@ -49,8 +49,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Dados Binário em .Net Core",
       excerpt: "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
-      categories: ["CSharp"],
-      tags: ["CSharp"],
+      categories: ["C#"],
+      tags: ["C#"],
       id: 4
     });
     
@@ -148,8 +148,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Novidade C# 7.3, o que vem por ai?",
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
-      categories: ["CSharp"],
-      tags: ["CSharp"],
+      categories: ["C#","News"],
+      tags: ["C#"],
       id: 15
     });
     
@@ -157,8 +157,8 @@ var idx = lunr(function () {
     idx.add({
       title: "O básico do LINQ",
       excerpt: "Nesse pequeno post iremos conhecer um pouco de LINQ Um pouco de história Introdução ao LINQ Conhecendo métodos do LINQ...",
-      categories: ["LINQ"],
-      tags: ["LINQ"],
+      categories: ["Linq"],
+      tags: ["Linq"],
       id: 16
     });
     
@@ -211,8 +211,8 @@ var idx = lunr(function () {
     idx.add({
       title: "LazyLoad EF Core 2.1(Preview)",
       excerpt: "Fala pessoal, tudo bem?! Nesse artigo estarei mostrando uma das grandes novidades do Entity Framework Core 2.1, o LazyLoad, (vale...",
-      categories: ["EFCore"],
-      tags: ["EFCore"],
+      categories: ["Entity Framework Core"],
+      tags: ["Entity Framework Core"],
       id: 22
     });
     
@@ -229,7 +229,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Fluent API ou Annotation, Quem tem mais moral?",
       excerpt: "Fala pessoal, tudo bem?! 💚 Dica EF Core Esses dias estava conversando com alguém e me fez uma pergunta sobre...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 24
     });
@@ -337,7 +337,7 @@ var idx = lunr(function () {
     idx.add({
       title: "With NOLOCK & DateDIFF",
       excerpt: "Fala pessoal, tudo bem?! 💚 Extensão para EntityFramework Core Exatamente dia 02/06/2018 02:00 AM, em um quarto de hotel de...",
-      categories: ["Dica"],
+      categories: ["Extensions","Entity Framework Core"],
       tags: [],
       id: 36
     });
@@ -364,7 +364,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Logs e Consultas LINQ to SQL",
       excerpt: "Fala pessoal, tudo bem?! 💚 Introdução Bom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o \"EU TER\",...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 39
     });
@@ -373,7 +373,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Um pouco de Reflection #1",
       excerpt: "Fala pessoal, tudo bem?! 💚 Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression...",
-      categories: ["Dica"],
+      categories: ["C#",".NET","Reflection"],
       tags: [],
       id: 40
     });
@@ -409,7 +409,7 @@ var idx = lunr(function () {
     idx.add({
       title: "EntityFramework Core - SnakeCase",
       excerpt: "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase para o EntityFramework Core! FYI: Nosso objetivo aqui...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 44
     });
@@ -445,7 +445,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Dica ApplyConfiguration EFCore >=2.2",
       excerpt: "Fala pessoALL, tudo bem?! 👊 Bom essa dica pode lhe ajudar a eliminar uma boa parte de código de sua...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 48
     });
@@ -490,7 +490,7 @@ var idx = lunr(function () {
     idx.add({
       title: "System.Text.JSON - ASPNET Core 3.1",
       excerpt: "Fala pessoal, tudo bem?! 💚 Porque estamos aqui? Eu acredito que você já sabe, e se não sabe, ficará agora,...",
-      categories: ["Dica"],
+      categories: ["Dica","ASPNET Core"],
       tags: [],
       id: 53
     });
@@ -499,7 +499,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Breaking changes - EF Core 3.1",
       excerpt: "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 54
     });
@@ -508,7 +508,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Interceptando comandos - EF Core 3.1",
       excerpt: "Fala pessoal, tudo bem?! Sonho realizado Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de...",
-      categories: ["Dica"],
+      categories: ["Dica","Entity Framework Core"],
       tags: [],
       id: 55
     });
@@ -517,7 +517,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Será que o Regex é rápido?",
       excerpt: "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! No artigo SNAKE CASE eu usei um...",
-      categories: ["Dica"],
+      categories: ["Performance","Entity Framework Core","Regex"],
       tags: [],
       id: 56
     });
@@ -588,7 +588,7 @@ var store = [
       
       {
         "title": "Dados Binário em .Net Core",
-        "url": "http://localhost:4000/csharp/binario/",
+        "url": "http://localhost:4000/c%23/binario/",
         "excerpt": "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
         "teaser":
           
@@ -709,7 +709,7 @@ var store = [
       
       {
         "title": "Novidade C# 7.3, o que vem por ai?",
-        "url": "http://localhost:4000/csharp/csharp-novidade/",
+        "url": "http://localhost:4000/c%23/news/csharp-novidade/",
         "excerpt": "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
         "teaser":
           
@@ -786,7 +786,7 @@ var store = [
       
       {
         "title": "LazyLoad EF Core 2.1(Preview)",
-        "url": "http://localhost:4000/efcore/lazyload/",
+        "url": "http://localhost:4000/entity%20framework%20core/lazyload/",
         "excerpt": "Fala pessoal, tudo bem?! Nesse artigo estarei mostrando uma das grandes novidades do Entity Framework Core 2.1, o LazyLoad, (vale...",
         "teaser":
           
@@ -808,7 +808,7 @@ var store = [
       
       {
         "title": "Fluent API ou Annotation, Quem tem mais moral?",
-        "url": "http://localhost:4000/dica/dicaefcore01/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/dicaefcore01/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Dica EF Core Esses dias estava conversando com alguém e me fez uma pergunta sobre...",
         "teaser":
           
@@ -940,7 +940,7 @@ var store = [
       
       {
         "title": "With NOLOCK & DateDIFF",
-        "url": "http://localhost:4000/dica/nolockdatediff/",
+        "url": "http://localhost:4000/extensions/entity%20framework%20core/nolockdatediff/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Extensão para EntityFramework Core Exatamente dia 02/06/2018 02:00 AM, em um quarto de hotel de...",
         "teaser":
           
@@ -973,7 +973,7 @@ var store = [
       
       {
         "title": "Logs e Consultas LINQ to SQL",
-        "url": "http://localhost:4000/dica/logExtension/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/logExtension/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Introdução Bom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o \"EU TER\",...",
         "teaser":
           
@@ -984,7 +984,7 @@ var store = [
       
       {
         "title": "Um pouco de Reflection #1",
-        "url": "http://localhost:4000/dica/reflection01/",
+        "url": "http://localhost:4000/c%23/.net/reflection/reflection01/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression...",
         "teaser":
           
@@ -1028,7 +1028,7 @@ var store = [
       
       {
         "title": "EntityFramework Core - SnakeCase",
-        "url": "http://localhost:4000/dica/snakecase/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/snakecase/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase para o EntityFramework Core! FYI: Nosso objetivo aqui...",
         "teaser":
           
@@ -1072,7 +1072,7 @@ var store = [
       
       {
         "title": "Dica ApplyConfiguration EFCore >=2.2",
-        "url": "http://localhost:4000/dica/dicaapplyconfiguration/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/dicaapplyconfiguration/",
         "excerpt": "Fala pessoALL, tudo bem?! 👊 Bom essa dica pode lhe ajudar a eliminar uma boa parte de código de sua...",
         "teaser":
           
@@ -1127,7 +1127,7 @@ var store = [
       
       {
         "title": "System.Text.JSON - ASPNET Core 3.1",
-        "url": "http://localhost:4000/dica/snakecase_aspnetcore31/",
+        "url": "http://localhost:4000/dica/aspnet%20core/snakecase_aspnetcore31/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Porque estamos aqui? Eu acredito que você já sabe, e se não sabe, ficará agora,...",
         "teaser":
           
@@ -1138,7 +1138,7 @@ var store = [
       
       {
         "title": "Breaking changes - EF Core 3.1",
-        "url": "http://localhost:4000/dica/snakecase_efcore31/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/snakecase_efcore31/",
         "excerpt": "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core...",
         "teaser":
           
@@ -1149,7 +1149,7 @@ var store = [
       
       {
         "title": "Interceptando comandos - EF Core 3.1",
-        "url": "http://localhost:4000/dica/efcore31_operations_interception/",
+        "url": "http://localhost:4000/dica/entity%20framework%20core/efcore31_operations_interception/",
         "excerpt": "Fala pessoal, tudo bem?! Sonho realizado Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de...",
         "teaser":
           
@@ -1160,7 +1160,7 @@ var store = [
       
       {
         "title": "Será que o Regex é rápido?",
-        "url": "http://localhost:4000/dica/performanceregexvsspan/",
+        "url": "http://localhost:4000/performance/entity%20framework%20core/regex/performanceregexvsspan/",
         "excerpt": "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! No artigo SNAKE CASE eu usei um...",
         "teaser":
           

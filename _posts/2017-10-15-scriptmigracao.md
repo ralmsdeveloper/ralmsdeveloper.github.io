@@ -3,9 +3,9 @@ title: "Script Migração – EF Core"
 comments: false
 excerpt_separator: "Ler mais"
 categories:
-  - CSharp
+  - "C#"
 tags:
-  - CSharp
+  - "C#"
   - EntityFrameworkCore
 ---
 
