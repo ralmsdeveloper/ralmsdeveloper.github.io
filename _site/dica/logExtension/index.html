@@ -1,0 +1,954 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Logs e Consultas LINQ to SQL  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?! 💚IntroduçãoBom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o &quot;EU TER&quot;, é fundamental que todo desenvolvedor, ou integrador de software tenha o controle de tudo ou quase tudo que acontece no banco. é imprescindível que não tenhamos esse controle. É uma forma de saber se as consultas estão sendo geradas corretamente, mas em outra oportunidade iremos falar mais sobre isso, enfim ..., como o objetivo maior de nosso artigo é mostrar como visualizar/capturar os comandos enviados para o banco, nada mais justo que utilizarmos o EntityFramework Core para isso 😊.O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico SQL Server Profiler, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.Iremos apresentar aqui 2 opções de Logs (1-Log no console do aplicativo, 2-Log em uma variável) e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).Estrutura de nosso projetoClass Blogpublic class Blog{    public int Id { get; set; }    public string Name { get; set; }    public DateTime Date { get; set; } }Nosso DbContextpublic class SampleContext : DbContext{     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploArtigo;Integrated Security=True;&quot;;         optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }}Até aqui tudo bem, temos já o principal para continuar com nosso artigo.Registro de LogsConsiderações:Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.Alguns dos principais registros de Logs são:Microsoft.Extensions.Logging.Console Um agente de log de console simples.Microsoft.Extensions.Logging.AzureAppServices:Serviços de aplicativo do Azure oferece suporte a &#39;Logs de diagnóstico&#39; e recursos de fluxo de Log.Microsoft.Extensions.Logging.DebugLogs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().Microsoft.Extensions.Logging.EventLogRegistros de log de eventos do Windows.Microsoft.Extensions.Logging.EventSourceDá suporte a EventSource/EventListener.Microsoft.Extensions.Logging.TraceSourceLogs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent(). Você pode ver mais informações sobre as opções apresentadas aqui:https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging que por sinal é uma excelente documentação.Mão na massaVamos agora ver como utilizar alguns deles.Primeiramente o ConsoleO que o AddConsole faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.O pacote Microsoft.Extensions.Logging.Console disponibiliza um método de extensão AddConsole para o LoggerFactoryVeja um exemplo simples de fazer isso!var logConsole = new LoggerFactory().AddConsole();optionsBuilder.UseLoggerFactory(logConsole);Completo:protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){    var strConexao = &quot;...&quot;;     optionsBuilder.UseSqlServer(strConexao);     optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());}Output SQL de meu aplicativo console:info: Microsoft.EntityFrameworkCore.Infrastructure[10403]      Entity Framework Core 2.1.1-rtm-30846 initialized &#39;SampleContext&#39; using provider &#39;Microsoft.EntityFrameworkCore.SqlServer&#39; with options: Noneinfo: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (146ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = &#39;BASE TABLE&#39;) SELECT 1 ELSE SELECT 0info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (62ms) [Parameters=[@p0=&#39;?&#39; (DbType = DateTime2), @p1=&#39;?&#39; (Size = 4000)], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SET NOCOUNT ON;      INSERT INTO [Blogs] ([Date], [Name])      VALUES (@p0, @p1);      SELECT [Id]      FROM [Blogs]      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (15ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SELECT [p].[Id], [p].[Date], [p].[Name]      FROM [Blogs] AS [p]      WHERE [p].[Id] &gt; 0Muito simples não é?!Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?Resposta: SIME iremos ver um exemplo básico de como podemos construir um log manipulável, é um exemplo básico, mas você terá uma ideia de como construir algo mais complexo para sua aplicação!Log CustomizadoAgora a coisa começa a ficar melhor… :), vamos criar uma classe com a seguinte estrutura:Classe responsável por fazer a manipulação do log.private class CustomLoggerProvider : ILoggerProvider{    public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();     private class SampleLogger : ILogger    {        public void Log&lt;TState&gt;(            LogLevel logLevel,             EventId eventId,             TState state,             Exception exception,            Func&lt;TState, Exception, string&gt; formatter)        {            if (eventId.Id == RelationalEventId.CommandExecuting.Id)            {                var log = formatter(state, exception);                Logs.Add(log);             }        }        public bool IsEnabled(LogLevel logLevel) =&gt; true;        public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;    }    public void Dispose() { }}Observações:existe uma variável Logs em minha classe acima, e minha classe também está como privada, fiz isso para não expor ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.Nosso contexto completo ficou assim:public class SampleContext : DbContext{    public SampleContext()    {        if (Logs == null)        {            this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());            Logs = new List&lt;string&gt;();        }    }    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;&quot;;        optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }    public static IList&lt;string&gt; Logs = null;    private class CustomLoggerProvider : ILoggerProvider    {        public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();        private class SampleLogger : ILogger        {            public void Log&lt;TState&gt;(                LogLevel logLevel,                EventId eventId,                TState state,                Exception exception,                Func&lt;TState, Exception, string&gt; formatter)            {                if (eventId.Id == RelationalEventId.CommandExecuting.Id)                {                    var log = formatter(state, exception);                    Logs.Add(log);                }            }            public bool IsEnabled(LogLevel logLevel) =&gt; true;            public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;        }        public void Dispose() { }    }}Essa classe é tudo que precisamos para criar uma instância de ILogger, onde é feito todo rastreamento das query’s, mas claro falando de forma genérica, já que podemos fazer “N” coisas!Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface ILoggerFactory, da seguinte maneira.this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());Como foi mostrado no exemplo completo acima!Nosso exemplo de usostatic void Main(string[] args){    using(var db = new SampleContext())    {        db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();        db.Set&lt;Blog&gt;().Where(p=&gt;p.Id &gt; 0).ToList();    }	// Recuperar o log dos comandos executados    foreach (var log in SampleContext.Logs)    {        Console.WriteLine(log);    }    Console.ReadKey();}Vamos criar nossa ExtensãoSabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com o método de extensão GenerateCreateScript disponibilizado pelo próprio EF Core, veja o exemplo abaixo:var scriptBanco = db.Database.GenerateCreateScript();Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ tipo Queryable.Como sempre falo, System.Reflection I LOVE, SEMPRE, SEMPRE!!!Com algumas magias usando Reflection podemos fazer a recuperação de algumas informações serializadas que estão em memória.Algumas informações para vocêEntityQueryProvider (IQueryCompiler)Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.DatabaseDependenciesClasse de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.Veja nossa classe completapublic static class RalmsExtensionSql{    private static readonly TypeInfo _queryCompilerTypeInfo = typeof(QueryCompiler).GetTypeInfo();    private static readonly FieldInfo _queryCompiler        = typeof(EntityQueryProvider)            .GetTypeInfo()            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryCompiler&quot;);     private static readonly FieldInfo _queryModelGenerator        = _queryCompilerTypeInfo            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryModelGenerator&quot;);    private static readonly FieldInfo _database = _queryCompilerTypeInfo        .DeclaredFields        .Single(x =&gt; x.Name == &quot;_database&quot;);    private static readonly PropertyInfo _dependencies        = typeof(Database)            .GetTypeInfo()            .DeclaredProperties            .Single(x =&gt; x.Name == &quot;Dependencies&quot;);    public static string ToSql&lt;T&gt;(this IQueryable&lt;T&gt; queryable)        where T : class    {        var queryCompiler = _queryCompiler.GetValue(queryable.Provider) as IQueryCompiler;        var queryModelGen = _queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator;        var queryCompilationContextFactory            = ((DatabaseDependencies)_dependencies.GetValue(_database.GetValue(queryCompiler)))                .QueryCompilationContextFactory;        var queryCompilationContext = queryCompilationContextFactory.Create(false);        var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();        modelVisitor.CreateQueryExecutor&lt;T&gt;(queryModelGen.ParseQuery(queryable.Expression));        return modelVisitor            .Queries            .FirstOrDefault()            .ToString();    }}Exemplo de usostatic void Main(string[] args){    using (var db = new SampleContext())    {         db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();         // Gerar/Projetar o SQL         var strSQL = db.Set&lt;Blog&gt;().Where(p =&gt; p.Id &gt; 0).ToSql();    }     Console.ReadKey();}Veja o exemploReferênciasEF CoreQueryCompilerDatabaseDependenciesRelationalQueryModelVisitorClick aqui para acessar os fontes no github!Pessoal, fico por aqui #efcore #mvp #mvpbr #mvpbuzz">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Logs e Consultas LINQ to SQL">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/logExtension/">
+  <meta property="og:url" content="http://localhost:4000/dica/logExtension/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?! 💚IntroduçãoBom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o &quot;EU TER&quot;, é fundamental que todo desenvolvedor, ou integrador de software tenha o controle de tudo ou quase tudo que acontece no banco. é imprescindível que não tenhamos esse controle. É uma forma de saber se as consultas estão sendo geradas corretamente, mas em outra oportunidade iremos falar mais sobre isso, enfim ..., como o objetivo maior de nosso artigo é mostrar como visualizar/capturar os comandos enviados para o banco, nada mais justo que utilizarmos o EntityFramework Core para isso 😊.O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico SQL Server Profiler, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.Iremos apresentar aqui 2 opções de Logs (1-Log no console do aplicativo, 2-Log em uma variável) e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).Estrutura de nosso projetoClass Blogpublic class Blog{    public int Id { get; set; }    public string Name { get; set; }    public DateTime Date { get; set; } }Nosso DbContextpublic class SampleContext : DbContext{     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploArtigo;Integrated Security=True;&quot;;         optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }}Até aqui tudo bem, temos já o principal para continuar com nosso artigo.Registro de LogsConsiderações:Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.Alguns dos principais registros de Logs são:Microsoft.Extensions.Logging.Console Um agente de log de console simples.Microsoft.Extensions.Logging.AzureAppServices:Serviços de aplicativo do Azure oferece suporte a &#39;Logs de diagnóstico&#39; e recursos de fluxo de Log.Microsoft.Extensions.Logging.DebugLogs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().Microsoft.Extensions.Logging.EventLogRegistros de log de eventos do Windows.Microsoft.Extensions.Logging.EventSourceDá suporte a EventSource/EventListener.Microsoft.Extensions.Logging.TraceSourceLogs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent(). Você pode ver mais informações sobre as opções apresentadas aqui:https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging que por sinal é uma excelente documentação.Mão na massaVamos agora ver como utilizar alguns deles.Primeiramente o ConsoleO que o AddConsole faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.O pacote Microsoft.Extensions.Logging.Console disponibiliza um método de extensão AddConsole para o LoggerFactoryVeja um exemplo simples de fazer isso!var logConsole = new LoggerFactory().AddConsole();optionsBuilder.UseLoggerFactory(logConsole);Completo:protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){    var strConexao = &quot;...&quot;;     optionsBuilder.UseSqlServer(strConexao);     optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());}Output SQL de meu aplicativo console:info: Microsoft.EntityFrameworkCore.Infrastructure[10403]      Entity Framework Core 2.1.1-rtm-30846 initialized &#39;SampleContext&#39; using provider &#39;Microsoft.EntityFrameworkCore.SqlServer&#39; with options: Noneinfo: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (146ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = &#39;BASE TABLE&#39;) SELECT 1 ELSE SELECT 0info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (62ms) [Parameters=[@p0=&#39;?&#39; (DbType = DateTime2), @p1=&#39;?&#39; (Size = 4000)], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SET NOCOUNT ON;      INSERT INTO [Blogs] ([Date], [Name])      VALUES (@p0, @p1);      SELECT [Id]      FROM [Blogs]      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (15ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SELECT [p].[Id], [p].[Date], [p].[Name]      FROM [Blogs] AS [p]      WHERE [p].[Id] &gt; 0Muito simples não é?!Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?Resposta: SIME iremos ver um exemplo básico de como podemos construir um log manipulável, é um exemplo básico, mas você terá uma ideia de como construir algo mais complexo para sua aplicação!Log CustomizadoAgora a coisa começa a ficar melhor… :), vamos criar uma classe com a seguinte estrutura:Classe responsável por fazer a manipulação do log.private class CustomLoggerProvider : ILoggerProvider{    public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();     private class SampleLogger : ILogger    {        public void Log&lt;TState&gt;(            LogLevel logLevel,             EventId eventId,             TState state,             Exception exception,            Func&lt;TState, Exception, string&gt; formatter)        {            if (eventId.Id == RelationalEventId.CommandExecuting.Id)            {                var log = formatter(state, exception);                Logs.Add(log);             }        }        public bool IsEnabled(LogLevel logLevel) =&gt; true;        public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;    }    public void Dispose() { }}Observações:existe uma variável Logs em minha classe acima, e minha classe também está como privada, fiz isso para não expor ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.Nosso contexto completo ficou assim:public class SampleContext : DbContext{    public SampleContext()    {        if (Logs == null)        {            this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());            Logs = new List&lt;string&gt;();        }    }    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;&quot;;        optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }    public static IList&lt;string&gt; Logs = null;    private class CustomLoggerProvider : ILoggerProvider    {        public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();        private class SampleLogger : ILogger        {            public void Log&lt;TState&gt;(                LogLevel logLevel,                EventId eventId,                TState state,                Exception exception,                Func&lt;TState, Exception, string&gt; formatter)            {                if (eventId.Id == RelationalEventId.CommandExecuting.Id)                {                    var log = formatter(state, exception);                    Logs.Add(log);                }            }            public bool IsEnabled(LogLevel logLevel) =&gt; true;            public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;        }        public void Dispose() { }    }}Essa classe é tudo que precisamos para criar uma instância de ILogger, onde é feito todo rastreamento das query’s, mas claro falando de forma genérica, já que podemos fazer “N” coisas!Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface ILoggerFactory, da seguinte maneira.this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());Como foi mostrado no exemplo completo acima!Nosso exemplo de usostatic void Main(string[] args){    using(var db = new SampleContext())    {        db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();        db.Set&lt;Blog&gt;().Where(p=&gt;p.Id &gt; 0).ToList();    }	// Recuperar o log dos comandos executados    foreach (var log in SampleContext.Logs)    {        Console.WriteLine(log);    }    Console.ReadKey();}Vamos criar nossa ExtensãoSabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com o método de extensão GenerateCreateScript disponibilizado pelo próprio EF Core, veja o exemplo abaixo:var scriptBanco = db.Database.GenerateCreateScript();Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ tipo Queryable.Como sempre falo, System.Reflection I LOVE, SEMPRE, SEMPRE!!!Com algumas magias usando Reflection podemos fazer a recuperação de algumas informações serializadas que estão em memória.Algumas informações para vocêEntityQueryProvider (IQueryCompiler)Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.DatabaseDependenciesClasse de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.Veja nossa classe completapublic static class RalmsExtensionSql{    private static readonly TypeInfo _queryCompilerTypeInfo = typeof(QueryCompiler).GetTypeInfo();    private static readonly FieldInfo _queryCompiler        = typeof(EntityQueryProvider)            .GetTypeInfo()            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryCompiler&quot;);     private static readonly FieldInfo _queryModelGenerator        = _queryCompilerTypeInfo            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryModelGenerator&quot;);    private static readonly FieldInfo _database = _queryCompilerTypeInfo        .DeclaredFields        .Single(x =&gt; x.Name == &quot;_database&quot;);    private static readonly PropertyInfo _dependencies        = typeof(Database)            .GetTypeInfo()            .DeclaredProperties            .Single(x =&gt; x.Name == &quot;Dependencies&quot;);    public static string ToSql&lt;T&gt;(this IQueryable&lt;T&gt; queryable)        where T : class    {        var queryCompiler = _queryCompiler.GetValue(queryable.Provider) as IQueryCompiler;        var queryModelGen = _queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator;        var queryCompilationContextFactory            = ((DatabaseDependencies)_dependencies.GetValue(_database.GetValue(queryCompiler)))                .QueryCompilationContextFactory;        var queryCompilationContext = queryCompilationContextFactory.Create(false);        var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();        modelVisitor.CreateQueryExecutor&lt;T&gt;(queryModelGen.ParseQuery(queryable.Expression));        return modelVisitor            .Queries            .FirstOrDefault()            .ToString();    }}Exemplo de usostatic void Main(string[] args){    using (var db = new SampleContext())    {         db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();         // Gerar/Projetar o SQL         var strSQL = db.Set&lt;Blog&gt;().Where(p =&gt; p.Id &gt; 0).ToSql();    }     Console.ReadKey();}Veja o exemploReferênciasEF CoreQueryCompilerDatabaseDependenciesRelationalQueryModelVisitorClick aqui para acessar os fontes no github!Pessoal, fico por aqui #efcore #mvp #mvpbr #mvpbuzz">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-07-01T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Logs e Consultas LINQ to SQL">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?! 💚IntroduçãoBom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o &quot;EU TER&quot;, é fundamental que todo desenvolvedor, ou integrador de software tenha o controle de tudo ou quase tudo que acontece no banco. é imprescindível que não tenhamos esse controle. É uma forma de saber se as consultas estão sendo geradas corretamente, mas em outra oportunidade iremos falar mais sobre isso, enfim ..., como o objetivo maior de nosso artigo é mostrar como visualizar/capturar os comandos enviados para o banco, nada mais justo que utilizarmos o EntityFramework Core para isso 😊.O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico SQL Server Profiler, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.Iremos apresentar aqui 2 opções de Logs (1-Log no console do aplicativo, 2-Log em uma variável) e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).Estrutura de nosso projetoClass Blogpublic class Blog{    public int Id { get; set; }    public string Name { get; set; }    public DateTime Date { get; set; } }Nosso DbContextpublic class SampleContext : DbContext{     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploArtigo;Integrated Security=True;&quot;;         optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }}Até aqui tudo bem, temos já o principal para continuar com nosso artigo.Registro de LogsConsiderações:Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.Alguns dos principais registros de Logs são:Microsoft.Extensions.Logging.Console Um agente de log de console simples.Microsoft.Extensions.Logging.AzureAppServices:Serviços de aplicativo do Azure oferece suporte a &#39;Logs de diagnóstico&#39; e recursos de fluxo de Log.Microsoft.Extensions.Logging.DebugLogs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().Microsoft.Extensions.Logging.EventLogRegistros de log de eventos do Windows.Microsoft.Extensions.Logging.EventSourceDá suporte a EventSource/EventListener.Microsoft.Extensions.Logging.TraceSourceLogs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent(). Você pode ver mais informações sobre as opções apresentadas aqui:https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging que por sinal é uma excelente documentação.Mão na massaVamos agora ver como utilizar alguns deles.Primeiramente o ConsoleO que o AddConsole faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.O pacote Microsoft.Extensions.Logging.Console disponibiliza um método de extensão AddConsole para o LoggerFactoryVeja um exemplo simples de fazer isso!var logConsole = new LoggerFactory().AddConsole();optionsBuilder.UseLoggerFactory(logConsole);Completo:protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder){    var strConexao = &quot;...&quot;;     optionsBuilder.UseSqlServer(strConexao);     optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());}Output SQL de meu aplicativo console:info: Microsoft.EntityFrameworkCore.Infrastructure[10403]      Entity Framework Core 2.1.1-rtm-30846 initialized &#39;SampleContext&#39; using provider &#39;Microsoft.EntityFrameworkCore.SqlServer&#39; with options: Noneinfo: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (146ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE = &#39;BASE TABLE&#39;) SELECT 1 ELSE SELECT 0info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (62ms) [Parameters=[@p0=&#39;?&#39; (DbType = DateTime2), @p1=&#39;?&#39; (Size = 4000)], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SET NOCOUNT ON;      INSERT INTO [Blogs] ([Date], [Name])      VALUES (@p0, @p1);      SELECT [Id]      FROM [Blogs]      WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();info: Microsoft.EntityFrameworkCore.Database.Command[20101]      Executed DbCommand (15ms) [Parameters=[], CommandType=&#39;Text&#39;, CommandTimeout=&#39;30&#39;]      SELECT [p].[Id], [p].[Date], [p].[Name]      FROM [Blogs] AS [p]      WHERE [p].[Id] &gt; 0Muito simples não é?!Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?Resposta: SIME iremos ver um exemplo básico de como podemos construir um log manipulável, é um exemplo básico, mas você terá uma ideia de como construir algo mais complexo para sua aplicação!Log CustomizadoAgora a coisa começa a ficar melhor… :), vamos criar uma classe com a seguinte estrutura:Classe responsável por fazer a manipulação do log.private class CustomLoggerProvider : ILoggerProvider{    public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();     private class SampleLogger : ILogger    {        public void Log&lt;TState&gt;(            LogLevel logLevel,             EventId eventId,             TState state,             Exception exception,            Func&lt;TState, Exception, string&gt; formatter)        {            if (eventId.Id == RelationalEventId.CommandExecuting.Id)            {                var log = formatter(state, exception);                Logs.Add(log);             }        }        public bool IsEnabled(LogLevel logLevel) =&gt; true;        public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;    }    public void Dispose() { }}Observações:existe uma variável Logs em minha classe acima, e minha classe também está como privada, fiz isso para não expor ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.Nosso contexto completo ficou assim:public class SampleContext : DbContext{    public SampleContext()    {        if (Logs == null)        {            this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());            Logs = new List&lt;string&gt;();        }    }    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        var sqlConnectionStringBuilder = &quot;Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;&quot;;        optionsBuilder.UseSqlServer(sqlConnectionStringBuilder);         base.OnConfiguring(optionsBuilder);    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        modelBuilder.Entity&lt;Blog&gt;();    }    public static IList&lt;string&gt; Logs = null;    private class CustomLoggerProvider : ILoggerProvider    {        public ILogger CreateLogger(string categoryName) =&gt; new SampleLogger();        private class SampleLogger : ILogger        {            public void Log&lt;TState&gt;(                LogLevel logLevel,                EventId eventId,                TState state,                Exception exception,                Func&lt;TState, Exception, string&gt; formatter)            {                if (eventId.Id == RelationalEventId.CommandExecuting.Id)                {                    var log = formatter(state, exception);                    Logs.Add(log);                }            }            public bool IsEnabled(LogLevel logLevel) =&gt; true;            public IDisposable BeginScope&lt;TState&gt;(TState state) =&gt; null;        }        public void Dispose() { }    }}Essa classe é tudo que precisamos para criar uma instância de ILogger, onde é feito todo rastreamento das query’s, mas claro falando de forma genérica, já que podemos fazer “N” coisas!Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface ILoggerFactory, da seguinte maneira.this.GetService&lt;ILoggerFactory&gt;().AddProvider(new CustomLoggerProvider());Como foi mostrado no exemplo completo acima!Nosso exemplo de usostatic void Main(string[] args){    using(var db = new SampleContext())    {        db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();        db.Set&lt;Blog&gt;().Where(p=&gt;p.Id &gt; 0).ToList();    }	// Recuperar o log dos comandos executados    foreach (var log in SampleContext.Logs)    {        Console.WriteLine(log);    }    Console.ReadKey();}Vamos criar nossa ExtensãoSabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com o método de extensão GenerateCreateScript disponibilizado pelo próprio EF Core, veja o exemplo abaixo:var scriptBanco = db.Database.GenerateCreateScript();Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ tipo Queryable.Como sempre falo, System.Reflection I LOVE, SEMPRE, SEMPRE!!!Com algumas magias usando Reflection podemos fazer a recuperação de algumas informações serializadas que estão em memória.Algumas informações para vocêEntityQueryProvider (IQueryCompiler)Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.DatabaseDependenciesClasse de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.Veja nossa classe completapublic static class RalmsExtensionSql{    private static readonly TypeInfo _queryCompilerTypeInfo = typeof(QueryCompiler).GetTypeInfo();    private static readonly FieldInfo _queryCompiler        = typeof(EntityQueryProvider)            .GetTypeInfo()            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryCompiler&quot;);     private static readonly FieldInfo _queryModelGenerator        = _queryCompilerTypeInfo            .DeclaredFields            .Single(x =&gt; x.Name == &quot;_queryModelGenerator&quot;);    private static readonly FieldInfo _database = _queryCompilerTypeInfo        .DeclaredFields        .Single(x =&gt; x.Name == &quot;_database&quot;);    private static readonly PropertyInfo _dependencies        = typeof(Database)            .GetTypeInfo()            .DeclaredProperties            .Single(x =&gt; x.Name == &quot;Dependencies&quot;);    public static string ToSql&lt;T&gt;(this IQueryable&lt;T&gt; queryable)        where T : class    {        var queryCompiler = _queryCompiler.GetValue(queryable.Provider) as IQueryCompiler;        var queryModelGen = _queryModelGenerator.GetValue(queryCompiler) as IQueryModelGenerator;        var queryCompilationContextFactory            = ((DatabaseDependencies)_dependencies.GetValue(_database.GetValue(queryCompiler)))                .QueryCompilationContextFactory;        var queryCompilationContext = queryCompilationContextFactory.Create(false);        var modelVisitor = (RelationalQueryModelVisitor)queryCompilationContext.CreateQueryModelVisitor();        modelVisitor.CreateQueryExecutor&lt;T&gt;(queryModelGen.ParseQuery(queryable.Expression));        return modelVisitor            .Queries            .FirstOrDefault()            .ToString();    }}Exemplo de usostatic void Main(string[] args){    using (var db = new SampleContext())    {         db.Database.EnsureCreated();        db.Set&lt;Blog&gt;().Add(new Blog        {            Name = &quot;Rafael Almeida&quot;,            Date = DateTime.Now        });        db.SaveChanges();         // Gerar/Projetar o SQL         var strSQL = db.Set&lt;Blog&gt;().Where(p =&gt; p.Id &gt; 0).ToSql();    }     Console.ReadKey();}Veja o exemploReferênciasEF CoreQueryCompilerDatabaseDependenciesRelationalQueryModelVisitorClick aqui para acessar os fontes no github!Pessoal, fico por aqui #efcore #mvp #mvpbr #mvpbuzz">
+    <meta itemprop="datePublished" content="July 01, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Logs e Consultas LINQ to SQL
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  27 minuto(s) de leitura
+ - July 01, 2018</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Começando</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#introdução">Introdução</a></li>
+  <li><a href="#estrutura-de-nosso-projeto">Estrutura de nosso projeto</a></li>
+  <li><a href="#registro-de-logs">Registro de Logs</a></li>
+  <li><a href="#mão-na-massa">Mão na massa</a></li>
+  <li><a href="#log-customizado">Log Customizado</a></li>
+  <li><a href="#vamos-criar-nossa-extensão">Vamos criar nossa Extensão</a></li>
+  <li><a href="#algumas-informações-para-você">Algumas informações para você</a></li>
+  <li><a href="#referências">Referências</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/topoefnew.jpg" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
+<hr />
+
+<h2 id="introdução">Introdução</h2>
+<div style="text-align: justify;">
+Bom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o <strong>"EU TER"</strong>, é fundamental que todo desenvolvedor, ou integrador de software tenha 
+o controle de tudo ou quase tudo que acontece no banco. é imprescindível que não tenhamos esse controle. É uma forma de saber se as consultas estão sendo geradas corretamente, mas em outra oportunidade iremos falar mais sobre isso, enfim ..., como o objetivo maior de nosso artigo é mostrar como visualizar/capturar os comandos enviados para o banco, nada mais justo que utilizarmos o <strong>EntityFramework Core</strong> para isso 😊.
+<br /><br />
+O EF Core fornece já um conjunto de opções para que possamos verificar as saídas SQL, vale a pena ressaltar que para o SQL Server temos o magnífico <strong>SQL Server Profiler</strong>, monitor de instruções SQL em tempo real, ótimo para saber quais querys por exemplo consumiram mais tempo.
+<br /><br />
+Iremos apresentar aqui 2 opções de Logs (1-Log no console do aplicativo, 2-Log em uma variável) e criaremos uma extensão para projetar o SQL de uma consulta LINQ (Queryable).
+</div>
+<h2 id="estrutura-de-nosso-projeto">Estrutura de nosso projeto</h2>
+<p><strong>Class Blog</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Blog</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Name</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Date</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><strong>Nosso DbContext</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">SampleContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span> 
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">sqlConnectionStringBuilder</span> <span class="p">=</span> <span class="s">"Server=(localdb)\\mssqllocaldb;Database=ExemploArtigo;Integrated Security=True;"</span><span class="p">;</span> 
+        <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="n">sqlConnectionStringBuilder</span><span class="p">);</span> 
+        <span class="k">base</span><span class="p">.</span><span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">optionsBuilder</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Até aqui tudo bem, temos já o principal para continuar com nosso artigo.</p>
+<h2 id="registro-de-logs">Registro de Logs</h2>
+<div class="notice--success">
+<strong>Considerações:</strong><br />
+Para usar alguma das opções abaixo, tem que instalar, são pacotes separados, então requer uma instalação.<br /><br />
+<strong>Alguns dos principais registros de Logs são:</strong><br /><br />
+
+<strong>Microsoft.Extensions.Logging.Console</strong><br /> Um agente de log de console simples.<br /><br />
+<strong>Microsoft.Extensions.Logging.AzureAppServices:</strong><br />Serviços de aplicativo do Azure oferece suporte a 'Logs de diagnóstico' e recursos de fluxo de Log.<br /><br />
+<strong>Microsoft.Extensions.Logging.Debug</strong><br />Logs de um monitor de depuração usando System.Diagnostics.Debug.WriteLine().<br /><br />
+<strong>Microsoft.Extensions.Logging.EventLog</strong><br />Registros de log de eventos do Windows.<br /><br />
+<strong>Microsoft.Extensions.Logging.EventSource</strong><br />Dá suporte a EventSource/EventListener.<br /><br />
+<strong>Microsoft.Extensions.Logging.TraceSource</strong><br />Logs para um ouvinte de rastreamento usando System.Diagnostics.TraceSource.TraceEvent().<br /><br />
+</div>
+<div class="notice--success"> 
+Você pode ver mais informações sobre as opções apresentadas aqui:<br />
+<a href="https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging" target="_BLACK">https://docs.microsoft.com/pt-br/ef/core/miscellaneous/logging</a> <br />
+que por sinal é uma excelente documentação.<br />
+</div>
+<h2 id="mão-na-massa">Mão na massa</h2>
+<p>Vamos agora ver como utilizar alguns deles.<br />
+<b>Primeiramente o Console</b><br />
+O que o <b><i>AddConsole</i></b> faz é jogar todas instruções SQL no console do aplicativo, é bem simples, após a instalação do pacote basta apenas referenciar.</p>
+
+<p>O pacote <b><i>Microsoft.Extensions.Logging.Console</i></b> disponibiliza um método de extensão <b>AddConsole</b> para o <b>LoggerFactory</b><br />
+Veja um exemplo simples de fazer isso!</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">logConsole</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">LoggerFactory</span><span class="p">().</span><span class="nf">AddConsole</span><span class="p">();</span>
+<span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseLoggerFactory</span><span class="p">(</span><span class="n">logConsole</span><span class="p">);</span>
+</code></pre></div></div>
+<p><strong>Completo:</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">strConexao</span> <span class="p">=</span> <span class="s">"..."</span><span class="p">;</span> 
+    <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="n">strConexao</span><span class="p">);</span> 
+    <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseLoggerFactory</span><span class="p">(</span><span class="k">new</span> <span class="nf">LoggerFactory</span><span class="p">().</span><span class="nf">AddConsole</span><span class="p">());</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br />
+<strong>Output SQL de meu aplicativo console:</strong>
+<br /></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">info</span><span class="p">:</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">EntityFrameworkCore</span><span class="p">.</span><span class="n">Infrastructure</span><span class="p">[</span><span class="mi">10403</span><span class="p">]</span>
+      <span class="n">Entity</span> <span class="n">Framework</span> <span class="n">Core</span> <span class="mi">2</span><span class="p">.</span><span class="mi">1</span><span class="p">.</span><span class="mi">1</span><span class="o">-</span><span class="n">rtm</span><span class="o">-</span><span class="mi">30846</span> <span class="n">initialized</span> <span class="s1">'SampleContext'</span> <span class="k">using</span> <span class="n">provider</span> <span class="s1">'Microsoft.EntityFrameworkCore.SqlServer'</span> <span class="k">with</span> <span class="k">options</span><span class="p">:</span> <span class="k">None</span>
+<span class="n">info</span><span class="p">:</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">EntityFrameworkCore</span><span class="p">.</span><span class="k">Database</span><span class="p">.</span><span class="n">Command</span><span class="p">[</span><span class="mi">20101</span><span class="p">]</span>
+      <span class="n">Executed</span> <span class="n">DbCommand</span> <span class="p">(</span><span class="mi">146</span><span class="n">ms</span><span class="p">)</span> <span class="p">[</span><span class="k">Parameters</span><span class="o">=</span><span class="p">[],</span> <span class="n">CommandType</span><span class="o">=</span><span class="s1">'Text'</span><span class="p">,</span> <span class="n">CommandTimeout</span><span class="o">=</span><span class="s1">'30'</span><span class="p">]</span>
+      <span class="n">IF</span> <span class="k">EXISTS</span> <span class="p">(</span><span class="k">SELECT</span> <span class="o">*</span> <span class="k">FROM</span> <span class="n">INFORMATION_SCHEMA</span><span class="p">.</span><span class="n">TABLES</span> <span class="k">WHERE</span> <span class="n">TABLE_TYPE</span> <span class="o">=</span> <span class="s1">'BASE TABLE'</span><span class="p">)</span> <span class="k">SELECT</span> <span class="mi">1</span> <span class="k">ELSE</span> <span class="k">SELECT</span> <span class="mi">0</span>
+<span class="n">info</span><span class="p">:</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">EntityFrameworkCore</span><span class="p">.</span><span class="k">Database</span><span class="p">.</span><span class="n">Command</span><span class="p">[</span><span class="mi">20101</span><span class="p">]</span>
+      <span class="n">Executed</span> <span class="n">DbCommand</span> <span class="p">(</span><span class="mi">62</span><span class="n">ms</span><span class="p">)</span> <span class="p">[</span><span class="k">Parameters</span><span class="o">=</span><span class="p">[</span><span class="o">@</span><span class="n">p0</span><span class="o">=</span><span class="s1">'?'</span> <span class="p">(</span><span class="n">DbType</span> <span class="o">=</span> <span class="n">DateTime2</span><span class="p">),</span> <span class="o">@</span><span class="n">p1</span><span class="o">=</span><span class="s1">'?'</span> <span class="p">(</span><span class="k">Size</span> <span class="o">=</span> <span class="mi">4000</span><span class="p">)],</span> <span class="n">CommandType</span><span class="o">=</span><span class="s1">'Text'</span><span class="p">,</span> <span class="n">CommandTimeout</span><span class="o">=</span><span class="s1">'30'</span><span class="p">]</span>
+      <span class="k">SET</span> <span class="n">NOCOUNT</span> <span class="k">ON</span><span class="p">;</span>
+      <span class="k">INSERT</span> <span class="k">INTO</span> <span class="p">[</span><span class="n">Blogs</span><span class="p">]</span> <span class="p">([</span><span class="nb">Date</span><span class="p">],</span> <span class="p">[</span><span class="n">Name</span><span class="p">])</span>
+      <span class="k">VALUES</span> <span class="p">(</span><span class="o">@</span><span class="n">p0</span><span class="p">,</span> <span class="o">@</span><span class="n">p1</span><span class="p">);</span>
+      <span class="k">SELECT</span> <span class="p">[</span><span class="n">Id</span><span class="p">]</span>
+      <span class="k">FROM</span> <span class="p">[</span><span class="n">Blogs</span><span class="p">]</span>
+      <span class="k">WHERE</span> <span class="o">@@</span><span class="n">ROWCOUNT</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">AND</span> <span class="p">[</span><span class="n">Id</span><span class="p">]</span> <span class="o">=</span> <span class="n">scope_identity</span><span class="p">();</span>
+<span class="n">info</span><span class="p">:</span> <span class="n">Microsoft</span><span class="p">.</span><span class="n">EntityFrameworkCore</span><span class="p">.</span><span class="k">Database</span><span class="p">.</span><span class="n">Command</span><span class="p">[</span><span class="mi">20101</span><span class="p">]</span>
+      <span class="n">Executed</span> <span class="n">DbCommand</span> <span class="p">(</span><span class="mi">15</span><span class="n">ms</span><span class="p">)</span> <span class="p">[</span><span class="k">Parameters</span><span class="o">=</span><span class="p">[],</span> <span class="n">CommandType</span><span class="o">=</span><span class="s1">'Text'</span><span class="p">,</span> <span class="n">CommandTimeout</span><span class="o">=</span><span class="s1">'30'</span><span class="p">]</span>
+      <span class="k">SELECT</span> <span class="p">[</span><span class="n">p</span><span class="p">].[</span><span class="n">Id</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span><span class="p">].[</span><span class="nb">Date</span><span class="p">],</span> <span class="p">[</span><span class="n">p</span><span class="p">].[</span><span class="n">Name</span><span class="p">]</span>
+      <span class="k">FROM</span> <span class="p">[</span><span class="n">Blogs</span><span class="p">]</span> <span class="k">AS</span> <span class="p">[</span><span class="n">p</span><span class="p">]</span>
+      <span class="k">WHERE</span> <span class="p">[</span><span class="n">p</span><span class="p">].[</span><span class="n">Id</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span>
+</code></pre></div></div>
+<p>Muito simples não é?!<br />
+Certo, mas aqui temos apenas as querys sendo projetadas no console, eu gostaria de ter algo mais customizado isso é possível?<br />
+Resposta: <strong>SIM</strong><br /><br />
+E iremos ver um exemplo básico de como podemos construir um log manipulável, é um exemplo básico, mas você terá uma ideia de como construir algo mais complexo para sua aplicação!</p>
+<h2 id="log-customizado">Log Customizado</h2>
+<p>Agora a coisa começa a ficar melhor… :), vamos criar uma classe com a seguinte estrutura:
+<br />
+<strong>Classe responsável por fazer a manipulação do log.</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">private</span> <span class="k">class</span> <span class="nc">CustomLoggerProvider</span> <span class="p">:</span> <span class="n">ILoggerProvider</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">ILogger</span> <span class="nf">CreateLogger</span><span class="p">(</span><span class="kt">string</span> <span class="n">categoryName</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">SampleLogger</span><span class="p">();</span> 
+
+    <span class="k">private</span> <span class="k">class</span> <span class="nc">SampleLogger</span> <span class="p">:</span> <span class="n">ILogger</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">void</span> <span class="n">Log</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">&gt;(</span>
+            <span class="n">LogLevel</span> <span class="n">logLevel</span><span class="p">,</span> 
+            <span class="n">EventId</span> <span class="n">eventId</span><span class="p">,</span> 
+            <span class="n">TState</span> <span class="n">state</span><span class="p">,</span> 
+            <span class="n">Exception</span> <span class="n">exception</span><span class="p">,</span>
+            <span class="n">Func</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">,</span> <span class="n">Exception</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="n">formatter</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">eventId</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">RelationalEventId</span><span class="p">.</span><span class="n">CommandExecuting</span><span class="p">.</span><span class="n">Id</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">log</span> <span class="p">=</span> <span class="nf">formatter</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">exception</span><span class="p">);</span>
+                <span class="n">Logs</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">log</span><span class="p">);</span> 
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">bool</span> <span class="nf">IsEnabled</span><span class="p">(</span><span class="n">LogLevel</span> <span class="n">logLevel</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">true</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="n">IDisposable</span> <span class="n">BeginScope</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">&gt;(</span><span class="n">TState</span> <span class="n">state</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><strong>Observações:</strong><br />
+existe uma variável <b>Logs</b> em minha classe acima, e minha classe também está como privada, fiz isso para não expor ela, apenas quero utilizar de forma que apenas meu DbContext tenha acesso a ela, veja nosso exemplo completo como ficou.</p>
+
+<p><strong>Nosso contexto completo ficou assim:</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">SampleContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nf">SampleContext</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">Logs</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">this</span><span class="p">.</span><span class="n">GetService</span><span class="p">&lt;</span><span class="n">ILoggerFactory</span><span class="p">&gt;().</span><span class="nf">AddProvider</span><span class="p">(</span><span class="k">new</span> <span class="nf">CustomLoggerProvider</span><span class="p">());</span>
+            <span class="n">Logs</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">sqlConnectionStringBuilder</span> <span class="p">=</span> <span class="s">"Server=(localdb)\\mssqllocaldb;Database=ExemploExtensao;Integrated Security=True;"</span><span class="p">;</span>
+        <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="n">sqlConnectionStringBuilder</span><span class="p">);</span> 
+        <span class="k">base</span><span class="p">.</span><span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">optionsBuilder</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="n">IList</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span> <span class="n">Logs</span> <span class="p">=</span> <span class="k">null</span><span class="p">;</span>
+
+    <span class="k">private</span> <span class="k">class</span> <span class="nc">CustomLoggerProvider</span> <span class="p">:</span> <span class="n">ILoggerProvider</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="n">ILogger</span> <span class="nf">CreateLogger</span><span class="p">(</span><span class="kt">string</span> <span class="n">categoryName</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">new</span> <span class="nf">SampleLogger</span><span class="p">();</span>
+
+        <span class="k">private</span> <span class="k">class</span> <span class="nc">SampleLogger</span> <span class="p">:</span> <span class="n">ILogger</span>
+        <span class="p">{</span>
+            <span class="k">public</span> <span class="k">void</span> <span class="n">Log</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">&gt;(</span>
+                <span class="n">LogLevel</span> <span class="n">logLevel</span><span class="p">,</span>
+                <span class="n">EventId</span> <span class="n">eventId</span><span class="p">,</span>
+                <span class="n">TState</span> <span class="n">state</span><span class="p">,</span>
+                <span class="n">Exception</span> <span class="n">exception</span><span class="p">,</span>
+                <span class="n">Func</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">,</span> <span class="n">Exception</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span> <span class="n">formatter</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">eventId</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">RelationalEventId</span><span class="p">.</span><span class="n">CommandExecuting</span><span class="p">.</span><span class="n">Id</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">log</span> <span class="p">=</span> <span class="nf">formatter</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">exception</span><span class="p">);</span>
+                    <span class="n">Logs</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">log</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="k">public</span> <span class="kt">bool</span> <span class="nf">IsEnabled</span><span class="p">(</span><span class="n">LogLevel</span> <span class="n">logLevel</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">true</span><span class="p">;</span>
+
+            <span class="k">public</span> <span class="n">IDisposable</span> <span class="n">BeginScope</span><span class="p">&lt;</span><span class="n">TState</span><span class="p">&gt;(</span><span class="n">TState</span> <span class="n">state</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Dispose</span><span class="p">()</span> <span class="p">{</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Essa classe é tudo que precisamos para criar uma instância de <strong>ILogger</strong>, onde é feito todo rastreamento das query’s, mas claro falando de forma genérica, já que podemos fazer “N” coisas!<br />
+Feito isso vamos agora injetar/adicionar ele como um provider customizado, a forma mais simples é recuperar o serviço que já foi injetado por (DI - injeção de dependência) através da interface <strong>ILoggerFactory</strong>, da seguinte maneira.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">this</span><span class="p">.</span><span class="n">GetService</span><span class="p">&lt;</span><span class="n">ILoggerFactory</span><span class="p">&gt;().</span><span class="nf">AddProvider</span><span class="p">(</span><span class="k">new</span> <span class="nf">CustomLoggerProvider</span><span class="p">());</span>
+</code></pre></div></div>
+<p>Como foi mostrado no exemplo completo acima!
+<br />
+<strong>Nosso exemplo de uso</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">using</span><span class="p">(</span><span class="kt">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SampleContext</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;().</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Blog</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
+            <span class="n">Date</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span>
+        <span class="p">});</span>
+        <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+        <span class="n">db</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;().</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span><span class="p">=&gt;</span><span class="n">p</span><span class="p">.</span><span class="n">Id</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+    <span class="p">}</span>
+
+	<span class="c1">// Recuperar o log dos comandos executados</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">log</span> <span class="k">in</span> <span class="n">SampleContext</span><span class="p">.</span><span class="n">Logs</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">log</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="vamos-criar-nossa-extensão">Vamos criar nossa Extensão</h2>
+<p>Sabemos que podemos monitorar os comandos SQL como mostrado acima, mas em alguns casos podemos querer ver uma query especifica de um comando LINQ especifico.<br /><br />
+O EF Core nos fornece uma possibilidade de obter todo DDL de nosso banco de dados com o método de extensão <strong>GenerateCreateScript</strong> disponibilizado pelo próprio EF Core, veja o exemplo abaixo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">scriptBanco</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">GenerateCreateScript</span><span class="p">();</span>
+</code></pre></div></div>
+<p>Agora iremos construir nosso próprio conversor LINQ to SQL com base em uma consulta LINQ tipo <b>Queryable</b>.<br /><br />
+Como sempre falo, <strong>System.Reflection</strong> I LOVE, SEMPRE, SEMPRE!!!<br />
+<br />
+Com algumas magias usando <b>Reflection</b> podemos fazer a recuperação de algumas informações serializadas que estão em memória.</p>
+
+<h2 id="algumas-informações-para-você">Algumas informações para você</h2>
+<div class="notice--warning">
+<b>EntityQueryProvider (IQueryCompiler)</b><br />
+Essa API oferece suporte à infraestrutura do Entity Framework Core e não se destina a ser usada diretamente em seu código.<br /><br />
+<b>DatabaseDependencies</b><br />
+Classe de parâmetro de dependências de serviço para o banco de dados. Esse tipo é normalmente usado por provedores de banco de dados (e outras extensões). Geralmente não é usado no código do aplicativo.<br />
+Não construa instâncias dessa classe diretamente do provedor ou do código do aplicativo, pois a assinatura do construtor pode mudar à medida que novas dependências são adicionadas. Em vez disso, use esse tipo em seu construtor para que uma instância seja criada e injetada automaticamente pelo contêiner de injeção de dependência.<br />
+</div>
+<p><strong>Veja nossa classe completa</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">RalmsExtensionSql</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">TypeInfo</span> <span class="n">_queryCompilerTypeInfo</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">QueryCompiler</span><span class="p">).</span><span class="nf">GetTypeInfo</span><span class="p">();</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">FieldInfo</span> <span class="n">_queryCompiler</span>
+        <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">EntityQueryProvider</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">GetTypeInfo</span><span class="p">()</span>
+            <span class="p">.</span><span class="n">DeclaredFields</span>
+            <span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">"_queryCompiler"</span><span class="p">);</span> 
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">FieldInfo</span> <span class="n">_queryModelGenerator</span>
+        <span class="p">=</span> <span class="n">_queryCompilerTypeInfo</span>
+            <span class="p">.</span><span class="n">DeclaredFields</span>
+            <span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">"_queryModelGenerator"</span><span class="p">);</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">FieldInfo</span> <span class="n">_database</span> <span class="p">=</span> <span class="n">_queryCompilerTypeInfo</span>
+        <span class="p">.</span><span class="n">DeclaredFields</span>
+        <span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">"_database"</span><span class="p">);</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="k">readonly</span> <span class="n">PropertyInfo</span> <span class="n">_dependencies</span>
+        <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Database</span><span class="p">)</span>
+            <span class="p">.</span><span class="nf">GetTypeInfo</span><span class="p">()</span>
+            <span class="p">.</span><span class="n">DeclaredProperties</span>
+            <span class="p">.</span><span class="nf">Single</span><span class="p">(</span><span class="n">x</span> <span class="p">=&gt;</span> <span class="n">x</span><span class="p">.</span><span class="n">Name</span> <span class="p">==</span> <span class="s">"Dependencies"</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="n">ToSql</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="k">this</span> <span class="n">IQueryable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="n">queryable</span><span class="p">)</span>
+        <span class="k">where</span> <span class="n">T</span> <span class="p">:</span> <span class="k">class</span>
+    <span class="err">{</span>
+        <span class="nc">var</span> <span class="n">queryCompiler</span> <span class="p">=</span> <span class="n">_queryCompiler</span><span class="p">.</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">queryable</span><span class="p">.</span><span class="n">Provider</span><span class="p">)</span> <span class="k">as</span> <span class="n">IQueryCompiler</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">queryModelGen</span> <span class="p">=</span> <span class="n">_queryModelGenerator</span><span class="p">.</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">queryCompiler</span><span class="p">)</span> <span class="k">as</span> <span class="n">IQueryModelGenerator</span><span class="p">;</span>
+        <span class="kt">var</span> <span class="n">queryCompilationContextFactory</span>
+            <span class="p">=</span> <span class="p">((</span><span class="n">DatabaseDependencies</span><span class="p">)</span><span class="n">_dependencies</span><span class="p">.</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">_database</span><span class="p">.</span><span class="nf">GetValue</span><span class="p">(</span><span class="n">queryCompiler</span><span class="p">)))</span>
+                <span class="p">.</span><span class="n">QueryCompilationContextFactory</span><span class="p">;</span>
+
+        <span class="kt">var</span> <span class="n">queryCompilationContext</span> <span class="p">=</span> <span class="n">queryCompilationContextFactory</span><span class="p">.</span><span class="nf">Create</span><span class="p">(</span><span class="k">false</span><span class="p">);</span>
+        <span class="kt">var</span> <span class="n">modelVisitor</span> <span class="p">=</span> <span class="p">(</span><span class="n">RelationalQueryModelVisitor</span><span class="p">)</span><span class="n">queryCompilationContext</span><span class="p">.</span><span class="nf">CreateQueryModelVisitor</span><span class="p">();</span>
+
+        <span class="n">modelVisitor</span><span class="p">.</span><span class="n">CreateQueryExecutor</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;(</span><span class="n">queryModelGen</span><span class="p">.</span><span class="nf">ParseQuery</span><span class="p">(</span><span class="n">queryable</span><span class="p">.</span><span class="n">Expression</span><span class="p">));</span>
+
+        <span class="k">return</span> <span class="n">modelVisitor</span>
+            <span class="p">.</span><span class="n">Queries</span>
+            <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">ToString</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br />
+<strong>Exemplo de uso</strong></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SampleContext</span><span class="p">())</span>
+    <span class="p">{</span> 
+        <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;().</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Blog</span>
+        <span class="p">{</span>
+            <span class="n">Name</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
+            <span class="n">Date</span> <span class="p">=</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span>
+        <span class="p">});</span>
+        <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span> 
+
+        <span class="c1">// Gerar/Projetar o SQL </span>
+        <span class="kt">var</span> <span class="n">strSQL</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Blog</span><span class="p">&gt;().</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Id</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">).</span><span class="nf">ToSql</span><span class="p">();</span>
+    <span class="p">}</span> 
+
+    <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br />
+<strong>Veja o exemplo</strong>
+<img src="http://localhost:4000/assets/images/toSql.PNG" alt="01" /></p>
+
+<h2 id="referências">Referências</h2>
+<p><a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore" target="_BLACK">EF Core</a><br />
+<a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.query.internal.querycompiler" target="_BLACK">QueryCompiler</a><br />
+<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.storage.databasedependencies?view=efcore-2.1" target="_BLACK">DatabaseDependencies</a><br />
+<a href="https://docs.microsoft.com/en-us/dotnet/api/microsoft.entityframeworkcore.query.relationalquerymodelvisitor?view=efcore-2.1" target="_BLACK">RelationalQueryModelVisitor</a><br />
+<br /><br />
+Click <a href="https://github.com/ralmsdeveloper/artigolog" target="_BLACK">aqui</a> para acessar os fontes no github!
+<br /><br />
+Pessoal, fico por aqui <strong>#efcore #mvp #mvpbr #mvpbuzz</strong></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2018-07-01T00:00:00+00:00">July 01, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Logs+e+Consultas+LINQ+to+SQL%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2FlogExtension%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2FlogExtension%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2FlogExtension%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2FlogExtension%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/evento/interop360/" class="pagination--pager" title="Interop360 - São Paulo
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/dica/reflection01/" class="pagination--pager" title="Um pouco de Reflection #1
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/logExtension/";
+      this.page.identifier = "/dica/logExtension";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

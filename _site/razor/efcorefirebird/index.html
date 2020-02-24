@@ -1,0 +1,1712 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Razor + EntityFramework Core 2.0  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Básico Razor  + EntityFramworkCore 2.0Olá pessoal tudo bem?!Resolvi escrever esse pequeno post sobre Razor para os iniciantes no mundo Asp.Net CORE!!!ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTESRazor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos oprovedor que desenvolvi para o EntityFramework Core que é o EntityFrameworkCore.FirebirdSql.Além disso, quero dizer que o projeto é open source, e está disponivel no GithubSem mais delongas vamos por a mão na massa.Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.“É simples, porém util!”Sendo assim com seu Visual Studio aberto, siga os passos abaixo!Para ver o projeto rodando execute: CTRL + F5Precisamos adicionar os seguintes Pacotes:  Microsoft.EntityFrameworkCore  EntityFrameworkCore.FirebirdSqlEstarei mostrando como fazer isso aqui no exemplo abaixo.Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.Crie uma pasta chamada Models com dois arquivos .cs “Grupo.cs e Produto.cs”Vamos criar as classes que iremos utilizar e que servirão como nossas tabelas posteriormente: Grupo e Produtousing System.ComponentModel;namespace CadastroDeProduto.Models{    public class Grupo    {        public int Id { get; set; }        public string Descricao { get; set; }    }}using System.ComponentModel;using System.ComponentModel.DataAnnotations;namespace CadastroDeProduto.Models{    public class Produto    {        public int Id { get; set; }        [StringLength(100)]        public string DescricaoProduto { get; set; }        public decimal Valor { get; set; }        public int Quantidade { get; set; }        public int GrupoId { get; set; }        public virtual Grupo Grupo { get; set; }    }}Vamos criar nossas Razor Pages?!Pois bem crie duas pastas dentro da pasta Pages, uma com o nome Grupo e outra Produto.Dentro de cada pasta iremos criar nossos arquivos Razor PagePara criar o arquivo clique com o direto do mouse sobre a pasta Grupo depois Adicionar-&gt;Novo Item.Nosso primeiro arquivo será o Index.cshtml como a imagem ilustrada abaixo.Criada a primeira página repita o mesmo procedimento para as seguintes.Create,Delete,Details,Edit feito isso crie os mesmos arquivos dentro dapasta Produto.No final deveremos ter algo assim:Esses são os códigos de cada arquivos:ARQUIVOS GRUPOIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Grupos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Grupo&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(modelItem =&gt; modelItem.Grupo[0].Descricao)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Grupo)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Grupo{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Grupo&gt; Grupo { get;set; }        public async Task OnGetAsync()        {            Grupo = await _context.Grupo.ToListAsync();        }    }}Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Cadastro&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;namespace CadastroDeProduto.Pages.Grupo{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {            return Page();        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Grupo.Add(Grupo);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;    &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Excluir&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.FindAsync(id);            if (Grupo != null)            {                _context.Grupo.Remove(Grupo);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Detalhe&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt; &lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Grupo.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt; using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Grupo).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}ARQUIVOS PRODUTOSIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Produtos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Produto&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].DescricaoProduto)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Valor)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Quantidade)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Grupo)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Produto)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.DescricaoProduto)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Valor)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Quantidade)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Grupo.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Produto&gt; Produto { get;set; }        public async Task OnGetAsync()        {            Produto = await _context.Produto.Include(p =&gt; p.Grupo).ToListAsync();        }    }} Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Create&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class =&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;            &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;namespace CadastroDeProduto.Pages.Produto{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {        ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Produto.Add(Produto);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Id)        &lt;/dd&gt;    &lt;/dl&gt;        &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Delete&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Produto{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto.FindAsync(id);            if (Produto != null)            {                _context.Produto.Remove(Produto);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Details&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Produto.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class=&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }           ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Produto).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Arquivo Startup.csusing CadastroDeProdutos;using EntityFrameworkCore.FirebirdSql.Extensions;using Microsoft.AspNetCore.Builder;using Microsoft.AspNetCore.Hosting;using Microsoft.Extensions.Configuration;using Microsoft.Extensions.DependencyInjection;namespace CadastroDeProduto{    public class Startup    {        public Startup(IConfiguration configuration)        {            Configuration = configuration;        }        public IConfiguration Configuration { get; }         public void ConfigureServices(IServiceCollection services)        {            var connectionString =  $&quot;User=SYSDBA;Password=masterkey;Database=localhost:{System.IO.Directory.GetCurrentDirectory()}\\CadastroProduto.fdb;&quot; +                                    &quot;DataSource=localhost;Port=3050;Dialect=3;ServerType=0&quot;;            services.AddEntityFrameworkFirebird()                    .AddDbContext&lt;ExemploContext&gt;(options =&gt; options.UseFirebird(connectionString));            services.AddMvc();        }        public void Configure(IApplicationBuilder app, IHostingEnvironment env)        {            if (env.IsDevelopment())            {                app.UseDeveloperExceptionPage();                app.UseBrowserLink();            }            else            {                app.UseExceptionHandler(&quot;/Error&quot;);            }            app.UseStaticFiles();            app.UseMvc(routes =&gt;            {                routes.MapRoute(                    name: &quot;default&quot;,                    template: &quot;{controller}/{action=Index}/{id?}&quot;);            });        }    }}Arquivo ExemploContext.csusing CadastroDeProduto.Models;using Microsoft.EntityFrameworkCore;namespace CadastroDeProdutos{    public sealed class ExemploContext : DbContext    {        public ExemploContext(DbContextOptions&lt;ExemploContext&gt; options)            : base(options)        {            Database.EnsureCreated();        }        public DbSet&lt;Produto&gt; Produto { get; set; }        public DbSet&lt;Grupo&gt; Grupo { get; set; }    }}Estrutura de Diretórios do ProjetoObrigado pela leitura, e um forte abraço!">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Razor + EntityFramework Core 2.0">
+
+
+  <link rel="canonical" href="http://localhost:4000/razor/efcorefirebird/">
+  <meta property="og:url" content="http://localhost:4000/razor/efcorefirebird/">
+
+
+
+  <meta property="og:description" content="Básico Razor  + EntityFramworkCore 2.0Olá pessoal tudo bem?!Resolvi escrever esse pequeno post sobre Razor para os iniciantes no mundo Asp.Net CORE!!!ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTESRazor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos oprovedor que desenvolvi para o EntityFramework Core que é o EntityFrameworkCore.FirebirdSql.Além disso, quero dizer que o projeto é open source, e está disponivel no GithubSem mais delongas vamos por a mão na massa.Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.“É simples, porém util!”Sendo assim com seu Visual Studio aberto, siga os passos abaixo!Para ver o projeto rodando execute: CTRL + F5Precisamos adicionar os seguintes Pacotes:  Microsoft.EntityFrameworkCore  EntityFrameworkCore.FirebirdSqlEstarei mostrando como fazer isso aqui no exemplo abaixo.Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.Crie uma pasta chamada Models com dois arquivos .cs “Grupo.cs e Produto.cs”Vamos criar as classes que iremos utilizar e que servirão como nossas tabelas posteriormente: Grupo e Produtousing System.ComponentModel;namespace CadastroDeProduto.Models{    public class Grupo    {        public int Id { get; set; }        public string Descricao { get; set; }    }}using System.ComponentModel;using System.ComponentModel.DataAnnotations;namespace CadastroDeProduto.Models{    public class Produto    {        public int Id { get; set; }        [StringLength(100)]        public string DescricaoProduto { get; set; }        public decimal Valor { get; set; }        public int Quantidade { get; set; }        public int GrupoId { get; set; }        public virtual Grupo Grupo { get; set; }    }}Vamos criar nossas Razor Pages?!Pois bem crie duas pastas dentro da pasta Pages, uma com o nome Grupo e outra Produto.Dentro de cada pasta iremos criar nossos arquivos Razor PagePara criar o arquivo clique com o direto do mouse sobre a pasta Grupo depois Adicionar-&gt;Novo Item.Nosso primeiro arquivo será o Index.cshtml como a imagem ilustrada abaixo.Criada a primeira página repita o mesmo procedimento para as seguintes.Create,Delete,Details,Edit feito isso crie os mesmos arquivos dentro dapasta Produto.No final deveremos ter algo assim:Esses são os códigos de cada arquivos:ARQUIVOS GRUPOIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Grupos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Grupo&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(modelItem =&gt; modelItem.Grupo[0].Descricao)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Grupo)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Grupo{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Grupo&gt; Grupo { get;set; }        public async Task OnGetAsync()        {            Grupo = await _context.Grupo.ToListAsync();        }    }}Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Cadastro&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;namespace CadastroDeProduto.Pages.Grupo{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {            return Page();        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Grupo.Add(Grupo);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;    &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Excluir&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.FindAsync(id);            if (Grupo != null)            {                _context.Grupo.Remove(Grupo);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Detalhe&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt; &lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Grupo.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt; using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Grupo).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}ARQUIVOS PRODUTOSIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Produtos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Produto&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].DescricaoProduto)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Valor)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Quantidade)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Grupo)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Produto)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.DescricaoProduto)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Valor)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Quantidade)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Grupo.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Produto&gt; Produto { get;set; }        public async Task OnGetAsync()        {            Produto = await _context.Produto.Include(p =&gt; p.Grupo).ToListAsync();        }    }} Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Create&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class =&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;            &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;namespace CadastroDeProduto.Pages.Produto{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {        ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Produto.Add(Produto);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Id)        &lt;/dd&gt;    &lt;/dl&gt;        &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Delete&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Produto{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto.FindAsync(id);            if (Produto != null)            {                _context.Produto.Remove(Produto);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Details&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Produto.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class=&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }           ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Produto).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Arquivo Startup.csusing CadastroDeProdutos;using EntityFrameworkCore.FirebirdSql.Extensions;using Microsoft.AspNetCore.Builder;using Microsoft.AspNetCore.Hosting;using Microsoft.Extensions.Configuration;using Microsoft.Extensions.DependencyInjection;namespace CadastroDeProduto{    public class Startup    {        public Startup(IConfiguration configuration)        {            Configuration = configuration;        }        public IConfiguration Configuration { get; }         public void ConfigureServices(IServiceCollection services)        {            var connectionString =  $&quot;User=SYSDBA;Password=masterkey;Database=localhost:{System.IO.Directory.GetCurrentDirectory()}\\CadastroProduto.fdb;&quot; +                                    &quot;DataSource=localhost;Port=3050;Dialect=3;ServerType=0&quot;;            services.AddEntityFrameworkFirebird()                    .AddDbContext&lt;ExemploContext&gt;(options =&gt; options.UseFirebird(connectionString));            services.AddMvc();        }        public void Configure(IApplicationBuilder app, IHostingEnvironment env)        {            if (env.IsDevelopment())            {                app.UseDeveloperExceptionPage();                app.UseBrowserLink();            }            else            {                app.UseExceptionHandler(&quot;/Error&quot;);            }            app.UseStaticFiles();            app.UseMvc(routes =&gt;            {                routes.MapRoute(                    name: &quot;default&quot;,                    template: &quot;{controller}/{action=Index}/{id?}&quot;);            });        }    }}Arquivo ExemploContext.csusing CadastroDeProduto.Models;using Microsoft.EntityFrameworkCore;namespace CadastroDeProdutos{    public sealed class ExemploContext : DbContext    {        public ExemploContext(DbContextOptions&lt;ExemploContext&gt; options)            : base(options)        {            Database.EnsureCreated();        }        public DbSet&lt;Produto&gt; Produto { get; set; }        public DbSet&lt;Grupo&gt; Grupo { get; set; }    }}Estrutura de Diretórios do ProjetoObrigado pela leitura, e um forte abraço!">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2017-09-01T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Razor + EntityFramework Core 2.0">
+    <meta itemprop="description" content="Básico Razor  + EntityFramworkCore 2.0Olá pessoal tudo bem?!Resolvi escrever esse pequeno post sobre Razor para os iniciantes no mundo Asp.Net CORE!!!ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTESRazor Page é uma nova engine do ASP.NET Core MVC que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.Nesse nosso exemplo estou utilizando o Asp.Net Core 2.0, e a versão do Visual Studio 2017 mais atualizada.Estaremos usando também o FirebirdSQL como Banco de dados principal, e para conectar usaremos oprovedor que desenvolvi para o EntityFramework Core que é o EntityFrameworkCore.FirebirdSql.Além disso, quero dizer que o projeto é open source, e está disponivel no GithubSem mais delongas vamos por a mão na massa.Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.“É simples, porém util!”Sendo assim com seu Visual Studio aberto, siga os passos abaixo!Para ver o projeto rodando execute: CTRL + F5Precisamos adicionar os seguintes Pacotes:  Microsoft.EntityFrameworkCore  EntityFrameworkCore.FirebirdSqlEstarei mostrando como fazer isso aqui no exemplo abaixo.Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.Crie uma pasta chamada Models com dois arquivos .cs “Grupo.cs e Produto.cs”Vamos criar as classes que iremos utilizar e que servirão como nossas tabelas posteriormente: Grupo e Produtousing System.ComponentModel;namespace CadastroDeProduto.Models{    public class Grupo    {        public int Id { get; set; }        public string Descricao { get; set; }    }}using System.ComponentModel;using System.ComponentModel.DataAnnotations;namespace CadastroDeProduto.Models{    public class Produto    {        public int Id { get; set; }        [StringLength(100)]        public string DescricaoProduto { get; set; }        public decimal Valor { get; set; }        public int Quantidade { get; set; }        public int GrupoId { get; set; }        public virtual Grupo Grupo { get; set; }    }}Vamos criar nossas Razor Pages?!Pois bem crie duas pastas dentro da pasta Pages, uma com o nome Grupo e outra Produto.Dentro de cada pasta iremos criar nossos arquivos Razor PagePara criar o arquivo clique com o direto do mouse sobre a pasta Grupo depois Adicionar-&gt;Novo Item.Nosso primeiro arquivo será o Index.cshtml como a imagem ilustrada abaixo.Criada a primeira página repita o mesmo procedimento para as seguintes.Create,Delete,Details,Edit feito isso crie os mesmos arquivos dentro dapasta Produto.No final deveremos ter algo assim:Esses são os códigos de cada arquivos:ARQUIVOS GRUPOIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Grupos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Grupo&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(modelItem =&gt; modelItem.Grupo[0].Descricao)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Grupo)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Grupo{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Grupo&gt; Grupo { get;set; }        public async Task OnGetAsync()        {            Grupo = await _context.Grupo.ToListAsync();        }    }}Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Cadastro&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;namespace CadastroDeProduto.Pages.Grupo{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {            return Page();        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Grupo.Add(Grupo);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;    &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Excluir&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.FindAsync(id);            if (Grupo != null)            {                _context.Grupo.Remove(Grupo);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Detalhe&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt; &lt;div&gt;    &lt;h4&gt;Grupo&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Grupo.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Grupo.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt; &lt;h4&gt;Grupo&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Grupo.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Grupo.Descricao&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Grupo.Descricao&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt; using System.Threading.Tasks;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;using CadastroDeProdutos;namespace CadastroDeProduto.Pages.Grupo{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Grupo Grupo { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Grupo = await _context.Grupo.SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Grupo == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Grupo).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}ARQUIVOS PRODUTOSIndex.cshtml/Index.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.IndexModel@{    ViewData[&quot;Title&quot;] = &quot;Produtos Cadastrados&quot;;}&lt;h2&gt;Grupos Cadastrados&lt;/h2&gt;&lt;p&gt;    &lt;a asp-page=&quot;Create&quot;&gt;Novo Produto&lt;/a&gt;&lt;/p&gt;&lt;table class=&quot;table&quot;&gt;    &lt;thead&gt;        &lt;tr&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].DescricaoProduto)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Valor)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Quantidade)            &lt;/th&gt;            &lt;th&gt;                @Html.DisplayNameFor(model =&gt; model.Produto[0].Grupo)            &lt;/th&gt;            &lt;th&gt;&lt;/th&gt;        &lt;/tr&gt;    &lt;/thead&gt;    &lt;tbody&gt;        @foreach (var item in Model.Produto)        {            &lt;tr&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.DescricaoProduto)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Valor)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Quantidade)                &lt;/td&gt;                &lt;td&gt;                    @Html.DisplayFor(modelItem =&gt; item.Grupo.Descricao)                &lt;/td&gt;                &lt;td&gt;                    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@item.Id&quot;&gt;Editar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Details&quot; asp-route-id=&quot;@item.Id&quot;&gt;Visualizar&lt;/a&gt; |                    &lt;a asp-page=&quot;./Delete&quot; asp-route-id=&quot;@item.Id&quot;&gt;Deletar&lt;/a&gt;                &lt;/td&gt;            &lt;/tr&gt;}    &lt;/tbody&gt;&lt;/table&gt;using System.Collections.Generic;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class IndexModel : PageModel    {        private readonly ExemploContext _context;        public IndexModel(ExemploContext context)        {            _context = context;        }        public IList&lt;Models.Produto&gt; Produto { get;set; }        public async Task OnGetAsync()        {            Produto = await _context.Produto.Include(p =&gt; p.Grupo).ToListAsync();        }    }} Create.cshtml/Create.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.CreateModel@{    ViewData[&quot;Title&quot;] = &quot;Create&quot;;}&lt;h2&gt;Página Cadastro&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class =&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;            &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;namespace CadastroDeProduto.Pages.Produto{    public class CreateModel : PageModel    {        private readonly ExemploContext _context;        public CreateModel(ExemploContext context)        {            _context = context;        }        public IActionResult OnGet()        {        ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Produto.Add(Produto);            await _context.SaveChangesAsync();            return RedirectToPage(&quot;./Index&quot;);        }    }}Delete.cshtml/Delete.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DeleteModel@{    ViewData[&quot;Title&quot;] = &quot;Delete&quot;;}&lt;h2&gt;Página Exclusão&lt;/h2&gt;&lt;h3&gt;Deseja Realmente Excluir Este Registro?&lt;/h3&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Id)        &lt;/dd&gt;    &lt;/dl&gt;        &lt;form method=&quot;post&quot;&gt;        &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;        &lt;input type=&quot;submit&quot; value=&quot;Delete&quot; class=&quot;btn btn-default&quot; /&gt; |        &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;    &lt;/form&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore; namespace CadastroDeProduto.Pages.Produto{    public class DeleteModel : PageModel    {        private readonly ExemploContext _context;        public DeleteModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto.FindAsync(id);            if (Produto != null)            {                _context.Produto.Remove(Produto);                await _context.SaveChangesAsync();            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Details.cshtml/Details.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.DetailsModel@{    ViewData[&quot;Title&quot;] = &quot;Details&quot;;}&lt;h2&gt;Detalhe&lt;/h2&gt;&lt;div&gt;    &lt;h4&gt;Produto&lt;/h4&gt;    &lt;hr /&gt;    &lt;dl class=&quot;dl-horizontal&quot;&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Valor)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)        &lt;/dd&gt;        &lt;dt&gt;            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)        &lt;/dt&gt;        &lt;dd&gt;            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Descricao)        &lt;/dd&gt;    &lt;/dl&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Edit&quot; asp-route-id=&quot;@Model.Produto.Id&quot;&gt;Editar&lt;/a&gt; |    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class DetailsModel : PageModel    {        private readonly ExemploContext _context;        public DetailsModel(ExemploContext context)        {            _context = context;        }        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }            return Page();        }    }}Edit.cshtml/Edit.cshtml.cs:@page@model CadastroDeProduto.Pages.Produto.EditModel@{    ViewData[&quot;Title&quot;] = &quot;Editar&quot;;}&lt;h2&gt;Editar&lt;/h2&gt;&lt;h4&gt;Produto&lt;/h4&gt;&lt;hr /&gt;&lt;div class=&quot;row&quot;&gt;    &lt;div class=&quot;col-md-4&quot;&gt;        &lt;form method=&quot;post&quot;&gt;             &lt;input type=&quot;hidden&quot; asp-for=&quot;Produto.Id&quot; /&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.DescricaoProduto&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Valor&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Valor&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.Quantidade&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;input asp-for=&quot;Produto.Quantidade&quot; class=&quot;form-control&quot; /&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;label asp-for=&quot;Produto.GrupoId&quot; class=&quot;control-label&quot;&gt;&lt;/label&gt;                &lt;select asp-for=&quot;Produto.GrupoId&quot; class=&quot;form-control&quot; asp-items=&quot;ViewBag.GrupoId&quot;&gt;&lt;/select&gt;             &lt;/div&gt;            &lt;div class=&quot;form-group&quot;&gt;                &lt;input type=&quot;submit&quot; value=&quot;Gravar&quot; class=&quot;btn btn-default&quot; /&gt;            &lt;/div&gt;        &lt;/form&gt;    &lt;/div&gt;&lt;/div&gt;&lt;div&gt;    &lt;a asp-page=&quot;./Index&quot;&gt;Voltar para Lista&lt;/a&gt;&lt;/div&gt;using System.Threading.Tasks;using CadastroDeProdutos;using Microsoft.AspNetCore.Mvc;using Microsoft.AspNetCore.Mvc.RazorPages;using Microsoft.AspNetCore.Mvc.Rendering;using Microsoft.EntityFrameworkCore;namespace CadastroDeProduto.Pages.Produto{    public class EditModel : PageModel    {        private readonly ExemploContext _context;        public EditModel(ExemploContext context)        {            _context = context;        }        [BindProperty]        public Models.Produto Produto { get; set; }        public async Task&lt;IActionResult&gt; OnGetAsync(int? id)        {            if (id == null)            {                return NotFound();            }            Produto = await _context.Produto                .Include(p =&gt; p.Grupo).SingleOrDefaultAsync(m =&gt; m.Id == id);            if (Produto == null)            {                return NotFound();            }           ViewData[&quot;GrupoId&quot;] = new SelectList(_context.Grupo, &quot;Id&quot;, &quot;Descricao&quot;);            return Page();        }        public async Task&lt;IActionResult&gt; OnPostAsync()        {            if (!ModelState.IsValid)            {                return Page();            }            _context.Attach(Produto).State = EntityState.Modified;            try            {                await _context.SaveChangesAsync();            }            catch (DbUpdateConcurrencyException)            {            }            return RedirectToPage(&quot;./Index&quot;);        }    }}Arquivo Startup.csusing CadastroDeProdutos;using EntityFrameworkCore.FirebirdSql.Extensions;using Microsoft.AspNetCore.Builder;using Microsoft.AspNetCore.Hosting;using Microsoft.Extensions.Configuration;using Microsoft.Extensions.DependencyInjection;namespace CadastroDeProduto{    public class Startup    {        public Startup(IConfiguration configuration)        {            Configuration = configuration;        }        public IConfiguration Configuration { get; }         public void ConfigureServices(IServiceCollection services)        {            var connectionString =  $&quot;User=SYSDBA;Password=masterkey;Database=localhost:{System.IO.Directory.GetCurrentDirectory()}\\CadastroProduto.fdb;&quot; +                                    &quot;DataSource=localhost;Port=3050;Dialect=3;ServerType=0&quot;;            services.AddEntityFrameworkFirebird()                    .AddDbContext&lt;ExemploContext&gt;(options =&gt; options.UseFirebird(connectionString));            services.AddMvc();        }        public void Configure(IApplicationBuilder app, IHostingEnvironment env)        {            if (env.IsDevelopment())            {                app.UseDeveloperExceptionPage();                app.UseBrowserLink();            }            else            {                app.UseExceptionHandler(&quot;/Error&quot;);            }            app.UseStaticFiles();            app.UseMvc(routes =&gt;            {                routes.MapRoute(                    name: &quot;default&quot;,                    template: &quot;{controller}/{action=Index}/{id?}&quot;);            });        }    }}Arquivo ExemploContext.csusing CadastroDeProduto.Models;using Microsoft.EntityFrameworkCore;namespace CadastroDeProdutos{    public sealed class ExemploContext : DbContext    {        public ExemploContext(DbContextOptions&lt;ExemploContext&gt; options)            : base(options)        {            Database.EnsureCreated();        }        public DbSet&lt;Produto&gt; Produto { get; set; }        public DbSet&lt;Grupo&gt; Grupo { get; set; }    }}Estrutura de Diretórios do ProjetoObrigado pela leitura, e um forte abraço!">
+    <meta itemprop="datePublished" content="September 01, 2017">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Razor + EntityFramework Core 2.0
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  39 minuto(s) de leitura
+ - September 01, 2017</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/razorpage.png" alt="01" /></p>
+
+<h2 id="básico-razor---entityframworkcore-20">Básico Razor  + EntityFramworkCore 2.0</h2>
+
+<p>Olá pessoal tudo bem?!</p>
+
+<p>Resolvi escrever esse pequeno post sobre <strong>Razor</strong> para os iniciantes no mundo Asp.Net CORE!!!</p>
+
+<p><strong>ESTE É UM ARTIGO BÁSICO, DESTINADO A INICIANTES</strong></p>
+
+<p><strong>Razor Page</strong> é uma nova engine do <strong>ASP.NET Core MVC</strong> que torna a codificação de em alguns cenários focados em páginas web, mais fácil e mais produtiva.</p>
+
+<p>Nesse nosso exemplo estou utilizando o <strong>Asp.Net Core 2.0</strong>, e a versão do Visual Studio 2017 mais atualizada.</p>
+
+<p>Estaremos usando também o <strong>FirebirdSQL</strong> como Banco de dados principal, e para conectar usaremos o
+provedor que desenvolvi para o <strong>EntityFramework Core</strong> que é o <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">EntityFrameworkCore.FirebirdSql</a>.</p>
+
+<p>Além disso, quero dizer que o projeto é open source, e está disponivel no <a href="https://github.com/ralmsdeveloper/EntityFrameworkCore.FirebirdSQL">Github</a></p>
+
+<p>Sem mais delongas vamos por a mão na massa.</p>
+
+<p>Neste tutotial resolvi fazer passo-a-passo usando imagens como ilustração.</p>
+
+<p><strong>“É simples, porém util!”</strong></p>
+
+<p>Sendo assim com seu Visual Studio aberto, siga os passos abaixo!</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/01.png" alt="01" /></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/02.png" alt="01" /></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/03.png" alt="01" /></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/04.png" alt="01" /></p>
+
+<p><strong>Para ver o projeto rodando execute: CTRL + F5</strong></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/05.png" alt="01" /></p>
+
+<p><strong>Precisamos adicionar os seguintes Pacotes:</strong></p>
+
+<ul>
+  <li>Microsoft.EntityFrameworkCore</li>
+  <li>EntityFrameworkCore.FirebirdSql</li>
+</ul>
+
+<p>Estarei mostrando como fazer isso aqui no exemplo abaixo.</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/06.png" alt="01" /></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/07.png" alt="01" /></p>
+
+<p>Vamos começar a criar os arquivos necessários para o funcionamento de nosso pequeno sistema.</p>
+
+<p>Crie uma pasta chamada <strong>Models</strong> com dois arquivos .cs <strong>“Grupo.cs e Produto.cs”</strong></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/11_PASTA_MODELS.png" alt="01" /></p>
+
+<p>Vamos criar as classes que iremos utilizar e que servirão como nossas tabelas posteriormente: <strong>Grupo e Produto</strong></p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.ComponentModel</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Models</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Grupo</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Descricao</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.ComponentModel</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.ComponentModel.DataAnnotations</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Models</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Produto</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="p">[</span><span class="nf">StringLength</span><span class="p">(</span><span class="m">100</span><span class="p">)]</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">DescricaoProduto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">decimal</span> <span class="n">Valor</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Quantidade</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">GrupoId</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="k">virtual</span> <span class="n">Grupo</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Vamos criar nossas <strong>Razor Pages</strong>?!</p>
+
+<p>Pois bem crie duas pastas dentro da pasta <strong>Pages</strong>, uma com o nome <strong>Grupo</strong> e outra <strong>Produto</strong>.</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/10_DIRETORIO_PAGES_GRUPO_PRODUTO.png" alt="01" /></p>
+
+<p>Dentro de cada pasta iremos criar nossos arquivos <strong>Razor Page</strong></p>
+
+<p>Para criar o arquivo clique com o direto do mouse sobre a pasta <strong>Grupo</strong> depois Adicionar-&gt;Novo Item.</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/09_CREATE_NEW_RAZOR.png" alt="01" /></p>
+
+<p>Nosso primeiro arquivo será o <strong>Index.cshtml</strong> como a imagem ilustrada abaixo.</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/12_PAGINA_INDEX_EXEMPLO.png" alt="01" /></p>
+
+<p>Criada a primeira página repita o mesmo procedimento para as seguintes.</p>
+
+<p><em>Create,Delete,Details,Edit</em> feito isso crie os mesmos arquivos dentro da
+pasta <strong>Produto</strong>.</p>
+
+<p>No final deveremos ter algo assim:</p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/08-1.png" alt="01" /></p>
+
+<p>Esses são os códigos de cada arquivos:</p>
+
+<p><strong>ARQUIVOS GRUPO</strong></p>
+
+<p>Index.cshtml/Index.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Grupo.IndexModel
+@{
+    ViewData["Title"] = "Grupos Cadastrados";
+}
+<span class="nt">&lt;h2&gt;</span>Grupos Cadastrados<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"Create"</span><span class="nt">&gt;</span>Novo Grupo<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;th&gt;</span>
+                @Html.DisplayNameFor(modelItem =&gt; modelItem.Grupo[0].Descricao)
+            <span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;&lt;/th&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        @foreach (var item in Model.Grupo)
+        {
+            <span class="nt">&lt;tr&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    @Html.DisplayFor(modelItem =&gt; item.Descricao)
+                <span class="nt">&lt;/td&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Edit"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Editar<span class="nt">&lt;/a&gt;</span> |
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Details"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Visualizar<span class="nt">&lt;/a&gt;</span> |
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Delete"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Deletar<span class="nt">&lt;/a&gt;</span>
+                <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;/tr&gt;</span>
+}
+    <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span> 
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Grupo</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">IndexModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">IndexModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Models</span><span class="p">.</span><span class="n">Grupo</span><span class="p">&gt;</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnGetAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Grupo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">ToListAsync</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Create.cshtml/Create.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Grupo.CreateModel
+
+@{
+    ViewData["Title"] = "Cadastro";
+}
+
+<span class="nt">&lt;h2&gt;</span>Página Cadastro<span class="nt">&lt;/h2&gt;</span> 
+<span class="nt">&lt;h4&gt;</span>Grupo<span class="nt">&lt;/h4&gt;</span>
+<span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span> 
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Grupo.Descricao"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Grupo.Descricao"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Gravar"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Grupo</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">CreateModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">CreateModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IActionResult</span> <span class="nf">OnGet</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Grupo</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">Grupo</span><span class="p">);</span>
+            <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Delete.cshtml/Delete.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Grupo.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<span class="nt">&lt;h2&gt;</span>Página Exclusão<span class="nt">&lt;/h2&gt;</span>
+
+<span class="nt">&lt;h3&gt;</span>Deseja Realmente Excluir Este Registro?<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;h4&gt;</span>Grupo<span class="nt">&lt;/h4&gt;</span>
+    <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">"dl-horizontal"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)
+        <span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;/dl&gt;</span>
+
+    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">asp-for=</span><span class="s">"Grupo.Id"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Excluir"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span> |
+        <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Grupo</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">DeleteModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">DeleteModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Grupo</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Grupo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Grupo</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Grupo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">FindAsync</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Grupo</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">Grupo</span><span class="p">);</span>
+                <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Details.cshtml/Details.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Grupo.DetailsModel
+
+@{
+    ViewData["Title"] = "Detalhe";
+}
+
+<span class="nt">&lt;h2&gt;</span>Detalhe<span class="nt">&lt;/h2&gt;</span> 
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;h4&gt;</span>Grupo<span class="nt">&lt;/h4&gt;</span>
+    <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">"dl-horizontal"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Grupo.Descricao)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Grupo.Descricao)
+        <span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;/dl&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Edit"</span> <span class="na">asp-route-id=</span><span class="s">"@Model.Grupo.Id"</span><span class="nt">&gt;</span>Editar<span class="nt">&lt;/a&gt;</span> |
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Grupo</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">DetailsModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">DetailsModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Grupo</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Grupo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Grupo</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p>Edit.cshtml/Edit.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Grupo.EditModel
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<span class="nt">&lt;h2&gt;</span>Editar<span class="nt">&lt;/h2&gt;</span> 
+<span class="nt">&lt;h4&gt;</span>Grupo<span class="nt">&lt;/h4&gt;</span>
+<span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span> 
+            <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">asp-for=</span><span class="s">"Grupo.Id"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Grupo.Descricao"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Grupo.Descricao"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Gravar"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span> 
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Grupo</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">EditModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">EditModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Grupo</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Grupo</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">.</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Grupo</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">_context</span><span class="p">.</span><span class="nf">Attach</span><span class="p">(</span><span class="n">Grupo</span><span class="p">).</span><span class="n">State</span> <span class="p">=</span> <span class="n">EntityState</span><span class="p">.</span><span class="n">Modified</span><span class="p">;</span>
+
+            <span class="k">try</span>
+            <span class="p">{</span>
+                <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">catch</span> <span class="p">(</span><span class="n">DbUpdateConcurrencyException</span><span class="p">)</span>
+            <span class="p">{</span>
+
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong>ARQUIVOS PRODUTOS</strong></p>
+
+<p>Index.cshtml/Index.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Produto.IndexModel
+@{
+    ViewData["Title"] = "Produtos Cadastrados";
+}
+<span class="nt">&lt;h2&gt;</span>Grupos Cadastrados<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;p&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"Create"</span><span class="nt">&gt;</span>Novo Produto<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;table</span> <span class="na">class=</span><span class="s">"table"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;thead&gt;</span>
+        <span class="nt">&lt;tr&gt;</span>
+            <span class="nt">&lt;th&gt;</span>
+                @Html.DisplayNameFor(model =&gt; model.Produto[0].DescricaoProduto)
+            <span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>
+                @Html.DisplayNameFor(model =&gt; model.Produto[0].Valor)
+            <span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>
+                @Html.DisplayNameFor(model =&gt; model.Produto[0].Quantidade)
+            <span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;</span>
+                @Html.DisplayNameFor(model =&gt; model.Produto[0].Grupo)
+            <span class="nt">&lt;/th&gt;</span>
+            <span class="nt">&lt;th&gt;&lt;/th&gt;</span>
+        <span class="nt">&lt;/tr&gt;</span>
+    <span class="nt">&lt;/thead&gt;</span>
+    <span class="nt">&lt;tbody&gt;</span>
+        @foreach (var item in Model.Produto)
+        {
+            <span class="nt">&lt;tr&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    @Html.DisplayFor(modelItem =&gt; item.DescricaoProduto)
+                <span class="nt">&lt;/td&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    @Html.DisplayFor(modelItem =&gt; item.Valor)
+                <span class="nt">&lt;/td&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    @Html.DisplayFor(modelItem =&gt; item.Quantidade)
+                <span class="nt">&lt;/td&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    @Html.DisplayFor(modelItem =&gt; item.Grupo.Descricao)
+                <span class="nt">&lt;/td&gt;</span>
+                <span class="nt">&lt;td&gt;</span>
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Edit"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Editar<span class="nt">&lt;/a&gt;</span> |
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Details"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Visualizar<span class="nt">&lt;/a&gt;</span> |
+                    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Delete"</span> <span class="na">asp-route-id=</span><span class="s">"@item.Id"</span><span class="nt">&gt;</span>Deletar<span class="nt">&lt;/a&gt;</span>
+                <span class="nt">&lt;/td&gt;</span>
+            <span class="nt">&lt;/tr&gt;</span>
+}
+    <span class="nt">&lt;/tbody&gt;</span>
+<span class="nt">&lt;/table&gt;</span>
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Produto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">IndexModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">IndexModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IList</span><span class="p">&lt;</span><span class="n">Models</span><span class="p">.</span><span class="n">Produto</span><span class="p">&gt;</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span><span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span> <span class="nf">OnGetAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="n">Produto</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span><span class="p">.</span><span class="nf">Include</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Grupo</span><span class="p">).</span><span class="nf">ToListAsync</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+ 
+</code></pre></div></div>
+
+<p>Create.cshtml/Create.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Produto.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<span class="nt">&lt;h2&gt;</span>Página Cadastro<span class="nt">&lt;/h2&gt;</span>
+
+<span class="nt">&lt;h4&gt;</span>Produto<span class="nt">&lt;/h4&gt;</span>
+<span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span> 
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.DescricaoProduto"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.DescricaoProduto"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.Valor"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.Valor"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.Quantidade"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.Quantidade"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.GrupoId"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;select</span> <span class="na">asp-for=</span><span class="s">"Produto.GrupoId"</span> <span class="na">class =</span><span class="s">"form-control"</span> <span class="na">asp-items=</span><span class="s">"ViewBag.GrupoId"</span><span class="nt">&gt;&lt;/select&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Gravar"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.Rendering</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Produto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">CreateModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">CreateModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IActionResult</span> <span class="nf">OnGet</span><span class="p">()</span>
+        <span class="p">{</span>
+        <span class="n">ViewData</span><span class="p">[</span><span class="s">"GrupoId"</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SelectList</span><span class="p">(</span><span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">,</span> <span class="s">"Id"</span><span class="p">,</span> <span class="s">"Descricao"</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Produto</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="n">Produto</span><span class="p">);</span>
+            <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Delete.cshtml/Delete.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Produto.DeleteModel
+
+@{
+    ViewData["Title"] = "Delete";
+}
+
+<span class="nt">&lt;h2&gt;</span>Página Exclusão<span class="nt">&lt;/h2&gt;</span>
+<span class="nt">&lt;h3&gt;</span>Deseja Realmente Excluir Este Registro?<span class="nt">&lt;/h3&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;h4&gt;</span>Produto<span class="nt">&lt;/h4&gt;</span>
+    <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">"dl-horizontal"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Valor)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Id)
+        <span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;/dl&gt;</span>
+    
+    <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">asp-for=</span><span class="s">"Produto.Id"</span> <span class="nt">/&gt;</span>
+        <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Delete"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span> |
+        <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+    <span class="nt">&lt;/form&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span> 
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Produto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">DeleteModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">DeleteModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Produto</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Produto</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span>
+                <span class="p">.</span><span class="nf">Include</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Grupo</span><span class="p">).</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Produto</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Produto</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span><span class="p">.</span><span class="nf">FindAsync</span><span class="p">(</span><span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Produto</span> <span class="p">!=</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span><span class="p">.</span><span class="nf">Remove</span><span class="p">(</span><span class="n">Produto</span><span class="p">);</span>
+                <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Details.cshtml/Details.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Produto.DetailsModel
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<span class="nt">&lt;h2&gt;</span>Detalhe<span class="nt">&lt;/h2&gt;</span>
+
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;h4&gt;</span>Produto<span class="nt">&lt;/h4&gt;</span>
+    <span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+    <span class="nt">&lt;dl</span> <span class="na">class=</span><span class="s">"dl-horizontal"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.DescricaoProduto)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.DescricaoProduto)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Valor)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Valor)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Quantidade)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Quantidade)
+        <span class="nt">&lt;/dd&gt;</span>
+        <span class="nt">&lt;dt&gt;</span>
+            @Html.DisplayNameFor(model =&gt; model.Produto.Grupo)
+        <span class="nt">&lt;/dt&gt;</span>
+        <span class="nt">&lt;dd&gt;</span>
+            @Html.DisplayFor(model =&gt; model.Produto.Grupo.Descricao)
+        <span class="nt">&lt;/dd&gt;</span>
+    <span class="nt">&lt;/dl&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Edit"</span> <span class="na">asp-route-id=</span><span class="s">"@Model.Produto.Id"</span><span class="nt">&gt;</span>Editar<span class="nt">&lt;/a&gt;</span> |
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Produto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">DetailsModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">DetailsModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Produto</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Produto</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span> <span class="p">.</span><span class="nf">Include</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Grupo</span><span class="p">).</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Produto</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p>Edit.cshtml/Edit.cshtml.cs:</p>
+<div class="language-html highlighter-rouge"><div class="highlight"><pre class="highlight"><code>@page
+@model CadastroDeProduto.Pages.Produto.EditModel
+
+@{
+    ViewData["Title"] = "Editar";
+}
+
+<span class="nt">&lt;h2&gt;</span>Editar<span class="nt">&lt;/h2&gt;</span>
+
+<span class="nt">&lt;h4&gt;</span>Produto<span class="nt">&lt;/h4&gt;</span>
+<span class="nt">&lt;hr</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"row"</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"col-md-4"</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;form</span> <span class="na">method=</span><span class="s">"post"</span><span class="nt">&gt;</span> 
+            <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"hidden"</span> <span class="na">asp-for=</span><span class="s">"Produto.Id"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.DescricaoProduto"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.DescricaoProduto"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.Valor"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.Valor"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.Quantidade"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">asp-for=</span><span class="s">"Produto.Quantidade"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="nt">/&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;label</span> <span class="na">asp-for=</span><span class="s">"Produto.GrupoId"</span> <span class="na">class=</span><span class="s">"control-label"</span><span class="nt">&gt;&lt;/label&gt;</span>
+                <span class="nt">&lt;select</span> <span class="na">asp-for=</span><span class="s">"Produto.GrupoId"</span> <span class="na">class=</span><span class="s">"form-control"</span> <span class="na">asp-items=</span><span class="s">"ViewBag.GrupoId"</span><span class="nt">&gt;&lt;/select&gt;</span> 
+            <span class="nt">&lt;/div&gt;</span>
+            <span class="nt">&lt;div</span> <span class="na">class=</span><span class="s">"form-group"</span><span class="nt">&gt;</span>
+                <span class="nt">&lt;input</span> <span class="na">type=</span><span class="s">"submit"</span> <span class="na">value=</span><span class="s">"Gravar"</span> <span class="na">class=</span><span class="s">"btn btn-default"</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/div&gt;</span>
+        <span class="nt">&lt;/form&gt;</span>
+    <span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+<span class="nt">&lt;div&gt;</span>
+    <span class="nt">&lt;a</span> <span class="na">asp-page=</span><span class="s">"./Index"</span><span class="nt">&gt;</span>Voltar para Lista<span class="nt">&lt;/a&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System.Threading.Tasks</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.RazorPages</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Mvc.Rendering</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto.Pages.Produto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">EditModel</span> <span class="p">:</span> <span class="n">PageModel</span>
+    <span class="p">{</span>
+        <span class="k">private</span> <span class="k">readonly</span> <span class="n">ExemploContext</span> <span class="n">_context</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="nf">EditModel</span><span class="p">(</span><span class="n">ExemploContext</span> <span class="n">context</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">_context</span> <span class="p">=</span> <span class="n">context</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="p">[</span><span class="n">BindProperty</span><span class="p">]</span>
+        <span class="k">public</span> <span class="n">Models</span><span class="p">.</span><span class="n">Produto</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnGetAsync</span><span class="p">(</span><span class="kt">int</span><span class="p">?</span> <span class="n">id</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">id</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">Produto</span> <span class="p">=</span> <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="n">Produto</span>
+                <span class="p">.</span><span class="nf">Include</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Grupo</span><span class="p">).</span><span class="nf">SingleOrDefaultAsync</span><span class="p">(</span><span class="n">m</span> <span class="p">=&gt;</span> <span class="n">m</span><span class="p">.</span><span class="n">Id</span> <span class="p">==</span> <span class="n">id</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="n">Produto</span> <span class="p">==</span> <span class="k">null</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">NotFound</span><span class="p">();</span>
+            <span class="p">}</span>
+           <span class="n">ViewData</span><span class="p">[</span><span class="s">"GrupoId"</span><span class="p">]</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SelectList</span><span class="p">(</span><span class="n">_context</span><span class="p">.</span><span class="n">Grupo</span><span class="p">,</span> <span class="s">"Id"</span><span class="p">,</span> <span class="s">"Descricao"</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">async</span> <span class="n">Task</span><span class="p">&lt;</span><span class="n">IActionResult</span><span class="p">&gt;</span> <span class="nf">OnPostAsync</span><span class="p">()</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">ModelState</span><span class="p">.</span><span class="n">IsValid</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">return</span> <span class="nf">Page</span><span class="p">();</span>
+            <span class="p">}</span>
+
+            <span class="n">_context</span><span class="p">.</span><span class="nf">Attach</span><span class="p">(</span><span class="n">Produto</span><span class="p">).</span><span class="n">State</span> <span class="p">=</span> <span class="n">EntityState</span><span class="p">.</span><span class="n">Modified</span><span class="p">;</span>
+
+            <span class="k">try</span>
+            <span class="p">{</span>
+                <span class="k">await</span> <span class="n">_context</span><span class="p">.</span><span class="nf">SaveChangesAsync</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">catch</span> <span class="p">(</span><span class="n">DbUpdateConcurrencyException</span><span class="p">)</span>
+            <span class="p">{</span>
+
+            <span class="p">}</span>
+
+            <span class="k">return</span> <span class="nf">RedirectToPage</span><span class="p">(</span><span class="s">"./Index"</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><br /></p>
+
+<p><strong><em>Arquivo Startup.cs</em></strong><br /></p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">CadastroDeProdutos</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">EntityFrameworkCore.FirebirdSql.Extensions</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Builder</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.AspNetCore.Hosting</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.Configuration</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.Extensions.DependencyInjection</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProduto</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Startup</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="nf">Startup</span><span class="p">(</span><span class="n">IConfiguration</span> <span class="n">configuration</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Configuration</span> <span class="p">=</span> <span class="n">configuration</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">IConfiguration</span> <span class="n">Configuration</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span> 
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">ConfigureServices</span><span class="p">(</span><span class="n">IServiceCollection</span> <span class="n">services</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">connectionString</span> <span class="p">=</span>  <span class="s">$"User=SYSDBA;Password=masterkey;Database=localhost:</span><span class="p">{</span><span class="n">System</span><span class="p">.</span><span class="n">IO</span><span class="p">.</span><span class="n">Directory</span><span class="p">.</span><span class="nf">GetCurrentDirectory</span><span class="p">()}</span><span class="s">\\CadastroProduto.fdb;"</span> <span class="p">+</span>
+                                    <span class="s">"DataSource=localhost;Port=3050;Dialect=3;ServerType=0"</span><span class="p">;</span>
+
+            <span class="n">services</span><span class="p">.</span><span class="nf">AddEntityFrameworkFirebird</span><span class="p">()</span>
+                    <span class="p">.</span><span class="n">AddDbContext</span><span class="p">&lt;</span><span class="n">ExemploContext</span><span class="p">&gt;(</span><span class="n">options</span> <span class="p">=&gt;</span> <span class="n">options</span><span class="p">.</span><span class="nf">UseFirebird</span><span class="p">(</span><span class="n">connectionString</span><span class="p">));</span>
+
+            <span class="n">services</span><span class="p">.</span><span class="nf">AddMvc</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">Configure</span><span class="p">(</span><span class="n">IApplicationBuilder</span> <span class="n">app</span><span class="p">,</span> <span class="n">IHostingEnvironment</span> <span class="n">env</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">env</span><span class="p">.</span><span class="nf">IsDevelopment</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="n">app</span><span class="p">.</span><span class="nf">UseDeveloperExceptionPage</span><span class="p">();</span>
+                <span class="n">app</span><span class="p">.</span><span class="nf">UseBrowserLink</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="n">app</span><span class="p">.</span><span class="nf">UseExceptionHandler</span><span class="p">(</span><span class="s">"/Error"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="n">app</span><span class="p">.</span><span class="nf">UseStaticFiles</span><span class="p">();</span>
+
+            <span class="n">app</span><span class="p">.</span><span class="nf">UseMvc</span><span class="p">(</span><span class="n">routes</span> <span class="p">=&gt;</span>
+            <span class="p">{</span>
+                <span class="n">routes</span><span class="p">.</span><span class="nf">MapRoute</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">:</span> <span class="s">"default"</span><span class="p">,</span>
+                    <span class="n">template</span><span class="p">:</span> <span class="s">"{controller}/{action=Index}/{id?}"</span><span class="p">);</span>
+            <span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<p><strong>Arquivo ExemploContext.cs</strong></p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="k">using</span> <span class="nn">CadastroDeProduto.Models</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">CadastroDeProdutos</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">ExemploContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="nf">ExemploContext</span><span class="p">(</span><span class="n">DbContextOptions</span><span class="p">&lt;</span><span class="n">ExemploContext</span><span class="p">&gt;</span> <span class="n">options</span><span class="p">)</span>
+            <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Produto</span><span class="p">&gt;</span> <span class="n">Produto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Grupo</span><span class="p">&gt;</span> <span class="n">Grupo</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+</code></pre></div></div>
+
+<p><strong>Estrutura de Diretórios do Projeto</strong></p>
+
+<p><img src="http://blog.ralms.net/wp-content/uploads/2017/09/EstruturaGeral.png" alt="" width="682" class="alignnone size-full wp-image-147" /></p>
+
+<p>Obrigado pela leitura, e um forte abraço!</p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-tags" aria-hidden="true"></i> Tags: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/tags/" class="page__taxonomy-item" rel="tag"></a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/#razor" class="page__taxonomy-item" rel="tag">Razor</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/tags/" class="page__taxonomy-item" rel="tag"></a>
+    
+    </span>
+  </p>
+
+
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#razor" class="page__taxonomy-item" rel="tag">Razor</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-09-01T00:00:00+00:00">September 01, 2017</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Razor+%2B+EntityFramework+Core+2.0%20http%3A%2F%2Flocalhost%3A4000%2Frazor%2Fefcorefirebird%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Fefcorefirebird%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Fefcorefirebird%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Frazor%2Fefcorefirebird%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/provider/efcorefirebirdv208/" class="pagination--pager" title="EntityFrameworkCore.FirebirdSQL  2.0.8
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/provider/efcorefirebirdv209/" class="pagination--pager" title="EntityFrameworkCore.FirebirdSQL  2.0.9
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/razor/efcorefirebird/";
+      this.page.identifier = "/razor/efcorefirebird";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

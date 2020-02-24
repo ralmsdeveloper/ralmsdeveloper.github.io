@@ -1,15 +1,11 @@
-<!doctype html>
-<!--
-  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
-  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
-  Free for personal and commercial use under the MIT license
-  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
--->
-<html lang="pt" class="no-js">
-  <head>
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
     <meta charset="utf-8">
 
 <!-- begin SEO -->
+<meta name="robots" content="index, follow">
 
 
 
@@ -19,12 +15,12 @@
 
 
 
-<title>Carregando instâncias do SQL Server - Ralms.NET</title>
+<title>Carregando instâncias do SQL Server  Ralms.NET</title>
 
 
 
 
-<meta name="description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código está se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {			// Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();			//Limpar o combo de instâncias            cbInstancias.Items.Clear();			// Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();				// Aqui é um extra, onde iremos exibir os bancos disponíveis para				// a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {						// Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
+<meta name="description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {            // Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();            //Limpar o combo de instâncias            cbInstancias.Items.Clear();            // Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();                // Aqui é um extra, onde iremos exibir os bancos disponíveis para                // a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {                        // Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
 
 
 
@@ -32,7 +28,7 @@
 <meta name="author" content="Rafael Almeida">
 
 <meta property="og:locale" content="pt_BR">
-<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
 <meta property="og:title" content="Carregando instâncias do SQL Server">
 
 
@@ -41,7 +37,7 @@
 
 
 
-  <meta property="og:description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código está se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {			// Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();			//Limpar o combo de instâncias            cbInstancias.Items.Clear();			// Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();				// Aqui é um extra, onde iremos exibir os bancos disponíveis para				// a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {						// Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
+  <meta property="og:description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {            // Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();            //Limpar o combo de instâncias            cbInstancias.Items.Clear();            // Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();                // Aqui é um extra, onde iremos exibir os bancos disponíveis para                // a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {                        // Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
 
 
 
@@ -58,17 +54,13 @@
 
 
 
-
-  
-
-  
 
 
 
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2017-12-20T00:00:00-02:00">
+  <meta property="article:published_time" content="2017-05-20T00:00:00+00:00">
 
 
 
@@ -76,16 +68,6 @@
 
 
 
-
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Person",
-      "name" : "Rafael Almeida",
-      "url" : "http://localhost:4000",
-      "sameAs" : null
-    }
-  </script>
 
 
 
@@ -128,12 +110,18 @@
 
     <!-- start custom head snippets -->
 
-<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 
 <!-- end custom head snippets -->
-  </head>
+</head>
 
-  <body class="layout--single">
+  <body class="layout--single wide">
 
     <!--[if lt IE 9]>
 <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
@@ -146,7 +134,23 @@
         <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
         <ul class="visible-links">
           
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
         </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
         
         <button class="greedy-nav__toggle" type="button">
           <span class="visually-hidden">Toggle Menu</span>
@@ -175,7 +179,7 @@
       
 
       
-        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
       
     </div>
   
@@ -186,7 +190,7 @@
     
     
       <p class="author__bio" itemprop="description">
-        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Creator of EntityFrameworkCore for FirebirdSQL, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
       </p>
     
   </div>
@@ -200,12 +204,6 @@
         </li>
       
 
-      
-        <li>
-          <a href="https://ralmsdeveloper.github.io" itemprop="url">
-            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Site
-          </a>
-        </li>
       
 
       
@@ -241,6 +239,12 @@
 
       
 
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
       
 
       
@@ -298,8 +302,8 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="Carregando instâncias do SQL Server">
-    <meta itemprop="description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código está se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {			// Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();			//Limpar o combo de instâncias            cbInstancias.Items.Clear();			// Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();				// Aqui é um extra, onde iremos exibir os bancos disponíveis para				// a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {						// Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
-    <meta itemprop="datePublished" content="December 20, 2017">
+    <meta itemprop="description" content="Carregando Instâncias do SQL SERVEROlá tudo bem?!Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.Para aqueles que precisam muitas vezes descobrir uma instância para configurar seu sistema aqui está um exemplo simples e muito prático, alémde carregarmos as instâncias, também iremos carregar todas bases de dados para essa instância.Observação: Os bancos de dados serão carregados apenas se a instância for LOCAL, para nosso exemplo, por que para instância em outros computadores, pode ser necessáriouma conta de acesso e permissões, mais isso é fácil de ser alterado em uma string de conexão.Vamos para o código, deixarei o link do projeto para download  acesse AquiTodo nosso código se resume a isso:using System;using System.Data;using System.Data.Sql;using System.Data.SqlClient;using System.Windows.Forms;namespace RecuperandoInstanciasSQLServer{    public partial class Form1 : Form    {        public Form1()        {            InitializeComponent();            // Quando selecionar uma instância listar os bancos            cbInstancias.SelectedIndexChanged += delegate { GetBancos(); };        }        private void btnCarregar_Click(object sender, EventArgs e)        {            // Carregar instâncias disponíveis na rede            var instancias = SqlDataSourceEnumerator.Instance.GetDataSources();            //Limpar o combo de instâncias            cbInstancias.Items.Clear();            // Percorrer e adicionar as instâncias no combo            foreach (DataRow info in instancias.Rows)            {                // Nome do computador                var seridor = info[&quot;ServerName&quot;].ToString();                // Nome da Instância                var instancia = info[&quot;InstanceName&quot;].ToString();                cbInstancias.Items.Add($&quot;{seridor}\\{instancia}&quot;);            }            if (cbInstancias.Items.Count &gt; 0)            {                cbInstancias.SelectedIndex = 0;            }        }        private void GetBancos()        {            try            {                cbBancos.Items.Clear();                // Aqui é um extra, onde iremos exibir os bancos disponíveis para                // a instância selecionada                var stringConexao = $&quot;Server={cbInstancias.SelectedItem};Database=master;Trusted_Connection=True;&quot;;                using (var conn = new SqlConnection(stringConexao))                {                    conn.Open();                    using (var cmd = conn.CreateCommand())                    {                        // Consultar os bancos disponíveis                        cmd.CommandText = &quot;SELECT name FROM sys.databases&quot;;                        var bancos = cmd.ExecuteReader();                        while (bancos.Read())                        {                            cbBancos.Items.Add(bancos.GetString(0));                        }                    }                }            }            catch (Exception err)            {                MessageBox.Show(err.Message);            }        }    }}Fico por aqui, compartilhem, comentem…">
+    <meta itemprop="datePublished" content="May 20, 2017">
     
 
     <div class="page__inner-wrap">
@@ -308,13 +312,13 @@
           <h1 class="page__title" itemprop="headline">Carregando instâncias do SQL Server
 </h1>
           
-            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
 
 
 
-  1 minuto(s) de leitura
-</p>
+  6 minuto(s) de leitura
+ - May 20, 2017</p>
           
         </header>
       
@@ -337,7 +341,7 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
 
 <p><img src="http://localhost:4000/assets/images/carregarinstancias.png" alt="01" /></p>
 
-<p>Todo nosso código está se resume a isso:</p>
+<p>Todo nosso código se resume a isso:</p>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Data</span><span class="p">;</span>
 <span class="k">using</span> <span class="nn">System.Data.Sql</span><span class="p">;</span>
@@ -358,13 +362,13 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
 
         <span class="k">private</span> <span class="k">void</span> <span class="nf">btnCarregar_Click</span><span class="p">(</span><span class="kt">object</span> <span class="n">sender</span><span class="p">,</span> <span class="n">EventArgs</span> <span class="n">e</span><span class="p">)</span>
         <span class="p">{</span>
-			<span class="c1">// Carregar instâncias disponíveis na rede</span>
+            <span class="c1">// Carregar instâncias disponíveis na rede</span>
             <span class="kt">var</span> <span class="n">instancias</span> <span class="p">=</span> <span class="n">SqlDataSourceEnumerator</span><span class="p">.</span><span class="n">Instance</span><span class="p">.</span><span class="nf">GetDataSources</span><span class="p">();</span>
 
-			<span class="c1">//Limpar o combo de instâncias</span>
+            <span class="c1">//Limpar o combo de instâncias</span>
             <span class="n">cbInstancias</span><span class="p">.</span><span class="n">Items</span><span class="p">.</span><span class="nf">Clear</span><span class="p">();</span>
 
-			<span class="c1">// Percorrer e adicionar as instâncias no combo</span>
+            <span class="c1">// Percorrer e adicionar as instâncias no combo</span>
             <span class="k">foreach</span> <span class="p">(</span><span class="n">DataRow</span> <span class="n">info</span> <span class="k">in</span> <span class="n">instancias</span><span class="p">.</span><span class="n">Rows</span><span class="p">)</span>
             <span class="p">{</span>
                 <span class="c1">// Nome do computador</span>
@@ -387,15 +391,15 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
             <span class="p">{</span>
                 <span class="n">cbBancos</span><span class="p">.</span><span class="n">Items</span><span class="p">.</span><span class="nf">Clear</span><span class="p">();</span>
 
-				<span class="c1">// Aqui é um extra, onde iremos exibir os bancos disponíveis para</span>
-				<span class="c1">// a instância selecionada</span>
+                <span class="c1">// Aqui é um extra, onde iremos exibir os bancos disponíveis para</span>
+                <span class="c1">// a instância selecionada</span>
                 <span class="kt">var</span> <span class="n">stringConexao</span> <span class="p">=</span> <span class="s">$"Server=</span><span class="p">{</span><span class="n">cbInstancias</span><span class="p">.</span><span class="n">SelectedItem</span><span class="p">}</span><span class="s">;Database=master;Trusted_Connection=True;"</span><span class="p">;</span>
                 <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">conn</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SqlConnection</span><span class="p">(</span><span class="n">stringConexao</span><span class="p">))</span>
                 <span class="p">{</span>
                     <span class="n">conn</span><span class="p">.</span><span class="nf">Open</span><span class="p">();</span>
                     <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">cmd</span> <span class="p">=</span> <span class="n">conn</span><span class="p">.</span><span class="nf">CreateCommand</span><span class="p">())</span>
                     <span class="p">{</span>
-						<span class="c1">// Consultar os bancos disponíveis</span>
+                        <span class="c1">// Consultar os bancos disponíveis</span>
                         <span class="n">cmd</span><span class="p">.</span><span class="n">CommandText</span> <span class="p">=</span> <span class="s">"SELECT name FROM sys.databases"</span><span class="p">;</span>
                         <span class="kt">var</span> <span class="n">bancos</span> <span class="p">=</span> <span class="n">cmd</span><span class="p">.</span><span class="nf">ExecuteReader</span><span class="p">();</span>
 
@@ -436,7 +440,7 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
     
       
       
-      <a href="http://localhost:4000/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
+      <a href="http://localhost:4000/tags/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a>
     
     </span>
   </p>
@@ -457,18 +461,18 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
     
       
       
-      <a href="http://localhost:4000/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
+      <a href="http://localhost:4000/categories/#csharp" class="page__taxonomy-item" rel="tag">CSharp</a><span class="sep">, </span>
     
       
       
-      <a href="http://localhost:4000/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
+      <a href="http://localhost:4000/categories/#sql-server" class="page__taxonomy-item" rel="tag">SQL Server</a>
     
     </span>
   </p>
 
 
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-12-20T00:00:00-02:00">December 20, 2017</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-05-20T00:00:00+00:00">May 20, 2017</time></p>
         
       </footer>
 
@@ -490,11 +494,11 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/csharp/csharp-novidade/" class="pagination--pager" title="Novidade C# 7.3, o que vem por ai?
+      <a href="http://localhost:4000/sefaz/sefazcodigos/" class="pagination--pager" title="Códigos de Rejeição da Sefaz
 ">Anterior</a>
     
     
-      <a href="http://localhost:4000/linq/basicolinq/" class="pagination--pager" title="O básico do LINQ
+      <a href="http://localhost:4000/razor/injecaodependencia/" class="pagination--pager" title="Injeção de Dependência Asp.Net Core 2 (Razor)
 ">Próxima</a>
     
   </nav>
@@ -519,115 +523,136 @@ uma conta de acesso e permissões, mais isso é fácil de ser alterado em uma st
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/linq/basicolinq/" rel="permalink">O básico do LINQ
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
 </a>
       
     </h2>
     
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
 
 
 
-  6 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Nesse pequeno post iremos conhecer um pouco de LINQ
-
-
-  Um pouco de história
-  Introdução ao LINQ
-  Conhecendo métodos do LINQ
-  Expressões
-
-
-Um pouco de his...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/sql%20server/sqlserverclr/" rel="permalink">Usando CLR no SQL Server
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  2 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">NET Framework CLR + SQL Server
-
-“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Window...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/provider/ordenarcoluna/" rel="permalink">Ordem das colunas no EF Core 2.1
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minuto(s) de leitura
-</p>
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
     
     <p class="archive__item-excerpt" itemprop="description">
 
-Hoje tenho uma ótima noticia para você usuário do EFCore. 
-Acabei de compilar os fontes do EFCore e já se encontra com o que muitos desejavam.
-Vale lembrar...</p>
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
   </article>
 </div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
         
       </div>
     </div>
@@ -637,6 +662,13 @@ Vale lembrar...</p>
 
     </div>
 
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
     
 
     <div class="page__footer">
@@ -660,7 +692,7 @@ Vale lembrar...</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2017 Rafael Almeida.</div>
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
 
       </footer>
     </div>
@@ -670,8 +702,29 @@ Vale lembrar...</p>
 
 
 
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
 
 
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/csharp/sql%20server/carregarinstancia/";
+      this.page.identifier = "/csharp/sql%20server/carregarinstancia";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
 
 

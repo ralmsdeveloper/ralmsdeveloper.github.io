@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Gravando informações criptografadas #2  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion.Criptografia usando EF Core (Annotation)Classe de criptografia é a mesma do artigo anterior.Usaremos o TripleDESCryptoServiceProvider para criptografar e descriptografar nossas informações, para mais informações sobre TripleDESCryptoServiceProvider, acesse essa URL.Veja como criptografar dados usando propriedades customizadas com Annotation.Nossa Classe criptografiapublic class Criptografia{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#ef&quot;);    public static string Encrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var encriptar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = encriptar.CreateEncryptor())            {                var dados = Encoding.UTF8.GetBytes(texto);                return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }    public static string Decrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var descriptografar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = descriptografar.CreateDecryptor())            {                var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));                return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }}Nosso DBContextpublic class ExemploContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        optionsBuilder.UseSqlServer(@&quot;Data Source=.\Sistemas;Initial Catalog=TesteCriptografia;Integrated Security=True&quot;);        optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        base.OnModelCreating(modelBuilder);        modelBuilder.Entity&lt;Teste&gt;();        foreach (var entidade in modelBuilder.Model.GetEntityTypes())        {            foreach (var propriedade in entidade.GetProperties())            {                var atributos = propriedade                    .PropertyInfo                    .GetCustomAttributes(typeof(EncripatarAttribute), false);                if (atributos.Any())                {                    propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);                }            }        }    }}Nossa Classe (Entidade)public class Teste{    private string informacoes;    public int Id { get; set; }    [Encripatar]    public string Informacoes    {        get =&gt; Criptografia.Decrypt(informacoes);        set =&gt; informacoes = Criptografia.Encrypt(value);    }    public DateTime Cadastro { get; set; }}Nosso Programs.csclass Program{    static void Main(string[] args)    {        using (var db = new ExemploContext())        {            db.Database.EnsureDeleted();            db.Database.EnsureCreated();            var dados = new[]            {                new Teste                {                    Informacoes = &quot;Informação 01&quot;                },                new Teste                {                    Informacoes = &quot;Informação 02&quot;                },                new Teste                {                    Informacoes = &quot;Informação 03&quot;                }            };            db.Set&lt;Teste&gt;().AddRange(dados);            db.SaveChanges();            var registros = db                .Set&lt;Teste&gt;()                .AsNoTracking()                .ToList();            // Leitura feita pelo EF Core            Console.WriteLine(&quot;Leitura EF Core:&quot;);            foreach (var reg in registros)            {                Console.WriteLine($&quot;{reg.Id}-{reg.Informacoes}&quot;);            }            // Leitura feita via ADO.NET            Console.WriteLine(&quot;\nLeitura ADO.NET:&quot;);            using (var cmd = db.Database.GetDbConnection().CreateCommand())            {                db.Database.OpenConnection();                cmd.CommandText = &quot;SELECT [Id],[Informacoes] FROM [Teste]&quot;;                using (var ler = cmd.ExecuteReader())                {                    while (ler.Read())                    {                        Console.WriteLine($&quot;{ler.GetInt32(0)}-{ler.GetString(1)}&quot;);                    }                }            }        }        Console.ReadKey();    }}Considerações:Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado &quot;Encriptar&quot;, e informei ao EF Core o tipo de acesso a essa propriedade usando:SetPropertyAccessMode(PropertyAccessMode.Field)Se não informarmos o UsePropertyAccessMode  para o EntityFrameworkCore, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.Documentação SetPropertyAccessMode:  AquiPor exemplo se cometar o seguinte trecho de código:protected override void OnModelCreating(ModelBuilder modelBuilder){    base.OnModelCreating(modelBuilder);    modelBuilder.Entity&lt;Teste&gt;();    //foreach (var entidade in modelBuilder.Model.GetEntityTypes())    //{    //    foreach (var propriedade in entidade.GetProperties())    //    {    //        var atributos = propriedade    //            .PropertyInfo    //            .GetCustomAttributes(typeof(EncripatarAttribute), false);    //        if (atributos.Any())    //        {    //            propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);    //        }    //    }    //}}E tentar ler a propriedade Informacoes:var lerInformacao = db    .Set&lt;TesteCriptografado&gt;()    .First().Informacoes;Teremos a seguinte exceção:System.FormatException:A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.Impacto na performance?Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o de fazer a criptografia e o de descriptografar que envolve cálculos mais complexos dependendo do algoritmo usado.Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 1000 registros obtive o seguinte resultado:            Total registros      Tempo gravar normal      Tempo gravar criptografado                  1000 Registros      00:00:00.1962283      00:00:00.3485831              1 Registro      00:00:00.0026146      00:00:00.0032140                  Total registros      Tempo leitura normal      Tempo leitura criptografado                  1000 Registros      00:00:00.0239231      00:00:00.0241933      Se observarmos o impacto de custo sobre (1) um registro é praticamente aceitável, quase imperceptível, o tempo de leitura de (1000 registros) é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: Performance ou segurança?Para mim os dois tem que trabalhar juntos!!!Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.Url projeto: https://github.com/ralmsdeveloper/ExemplosArtigosPessoal, fico por aqui #+1dica!">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Gravando informações criptografadas #2">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/criptografiaefcoreparte2/">
+  <meta property="og:url" content="http://localhost:4000/dica/criptografiaefcoreparte2/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion.Criptografia usando EF Core (Annotation)Classe de criptografia é a mesma do artigo anterior.Usaremos o TripleDESCryptoServiceProvider para criptografar e descriptografar nossas informações, para mais informações sobre TripleDESCryptoServiceProvider, acesse essa URL.Veja como criptografar dados usando propriedades customizadas com Annotation.Nossa Classe criptografiapublic class Criptografia{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#ef&quot;);    public static string Encrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var encriptar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = encriptar.CreateEncryptor())            {                var dados = Encoding.UTF8.GetBytes(texto);                return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }    public static string Decrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var descriptografar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = descriptografar.CreateDecryptor())            {                var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));                return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }}Nosso DBContextpublic class ExemploContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        optionsBuilder.UseSqlServer(@&quot;Data Source=.\Sistemas;Initial Catalog=TesteCriptografia;Integrated Security=True&quot;);        optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        base.OnModelCreating(modelBuilder);        modelBuilder.Entity&lt;Teste&gt;();        foreach (var entidade in modelBuilder.Model.GetEntityTypes())        {            foreach (var propriedade in entidade.GetProperties())            {                var atributos = propriedade                    .PropertyInfo                    .GetCustomAttributes(typeof(EncripatarAttribute), false);                if (atributos.Any())                {                    propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);                }            }        }    }}Nossa Classe (Entidade)public class Teste{    private string informacoes;    public int Id { get; set; }    [Encripatar]    public string Informacoes    {        get =&gt; Criptografia.Decrypt(informacoes);        set =&gt; informacoes = Criptografia.Encrypt(value);    }    public DateTime Cadastro { get; set; }}Nosso Programs.csclass Program{    static void Main(string[] args)    {        using (var db = new ExemploContext())        {            db.Database.EnsureDeleted();            db.Database.EnsureCreated();            var dados = new[]            {                new Teste                {                    Informacoes = &quot;Informação 01&quot;                },                new Teste                {                    Informacoes = &quot;Informação 02&quot;                },                new Teste                {                    Informacoes = &quot;Informação 03&quot;                }            };            db.Set&lt;Teste&gt;().AddRange(dados);            db.SaveChanges();            var registros = db                .Set&lt;Teste&gt;()                .AsNoTracking()                .ToList();            // Leitura feita pelo EF Core            Console.WriteLine(&quot;Leitura EF Core:&quot;);            foreach (var reg in registros)            {                Console.WriteLine($&quot;{reg.Id}-{reg.Informacoes}&quot;);            }            // Leitura feita via ADO.NET            Console.WriteLine(&quot;\nLeitura ADO.NET:&quot;);            using (var cmd = db.Database.GetDbConnection().CreateCommand())            {                db.Database.OpenConnection();                cmd.CommandText = &quot;SELECT [Id],[Informacoes] FROM [Teste]&quot;;                using (var ler = cmd.ExecuteReader())                {                    while (ler.Read())                    {                        Console.WriteLine($&quot;{ler.GetInt32(0)}-{ler.GetString(1)}&quot;);                    }                }            }        }        Console.ReadKey();    }}Considerações:Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado &quot;Encriptar&quot;, e informei ao EF Core o tipo de acesso a essa propriedade usando:SetPropertyAccessMode(PropertyAccessMode.Field)Se não informarmos o UsePropertyAccessMode  para o EntityFrameworkCore, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.Documentação SetPropertyAccessMode:  AquiPor exemplo se cometar o seguinte trecho de código:protected override void OnModelCreating(ModelBuilder modelBuilder){    base.OnModelCreating(modelBuilder);    modelBuilder.Entity&lt;Teste&gt;();    //foreach (var entidade in modelBuilder.Model.GetEntityTypes())    //{    //    foreach (var propriedade in entidade.GetProperties())    //    {    //        var atributos = propriedade    //            .PropertyInfo    //            .GetCustomAttributes(typeof(EncripatarAttribute), false);    //        if (atributos.Any())    //        {    //            propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);    //        }    //    }    //}}E tentar ler a propriedade Informacoes:var lerInformacao = db    .Set&lt;TesteCriptografado&gt;()    .First().Informacoes;Teremos a seguinte exceção:System.FormatException:A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.Impacto na performance?Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o de fazer a criptografia e o de descriptografar que envolve cálculos mais complexos dependendo do algoritmo usado.Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 1000 registros obtive o seguinte resultado:            Total registros      Tempo gravar normal      Tempo gravar criptografado                  1000 Registros      00:00:00.1962283      00:00:00.3485831              1 Registro      00:00:00.0026146      00:00:00.0032140                  Total registros      Tempo leitura normal      Tempo leitura criptografado                  1000 Registros      00:00:00.0239231      00:00:00.0241933      Se observarmos o impacto de custo sobre (1) um registro é praticamente aceitável, quase imperceptível, o tempo de leitura de (1000 registros) é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: Performance ou segurança?Para mim os dois tem que trabalhar juntos!!!Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.Url projeto: https://github.com/ralmsdeveloper/ExemplosArtigosPessoal, fico por aqui #+1dica!">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-03-05T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Gravando informações criptografadas #2">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion.Criptografia usando EF Core (Annotation)Classe de criptografia é a mesma do artigo anterior.Usaremos o TripleDESCryptoServiceProvider para criptografar e descriptografar nossas informações, para mais informações sobre TripleDESCryptoServiceProvider, acesse essa URL.Veja como criptografar dados usando propriedades customizadas com Annotation.Nossa Classe criptografiapublic class Criptografia{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#ef&quot;);    public static string Encrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var encriptar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = encriptar.CreateEncryptor())            {                var dados = Encoding.UTF8.GetBytes(texto);                return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }    public static string Decrypt(string texto)    {        using (var hashProvider = new MD5CryptoServiceProvider())        {            var descriptografar = new TripleDESCryptoServiceProvider            {                Mode = CipherMode.ECB,                Key = hashProvider.ComputeHash(_chave),                Padding = PaddingMode.PKCS7            };            using (var transforme = descriptografar.CreateDecryptor())            {                var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));                return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));            }        }    }}Nosso DBContextpublic class ExemploContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        optionsBuilder.UseSqlServer(@&quot;Data Source=.\Sistemas;Initial Catalog=TesteCriptografia;Integrated Security=True&quot;);        optionsBuilder.UseLoggerFactory(new LoggerFactory().AddConsole());    }    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        base.OnModelCreating(modelBuilder);        modelBuilder.Entity&lt;Teste&gt;();        foreach (var entidade in modelBuilder.Model.GetEntityTypes())        {            foreach (var propriedade in entidade.GetProperties())            {                var atributos = propriedade                    .PropertyInfo                    .GetCustomAttributes(typeof(EncripatarAttribute), false);                if (atributos.Any())                {                    propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);                }            }        }    }}Nossa Classe (Entidade)public class Teste{    private string informacoes;    public int Id { get; set; }    [Encripatar]    public string Informacoes    {        get =&gt; Criptografia.Decrypt(informacoes);        set =&gt; informacoes = Criptografia.Encrypt(value);    }    public DateTime Cadastro { get; set; }}Nosso Programs.csclass Program{    static void Main(string[] args)    {        using (var db = new ExemploContext())        {            db.Database.EnsureDeleted();            db.Database.EnsureCreated();            var dados = new[]            {                new Teste                {                    Informacoes = &quot;Informação 01&quot;                },                new Teste                {                    Informacoes = &quot;Informação 02&quot;                },                new Teste                {                    Informacoes = &quot;Informação 03&quot;                }            };            db.Set&lt;Teste&gt;().AddRange(dados);            db.SaveChanges();            var registros = db                .Set&lt;Teste&gt;()                .AsNoTracking()                .ToList();            // Leitura feita pelo EF Core            Console.WriteLine(&quot;Leitura EF Core:&quot;);            foreach (var reg in registros)            {                Console.WriteLine($&quot;{reg.Id}-{reg.Informacoes}&quot;);            }            // Leitura feita via ADO.NET            Console.WriteLine(&quot;\nLeitura ADO.NET:&quot;);            using (var cmd = db.Database.GetDbConnection().CreateCommand())            {                db.Database.OpenConnection();                cmd.CommandText = &quot;SELECT [Id],[Informacoes] FROM [Teste]&quot;;                using (var ler = cmd.ExecuteReader())                {                    while (ler.Read())                    {                        Console.WriteLine($&quot;{ler.GetInt32(0)}-{ler.GetString(1)}&quot;);                    }                }            }        }        Console.ReadKey();    }}Considerações:Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado &quot;Encriptar&quot;, e informei ao EF Core o tipo de acesso a essa propriedade usando:SetPropertyAccessMode(PropertyAccessMode.Field)Se não informarmos o UsePropertyAccessMode  para o EntityFrameworkCore, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.Documentação SetPropertyAccessMode:  AquiPor exemplo se cometar o seguinte trecho de código:protected override void OnModelCreating(ModelBuilder modelBuilder){    base.OnModelCreating(modelBuilder);    modelBuilder.Entity&lt;Teste&gt;();    //foreach (var entidade in modelBuilder.Model.GetEntityTypes())    //{    //    foreach (var propriedade in entidade.GetProperties())    //    {    //        var atributos = propriedade    //            .PropertyInfo    //            .GetCustomAttributes(typeof(EncripatarAttribute), false);    //        if (atributos.Any())    //        {    //            propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);    //        }    //    }    //}}E tentar ler a propriedade Informacoes:var lerInformacao = db    .Set&lt;TesteCriptografado&gt;()    .First().Informacoes;Teremos a seguinte exceção:System.FormatException:A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.Impacto na performance?Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o de fazer a criptografia e o de descriptografar que envolve cálculos mais complexos dependendo do algoritmo usado.Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo 1000 registros obtive o seguinte resultado:            Total registros      Tempo gravar normal      Tempo gravar criptografado                  1000 Registros      00:00:00.1962283      00:00:00.3485831              1 Registro      00:00:00.0026146      00:00:00.0032140                  Total registros      Tempo leitura normal      Tempo leitura criptografado                  1000 Registros      00:00:00.0239231      00:00:00.0241933      Se observarmos o impacto de custo sobre (1) um registro é praticamente aceitável, quase imperceptível, o tempo de leitura de (1000 registros) é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: Performance ou segurança?Para mim os dois tem que trabalhar juntos!!!Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.Url projeto: https://github.com/ralmsdeveloper/ExemplosArtigosPessoal, fico por aqui #+1dica!">
+    <meta itemprop="datePublished" content="March 05, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Gravando informações criptografadas #2
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  14 minuto(s) de leitura
+ - March 05, 2018</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Começando</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#criptografia-usando-ef-core-annotation">Criptografia usando EF Core (Annotation)</a></li>
+  <li><a href="#nossa-classe-criptografia">Nossa Classe criptografia</a></li>
+  <li><a href="#nosso-dbcontext">Nosso DBContext</a></li>
+  <li><a href="#nossa-classe-entidade">Nossa Classe (Entidade)</a></li>
+  <li><a href="#nosso-programscs">Nosso Programs.cs</a></li>
+  <li><a href="#impacto-na-performance">Impacto na performance?</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/efcoretopocriptografiaparte2.jpg" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?! 🔑 </strong></center>
+<hr />
+
+<p>No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">http://ralms.net/dica/criptografiaefcore/</a> eu mostrei como criptografar dados no EF Core usando <strong>HasConversion.</strong></p>
+<h2 id="criptografia-usando-ef-core-annotation">Criptografia usando EF Core (Annotation)</h2>
+<div style="text-align: justify;">
+Classe de criptografia é a mesma do artigo anterior.<br /><br />
+Usaremos o <strong>TripleDESCryptoServiceProvider</strong> para criptografar e descriptografar nossas informações, para mais informações sobre <strong>TripleDESCryptoServiceProvider</strong>, acesse essa <a href="https://msdn.microsoft.com/pt-br/library/system.security.cryptography.tripledescryptoserviceprovider(v=vs.110).aspx" alt="">URL</a>.
+</div>
+<p><br />
+Veja como criptografar dados usando propriedades customizadas com <strong>Annotation.</strong></p>
+<h2 id="nossa-classe-criptografia">Nossa Classe criptografia</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Criptografia</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_chave</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="s">"#ef"</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">Encrypt</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">encriptar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+            <span class="p">{</span>
+                <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+                <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+                <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+            <span class="p">};</span>
+
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">encriptar</span><span class="p">.</span><span class="nf">CreateEncryptor</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">texto</span><span class="p">);</span>
+                <span class="k">return</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToBase64String</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">Decrypt</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">descriptografar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+            <span class="p">{</span>
+                <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+                <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+                <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+            <span class="p">};</span>
+
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">descriptografar</span><span class="p">.</span><span class="nf">CreateDecryptor</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">FromBase64String</span><span class="p">(</span><span class="n">texto</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="s">"+"</span><span class="p">));</span>
+                <span class="k">return</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetString</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nosso-dbcontext">Nosso DBContext</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">ExemploContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="s">@"Data Source=.\Sistemas;Initial Catalog=TesteCriptografia;Integrated Security=True"</span><span class="p">);</span>
+        <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseLoggerFactory</span><span class="p">(</span><span class="k">new</span> <span class="nf">LoggerFactory</span><span class="p">().</span><span class="nf">AddConsole</span><span class="p">());</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">base</span><span class="p">.</span><span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">modelBuilder</span><span class="p">);</span>
+
+        <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">Teste</span><span class="p">&gt;();</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entidade</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">propriedade</span> <span class="k">in</span> <span class="n">entidade</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">atributos</span> <span class="p">=</span> <span class="n">propriedade</span>
+                    <span class="p">.</span><span class="n">PropertyInfo</span>
+                    <span class="p">.</span><span class="nf">GetCustomAttributes</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">EncripatarAttribute</span><span class="p">),</span> <span class="k">false</span><span class="p">);</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">atributos</span><span class="p">.</span><span class="nf">Any</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="n">propriedade</span><span class="p">.</span><span class="nf">SetPropertyAccessMode</span><span class="p">(</span><span class="n">PropertyAccessMode</span><span class="p">.</span><span class="n">Field</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nossa-classe-entidade">Nossa Classe (Entidade)</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Teste</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="kt">string</span> <span class="n">informacoes</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">Encripatar</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Informacoes</span>
+    <span class="p">{</span>
+        <span class="k">get</span> <span class="p">=&gt;</span> <span class="n">Criptografia</span><span class="p">.</span><span class="nf">Decrypt</span><span class="p">(</span><span class="n">informacoes</span><span class="p">);</span>
+        <span class="k">set</span> <span class="p">=&gt;</span> <span class="n">informacoes</span> <span class="p">=</span> <span class="n">Criptografia</span><span class="p">.</span><span class="nf">Encrypt</span><span class="p">(</span><span class="k">value</span><span class="p">);</span>
+    <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">Cadastro</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nosso-programscs">Nosso Programs.cs</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">ExemploContext</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureDeleted</span><span class="p">();</span>
+            <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+
+            <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="k">new</span><span class="p">[]</span>
+            <span class="p">{</span>
+                <span class="k">new</span> <span class="n">Teste</span>
+                <span class="p">{</span>
+                    <span class="n">Informacoes</span> <span class="p">=</span> <span class="s">"Informação 01"</span>
+                <span class="p">},</span>
+                <span class="k">new</span> <span class="n">Teste</span>
+                <span class="p">{</span>
+                    <span class="n">Informacoes</span> <span class="p">=</span> <span class="s">"Informação 02"</span>
+                <span class="p">},</span>
+                <span class="k">new</span> <span class="n">Teste</span>
+                <span class="p">{</span>
+                    <span class="n">Informacoes</span> <span class="p">=</span> <span class="s">"Informação 03"</span>
+                <span class="p">}</span>
+            <span class="p">};</span>
+
+            <span class="n">db</span><span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Teste</span><span class="p">&gt;().</span><span class="nf">AddRange</span><span class="p">(</span><span class="n">dados</span><span class="p">);</span>
+            <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+            <span class="kt">var</span> <span class="n">registros</span> <span class="p">=</span> <span class="n">db</span>
+                <span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">Teste</span><span class="p">&gt;()</span>
+                <span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">ToList</span><span class="p">();</span>
+
+            <span class="c1">// Leitura feita pelo EF Core</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"Leitura EF Core:"</span><span class="p">);</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">reg</span> <span class="k">in</span> <span class="n">registros</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">reg</span><span class="p">.</span><span class="n">Id</span><span class="p">}</span><span class="s">-</span><span class="p">{</span><span class="n">reg</span><span class="p">.</span><span class="n">Informacoes</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Leitura feita via ADO.NET</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">"\nLeitura ADO.NET:"</span><span class="p">);</span>
+            <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">cmd</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">GetDbConnection</span><span class="p">().</span><span class="nf">CreateCommand</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">OpenConnection</span><span class="p">();</span>
+                <span class="n">cmd</span><span class="p">.</span><span class="n">CommandText</span> <span class="p">=</span> <span class="s">"SELECT [Id],[Informacoes] FROM [Teste]"</span><span class="p">;</span>
+                <span class="k">using</span> <span class="p">(</span><span class="kt">var</span> <span class="n">ler</span> <span class="p">=</span> <span class="n">cmd</span><span class="p">.</span><span class="nf">ExecuteReader</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="k">while</span> <span class="p">(</span><span class="n">ler</span><span class="p">.</span><span class="nf">Read</span><span class="p">())</span>
+                    <span class="p">{</span>
+                        <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"</span><span class="p">{</span><span class="n">ler</span><span class="p">.</span><span class="nf">GetInt32</span><span class="p">(</span><span class="m">0</span><span class="p">)}</span><span class="s">-</span><span class="p">{</span><span class="n">ler</span><span class="p">.</span><span class="nf">GetString</span><span class="p">(</span><span class="m">1</span><span class="p">)}</span><span class="s">"</span><span class="p">);</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><br /></p>
+<div class="notice--success">
+<strong>Considerações:</strong><br />
+Observe que filtrei todas minhas propriedades customizadas com meu atributo chamado "Encriptar", e informei ao EF Core o tipo de acesso a essa propriedade usando:
+<strong>SetPropertyAccessMode(PropertyAccessMode.Field)</strong>
+</div>
+<div style="text-align: justify;">
+Se não informarmos o <strong>UsePropertyAccessMode</strong>  para o <strong>EntityFrameworkCore</strong>, dizendo que ele pode ler e escrever naquela determinada propriedade com anotação, teremos uma exceção ao ler a propriedade.<br />
+</div>
+<div class="notice--success">
+<strong>Documentação SetPropertyAccessMode:</strong>  <a href="https://docs.microsoft.com/en-us/ef/core/api/microsoft.entityframeworkcore.metadata.propertyaccessmode" alt="">Aqui</a>
+</div>
+<p>Por exemplo se cometar o seguinte trecho de código:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">base</span><span class="p">.</span><span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">modelBuilder</span><span class="p">);</span>
+
+    <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">Teste</span><span class="p">&gt;();</span>
+
+    <span class="c1">//foreach (var entidade in modelBuilder.Model.GetEntityTypes())</span>
+    <span class="c1">//{</span>
+    <span class="c1">//    foreach (var propriedade in entidade.GetProperties())</span>
+    <span class="c1">//    {</span>
+    <span class="c1">//        var atributos = propriedade</span>
+    <span class="c1">//            .PropertyInfo</span>
+    <span class="c1">//            .GetCustomAttributes(typeof(EncripatarAttribute), false);</span>
+
+    <span class="c1">//        if (atributos.Any())</span>
+    <span class="c1">//        {</span>
+    <span class="c1">//            propriedade.SetPropertyAccessMode(PropertyAccessMode.Field);</span>
+    <span class="c1">//        }</span>
+    <span class="c1">//    }</span>
+    <span class="c1">//}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>E tentar ler a propriedade <strong>Informacoes</strong>:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">lerInformacao</span> <span class="p">=</span> <span class="n">db</span>
+    <span class="p">.</span><span class="n">Set</span><span class="p">&lt;</span><span class="n">TesteCriptografado</span><span class="p">&gt;()</span>
+    <span class="p">.</span><span class="nf">First</span><span class="p">().</span><span class="n">Informacoes</span><span class="p">;</span>
+</code></pre></div></div>
+<p>Teremos a seguinte exceção:</p>
+<div class="notice--danger">
+<strong>System.FormatException:</strong><br />
+A entrada não é uma cadeia de caracteres de Base 64 válida, pois contém um caractere que não é de base 64, mais de dois caracteres de preenchimento ou um caractere ilegal entre os caracteres de preenchimento.
+</div>
+
+<h2 id="impacto-na-performance">Impacto na performance?</h2>
+<div style="text-align: justify;">
+Praticamente é o dobro do processamento, mas isso é obvio pelo motivo de ter um segundo processo envolvido que o de fazer a <strong>criptografia e o de descriptografar</strong> que envolve cálculos mais complexos dependendo do algoritmo usado.<br /><br />
+Fiz alguns testes para ter uma base do tempo gasto, em minha máquina inserindo <strong>1000 registros</strong> obtive o seguinte resultado:
+</div>
+<p><br /></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Total registros</th>
+      <th>Tempo gravar normal</th>
+      <th>Tempo gravar criptografado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1000 Registros</td>
+      <td>00:00:00.1962283</td>
+      <td>00:00:00.3485831</td>
+    </tr>
+    <tr>
+      <td>1 Registro</td>
+      <td>00:00:00.0026146</td>
+      <td>00:00:00.0032140</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th>Total registros</th>
+      <th>Tempo leitura normal</th>
+      <th>Tempo leitura criptografado</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1000 Registros</td>
+      <td>00:00:00.0239231</td>
+      <td>00:00:00.0241933</td>
+    </tr>
+  </tbody>
+</table>
+
+<div style="text-align: justify;">
+<br />
+Se observarmos o impacto de custo sobre <strong>(1) um registro</strong> é praticamente aceitável, quase imperceptível, o tempo de leitura de <strong>(1000 registros)</strong> é aceitavel para ambos, porém para quem trabalha fazendo inserts em uma escala de registros maiores, pode ser um pequeno problema, no que se trata do quesito performance, mas aí é onde entra a pergunta: <strong><i>Performance ou segurança?</i></strong><br />
+Para mim os dois tem que trabalhar juntos!!!<br /><br />
+Em uma situação que necessite de total segurança das informações, por exemplo: ambiente onde terceiros tenham acesso ao banco de dados, eu prefiro ativar a criptografia, para assegurar que minhas informações estarão mais protegidas.
+</div>
+<p><br />
+Url projeto: <a href="https://github.com/ralmsdeveloper/ExemplosArtigos" alt="">https://github.com/ralmsdeveloper/ExemplosArtigos</a>
+<br /><br />
+Pessoal, fico por aqui <strong>#+1dica!</strong></p>
+
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2018-03-05T00:00:00+00:00">March 05, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Gravando+informa%C3%A7%C3%B5es+criptografadas+%232%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fcriptografiaefcoreparte2%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fcriptografiaefcoreparte2%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fcriptografiaefcoreparte2%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fcriptografiaefcoreparte2%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/dica/preview1/" class="pagination--pager" title="Entity Framework Core 2.1 Preview1
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/dica/odpnet2/" class="pagination--pager" title="ODP.NET Core  Beta 2
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/criptografiaefcoreparte2/";
+      this.page.identifier = "/dica/criptografiaefcoreparte2";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Adeus 2019, bem vindo 2020!  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala meu amigo(a), tudo bem?!AgradecimentosNossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospectiva  quero deixar aqui meu muito obrigado, a você que diretamente ou indiretamente me ajudou a passar este maravilhoso ano, com seus feedbacks, apoio e carinho.FamíliaQuero agradeçer a minha esposa e minhas filhas por toda paciência que tiveram comigo, pedir desculpa pelo tempo que tive ausente, pois saiba que, vocês são minha base, minha estrutura, eu amo vocês, quantas noites e quanto tempo ausente, mas vocês sempre me apoiando em todas minhas decisões e desafios.💛 💙 💜 ❤️ 💚DesafioEu estava em uma fase de minha vida onde realmente procurava algo desafiador, então recebi um convite para fazer uma entrevista em Janeiro para uma possível vaga nesta empresa espetacular, com uma cultura linda e empolgante, então no mês seguinte já iniciei as atividades, onde a cada dia que passa mais apaixonado fico, o desafio não tem sido fácil, porém é prazeroso.Tem me proporcionado um crescimento profissional, onde me sinto realizado!MentorTive/tenho a oportunidade de trabalhar com esse cara fenomenal Alexandre Brandão, tem sido um divisor de aguas em minha carreira profissional, tem me dado feedbacks extramamente evolutivos, sendo assim queria deixar aqui registrado meu muito obrigado por tudo.BootcampRealizamos um bootcamp na Universidade Mauricio de Nassau, onde tive o prazer de conhecer uma galera muito legal, dentre eles o David Counto e a Izabela Rezende, 2 seres vivos que Deus colocou em minha vida e hoje considero como familia, amo vocês 2 de coração!GoogleEm março também tive a oportunidade conhecer o escritório da Google aqui no Brasil, onde participei de um treinamento Cloud, onde tive oportunidade de fazer um Deep-Dive em suas tecnologias para nuvem.MVPCONF LATAM 2019Eu tive a oportunidade de entregar 3 palestras no maior evento técnico de experts Microsoft, o MVPConf Latam edição 2019, mais de 2500 pessoas.Reconhecimento MicrosoftPelo segundo ano consecutivo fui reconhecido pela Mirosoft com o título MVP, onde faço parte de um time seleto de profissionais, que procuram impactar e disseminar tecnologia.VS Summit 2019Este ano entreguei 2 palestra no VSSummit evento esse organizado pelo Ramon Durões, que inclusive quero parabenizar pela qualidade do evento.Developers Sergipe Summit 2019O desafio é grande, mas o retorno é gratificante, nosso evento acontece anualmente em nosso estado de Sergipe, onde trazemos profissionais de grandes players do Brasil e do Estado, para compartilhar conhecimento e impactar profissionais e amantes da tecnologia de nosso estado.AmigosA vida é cheia de segredos, amigos, estou utilizando essa foto porque representa algo pra mim, foi uma noite marcante, curtimos muito, o Eduardo Pires me apresentou um licor chamado Jagermeister que terminei exagerando e me apagando kkkk.Encontro de MVPEm dezembro tivemos nosso encontro na Microsoft fechado para todos MVP&#39;s do Brasil, foi um dia completo reunido com essa galera espetacular, fazendo network e conversando sobre o impacto na comunidade, amo todos vocês. #minhafamiliaOportunidade MicrosoftE pra fechar com chave de ouro, tive a oportunidade conhecer a presidente da Microsoft Brasil, a Srª Tânia Cosentino. Fico por aqui e um forte abraço! 😄 #2019 #2020">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Adeus 2019, bem vindo 2020!">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/feliz2020/">
+  <meta property="og:url" content="http://localhost:4000/dica/feliz2020/">
+
+
+
+  <meta property="og:description" content="Fala meu amigo(a), tudo bem?!AgradecimentosNossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospectiva  quero deixar aqui meu muito obrigado, a você que diretamente ou indiretamente me ajudou a passar este maravilhoso ano, com seus feedbacks, apoio e carinho.FamíliaQuero agradeçer a minha esposa e minhas filhas por toda paciência que tiveram comigo, pedir desculpa pelo tempo que tive ausente, pois saiba que, vocês são minha base, minha estrutura, eu amo vocês, quantas noites e quanto tempo ausente, mas vocês sempre me apoiando em todas minhas decisões e desafios.💛 💙 💜 ❤️ 💚DesafioEu estava em uma fase de minha vida onde realmente procurava algo desafiador, então recebi um convite para fazer uma entrevista em Janeiro para uma possível vaga nesta empresa espetacular, com uma cultura linda e empolgante, então no mês seguinte já iniciei as atividades, onde a cada dia que passa mais apaixonado fico, o desafio não tem sido fácil, porém é prazeroso.Tem me proporcionado um crescimento profissional, onde me sinto realizado!MentorTive/tenho a oportunidade de trabalhar com esse cara fenomenal Alexandre Brandão, tem sido um divisor de aguas em minha carreira profissional, tem me dado feedbacks extramamente evolutivos, sendo assim queria deixar aqui registrado meu muito obrigado por tudo.BootcampRealizamos um bootcamp na Universidade Mauricio de Nassau, onde tive o prazer de conhecer uma galera muito legal, dentre eles o David Counto e a Izabela Rezende, 2 seres vivos que Deus colocou em minha vida e hoje considero como familia, amo vocês 2 de coração!GoogleEm março também tive a oportunidade conhecer o escritório da Google aqui no Brasil, onde participei de um treinamento Cloud, onde tive oportunidade de fazer um Deep-Dive em suas tecnologias para nuvem.MVPCONF LATAM 2019Eu tive a oportunidade de entregar 3 palestras no maior evento técnico de experts Microsoft, o MVPConf Latam edição 2019, mais de 2500 pessoas.Reconhecimento MicrosoftPelo segundo ano consecutivo fui reconhecido pela Mirosoft com o título MVP, onde faço parte de um time seleto de profissionais, que procuram impactar e disseminar tecnologia.VS Summit 2019Este ano entreguei 2 palestra no VSSummit evento esse organizado pelo Ramon Durões, que inclusive quero parabenizar pela qualidade do evento.Developers Sergipe Summit 2019O desafio é grande, mas o retorno é gratificante, nosso evento acontece anualmente em nosso estado de Sergipe, onde trazemos profissionais de grandes players do Brasil e do Estado, para compartilhar conhecimento e impactar profissionais e amantes da tecnologia de nosso estado.AmigosA vida é cheia de segredos, amigos, estou utilizando essa foto porque representa algo pra mim, foi uma noite marcante, curtimos muito, o Eduardo Pires me apresentou um licor chamado Jagermeister que terminei exagerando e me apagando kkkk.Encontro de MVPEm dezembro tivemos nosso encontro na Microsoft fechado para todos MVP&#39;s do Brasil, foi um dia completo reunido com essa galera espetacular, fazendo network e conversando sobre o impacto na comunidade, amo todos vocês. #minhafamiliaOportunidade MicrosoftE pra fechar com chave de ouro, tive a oportunidade conhecer a presidente da Microsoft Brasil, a Srª Tânia Cosentino. Fico por aqui e um forte abraço! 😄 #2019 #2020">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-12-31T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Adeus 2019, bem vindo 2020!">
+    <meta itemprop="description" content="Fala meu amigo(a), tudo bem?!AgradecimentosNossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospectiva  quero deixar aqui meu muito obrigado, a você que diretamente ou indiretamente me ajudou a passar este maravilhoso ano, com seus feedbacks, apoio e carinho.FamíliaQuero agradeçer a minha esposa e minhas filhas por toda paciência que tiveram comigo, pedir desculpa pelo tempo que tive ausente, pois saiba que, vocês são minha base, minha estrutura, eu amo vocês, quantas noites e quanto tempo ausente, mas vocês sempre me apoiando em todas minhas decisões e desafios.💛 💙 💜 ❤️ 💚DesafioEu estava em uma fase de minha vida onde realmente procurava algo desafiador, então recebi um convite para fazer uma entrevista em Janeiro para uma possível vaga nesta empresa espetacular, com uma cultura linda e empolgante, então no mês seguinte já iniciei as atividades, onde a cada dia que passa mais apaixonado fico, o desafio não tem sido fácil, porém é prazeroso.Tem me proporcionado um crescimento profissional, onde me sinto realizado!MentorTive/tenho a oportunidade de trabalhar com esse cara fenomenal Alexandre Brandão, tem sido um divisor de aguas em minha carreira profissional, tem me dado feedbacks extramamente evolutivos, sendo assim queria deixar aqui registrado meu muito obrigado por tudo.BootcampRealizamos um bootcamp na Universidade Mauricio de Nassau, onde tive o prazer de conhecer uma galera muito legal, dentre eles o David Counto e a Izabela Rezende, 2 seres vivos que Deus colocou em minha vida e hoje considero como familia, amo vocês 2 de coração!GoogleEm março também tive a oportunidade conhecer o escritório da Google aqui no Brasil, onde participei de um treinamento Cloud, onde tive oportunidade de fazer um Deep-Dive em suas tecnologias para nuvem.MVPCONF LATAM 2019Eu tive a oportunidade de entregar 3 palestras no maior evento técnico de experts Microsoft, o MVPConf Latam edição 2019, mais de 2500 pessoas.Reconhecimento MicrosoftPelo segundo ano consecutivo fui reconhecido pela Mirosoft com o título MVP, onde faço parte de um time seleto de profissionais, que procuram impactar e disseminar tecnologia.VS Summit 2019Este ano entreguei 2 palestra no VSSummit evento esse organizado pelo Ramon Durões, que inclusive quero parabenizar pela qualidade do evento.Developers Sergipe Summit 2019O desafio é grande, mas o retorno é gratificante, nosso evento acontece anualmente em nosso estado de Sergipe, onde trazemos profissionais de grandes players do Brasil e do Estado, para compartilhar conhecimento e impactar profissionais e amantes da tecnologia de nosso estado.AmigosA vida é cheia de segredos, amigos, estou utilizando essa foto porque representa algo pra mim, foi uma noite marcante, curtimos muito, o Eduardo Pires me apresentou um licor chamado Jagermeister que terminei exagerando e me apagando kkkk.Encontro de MVPEm dezembro tivemos nosso encontro na Microsoft fechado para todos MVP&#39;s do Brasil, foi um dia completo reunido com essa galera espetacular, fazendo network e conversando sobre o impacto na comunidade, amo todos vocês. #minhafamiliaOportunidade MicrosoftE pra fechar com chave de ouro, tive a oportunidade conhecer a presidente da Microsoft Brasil, a Srª Tânia Cosentino. Fico por aqui e um forte abraço! 😄 #2019 #2020">
+    <meta itemprop="datePublished" content="December 31, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Adeus 2019, bem vindo 2020!
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  10 minuto(s) de leitura
+ - December 31, 2019</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://localhost:4000/assets/images/2020/feliz2020.png" alt="01" /></p>
+
+<center><strong>Fala meu amigo(a), tudo bem?!</strong></center>
+<hr />
+
+<h1 id="agradecimentos">Agradecimentos</h1>
+<div style="text-align: justify;">
+Nossa, que ano foi esse <b>2019</b>, muitas conquistas e realizações, e antes de começar a escrever minha retrospectiva 
+ quero deixar aqui meu muito obrigado, a você que diretamente ou indiretamente me ajudou a passar este maravilhoso ano, com seus feedbacks, apoio e carinho.
+</div>
+<p><br /></p>
+<h1 id="família">Família</h1>
+<p><img src="http://localhost:4000/assets/images/2020/familia.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Quero agradeçer a minha esposa e minhas filhas por toda paciência que tiveram comigo, pedir desculpa 
+pelo tempo que tive ausente, pois saiba que, vocês são minha base, minha estrutura, eu amo vocês, quantas noites e quanto tempo ausente, mas vocês sempre me apoiando em todas minhas decisões e desafios.<br />
+💛 💙 💜 ❤️ 💚
+</div>
+<p><br /></p>
+<h1 id="desafio">Desafio</h1>
+<p><img src="http://localhost:4000/assets/images/2020/stonepagamentos.png" alt="01" /></p>
+<div style="text-align: justify;">
+Eu estava em uma fase de minha vida onde realmente procurava algo desafiador, então recebi um convite para fazer uma entrevista em Janeiro para uma possível vaga 
+nesta empresa espetacular, com uma cultura linda e empolgante, então no mês seguinte já iniciei as atividades, onde a cada dia que passa mais apaixonado fico, o desafio não tem sido fácil, porém é prazeroso.<br />
+Tem me proporcionado um crescimento profissional, onde me sinto realizado!
+</div>
+<p><br /></p>
+<h1 id="mentor">Mentor</h1>
+<p><img src="http://localhost:4000/assets/images/2020/alexandre.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Tive/tenho a oportunidade de trabalhar com esse cara fenomenal <b>Alexandre Brandão</b>, tem sido um divisor de aguas em minha carreira profissional, tem me dado feedbacks extramamente evolutivos, sendo assim queria deixar aqui registrado meu muito obrigado por tudo.
+</div>
+<p><br /></p>
+<h1 id="bootcamp">Bootcamp</h1>
+<p><img src="http://localhost:4000/assets/images/2020/azurebootcamp.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Realizamos um bootcamp na Universidade Mauricio de Nassau, onde tive o prazer de conhecer uma galera muito legal, dentre eles o <b>David Counto</b> e a <b>Izabela Rezende</b>, 2 seres vivos que Deus colocou em minha vida e hoje considero como familia, amo vocês 2 de coração!
+</div>
+<p><br /></p>
+<h1 id="google">Google</h1>
+<p><img src="http://localhost:4000/assets/images/2020/google.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Em março também tive a oportunidade conhecer o escritório da Google aqui no Brasil, onde participei de um treinamento Cloud, onde tive oportunidade de fazer um Deep-Dive em suas tecnologias para nuvem.
+</div>
+<p><br /></p>
+<h1 id="mvpconf-latam-2019">MVPCONF LATAM 2019</h1>
+<p><img src="http://localhost:4000/assets/images/2020/mvpconf.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Eu tive a oportunidade de entregar 3 palestras no maior evento técnico de experts Microsoft, o MVPConf Latam edição 2019, mais de 2500 pessoas.
+</div>
+<p><br /></p>
+<h1 id="reconhecimento-microsoft">Reconhecimento Microsoft</h1>
+<p><img src="http://localhost:4000/assets/images/2020/mvp.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Pelo segundo ano consecutivo fui reconhecido pela Mirosoft com o título MVP, onde faço parte de um time seleto de profissionais, que procuram impactar e disseminar tecnologia.
+</div>
+<p><br /></p>
+<h1 id="vs-summit-2019">VS Summit 2019</h1>
+<p><img src="http://localhost:4000/assets/images/2020/vssummit1.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Este ano entreguei 2 palestra no <b>VSSummit</b> evento esse organizado pelo <b>Ramon Durões</b>, que inclusive quero parabenizar pela qualidade do evento.
+</div>
+<p><br /></p>
+<h1 id="developers-sergipe-summit-2019">Developers Sergipe Summit 2019</h1>
+<p><img src="http://localhost:4000/assets/images/2020/developerssergipesummit2019.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+O desafio é grande, mas o retorno é gratificante, nosso evento acontece anualmente em nosso estado de Sergipe, onde trazemos profissionais de grandes players do Brasil e do Estado, para compartilhar conhecimento e impactar profissionais e amantes da tecnologia de nosso estado.
+</div>
+<p><br /></p>
+<h1 id="amigos">Amigos</h1>
+<p><img src="http://localhost:4000/assets/images/2020/amigos.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+A vida é cheia de segredos, amigos, estou utilizando essa foto porque representa algo pra mim, foi uma noite marcante, curtimos muito, o <b>Eduardo Pires</b> me apresentou um licor chamado <b>Jagermeister</b> que terminei exagerando e me apagando kkkk.
+</div>
+<p><br /></p>
+<h1 id="encontro-de-mvp">Encontro de MVP</h1>
+<p><img src="http://localhost:4000/assets/images/2020/encontromvp.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+Em dezembro tivemos nosso encontro na Microsoft fechado para todos MVP's do Brasil, foi um dia completo reunido com essa galera espetacular, fazendo network e conversando sobre o impacto na comunidade, amo todos vocês. #minhafamilia
+</div>
+<p><br /></p>
+<h1 id="oportunidade-microsoft">Oportunidade Microsoft</h1>
+<p><img src="http://localhost:4000/assets/images/2020/presidente.jpeg" alt="01" /></p>
+<div style="text-align: justify;">
+E pra fechar com chave de ouro, tive a oportunidade conhecer a presidente da Microsoft Brasil, a Srª Tânia Cosentino.
+</div>
+<p><br /></p>
+<div class="notice--success">
+<strong>
+ Fico por aqui e um forte abraço! 😄 
+</strong>
+</div>
+
+<p>#2019 #2020</p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2019-12-31T00:00:00+00:00">December 31, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Adeus+2019%2C+bem+vindo+2020%21%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2Ffeliz2020%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Ffeliz2020%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Ffeliz2020%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Ffeliz2020%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/dica/performanceregexvsspan/" class="pagination--pager" title="Será que o Regex é rápido?
+">Anterior</a>
+    
+    
+      <a href="#" class="pagination--pager disabled">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  16 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_aspnetcore31/" rel="permalink">System.Text.JSON - ASPNET Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Porque estamos aqui?
+
+Eu acredito que você já sabe, e se não sabe, ficará agora, que a Microsoft escreveu seu proprio Serializ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/feliz2020/";
+      this.page.identifier = "/dica/feliz2020";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

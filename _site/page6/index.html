@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Ralms.NET  Página 6</title>
+
+
+
+
+<meta name="description" content="EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Break Change Developers Sergipe System&gt;Text.JSON Apply Configuration Deep-Dive EFCore Dicas Performance IEnumeralble List Array">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Ralms.NET">
+
+
+  <link rel="canonical" href="http://localhost:4000/page6/">
+  <meta property="og:url" content="http://localhost:4000/page6/">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <link rel="prev" href="http://localhost:4000/page5/">
+
+
+  <link rel="next" href="http://localhost:4000/page7/">
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--home">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <div class="archive">
+    
+      <h1 class="page__title"></h1>
+    
+    <h3 class="archive__subtitle">Postagens recentes</h3>
+
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/evento/gabsergipe2018/" rel="permalink">Global Azure Bootcamp 2018 - Sergipe
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  2 minuto(s) de leitura
+ - April 21, 2018</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Fala pessoal, tudo bem?! 👍 
+
+
+
+Foi uma manhã maravilhosa, um evento show, mesmo como muitas dificuldades como a chuva forte em nossa cidade, muita gente comp...</p>
+  </article>
+</div>
+
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/evento/azurebootcamp/" rel="permalink">Azure Bootcamp 2018 - Sergipe
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  1 minuto(s) de leitura
+ - March 15, 2018</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">Fala pessoal, tudo bem?! 👍 
+
+
+21 de abril de 2018 , todas as comunidades se reunirão novamente, somos uma de centenas no mundo, que ao mesmo tempo estaremos ...</p>
+  </article>
+</div>
+
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/odpnet2/" rel="permalink">ODP.NET Core  Beta 2
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  menos que 1 minuto(s) de leitura
+ - March 07, 2018</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 👍 
+
+
+
+
+</p>
+  </article>
+</div>
+
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/criptografiaefcoreparte2/" rel="permalink">Gravando informações criptografadas #2
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  14 minuto(s) de leitura
+ - March 05, 2018</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 🔑 
+
+
+No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConvers...</p>
+  </article>
+</div>
+
+
+  
+
+
+
+<div class="list__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/preview1/" rel="permalink">Entity Framework Core 2.1 Preview1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  menos que 1 minuto(s) de leitura
+ - February 27, 2018</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Entity Framework Core 2.1 Preview1
+
+
+Essa sem dúvidas é uma ótima notícia, pois é, os binários do EntityFramework Core 2.1-Pre...</p>
+  </article>
+</div>
+
+
+
+
+<nav class="pagination">
+  
+  <ul>
+    
+    
+      
+        <li><a href="http://localhost:4000/page5/">Anterior</a></li>
+      
+    
+
+    
+    
+      <li><a href="http://localhost:4000/">1</a></li>
+    
+
+    
+    
+      
+      
+      <li><a href="#" class="disabled">&hellip;</a></li>
+    
+
+    
+    
+    
+
+    
+      
+        
+        
+        
+        <li><a href="http://localhost:4000/page4/">4</a></li>
+      
+    
+      
+        
+        
+        
+        <li><a href="http://localhost:4000/page5/">5</a></li>
+      
+    
+      
+        <li><a href="http://localhost:4000/page6/" class="disabled current">6</a></li>
+      
+    
+      
+        
+        
+        
+        <li><a href="http://localhost:4000/page7/">7</a></li>
+      
+    
+      
+        
+        
+        
+        <li><a href="http://localhost:4000/page8/">8</a></li>
+      
+    
+
+    
+    
+      <li><a href="#" class="disabled">&hellip;</a></li>
+    
+
+    
+      <li><a href="http://localhost:4000/page12/">12</a></li>
+    
+
+    
+    
+      <li><a href="http://localhost:4000/page7/">Próxima</a></li>
+    
+  </ul>
+</nav>
+
+
+
+  </div>
+</div>
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+
+  </body>
+</html>

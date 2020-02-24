@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Um pouco de Reflection #1  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?! 💚Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression Tree &amp; Linq, escrever artigos é um hobby, como também é muito gratificante compartilhar conhecimento e impactar pessoas nesse mundo vasto de TI, meus dias são geralmente muito corrido, então sempre que me sobra um tempinho procuro escrever algo. Antes de mais nada quero dizer que esses artigos iniciais serão básicos e introdutório, ao decorrer das próximas séries iremos crescendo a complexidade e nos aprofundando mais no assunto.FYI:Quero falar que para mim Reflection/Lambda/Expression/Expression Tree &amp; Linq são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.Vamos falar aqui um pouquinho sobre Reflection de forma introdutória, e nos próximos artigos iremos apresentar mais sobre.•	Lambda Expression•	Expression•	Expresssion TreeAntes “de mais nada”, vamos usar a classe Aluno como base para exemplos que serão apresentados aqui, estrutura da classe:public class Aluno{    public Guid Id { get; set; }    public string Nome { get; set; }    public int Idade { get; set; }    private DateTime Data { get; set; }    public void SetAluno(Guid id, string nome, int idade)    {        Id = id;        Nome = nome;        Idade = idade;    }}1 – ReflectionPoderiamos falar sobre Reflection por muito tempo aqui, mais isso fica para os próximos artigos, já que estamos apenas iniciando nossa série!O que é Reflection?Reflection ou Reflexão e uma implementação dentro do .NET onde consegue obter informações dos metadados em tempo de execução, de forma dinâmica. Como por exemplo ler o tipo de dados de uma propriedade e até invocar métodos.Considerações finais sobre Reflection.Não é recomendado usar/invocar um método de classe que por design-design você já tem o método disponível, isso se torna trivial e não faz muito sentido.2 -  typeofO uso do typeof é um dos mais utilizados quando queremos obter informações de algo em tempo de execução.Exemplo:// Recuperar o nomevar nome = typeof(Aluno).Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = typeof(Aluno).FullName;// Namespacevar nameSpace = typeof(Aluno).Namespace;3 - GetTypeO uso do GetType se define da mesma forma que o typeof, exceto que as informações que serão recuperadas são de uma instancia.Exemplo:// Variável / Instância var aluno = new Aluno();// Recuperar o nomevar nome = aluno.GetType().Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = aluno.GetType().FullName;// Namespacevar nameSpace = aluno.GetType().Namespace;4 - Reflection + LinqVamos usar o Assembly aqui para fazer uma varredura em tempo de execução e recuperar as classes que contém o nome “Aluno”.A classe Assembly de forma resumida nos fornece possibilidades de obter basicamente tudo existente em nosso assembly como classes, métodos e propriedades, é ai onde entra o Linq para nos ajudar de forma mais elegante e com mais qualidade.Exemplo:var types = Assembly    .GetExecutingAssembly()    .GetTypes()    .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));foreach (var type in types){    Console.WriteLine($&quot;Nome..: {type.Name}&quot;);    Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);}5 - Recuperar propriedades da classeVeja como é simples recuperar as propriedades de uma classe usando Reflection, o método GetProperties() nos devolve um array do tipo PropertyInfo[] que contém todas propriedades da classe, que por sua vez contém todas informações da propriedade como nome e tipo.Exemplo:var propriedades = typeof(Aluno).GetProperties();foreach (var propriedade in propriedades){    Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);    Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;); } 6 - Invocando método com ReflectionA classe Type nos formece vários métodos para trabalhar em tempo de execução, um deles é o GetMethod que no retorna um MethodInfo, que por sua vez nos permite invocar um método de uma classe, o método pode ser Estático ou Não!Vamos ver um exemplo de como usufruir dessa funcionalidade.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno();setMetodo.Invoke(obj, parametros); // Se o método da classe for estático a chamada o invoke ficaria assim:// setMetodo.Invoke(null, parametros); 7 – PerformanceVamos testar a performance usando Invoke vs Method da classe.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno(); var interacoes = 10000;var watch = new Stopwatch();watch.Start();for (int i = 0; i &lt; interacoes; i++){    setMetodo.Invoke(obj, parametros);}watch.Stop();Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);var idAluno = Guid.NewGuid();var nomeAluno = &quot;Rafael&quot;;var idadeAluno = 29;watch.Restart();for (int i = 0; i &lt; interacoes; i++){    obj.SetAluno(idAluno, nomeAluno, idadeAluno);}watch.Stop();Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);Resultado: Como falei anteriormente a utilização do “Invoke” não é para qualquer situação, principalmente pelos fanáticos por performance como eu, embora seu valor seja tão precioso dentro de todo ecossistema .NET.Considerações:Este artigo foi apenas o primeiro passo para série completa que está por vir, iremos iniciar com o básico e iremos evoluir para o complexo, espero que gostem, deixem sugestões do que gostariam de ver nos próximos, algum exemplo do dia-a-dia de vocês.8 - Exemplo completousing System;using System.Diagnostics;using System.Linq;using System.Reflection;namespace ExemploLinqReflection{    public class Aluno    {           public Guid Id { get; set; }        public string Nome { get; set; }        public int Idade { get; set; }        private DateTime Data { get; set; }        public void SetAluno(Guid id, string nome, int idade)        {            Id = id;            Nome = nome;            Idade = idade;        }    }    class Program    {        static void Main(string[] args)        {            ////Recuperar o nome            //var nome = typeof(Aluno).Name;            //// Recuperar o nome completo (Namespace + object)            //var nomeCompleto = typeof(Aluno).FullName;            //// Namespace            //var nameSpace = typeof(Aluno).Namespace;            var aluno = new Aluno();            // Recuperar o nome            var nome = aluno.GetType().Name;            // Recuperar o nome completo (Namespace + object)            var nomeCompleto = aluno.GetType().FullName;            // Namespace            var nameSpace = aluno.GetType().Namespace;            var types = Assembly                .GetExecutingAssembly()                .GetTypes()                .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));            foreach (var type in types)            {                Console.WriteLine($&quot;Nome..: {type.Name}&quot;);                Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);            }            // Recuperar propriedades da class            var propriedades = typeof(Aluno).GetProperties();            foreach (var propriedade in propriedades)            {                Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);                Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;);             }             MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);            var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };            var obj = new Aluno();            setMetodo.Invoke(obj, parametros);            var interacoes = 10000;            var watch = new Stopwatch();            watch.Start();            for (int i = 0; i &lt; interacoes; i++)            {                setMetodo.Invoke(obj, parametros);            }            watch.Stop();            Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);            var idAluno = Guid.NewGuid();            var nomeAluno = &quot;Rafael&quot;;            var idadeAluno = 29;            watch.Restart();            for (int i = 0; i &lt; interacoes; i++)            {                obj.SetAluno(idAluno, nomeAluno, idadeAluno);            }            watch.Stop();            Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);            Console.ReadKey();        }    }}ReferênciasReflection Pessoal, fico por aqui #reflection #mvp #mvpbr #mvpbuzz #serieralms">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Um pouco de Reflection #1">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/reflection01/">
+  <meta property="og:url" content="http://localhost:4000/dica/reflection01/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?! 💚Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression Tree &amp; Linq, escrever artigos é um hobby, como também é muito gratificante compartilhar conhecimento e impactar pessoas nesse mundo vasto de TI, meus dias são geralmente muito corrido, então sempre que me sobra um tempinho procuro escrever algo. Antes de mais nada quero dizer que esses artigos iniciais serão básicos e introdutório, ao decorrer das próximas séries iremos crescendo a complexidade e nos aprofundando mais no assunto.FYI:Quero falar que para mim Reflection/Lambda/Expression/Expression Tree &amp; Linq são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.Vamos falar aqui um pouquinho sobre Reflection de forma introdutória, e nos próximos artigos iremos apresentar mais sobre.•	Lambda Expression•	Expression•	Expresssion TreeAntes “de mais nada”, vamos usar a classe Aluno como base para exemplos que serão apresentados aqui, estrutura da classe:public class Aluno{    public Guid Id { get; set; }    public string Nome { get; set; }    public int Idade { get; set; }    private DateTime Data { get; set; }    public void SetAluno(Guid id, string nome, int idade)    {        Id = id;        Nome = nome;        Idade = idade;    }}1 – ReflectionPoderiamos falar sobre Reflection por muito tempo aqui, mais isso fica para os próximos artigos, já que estamos apenas iniciando nossa série!O que é Reflection?Reflection ou Reflexão e uma implementação dentro do .NET onde consegue obter informações dos metadados em tempo de execução, de forma dinâmica. Como por exemplo ler o tipo de dados de uma propriedade e até invocar métodos.Considerações finais sobre Reflection.Não é recomendado usar/invocar um método de classe que por design-design você já tem o método disponível, isso se torna trivial e não faz muito sentido.2 -  typeofO uso do typeof é um dos mais utilizados quando queremos obter informações de algo em tempo de execução.Exemplo:// Recuperar o nomevar nome = typeof(Aluno).Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = typeof(Aluno).FullName;// Namespacevar nameSpace = typeof(Aluno).Namespace;3 - GetTypeO uso do GetType se define da mesma forma que o typeof, exceto que as informações que serão recuperadas são de uma instancia.Exemplo:// Variável / Instância var aluno = new Aluno();// Recuperar o nomevar nome = aluno.GetType().Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = aluno.GetType().FullName;// Namespacevar nameSpace = aluno.GetType().Namespace;4 - Reflection + LinqVamos usar o Assembly aqui para fazer uma varredura em tempo de execução e recuperar as classes que contém o nome “Aluno”.A classe Assembly de forma resumida nos fornece possibilidades de obter basicamente tudo existente em nosso assembly como classes, métodos e propriedades, é ai onde entra o Linq para nos ajudar de forma mais elegante e com mais qualidade.Exemplo:var types = Assembly    .GetExecutingAssembly()    .GetTypes()    .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));foreach (var type in types){    Console.WriteLine($&quot;Nome..: {type.Name}&quot;);    Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);}5 - Recuperar propriedades da classeVeja como é simples recuperar as propriedades de uma classe usando Reflection, o método GetProperties() nos devolve um array do tipo PropertyInfo[] que contém todas propriedades da classe, que por sua vez contém todas informações da propriedade como nome e tipo.Exemplo:var propriedades = typeof(Aluno).GetProperties();foreach (var propriedade in propriedades){    Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);    Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;); } 6 - Invocando método com ReflectionA classe Type nos formece vários métodos para trabalhar em tempo de execução, um deles é o GetMethod que no retorna um MethodInfo, que por sua vez nos permite invocar um método de uma classe, o método pode ser Estático ou Não!Vamos ver um exemplo de como usufruir dessa funcionalidade.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno();setMetodo.Invoke(obj, parametros); // Se o método da classe for estático a chamada o invoke ficaria assim:// setMetodo.Invoke(null, parametros); 7 – PerformanceVamos testar a performance usando Invoke vs Method da classe.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno(); var interacoes = 10000;var watch = new Stopwatch();watch.Start();for (int i = 0; i &lt; interacoes; i++){    setMetodo.Invoke(obj, parametros);}watch.Stop();Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);var idAluno = Guid.NewGuid();var nomeAluno = &quot;Rafael&quot;;var idadeAluno = 29;watch.Restart();for (int i = 0; i &lt; interacoes; i++){    obj.SetAluno(idAluno, nomeAluno, idadeAluno);}watch.Stop();Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);Resultado: Como falei anteriormente a utilização do “Invoke” não é para qualquer situação, principalmente pelos fanáticos por performance como eu, embora seu valor seja tão precioso dentro de todo ecossistema .NET.Considerações:Este artigo foi apenas o primeiro passo para série completa que está por vir, iremos iniciar com o básico e iremos evoluir para o complexo, espero que gostem, deixem sugestões do que gostariam de ver nos próximos, algum exemplo do dia-a-dia de vocês.8 - Exemplo completousing System;using System.Diagnostics;using System.Linq;using System.Reflection;namespace ExemploLinqReflection{    public class Aluno    {           public Guid Id { get; set; }        public string Nome { get; set; }        public int Idade { get; set; }        private DateTime Data { get; set; }        public void SetAluno(Guid id, string nome, int idade)        {            Id = id;            Nome = nome;            Idade = idade;        }    }    class Program    {        static void Main(string[] args)        {            ////Recuperar o nome            //var nome = typeof(Aluno).Name;            //// Recuperar o nome completo (Namespace + object)            //var nomeCompleto = typeof(Aluno).FullName;            //// Namespace            //var nameSpace = typeof(Aluno).Namespace;            var aluno = new Aluno();            // Recuperar o nome            var nome = aluno.GetType().Name;            // Recuperar o nome completo (Namespace + object)            var nomeCompleto = aluno.GetType().FullName;            // Namespace            var nameSpace = aluno.GetType().Namespace;            var types = Assembly                .GetExecutingAssembly()                .GetTypes()                .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));            foreach (var type in types)            {                Console.WriteLine($&quot;Nome..: {type.Name}&quot;);                Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);            }            // Recuperar propriedades da class            var propriedades = typeof(Aluno).GetProperties();            foreach (var propriedade in propriedades)            {                Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);                Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;);             }             MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);            var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };            var obj = new Aluno();            setMetodo.Invoke(obj, parametros);            var interacoes = 10000;            var watch = new Stopwatch();            watch.Start();            for (int i = 0; i &lt; interacoes; i++)            {                setMetodo.Invoke(obj, parametros);            }            watch.Stop();            Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);            var idAluno = Guid.NewGuid();            var nomeAluno = &quot;Rafael&quot;;            var idadeAluno = 29;            watch.Restart();            for (int i = 0; i &lt; interacoes; i++)            {                obj.SetAluno(idAluno, nomeAluno, idadeAluno);            }            watch.Stop();            Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);            Console.ReadKey();        }    }}ReferênciasReflection Pessoal, fico por aqui #reflection #mvp #mvpbr #mvpbuzz #serieralms">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2018-07-15T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Um pouco de Reflection #1">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?! 💚Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression Tree &amp; Linq, escrever artigos é um hobby, como também é muito gratificante compartilhar conhecimento e impactar pessoas nesse mundo vasto de TI, meus dias são geralmente muito corrido, então sempre que me sobra um tempinho procuro escrever algo. Antes de mais nada quero dizer que esses artigos iniciais serão básicos e introdutório, ao decorrer das próximas séries iremos crescendo a complexidade e nos aprofundando mais no assunto.FYI:Quero falar que para mim Reflection/Lambda/Expression/Expression Tree &amp; Linq são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.Vamos falar aqui um pouquinho sobre Reflection de forma introdutória, e nos próximos artigos iremos apresentar mais sobre.•	Lambda Expression•	Expression•	Expresssion TreeAntes “de mais nada”, vamos usar a classe Aluno como base para exemplos que serão apresentados aqui, estrutura da classe:public class Aluno{    public Guid Id { get; set; }    public string Nome { get; set; }    public int Idade { get; set; }    private DateTime Data { get; set; }    public void SetAluno(Guid id, string nome, int idade)    {        Id = id;        Nome = nome;        Idade = idade;    }}1 – ReflectionPoderiamos falar sobre Reflection por muito tempo aqui, mais isso fica para os próximos artigos, já que estamos apenas iniciando nossa série!O que é Reflection?Reflection ou Reflexão e uma implementação dentro do .NET onde consegue obter informações dos metadados em tempo de execução, de forma dinâmica. Como por exemplo ler o tipo de dados de uma propriedade e até invocar métodos.Considerações finais sobre Reflection.Não é recomendado usar/invocar um método de classe que por design-design você já tem o método disponível, isso se torna trivial e não faz muito sentido.2 -  typeofO uso do typeof é um dos mais utilizados quando queremos obter informações de algo em tempo de execução.Exemplo:// Recuperar o nomevar nome = typeof(Aluno).Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = typeof(Aluno).FullName;// Namespacevar nameSpace = typeof(Aluno).Namespace;3 - GetTypeO uso do GetType se define da mesma forma que o typeof, exceto que as informações que serão recuperadas são de uma instancia.Exemplo:// Variável / Instância var aluno = new Aluno();// Recuperar o nomevar nome = aluno.GetType().Name;// Recuperar o nome completo (Namespace + object)var nomeCompleto = aluno.GetType().FullName;// Namespacevar nameSpace = aluno.GetType().Namespace;4 - Reflection + LinqVamos usar o Assembly aqui para fazer uma varredura em tempo de execução e recuperar as classes que contém o nome “Aluno”.A classe Assembly de forma resumida nos fornece possibilidades de obter basicamente tudo existente em nosso assembly como classes, métodos e propriedades, é ai onde entra o Linq para nos ajudar de forma mais elegante e com mais qualidade.Exemplo:var types = Assembly    .GetExecutingAssembly()    .GetTypes()    .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));foreach (var type in types){    Console.WriteLine($&quot;Nome..: {type.Name}&quot;);    Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);}5 - Recuperar propriedades da classeVeja como é simples recuperar as propriedades de uma classe usando Reflection, o método GetProperties() nos devolve um array do tipo PropertyInfo[] que contém todas propriedades da classe, que por sua vez contém todas informações da propriedade como nome e tipo.Exemplo:var propriedades = typeof(Aluno).GetProperties();foreach (var propriedade in propriedades){    Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);    Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;); } 6 - Invocando método com ReflectionA classe Type nos formece vários métodos para trabalhar em tempo de execução, um deles é o GetMethod que no retorna um MethodInfo, que por sua vez nos permite invocar um método de uma classe, o método pode ser Estático ou Não!Vamos ver um exemplo de como usufruir dessa funcionalidade.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno();setMetodo.Invoke(obj, parametros); // Se o método da classe for estático a chamada o invoke ficaria assim:// setMetodo.Invoke(null, parametros); 7 – PerformanceVamos testar a performance usando Invoke vs Method da classe.Exemplo:MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };var obj = new Aluno(); var interacoes = 10000;var watch = new Stopwatch();watch.Start();for (int i = 0; i &lt; interacoes; i++){    setMetodo.Invoke(obj, parametros);}watch.Stop();Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);var idAluno = Guid.NewGuid();var nomeAluno = &quot;Rafael&quot;;var idadeAluno = 29;watch.Restart();for (int i = 0; i &lt; interacoes; i++){    obj.SetAluno(idAluno, nomeAluno, idadeAluno);}watch.Stop();Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);Resultado: Como falei anteriormente a utilização do “Invoke” não é para qualquer situação, principalmente pelos fanáticos por performance como eu, embora seu valor seja tão precioso dentro de todo ecossistema .NET.Considerações:Este artigo foi apenas o primeiro passo para série completa que está por vir, iremos iniciar com o básico e iremos evoluir para o complexo, espero que gostem, deixem sugestões do que gostariam de ver nos próximos, algum exemplo do dia-a-dia de vocês.8 - Exemplo completousing System;using System.Diagnostics;using System.Linq;using System.Reflection;namespace ExemploLinqReflection{    public class Aluno    {           public Guid Id { get; set; }        public string Nome { get; set; }        public int Idade { get; set; }        private DateTime Data { get; set; }        public void SetAluno(Guid id, string nome, int idade)        {            Id = id;            Nome = nome;            Idade = idade;        }    }    class Program    {        static void Main(string[] args)        {            ////Recuperar o nome            //var nome = typeof(Aluno).Name;            //// Recuperar o nome completo (Namespace + object)            //var nomeCompleto = typeof(Aluno).FullName;            //// Namespace            //var nameSpace = typeof(Aluno).Namespace;            var aluno = new Aluno();            // Recuperar o nome            var nome = aluno.GetType().Name;            // Recuperar o nome completo (Namespace + object)            var nomeCompleto = aluno.GetType().FullName;            // Namespace            var nameSpace = aluno.GetType().Namespace;            var types = Assembly                .GetExecutingAssembly()                .GetTypes()                .Where(p =&gt; p.Name.Contains(&quot;Aluno&quot;));            foreach (var type in types)            {                Console.WriteLine($&quot;Nome..: {type.Name}&quot;);                Console.WriteLine($&quot;Classe: {type.IsClass}&quot;);            }            // Recuperar propriedades da class            var propriedades = typeof(Aluno).GetProperties();            foreach (var propriedade in propriedades)            {                Console.WriteLine($&quot;Nome...: {propriedade.Name}&quot;);                Console.WriteLine($&quot;Tipo...: {propriedade.PropertyType}&quot;);             }             MethodInfo setMetodo = typeof(Aluno).GetMethod(&quot;SetAluno&quot;);            var parametros = new object[] { Guid.NewGuid(), &quot;Rafael&quot;, 29 };            var obj = new Aluno();            setMetodo.Invoke(obj, parametros);            var interacoes = 10000;            var watch = new Stopwatch();            watch.Start();            for (int i = 0; i &lt; interacoes; i++)            {                setMetodo.Invoke(obj, parametros);            }            watch.Stop();            Console.WriteLine($&quot;Invoke.......: {watch.Elapsed}&quot;);            var idAluno = Guid.NewGuid();            var nomeAluno = &quot;Rafael&quot;;            var idadeAluno = 29;            watch.Restart();            for (int i = 0; i &lt; interacoes; i++)            {                obj.SetAluno(idAluno, nomeAluno, idadeAluno);            }            watch.Stop();            Console.WriteLine($&quot;Metodo Classe: {watch.Elapsed}&quot;);            Console.ReadKey();        }    }}ReferênciasReflection Pessoal, fico por aqui #reflection #mvp #mvpbr #mvpbuzz #serieralms">
+    <meta itemprop="datePublished" content="July 15, 2018">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Um pouco de Reflection #1
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  22 minuto(s) de leitura
+ - July 15, 2018</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Começando</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#1--reflection">1 – Reflection</a></li>
+  <li><a href="#2----typeof">2 -  typeof</a></li>
+  <li><a href="#3---gettype">3 - GetType</a></li>
+  <li><a href="#4---reflection--linq">4 - Reflection + Linq</a></li>
+  <li><a href="#5---recuperar-propriedades-da-classe">5 - Recuperar propriedades da classe</a></li>
+  <li><a href="#6---invocando-método-com-reflection">6 - Invocando método com Reflection</a></li>
+  <li><a href="#7--performance">7 – Performance</a></li>
+  <li><a href="#8---exemplo-completo">8 - Exemplo completo</a></li>
+  <li><a href="#referências">Referências</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/logomicrosoftnet.png" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
+<hr />
+
+<p>Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre <strong>Reflection/Lambda/Expression/Expression Tree &amp; Linq</strong>, escrever artigos é um hobby, como também é muito gratificante compartilhar conhecimento e impactar pessoas nesse mundo vasto de TI, meus dias são geralmente muito corrido, então sempre que me sobra um tempinho procuro escrever algo. 
+Antes de mais nada quero dizer que esses artigos iniciais serão básicos e introdutório, ao decorrer das próximas séries iremos crescendo a complexidade e nos aprofundando mais no assunto.
+<br /></p>
+<div class="notice--warning">
+<strong>FYI:</strong><br />
+Quero falar que para mim <strong>Reflection/Lambda/Expression/Expression Tree &amp; Linq</strong> são as funcionalidades/implementações mais significativas para o .NET/C# tornando a linguagem muito mais poderosa, de forma que podemos escrever códigos mais limpos e com muito mais qualidade.
+</div>
+<p>Vamos falar aqui um pouquinho sobre Reflection de forma introdutória, e nos próximos artigos iremos apresentar mais sobre.<br />
+<strong>•	Lambda Expression</strong><br />
+<strong>•	Expression</strong><br />
+<strong>•	Expresssion Tree</strong><br /><br />
+Antes “de mais nada”, vamos usar a classe <strong>Aluno</strong> como base para exemplos que serão apresentados aqui, estrutura da classe:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Aluno</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">Guid</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Idade</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">private</span> <span class="n">DateTime</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">void</span> <span class="nf">SetAluno</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">,</span> <span class="kt">string</span> <span class="n">nome</span><span class="p">,</span> <span class="kt">int</span> <span class="n">idade</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span>
+        <span class="n">Nome</span> <span class="p">=</span> <span class="n">nome</span><span class="p">;</span>
+        <span class="n">Idade</span> <span class="p">=</span> <span class="n">idade</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="1--reflection">1 – Reflection</h2>
+
+<p>Poderiamos falar sobre Reflection por muito tempo aqui, mais isso fica para os próximos artigos, já que estamos apenas iniciando nossa série!<br />
+<strong>O que é Reflection?</strong><br />
+Reflection ou Reflexão e uma implementação dentro do .NET onde consegue obter informações dos metadados em tempo de execução, de forma dinâmica. Como por exemplo ler o tipo de dados de uma propriedade e até invocar métodos.<br />
+<strong>Considerações finais sobre Reflection.</strong><br />
+Não é recomendado usar/invocar um método de classe que por design-design você já tem o método disponível, isso se torna trivial e não faz muito sentido.</p>
+<h2 id="2----typeof">2 -  typeof</h2>
+<p>O uso do typeof é um dos mais utilizados quando queremos obter informações de algo em tempo de execução.
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Recuperar o nome</span>
+<span class="kt">var</span> <span class="n">nome</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="n">Name</span><span class="p">;</span>
+<span class="c1">// Recuperar o nome completo (Namespace + object)</span>
+<span class="kt">var</span> <span class="n">nomeCompleto</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="n">FullName</span><span class="p">;</span>
+<span class="c1">// Namespace</span>
+<span class="kt">var</span> <span class="n">nameSpace</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="n">Namespace</span><span class="p">;</span>
+</code></pre></div></div>
+<h2 id="3---gettype">3 - GetType</h2>
+<p>O uso do GetType se define da mesma forma que o <strong>typeof</strong>, exceto que as informações que serão recuperadas são de uma instancia.
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Variável / Instância </span>
+<span class="kt">var</span> <span class="n">aluno</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Aluno</span><span class="p">();</span>
+<span class="c1">// Recuperar o nome</span>
+<span class="kt">var</span> <span class="n">nome</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">Name</span><span class="p">;</span>
+<span class="c1">// Recuperar o nome completo (Namespace + object)</span>
+<span class="kt">var</span> <span class="n">nomeCompleto</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">FullName</span><span class="p">;</span>
+<span class="c1">// Namespace</span>
+<span class="kt">var</span> <span class="n">nameSpace</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">Namespace</span><span class="p">;</span>
+</code></pre></div></div>
+<h2 id="4---reflection--linq">4 - Reflection + Linq</h2>
+<p>Vamos usar o Assembly aqui para fazer uma varredura em tempo de execução e recuperar as classes que contém o nome “Aluno”.<br />
+<strong>A classe Assembly</strong> de forma resumida nos fornece possibilidades de obter basicamente tudo existente em nosso assembly como classes, métodos e propriedades, é ai onde entra o Linq para nos ajudar de forma mais elegante e com mais qualidade.
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">types</span> <span class="p">=</span> <span class="n">Assembly</span>
+    <span class="p">.</span><span class="nf">GetExecutingAssembly</span><span class="p">()</span>
+    <span class="p">.</span><span class="nf">GetTypes</span><span class="p">()</span>
+    <span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"Aluno"</span><span class="p">));</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">type</span> <span class="k">in</span> <span class="n">types</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome..: </span><span class="p">{</span><span class="n">type</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Classe: </span><span class="p">{</span><span class="n">type</span><span class="p">.</span><span class="n">IsClass</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h2 id="5---recuperar-propriedades-da-classe">5 - Recuperar propriedades da classe</h2>
+<p>Veja como é simples recuperar as propriedades de uma classe usando Reflection, o método <strong>GetProperties()</strong> nos devolve um array do tipo <strong>PropertyInfo[]</strong> que contém todas propriedades da classe, que por sua vez contém todas informações da propriedade como nome e tipo.
+<br />
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">propriedades</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="nf">GetProperties</span><span class="p">();</span>
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">propriedade</span> <span class="k">in</span> <span class="n">propriedades</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome...: </span><span class="p">{</span><span class="n">propriedade</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Tipo...: </span><span class="p">{</span><span class="n">propriedade</span><span class="p">.</span><span class="n">PropertyType</span><span class="p">}</span><span class="s">"</span><span class="p">);</span> 
+<span class="p">}</span> 
+</code></pre></div></div>
+<p><img src="http://localhost:4000/assets/images/reflectionserie/reflection03.PNG" alt="01" /></p>
+<h2 id="6---invocando-método-com-reflection">6 - Invocando método com Reflection</h2>
+<p>A classe <strong>Type</strong> nos formece vários métodos para trabalhar em tempo de execução, um deles é o <strong>GetMethod</strong> que no retorna um <strong>MethodInfo</strong>, que por sua vez nos permite invocar um método de uma classe, o método pode ser Estático ou Não!
+Vamos ver um exemplo de como usufruir dessa funcionalidade.
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MethodInfo</span> <span class="n">setMetodo</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="nf">GetMethod</span><span class="p">(</span><span class="s">"SetAluno"</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">parametros</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span> <span class="p">{</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">(),</span> <span class="s">"Rafael"</span><span class="p">,</span> <span class="m">29</span> <span class="p">};</span>
+<span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Aluno</span><span class="p">();</span>
+<span class="n">setMetodo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">parametros</span><span class="p">);</span> 
+<span class="c1">// Se o método da classe for estático a chamada o invoke ficaria assim:</span>
+<span class="c1">// setMetodo.Invoke(null, parametros); </span>
+</code></pre></div></div>
+<p><img src="http://localhost:4000/assets/images/reflectionserie/reflection01.png" alt="01" /></p>
+
+<h2 id="7--performance">7 – Performance</h2>
+<p>Vamos testar a performance usando <strong>Invoke</strong> vs <strong>Method</strong> da classe.
+Exemplo:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">MethodInfo</span> <span class="n">setMetodo</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="nf">GetMethod</span><span class="p">(</span><span class="s">"SetAluno"</span><span class="p">);</span>
+<span class="kt">var</span> <span class="n">parametros</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span> <span class="p">{</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">(),</span> <span class="s">"Rafael"</span><span class="p">,</span> <span class="m">29</span> <span class="p">};</span>
+<span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Aluno</span><span class="p">();</span> 
+<span class="kt">var</span> <span class="n">interacoes</span> <span class="p">=</span> <span class="m">10000</span><span class="p">;</span>
+
+<span class="kt">var</span> <span class="n">watch</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Stopwatch</span><span class="p">();</span>
+<span class="n">watch</span><span class="p">.</span><span class="nf">Start</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">interacoes</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+<span class="p">{</span>
+    <span class="n">setMetodo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">parametros</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">watch</span><span class="p">.</span><span class="nf">Stop</span><span class="p">();</span>
+<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Invoke.......: </span><span class="p">{</span><span class="n">watch</span><span class="p">.</span><span class="n">Elapsed</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+<span class="kt">var</span> <span class="n">idAluno</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">();</span>
+<span class="kt">var</span> <span class="n">nomeAluno</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">;</span>
+<span class="kt">var</span> <span class="n">idadeAluno</span> <span class="p">=</span> <span class="m">29</span><span class="p">;</span>
+
+<span class="n">watch</span><span class="p">.</span><span class="nf">Restart</span><span class="p">();</span>
+<span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">interacoes</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+<span class="p">{</span>
+    <span class="n">obj</span><span class="p">.</span><span class="nf">SetAluno</span><span class="p">(</span><span class="n">idAluno</span><span class="p">,</span> <span class="n">nomeAluno</span><span class="p">,</span> <span class="n">idadeAluno</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="n">watch</span><span class="p">.</span><span class="nf">Stop</span><span class="p">();</span>
+<span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Metodo Classe: </span><span class="p">{</span><span class="n">watch</span><span class="p">.</span><span class="n">Elapsed</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+</code></pre></div></div>
+<p>Resultado:
+ <img src="http://localhost:4000/assets/images/reflectionserie/reflection02.PNG" alt="01" /></p>
+
+<p>Como falei anteriormente a utilização do <strong>“Invoke”</strong> não é para qualquer situação, principalmente pelos fanáticos por performance como eu, embora seu valor seja tão precioso dentro de todo ecossistema .NET.</p>
+
+<div class="notice--success">
+<strong>Considerações:</strong><br />
+Este artigo foi apenas o primeiro passo para série completa que está por vir, iremos iniciar com o básico e iremos evoluir para o complexo, espero que gostem, deixem sugestões do que gostariam de ver nos próximos, algum exemplo do dia-a-dia de vocês.
+</div>
+<h2 id="8---exemplo-completo">8 - Exemplo completo</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Diagnostics</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Reflection</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">ExemploLinqReflection</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Aluno</span>
+    <span class="p">{</span>   
+        <span class="k">public</span> <span class="n">Guid</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Idade</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">private</span> <span class="n">DateTime</span> <span class="n">Data</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">void</span> <span class="nf">SetAluno</span><span class="p">(</span><span class="n">Guid</span> <span class="n">id</span><span class="p">,</span> <span class="kt">string</span> <span class="n">nome</span><span class="p">,</span> <span class="kt">int</span> <span class="n">idade</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Id</span> <span class="p">=</span> <span class="n">id</span><span class="p">;</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">nome</span><span class="p">;</span>
+            <span class="n">Idade</span> <span class="p">=</span> <span class="n">idade</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="c1">////Recuperar o nome</span>
+            <span class="c1">//var nome = typeof(Aluno).Name;</span>
+            <span class="c1">//// Recuperar o nome completo (Namespace + object)</span>
+            <span class="c1">//var nomeCompleto = typeof(Aluno).FullName;</span>
+            <span class="c1">//// Namespace</span>
+            <span class="c1">//var nameSpace = typeof(Aluno).Namespace;</span>
+
+            <span class="kt">var</span> <span class="n">aluno</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Aluno</span><span class="p">();</span>
+            <span class="c1">// Recuperar o nome</span>
+            <span class="kt">var</span> <span class="n">nome</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">Name</span><span class="p">;</span>
+            <span class="c1">// Recuperar o nome completo (Namespace + object)</span>
+            <span class="kt">var</span> <span class="n">nomeCompleto</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">FullName</span><span class="p">;</span>
+            <span class="c1">// Namespace</span>
+            <span class="kt">var</span> <span class="n">nameSpace</span> <span class="p">=</span> <span class="n">aluno</span><span class="p">.</span><span class="nf">GetType</span><span class="p">().</span><span class="n">Namespace</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">types</span> <span class="p">=</span> <span class="n">Assembly</span>
+                <span class="p">.</span><span class="nf">GetExecutingAssembly</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">GetTypes</span><span class="p">()</span>
+                <span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Contains</span><span class="p">(</span><span class="s">"Aluno"</span><span class="p">));</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">type</span> <span class="k">in</span> <span class="n">types</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome..: </span><span class="p">{</span><span class="n">type</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Classe: </span><span class="p">{</span><span class="n">type</span><span class="p">.</span><span class="n">IsClass</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="c1">// Recuperar propriedades da class</span>
+            <span class="kt">var</span> <span class="n">propriedades</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="nf">GetProperties</span><span class="p">();</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">propriedade</span> <span class="k">in</span> <span class="n">propriedades</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Nome...: </span><span class="p">{</span><span class="n">propriedade</span><span class="p">.</span><span class="n">Name</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+                <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Tipo...: </span><span class="p">{</span><span class="n">propriedade</span><span class="p">.</span><span class="n">PropertyType</span><span class="p">}</span><span class="s">"</span><span class="p">);</span> 
+            <span class="p">}</span> 
+
+            <span class="n">MethodInfo</span> <span class="n">setMetodo</span> <span class="p">=</span> <span class="k">typeof</span><span class="p">(</span><span class="n">Aluno</span><span class="p">).</span><span class="nf">GetMethod</span><span class="p">(</span><span class="s">"SetAluno"</span><span class="p">);</span>
+            <span class="kt">var</span> <span class="n">parametros</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[]</span> <span class="p">{</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">(),</span> <span class="s">"Rafael"</span><span class="p">,</span> <span class="m">29</span> <span class="p">};</span>
+            <span class="kt">var</span> <span class="n">obj</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Aluno</span><span class="p">();</span>
+            <span class="n">setMetodo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">parametros</span><span class="p">);</span>
+
+            <span class="kt">var</span> <span class="n">interacoes</span> <span class="p">=</span> <span class="m">10000</span><span class="p">;</span>
+
+            <span class="kt">var</span> <span class="n">watch</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Stopwatch</span><span class="p">();</span>
+            <span class="n">watch</span><span class="p">.</span><span class="nf">Start</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">interacoes</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">setMetodo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">parametros</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">watch</span><span class="p">.</span><span class="nf">Stop</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Invoke.......: </span><span class="p">{</span><span class="n">watch</span><span class="p">.</span><span class="n">Elapsed</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="kt">var</span> <span class="n">idAluno</span> <span class="p">=</span> <span class="n">Guid</span><span class="p">.</span><span class="nf">NewGuid</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">nomeAluno</span> <span class="p">=</span> <span class="s">"Rafael"</span><span class="p">;</span>
+            <span class="kt">var</span> <span class="n">idadeAluno</span> <span class="p">=</span> <span class="m">29</span><span class="p">;</span>
+
+            <span class="n">watch</span><span class="p">.</span><span class="nf">Restart</span><span class="p">();</span>
+            <span class="k">for</span> <span class="p">(</span><span class="kt">int</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">interacoes</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="n">obj</span><span class="p">.</span><span class="nf">SetAluno</span><span class="p">(</span><span class="n">idAluno</span><span class="p">,</span> <span class="n">nomeAluno</span><span class="p">,</span> <span class="n">idadeAluno</span><span class="p">);</span>
+            <span class="p">}</span>
+            <span class="n">watch</span><span class="p">.</span><span class="nf">Stop</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="s">$"Metodo Classe: </span><span class="p">{</span><span class="n">watch</span><span class="p">.</span><span class="n">Elapsed</span><span class="p">}</span><span class="s">"</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+<h2 id="referências">Referências</h2>
+<p><a href="https://docs.microsoft.com/pt-br/dotnet/framework/reflection-and-codedom/reflection" target="_BLACK">Reflection</a><br />
+<br /><br /> 
+Pessoal, fico por aqui <strong>#reflection #mvp #mvpbr #mvpbuzz #serieralms</strong></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2018-07-15T00:00:00+00:00">July 15, 2018</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Um+pouco+de+Reflection+%231%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2Freflection01%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Freflection01%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Freflection01%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Freflection01%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/dica/logExtension/" class="pagination--pager" title="Logs e Consultas LINQ to SQL
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/evento/hackatonufs2018/" class="pagination--pager" title="HACKATHON UFS 2018
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/reflection01/";
+      this.page.identifier = "/dica/reflection01";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

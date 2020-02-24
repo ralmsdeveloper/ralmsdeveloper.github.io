@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Breaking changes - EF Core 3.1  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?! 💚Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1FYI:Este artigo é uma versão atualizada de:http://ralms.net/dica/snakecase/O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.Veja esse artigo!Quer ver um resumidão sobre Naming Conventions?acesse esse link:http://ralms.net/dica/snakecase/O que me levou a escrever esse artigo?Não quero me prolongar aqui, dado que já escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi.O que mudou, Oops, aliás o que quebrou?Se observarmos semver e olhar para o significado de MAJOR, podemos dizerquer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao EF 3.0, acessavamos diretamente as propriedades, agora os acessos para algumas dessas propriedades são por métodos,para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.Então fiz um DE-PARA aqui do artigo anterior e o que mudou.Até o EF 2.2 (old)Tinhamos o seguinte comportamento para acessar e alterar os metadados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();        foreach (var property in entity.GetProperties())        {            property.Relational().ColumnName = property                .Relational()                .ColumnName                .ToSnakeCase();        }        foreach (var key in entity.GetKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();         }        foreach (var key in entity.GetForeignKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();        }        foreach (var index in entity.GetIndexes())        {            index.Relational().Name = index.Relational().Name.ToSnakeCase();        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower(); }Usando o EF 3.X (new)Agora o comportamento para acessar os metadados foram alterados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        var tableName = entity.GetTableName().ToSnakeCase();        entity.SetTableName(tableName);        foreach (var property in entity.GetProperties())        {            var columnName = property.GetColumnName().ToSnakeCase();            property.SetColumnName(columnName);        }        foreach (var key in entity.GetKeys())        {            var keyName = key.GetName().ToSnakeCase();            key.SetName(keyName);        }        foreach (var key in entity.GetForeignKeys())        {            var foreignKeyName = key.GetConstraintName().ToSnakeCase();            key.SetConstraintName(foreignKeyName);        }        foreach (var index in entity.GetIndexes())        {            var indexName = index.GetName().ToSnakeCase();            index.SetName(indexName);        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,            @&quot;([a-z0-9])([A-Z])&quot;,            &quot;$1_$2&quot;,            RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower();} Observe que não acessamos mais as propriedades diretamente, pois para alterar os metadados usamos: SetTableName, SetConstraintName, SetName.  😄  Veja como ficou nosso SampleContextpublic sealed class SampleContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        if (!optionsBuilder.IsConfigured)        {            optionsBuilder.UseNpgsql(                &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                 _ =&gt; _.EnableRetryOnFailure());        }    }    protected override void OnModelCreating(ModelBuilder modelo)    {        modelo.Entity&lt;TestSnakeCase&gt;();        // Aqui está nossa mágica!        modelo.ToSnakeNames();        //..    }}Nossa saída SQLCREATE TABLE test_snake_case (    id serial NOT NULL,    codigo_ibge integer NOT NULL,    nome_completo text NULL,    ano_nascimento integer NOT NULL,    data_cadastro timestamp without time zone NOT NULL,    CONSTRAINT pk_test_snake_case PRIMARY KEY (id));Veja as alterações na API de metadados            Antes      Depois                  IEntityType.QueryFilter      GetQueryFilter()               IEntityType.DefiningQuery      GetDefiningQuery()               IProperty.IsShadowProperty      IsShadowProperty()               IProperty.BeforeSaveBehavior      GetBeforeSaveBehavior()               IProperty.AfterSaveBehavior      GetAfterSaveBehavior()               IEntityType.Relational().TableName      IEntityType.GetTableName()              IProperty.Relational().ColumnName      IProperty.GetColumnName()              IKey.Relational().Name      IKey.GetName()               IForeignKey.Relational().Name      IForeignKey.GetConstraintName()              IIndex.Relational().Name      IIndex.GetName()      Performance1 - Em vez de usar Task agora se usa ValueTask o que reduz o número de alocações de memória na pilha.2 - Você poderia até não saber disso, mas quando acessavamos o método Entry() era disparado um DetectChanges() para todos objetos daquele contexto específico, agora isso não é mais uma verdade :) ualll!Código Completo!using Microsoft.EntityFrameworkCore;using System;using System.Text.RegularExpressions;namespace SnakeCase{    class Program    {        static void Main(string[] args)        {            using var db = new SampleContext();            var script = db.Database.GenerateCreateScript();            Console.WriteLine(script);        }    }    public sealed class SampleContext : DbContext    {        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)        {            if (!optionsBuilder.IsConfigured)            {                optionsBuilder.UseNpgsql(                    &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                     _ =&gt; _.EnableRetryOnFailure());            }        }        protected override void OnModelCreating(ModelBuilder modelo)        {            modelo.Entity&lt;TestSnakeCase&gt;();            // Aqui está nossa mágica!            modelo.ToSnakeNames();        }    }    public static class SnakeCase    {        public static void ToSnakeNames(this ModelBuilder modelBuilder)        {            foreach (var entity in modelBuilder.Model.GetEntityTypes())            {                var tableName = entity.GetTableName().ToSnakeCase();                entity.SetTableName(tableName);                foreach (var property in entity.GetProperties())                {                    var columnName = property.GetColumnName().ToSnakeCase();                    property.SetColumnName(columnName);                }                foreach (var key in entity.GetKeys())                {                    var keyName = key.GetName().ToSnakeCase();                    key.SetName(keyName);                }                foreach (var key in entity.GetForeignKeys())                {                    var foreignKeyName = key.GetConstraintName().ToSnakeCase();                    key.SetConstraintName(foreignKeyName);                }                foreach (var index in entity.GetIndexes())                {                    var indexName = index.GetName().ToSnakeCase();                    index.SetName(indexName);                }            }        }        private static string ToSnakeCase(this string name)        {            return string.IsNullOrWhiteSpace(name)                ? name                : Regex.Replace(                    name,                    @&quot;([a-z0-9])([A-Z])&quot;,                    &quot;$1_$2&quot;,                    RegexOptions.Compiled,                    TimeSpan.FromSeconds(0.2)).ToLower();        }    }    public class TestSnakeCase    {        public int Id { get; set; }        public int CodigoIBGE { get; set; }        public string NomeCompleto { get; set; }         public int AnoNascimento { get; set; }        public DateTime DataCadastro { get; set; }    }}Os fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/samplesnakecase Pessoal fico por aqui e um forte abraço! 😄  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore31 #netcore31">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Breaking changes - EF Core 3.1">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/snakecase_efcore31/">
+  <meta property="og:url" content="http://localhost:4000/dica/snakecase_efcore31/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?! 💚Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1FYI:Este artigo é uma versão atualizada de:http://ralms.net/dica/snakecase/O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.Veja esse artigo!Quer ver um resumidão sobre Naming Conventions?acesse esse link:http://ralms.net/dica/snakecase/O que me levou a escrever esse artigo?Não quero me prolongar aqui, dado que já escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi.O que mudou, Oops, aliás o que quebrou?Se observarmos semver e olhar para o significado de MAJOR, podemos dizerquer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao EF 3.0, acessavamos diretamente as propriedades, agora os acessos para algumas dessas propriedades são por métodos,para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.Então fiz um DE-PARA aqui do artigo anterior e o que mudou.Até o EF 2.2 (old)Tinhamos o seguinte comportamento para acessar e alterar os metadados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();        foreach (var property in entity.GetProperties())        {            property.Relational().ColumnName = property                .Relational()                .ColumnName                .ToSnakeCase();        }        foreach (var key in entity.GetKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();         }        foreach (var key in entity.GetForeignKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();        }        foreach (var index in entity.GetIndexes())        {            index.Relational().Name = index.Relational().Name.ToSnakeCase();        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower(); }Usando o EF 3.X (new)Agora o comportamento para acessar os metadados foram alterados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        var tableName = entity.GetTableName().ToSnakeCase();        entity.SetTableName(tableName);        foreach (var property in entity.GetProperties())        {            var columnName = property.GetColumnName().ToSnakeCase();            property.SetColumnName(columnName);        }        foreach (var key in entity.GetKeys())        {            var keyName = key.GetName().ToSnakeCase();            key.SetName(keyName);        }        foreach (var key in entity.GetForeignKeys())        {            var foreignKeyName = key.GetConstraintName().ToSnakeCase();            key.SetConstraintName(foreignKeyName);        }        foreach (var index in entity.GetIndexes())        {            var indexName = index.GetName().ToSnakeCase();            index.SetName(indexName);        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,            @&quot;([a-z0-9])([A-Z])&quot;,            &quot;$1_$2&quot;,            RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower();} Observe que não acessamos mais as propriedades diretamente, pois para alterar os metadados usamos: SetTableName, SetConstraintName, SetName.  😄  Veja como ficou nosso SampleContextpublic sealed class SampleContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        if (!optionsBuilder.IsConfigured)        {            optionsBuilder.UseNpgsql(                &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                 _ =&gt; _.EnableRetryOnFailure());        }    }    protected override void OnModelCreating(ModelBuilder modelo)    {        modelo.Entity&lt;TestSnakeCase&gt;();        // Aqui está nossa mágica!        modelo.ToSnakeNames();        //..    }}Nossa saída SQLCREATE TABLE test_snake_case (    id serial NOT NULL,    codigo_ibge integer NOT NULL,    nome_completo text NULL,    ano_nascimento integer NOT NULL,    data_cadastro timestamp without time zone NOT NULL,    CONSTRAINT pk_test_snake_case PRIMARY KEY (id));Veja as alterações na API de metadados            Antes      Depois                  IEntityType.QueryFilter      GetQueryFilter()               IEntityType.DefiningQuery      GetDefiningQuery()               IProperty.IsShadowProperty      IsShadowProperty()               IProperty.BeforeSaveBehavior      GetBeforeSaveBehavior()               IProperty.AfterSaveBehavior      GetAfterSaveBehavior()               IEntityType.Relational().TableName      IEntityType.GetTableName()              IProperty.Relational().ColumnName      IProperty.GetColumnName()              IKey.Relational().Name      IKey.GetName()               IForeignKey.Relational().Name      IForeignKey.GetConstraintName()              IIndex.Relational().Name      IIndex.GetName()      Performance1 - Em vez de usar Task agora se usa ValueTask o que reduz o número de alocações de memória na pilha.2 - Você poderia até não saber disso, mas quando acessavamos o método Entry() era disparado um DetectChanges() para todos objetos daquele contexto específico, agora isso não é mais uma verdade :) ualll!Código Completo!using Microsoft.EntityFrameworkCore;using System;using System.Text.RegularExpressions;namespace SnakeCase{    class Program    {        static void Main(string[] args)        {            using var db = new SampleContext();            var script = db.Database.GenerateCreateScript();            Console.WriteLine(script);        }    }    public sealed class SampleContext : DbContext    {        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)        {            if (!optionsBuilder.IsConfigured)            {                optionsBuilder.UseNpgsql(                    &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                     _ =&gt; _.EnableRetryOnFailure());            }        }        protected override void OnModelCreating(ModelBuilder modelo)        {            modelo.Entity&lt;TestSnakeCase&gt;();            // Aqui está nossa mágica!            modelo.ToSnakeNames();        }    }    public static class SnakeCase    {        public static void ToSnakeNames(this ModelBuilder modelBuilder)        {            foreach (var entity in modelBuilder.Model.GetEntityTypes())            {                var tableName = entity.GetTableName().ToSnakeCase();                entity.SetTableName(tableName);                foreach (var property in entity.GetProperties())                {                    var columnName = property.GetColumnName().ToSnakeCase();                    property.SetColumnName(columnName);                }                foreach (var key in entity.GetKeys())                {                    var keyName = key.GetName().ToSnakeCase();                    key.SetName(keyName);                }                foreach (var key in entity.GetForeignKeys())                {                    var foreignKeyName = key.GetConstraintName().ToSnakeCase();                    key.SetConstraintName(foreignKeyName);                }                foreach (var index in entity.GetIndexes())                {                    var indexName = index.GetName().ToSnakeCase();                    index.SetName(indexName);                }            }        }        private static string ToSnakeCase(this string name)        {            return string.IsNullOrWhiteSpace(name)                ? name                : Regex.Replace(                    name,                    @&quot;([a-z0-9])([A-Z])&quot;,                    &quot;$1_$2&quot;,                    RegexOptions.Compiled,                    TimeSpan.FromSeconds(0.2)).ToLower();        }    }    public class TestSnakeCase    {        public int Id { get; set; }        public int CodigoIBGE { get; set; }        public string NomeCompleto { get; set; }         public int AnoNascimento { get; set; }        public DateTime DataCadastro { get; set; }    }}Os fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/samplesnakecase Pessoal fico por aqui e um forte abraço! 😄  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore31 #netcore31">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-12-03T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Breaking changes - EF Core 3.1">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?! 💚Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1FYI:Este artigo é uma versão atualizada de:http://ralms.net/dica/snakecase/O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.Veja esse artigo!Quer ver um resumidão sobre Naming Conventions?acesse esse link:http://ralms.net/dica/snakecase/O que me levou a escrever esse artigo?Não quero me prolongar aqui, dado que já escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi.O que mudou, Oops, aliás o que quebrou?Se observarmos semver e olhar para o significado de MAJOR, podemos dizerquer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao EF 3.0, acessavamos diretamente as propriedades, agora os acessos para algumas dessas propriedades são por métodos,para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.Então fiz um DE-PARA aqui do artigo anterior e o que mudou.Até o EF 2.2 (old)Tinhamos o seguinte comportamento para acessar e alterar os metadados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        entity.Relational().TableName = entity.Relational().TableName.ToSnakeCase();        foreach (var property in entity.GetProperties())        {            property.Relational().ColumnName = property                .Relational()                .ColumnName                .ToSnakeCase();        }        foreach (var key in entity.GetKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();         }        foreach (var key in entity.GetForeignKeys())        {            key.Relational().Name = key.Relational().Name.ToSnakeCase();        }        foreach (var index in entity.GetIndexes())        {            index.Relational().Name = index.Relational().Name.ToSnakeCase();        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower(); }Usando o EF 3.X (new)Agora o comportamento para acessar os metadados foram alterados.public static void ToSnakeNames(this ModelBuilder modelBuilder){    foreach (var entity in modelBuilder.Model.GetEntityTypes())    {        var tableName = entity.GetTableName().ToSnakeCase();        entity.SetTableName(tableName);        foreach (var property in entity.GetProperties())        {            var columnName = property.GetColumnName().ToSnakeCase();            property.SetColumnName(columnName);        }        foreach (var key in entity.GetKeys())        {            var keyName = key.GetName().ToSnakeCase();            key.SetName(keyName);        }        foreach (var key in entity.GetForeignKeys())        {            var foreignKeyName = key.GetConstraintName().ToSnakeCase();            key.SetConstraintName(foreignKeyName);        }        foreach (var index in entity.GetIndexes())        {            var indexName = index.GetName().ToSnakeCase();            index.SetName(indexName);        }    }}private static string ToSnakeCase(this string name){    return string.IsNullOrWhiteSpace(name)        ? name        : Regex.Replace(            name,            @&quot;([a-z0-9])([A-Z])&quot;,            &quot;$1_$2&quot;,            RegexOptions.Compiled,            TimeSpan.FromSeconds(0.2)).ToLower();} Observe que não acessamos mais as propriedades diretamente, pois para alterar os metadados usamos: SetTableName, SetConstraintName, SetName.  😄  Veja como ficou nosso SampleContextpublic sealed class SampleContext : DbContext{    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)    {        if (!optionsBuilder.IsConfigured)        {            optionsBuilder.UseNpgsql(                &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                 _ =&gt; _.EnableRetryOnFailure());        }    }    protected override void OnModelCreating(ModelBuilder modelo)    {        modelo.Entity&lt;TestSnakeCase&gt;();        // Aqui está nossa mágica!        modelo.ToSnakeNames();        //..    }}Nossa saída SQLCREATE TABLE test_snake_case (    id serial NOT NULL,    codigo_ibge integer NOT NULL,    nome_completo text NULL,    ano_nascimento integer NOT NULL,    data_cadastro timestamp without time zone NOT NULL,    CONSTRAINT pk_test_snake_case PRIMARY KEY (id));Veja as alterações na API de metadados            Antes      Depois                  IEntityType.QueryFilter      GetQueryFilter()               IEntityType.DefiningQuery      GetDefiningQuery()               IProperty.IsShadowProperty      IsShadowProperty()               IProperty.BeforeSaveBehavior      GetBeforeSaveBehavior()               IProperty.AfterSaveBehavior      GetAfterSaveBehavior()               IEntityType.Relational().TableName      IEntityType.GetTableName()              IProperty.Relational().ColumnName      IProperty.GetColumnName()              IKey.Relational().Name      IKey.GetName()               IForeignKey.Relational().Name      IForeignKey.GetConstraintName()              IIndex.Relational().Name      IIndex.GetName()      Performance1 - Em vez de usar Task agora se usa ValueTask o que reduz o número de alocações de memória na pilha.2 - Você poderia até não saber disso, mas quando acessavamos o método Entry() era disparado um DetectChanges() para todos objetos daquele contexto específico, agora isso não é mais uma verdade :) ualll!Código Completo!using Microsoft.EntityFrameworkCore;using System;using System.Text.RegularExpressions;namespace SnakeCase{    class Program    {        static void Main(string[] args)        {            using var db = new SampleContext();            var script = db.Database.GenerateCreateScript();            Console.WriteLine(script);        }    }    public sealed class SampleContext : DbContext    {        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)        {            if (!optionsBuilder.IsConfigured)            {                optionsBuilder.UseNpgsql(                    &quot;Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake&quot;,                     _ =&gt; _.EnableRetryOnFailure());            }        }        protected override void OnModelCreating(ModelBuilder modelo)        {            modelo.Entity&lt;TestSnakeCase&gt;();            // Aqui está nossa mágica!            modelo.ToSnakeNames();        }    }    public static class SnakeCase    {        public static void ToSnakeNames(this ModelBuilder modelBuilder)        {            foreach (var entity in modelBuilder.Model.GetEntityTypes())            {                var tableName = entity.GetTableName().ToSnakeCase();                entity.SetTableName(tableName);                foreach (var property in entity.GetProperties())                {                    var columnName = property.GetColumnName().ToSnakeCase();                    property.SetColumnName(columnName);                }                foreach (var key in entity.GetKeys())                {                    var keyName = key.GetName().ToSnakeCase();                    key.SetName(keyName);                }                foreach (var key in entity.GetForeignKeys())                {                    var foreignKeyName = key.GetConstraintName().ToSnakeCase();                    key.SetConstraintName(foreignKeyName);                }                foreach (var index in entity.GetIndexes())                {                    var indexName = index.GetName().ToSnakeCase();                    index.SetName(indexName);                }            }        }        private static string ToSnakeCase(this string name)        {            return string.IsNullOrWhiteSpace(name)                ? name                : Regex.Replace(                    name,                    @&quot;([a-z0-9])([A-Z])&quot;,                    &quot;$1_$2&quot;,                    RegexOptions.Compiled,                    TimeSpan.FromSeconds(0.2)).ToLower();        }    }    public class TestSnakeCase    {        public int Id { get; set; }        public int CodigoIBGE { get; set; }        public string NomeCompleto { get; set; }         public int AnoNascimento { get; set; }        public DateTime DataCadastro { get; set; }    }}Os fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/samplesnakecase Pessoal fico por aqui e um forte abraço! 😄  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore31 #netcore31">
+    <meta itemprop="datePublished" content="December 03, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Breaking changes - EF Core 3.1
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  16 minuto(s) de leitura
+ - December 03, 2019</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://localhost:4000/assets/images/efcorecsharp.png" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
+<hr />
+
+<p>Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> de forma fácil para o <strong>Entity Framework Core 3.1</strong><br />
+<br />
+<img src="http://localhost:4000/assets/images/camelsnakecase.jpg" alt="01" /></p>
+<div class="notice--warning">
+<strong>FYI:</strong><br />
+Este artigo é uma versão atualizada de:
+<a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
+http://ralms.net/dica/snakecase/
+</a>
+<br />
+O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.
+</div>
+<p><img src="http://localhost:4000/assets/images/tipocase.png" alt="01" /></p>
+
+<h1 id="veja-esse-artigo">Veja esse artigo!</h1>
+<p>Quer ver um resumidão sobre <b>Naming Conventions</b>?<br />
+acesse esse link:
+<a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
+http://ralms.net/dica/snakecase/
+</a></p>
+
+<h1 id="o-que-me-levou-a-escrever-esse-artigo">O que me levou a escrever esse artigo?</h1>
+<p>Não quero me prolongar aqui, dado que já escrevi um artigo falando sobre minha real necessidade de utilizar conversões de nomenclaturas, então para não ser redundante acessem o link acima e leiam o primeiro artigo que escrevi.</p>
+
+<h1 id="o-que-mudou-oops-aliás-o-que-quebrou">O que mudou, Oops, aliás o que quebrou?</h1>
+<div style="text-align: justify;">
+Se observarmos <a href="https://semver.org/" target="_BLANK" alt="">semver</a> e olhar para o significado de <b>MAJOR</b>, podemos dizer
+quer foi bem aplicado aqui, mas não pode existir uma quebra sem um concerto, néh verdade!
+<br />
+<br />
+Os métodos de extensão específicos do provedor sofreram alterações, nas versões anteriores ao <b>EF 3.0</b>, acessavamos diretamente as propriedades, agora os acessos para algumas dessas propriedades são por métodos,
+para alguns pode até parecer que ficou mais complicado, mas eu defendo esse tipo de abordagem, em não expor suas propriedades onde as mesmas devem ser acessadas apenas por métodos ou por um construtor, que não é o caso aqui.
+<br />
+<br />
+Então fiz um <b>DE-PARA</b> aqui do artigo anterior e o que mudou.
+</div>
+<p><br /></p>
+<h1 id="até-o-ef-22-old">Até o EF 2.2 (old)</h1>
+<p>Tinhamos o seguinte comportamento para acessar e alterar os metadados.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ToSnakeNames</span><span class="p">(</span><span class="k">this</span> <span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entity</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="n">entity</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">TableName</span> <span class="p">=</span> <span class="n">entity</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">TableName</span><span class="p">.</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">property</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">property</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">ColumnName</span> <span class="p">=</span> <span class="n">property</span>
+                <span class="p">.</span><span class="nf">Relational</span><span class="p">()</span>
+                <span class="p">.</span><span class="n">ColumnName</span>
+                <span class="p">.</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetKeys</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">key</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span><span class="p">.</span><span class="nf">ToSnakeCase</span><span class="p">();</span> 
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetForeignKeys</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">key</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span><span class="p">.</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">index</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetIndexes</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="n">index</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span> <span class="p">=</span> <span class="n">index</span><span class="p">.</span><span class="nf">Relational</span><span class="p">().</span><span class="n">Name</span><span class="p">.</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ToSnakeCase</span><span class="p">(</span><span class="k">this</span> <span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">?</span> <span class="n">name</span>
+        <span class="p">:</span> <span class="n">Regex</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span> 
+            <span class="s">@"([a-z0-9])([A-Z])"</span><span class="p">,</span> 
+            <span class="s">"$1_$2"</span><span class="p">,</span> 
+            <span class="n">RegexOptions</span><span class="p">.</span><span class="n">Compiled</span><span class="p">,</span>
+            <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">0.2</span><span class="p">)).</span><span class="nf">ToLower</span><span class="p">();</span> 
+<span class="p">}</span>
+</code></pre></div></div>
+<h1 id="usando-o-ef-3x-new">Usando o EF 3.X (new)</h1>
+<p>Agora o comportamento para acessar os metadados foram alterados.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ToSnakeNames</span><span class="p">(</span><span class="k">this</span> <span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entity</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">tableName</span> <span class="p">=</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetTableName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+        <span class="n">entity</span><span class="p">.</span><span class="nf">SetTableName</span><span class="p">(</span><span class="n">tableName</span><span class="p">);</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">property</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">columnName</span> <span class="p">=</span> <span class="n">property</span><span class="p">.</span><span class="nf">GetColumnName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+            <span class="n">property</span><span class="p">.</span><span class="nf">SetColumnName</span><span class="p">(</span><span class="n">columnName</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetKeys</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">keyName</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">GetName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+            <span class="n">key</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="n">keyName</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetForeignKeys</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">foreignKeyName</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">GetConstraintName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+            <span class="n">key</span><span class="p">.</span><span class="nf">SetConstraintName</span><span class="p">(</span><span class="n">foreignKeyName</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">index</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetIndexes</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">indexName</span> <span class="p">=</span> <span class="n">index</span><span class="p">.</span><span class="nf">GetName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+            <span class="n">index</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="n">indexName</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ToSnakeCase</span><span class="p">(</span><span class="k">this</span> <span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">?</span> <span class="n">name</span>
+        <span class="p">:</span> <span class="n">Regex</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span>
+            <span class="n">name</span><span class="p">,</span>
+            <span class="s">@"([a-z0-9])([A-Z])"</span><span class="p">,</span>
+            <span class="s">"$1_$2"</span><span class="p">,</span>
+            <span class="n">RegexOptions</span><span class="p">.</span><span class="n">Compiled</span><span class="p">,</span>
+            <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">0.2</span><span class="p">)).</span><span class="nf">ToLower</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="notice--success">
+<strong>
+ Observe que não acessamos mais as propriedades diretamente, pois para alterar os metadados usamos: SetTableName, SetConstraintName, SetName.  😄 
+ </strong>
+</div>
+
+<h2 id="veja-como-ficou-nosso-samplecontext">Veja como ficou nosso SampleContext</h2>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">SampleContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(!</span><span class="n">optionsBuilder</span><span class="p">.</span><span class="n">IsConfigured</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseNpgsql</span><span class="p">(</span>
+                <span class="s">"Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake"</span><span class="p">,</span> 
+                <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span><span class="p">.</span><span class="nf">EnableRetryOnFailure</span><span class="p">());</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelo</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">modelo</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">TestSnakeCase</span><span class="p">&gt;();</span>
+
+        <span class="c1">// Aqui está nossa mágica!</span>
+        <span class="n">modelo</span><span class="p">.</span><span class="nf">ToSnakeNames</span><span class="p">();</span>
+        <span class="c1">//..</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nossa-saída-sql">Nossa saída SQL</h2>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">CREATE</span> <span class="k">TABLE</span> <span class="n">test_snake_case</span> <span class="p">(</span>
+    <span class="n">id</span> <span class="nb">serial</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">codigo_ibge</span> <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">nome_completo</span> <span class="nb">text</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">ano_nascimento</span> <span class="nb">integer</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="n">data_cadastro</span> <span class="nb">timestamp</span> <span class="k">without</span> <span class="nb">time</span> <span class="k">zone</span> <span class="k">NOT</span> <span class="k">NULL</span><span class="p">,</span>
+    <span class="k">CONSTRAINT</span> <span class="n">pk_test_snake_case</span> <span class="k">PRIMARY</span> <span class="k">KEY</span> <span class="p">(</span><span class="n">id</span><span class="p">)</span>
+<span class="p">);</span>
+</code></pre></div></div>
+<p><br /></p>
+<h1 id="veja-as-alterações-na-api-de-metadados">Veja as alterações na API de metadados</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Antes</th>
+      <th>Depois</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>IEntityType.QueryFilter</td>
+      <td>GetQueryFilter()</td>
+    </tr>
+     <tr>
+      <td>IEntityType.DefiningQuery</td>
+      <td>GetDefiningQuery()</td>
+    </tr>
+     <tr>
+      <td>IProperty.IsShadowProperty</td>
+      <td>IsShadowProperty()</td>
+    </tr>
+     <tr>
+      <td>IProperty.BeforeSaveBehavior</td>
+      <td>GetBeforeSaveBehavior()</td>
+    </tr>
+     <tr>
+      <td>IProperty.AfterSaveBehavior</td>
+      <td>GetAfterSaveBehavior()</td>
+    </tr>
+     <tr>
+      <td>IEntityType.Relational().TableName</td>
+      <td>IEntityType.GetTableName()</td>
+    </tr>
+
+    <tr>
+      <td>IProperty.Relational().ColumnName</td>
+      <td>IProperty.GetColumnName()</td>
+    </tr>
+    <tr>
+      <td>IKey.Relational().Name</td>
+      <td>IKey.GetName() </td>
+    </tr>
+    <tr>
+      <td>IForeignKey.Relational().Name</td>
+      <td>IForeignKey.GetConstraintName()</td>
+    </tr>
+    <tr>
+      <td>IIndex.Relational().Name</td>
+      <td>IIndex.GetName()</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="performance">Performance</h2>
+<p>1 - Em vez de usar Task<T> agora se usa <a href="https://docs.microsoft.com/pt-br/dotnet/api/system.threading.tasks.valuetask-1?view=netstandard-2.1" target="_BLANK" alt="">ValueTask</a> o que reduz o número de alocações de memória na pilha.
+<br />
+2 - Você poderia até não saber disso, mas quando acessavamos o método Entry() era disparado um DetectChanges() para todos objetos daquele contexto específico, agora isso não é mais uma verdade :) ualll!</T></p>
+
+<h2 id="código-completo">Código Completo!</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">Microsoft.EntityFrameworkCore</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Text.RegularExpressions</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SnakeCase</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">using</span> <span class="nn">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">SampleContext</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">script</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">GenerateCreateScript</span><span class="p">();</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">script</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">SampleContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+    <span class="p">{</span>
+        <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span><span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(!</span><span class="n">optionsBuilder</span><span class="p">.</span><span class="n">IsConfigured</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="n">optionsBuilder</span><span class="p">.</span><span class="nf">UseNpgsql</span><span class="p">(</span>
+                    <span class="s">"Host=127.0.0.1;Username=postgres;Password=XXX;Database=TestSnake"</span><span class="p">,</span> 
+                    <span class="n">_</span> <span class="p">=&gt;</span> <span class="n">_</span><span class="p">.</span><span class="nf">EnableRetryOnFailure</span><span class="p">());</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelo</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">modelo</span><span class="p">.</span><span class="n">Entity</span><span class="p">&lt;</span><span class="n">TestSnakeCase</span><span class="p">&gt;();</span>
+
+            <span class="c1">// Aqui está nossa mágica!</span>
+            <span class="n">modelo</span><span class="p">.</span><span class="nf">ToSnakeNames</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">class</span> <span class="nc">SnakeCase</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">void</span> <span class="nf">ToSnakeNames</span><span class="p">(</span><span class="k">this</span> <span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entity</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">tableName</span> <span class="p">=</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetTableName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+                <span class="n">entity</span><span class="p">.</span><span class="nf">SetTableName</span><span class="p">(</span><span class="n">tableName</span><span class="p">);</span>
+
+                <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">property</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">columnName</span> <span class="p">=</span> <span class="n">property</span><span class="p">.</span><span class="nf">GetColumnName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+                    <span class="n">property</span><span class="p">.</span><span class="nf">SetColumnName</span><span class="p">(</span><span class="n">columnName</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetKeys</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">keyName</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">GetName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+                    <span class="n">key</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="n">keyName</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">key</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetForeignKeys</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">foreignKeyName</span> <span class="p">=</span> <span class="n">key</span><span class="p">.</span><span class="nf">GetConstraintName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+                    <span class="n">key</span><span class="p">.</span><span class="nf">SetConstraintName</span><span class="p">(</span><span class="n">foreignKeyName</span><span class="p">);</span>
+                <span class="p">}</span>
+
+                <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">index</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetIndexes</span><span class="p">())</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="n">indexName</span> <span class="p">=</span> <span class="n">index</span><span class="p">.</span><span class="nf">GetName</span><span class="p">().</span><span class="nf">ToSnakeCase</span><span class="p">();</span>
+                    <span class="n">index</span><span class="p">.</span><span class="nf">SetName</span><span class="p">(</span><span class="n">indexName</span><span class="p">);</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">private</span> <span class="k">static</span> <span class="kt">string</span> <span class="nf">ToSnakeCase</span><span class="p">(</span><span class="k">this</span> <span class="kt">string</span> <span class="n">name</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">return</span> <span class="kt">string</span><span class="p">.</span><span class="nf">IsNullOrWhiteSpace</span><span class="p">(</span><span class="n">name</span><span class="p">)</span>
+                <span class="p">?</span> <span class="n">name</span>
+                <span class="p">:</span> <span class="n">Regex</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span>
+                    <span class="n">name</span><span class="p">,</span>
+                    <span class="s">@"([a-z0-9])([A-Z])"</span><span class="p">,</span>
+                    <span class="s">"$1_$2"</span><span class="p">,</span>
+                    <span class="n">RegexOptions</span><span class="p">.</span><span class="n">Compiled</span><span class="p">,</span>
+                    <span class="n">TimeSpan</span><span class="p">.</span><span class="nf">FromSeconds</span><span class="p">(</span><span class="m">0.2</span><span class="p">)).</span><span class="nf">ToLower</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">TestSnakeCase</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">CodigoIBGE</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">NomeCompleto</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span> 
+        <span class="k">public</span> <span class="kt">int</span> <span class="n">AnoNascimento</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">DataCadastro</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><br />
+Os fontes do exemplo usado está aqui:<br />
+<a href="https://github.com/ralmsdeveloper/samplesnakecase" target="_BLANK" alt="">
+https://github.com/ralmsdeveloper/samplesnakecase
+</a></p>
+
+<div class="notice--success">
+<strong>
+ Pessoal fico por aqui e um forte abraço! 😄 
+ </strong>
+</div>
+
+<p>#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore31 #netcore31<br /><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2019-12-03T00:00:00+00:00">December 03, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Breaking+changes+-+EF+Core+3.1%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fsnakecase_efcore31%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fsnakecase_efcore31%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fsnakecase_efcore31%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fsnakecase_efcore31%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/dica/snakecase_aspnetcore31/" class="pagination--pager" title="System.Text.JSON - ASPNET Core 3.1
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/dica/efcore31_operations_interception/" class="pagination--pager" title="Interceptando comandos - EF Core 3.1
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_aspnetcore31/" rel="permalink">System.Text.JSON - ASPNET Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Porque estamos aqui?
+
+Eu acredito que você já sabe, e se não sabe, ficará agora, que a Microsoft escreveu seu proprio Serializ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/snakecase_efcore31/";
+      this.page.identifier = "/dica/snakecase_efcore31";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

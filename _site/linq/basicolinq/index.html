@@ -1,15 +1,11 @@
-<!doctype html>
-<!--
-  Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
-  Copyright 2017 Michael Rose - mademistakes.com | @mmistakes
-  Free for personal and commercial use under the MIT license
-  https://github.com/mmistakes/minimal-mistakes/blob/master/LICENSE.txt
--->
-<html lang="pt" class="no-js">
-  <head>
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
     <meta charset="utf-8">
 
 <!-- begin SEO -->
+<meta name="robots" content="index, follow">
 
 
 
@@ -19,12 +15,12 @@
 
 
 
-<title>O básico do LINQ - Ralms.NET</title>
+<title>O básico do LINQ  Ralms.NET</title>
 
 
 
 
-<meta name="description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, vamos escrever nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);		    // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo 			// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.                       // Função básica em lambda			Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;     			// Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);			// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;			 // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }} Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
+<meta name="description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, criaremos agora nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);            // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo            // será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.            // Função básica em lambda            Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;            // Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);            // Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;            // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }}Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
 
 
 
@@ -32,7 +28,7 @@
 <meta name="author" content="Rafael Almeida">
 
 <meta property="og:locale" content="pt_BR">
-<meta property="og:site_name" content="Ralms.NET">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
 <meta property="og:title" content="O básico do LINQ">
 
 
@@ -41,7 +37,7 @@
 
 
 
-  <meta property="og:description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, vamos escrever nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);		    // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo 			// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.                       // Função básica em lambda			Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;     			// Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);			// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;			 // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }} Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
+  <meta property="og:description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, criaremos agora nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);            // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo            // será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.            // Função básica em lambda            Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;            // Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);            // Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;            // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }}Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
 
 
 
@@ -58,17 +54,13 @@
 
 
 
-
-  
-
-  
 
 
 
 
 
   <meta property="og:type" content="article">
-  <meta property="article:published_time" content="2017-12-22T00:00:00-02:00">
+  <meta property="article:published_time" content="2017-12-22T00:00:00+00:00">
 
 
 
@@ -76,16 +68,6 @@
 
 
 
-
-  <script type="application/ld+json">
-    {
-      "@context" : "http://schema.org",
-      "@type" : "Person",
-      "name" : "Rafael Almeida",
-      "url" : "http://localhost:4000",
-      "sameAs" : null
-    }
-  </script>
 
 
 
@@ -128,12 +110,18 @@
 
     <!-- start custom head snippets -->
 
-<!-- insert favicons. use http://realfavicongenerator.net/ -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
 
 <!-- end custom head snippets -->
-  </head>
+</head>
 
-  <body class="layout--single">
+  <body class="layout--single wide">
 
     <!--[if lt IE 9]>
 <div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
@@ -146,7 +134,23 @@
         <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
         <ul class="visible-links">
           
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
         </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
         
         <button class="greedy-nav__toggle" type="button">
           <span class="visually-hidden">Toggle Menu</span>
@@ -175,7 +179,7 @@
       
 
       
-        <img src="http://localhost:4000/assets/images/bio.jpg" alt="Rafael Almeida" itemprop="image">
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
       
     </div>
   
@@ -186,7 +190,7 @@
     
     
       <p class="author__bio" itemprop="description">
-        Microsoft Certified Professional, Sênior Developer .NET, Team Leader Development at JAMSOFT Systems and Passionate on C #, Creator of EntityFrameworkCore for FirebirdSQL, Github Project Contributor, MSDN Brazil Contributor, Founder of Developers Sergipe.
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
       </p>
     
   </div>
@@ -200,12 +204,6 @@
         </li>
       
 
-      
-        <li>
-          <a href="https://ralmsdeveloper.github.io" itemprop="url">
-            <i class="fa fa-fw fa-chain" aria-hidden="true"></i> Site
-          </a>
-        </li>
       
 
       
@@ -241,6 +239,12 @@
 
       
 
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
       
 
       
@@ -298,7 +302,7 @@
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
     <meta itemprop="headline" content="O básico do LINQ">
-    <meta itemprop="description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, vamos escrever nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);		    // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo 			// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.                       // Função básica em lambda			Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;     			// Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);			// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;			 // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }} Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
+    <meta itemprop="description" content="Nesse pequeno post iremos conhecer um pouco de LINQ  Um pouco de história  Introdução ao LINQ  Conhecendo métodos do LINQ  ExpressõesUm pouco de históriaO LINQ (consulta integrada à linguagem), é uma das implementações mais extraordinária que poderíamos ter no .NET, o LINQ foi introduzido inicialmente na versão do .NET Framework 3.5, como diz a própria documentação ele veio para preencher os buracos que existiam entre o mundo dos objetos e o mundo dos dados. Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, podemos manipular qualquer objeto, podemos escrever consultas em qualquer coleção de objetos que tenha suporte a IEnumerable, ou a uma interface genérica IEnumerable«T».Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉Introdução ao LINQVamos entender um pouco como realmente o LINQ funciona, criaremos agora nosso primeiro exemplo básico, manipulando informações de uma string.//  String com palavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada pelos espaçosvar listPalavras = palavras.Split(&#39; &#39;);Console.WriteLine(&quot;Palavras:&quot;);foreach (var palavra in listPalavras){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado da Lista://      Microsoft//      NET//      Framework//      Linq//      Consulta//      Linq//      NET// Consulta simples escrita em Linq// essa é uma forma mais simples de escrever uma// consulta com LINQ.var consultaLinq = from c in listPalavras where c != &quot;Linq&quot; select c;foreach (var palavra in consultaLinq){    Console.WriteLine($&quot;\t {palavra}&quot;);}// Resultado de consultaLinq://      Microsoft//      NET//      Framework//      Consulta//      NET// Agrupar as palavras// Vejamos como é simples agrupar dados com LINQvar agruparLinq = from c                    in listPalavras                    group c by c into agrupar                    select agrupar;// Ordenar as palavras// A opção de ordenação não há muito segredo é bem simplesvar ordenarLinq = from c                    in listPalavras                    group c by c into agrupar                    orderby agrupar.Key                    select agrupar;Bem simples, não é?! Agora iremos trabalhar com uma classe para que possamos ver o comportamento utilizado com as propriedades de uma classe, para assegurar que entendemos a lógica de uma consulta básica em LINQ.Dica FreeEssa é uma dica pessoal, muitas pessoas costumam chamar as propriedades de “atributos”, eu discordo totalmente, isso é um termo errado!Podemos atribuir o termo atributo por exemplo em um XML ou HTML, mais não em uma classe.Fiz algumas pesquisas e encontrei algo interessante, escrita por uma empresa que tem propriedade e segurança sobre isso que é a ORACLE, em um documentação ela explica algo sobre esse termo. Acesse aquiBom mais isso é apenas uma dica, para que possamos pronunciar de forma correta.Sendo assim vamos criar um exemplo que contenha uma classe Pessoa, com algumas propriedades.using System;using System.Collections.Generic;using System.Linq;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Consultar pessoas com o código &gt; 0            // e que não estão ativas            var consultaLinq = from p                               in listadePessoas                               where p.Codigo &gt; 0 &amp;&amp; !p.Ativo                               select p;            Console.WriteLine(&quot;------- Consultar ---------&quot;);            foreach (var pessoa in consultaLinq)            {                Console.WriteLine($&quot;{pessoa.Codigo}-{pessoa.Nome}&quot;);            }            // Agrupar Infomrações            var agruparLinq = from p                              in listadePessoas                              group p.Nome by p.Nome into agrupar                              select agrupar.Key;            Console.WriteLine(&quot;------- Agrupar ---------&quot;);            foreach (var nome in agruparLinq)            {                Console.WriteLine(nome);            }            Console.ReadKey();        }    }}Até aqui tudo bem certo?!Voltaremos a abordar sobre isso mais abaixo, sabendo o conceito básico do LINQ, vamos conhecer alguns métodos de extensões que são mais utilizados no LINQ.Métodos de Extensão do LINQO que são métodos de extensões?Resposta: Um método de extensão é uma forma de permitir adicionar uma função, sem necessidade de criar um novo método derivado de uma classe ou interface, métodos de extensão são estáticos e automaticamente são chamados como instância, no IntelliSense do Visual Studio eles aparecem com uma setinha, então essa é uma forma boa para saber se o método é derivado de uma classe ou ele é uma extensão.Bem isso é um resumo básico do que seria um método de extensão, vamos ver alguns deles que estão presentes no LINQ.//  String com plavrasvar palavras = &quot;Microsoft NET Framework Linq Consulta Linq NET&quot;;//  Array de palavras da string quebrada//  pelos espaços – Split “Não é extensão LINQ”// está aqui para demonstrar a utilização das extensões.var listPalavras = palavras.Split(&#39; &#39;);// Retornar o primeiro item da listavar primeiro = listPalavras.First();// Retornar o último item da listavar ultimo = listPalavras.Last();// Retornar os 2 primeiros itens da listavar primeiros = listPalavras.Take(2);// Concatenar dados, é necessário ser o mesmo tipo. var concatenar = primeiros.Concat(listPalavras);// Método de ordenação ascendentevar ordemAscendente = listPalavras.OrderBy(o =&gt; o);// Método de ordenação descendentevar ordemDescendente = listPalavras.OrderByDescending(o =&gt; o);// O Count pode ser usado para retornar à quantidade// de objetos de um array ou a quantidade de retorno de// uma consulta efetuada por expressãovar count = listPalavras.Count(o =&gt; o.Equals(&quot;NET&quot;));Aqui abaixo está um link com todos o métodos da classe System.Linq.Enumerablehttps://msdn.microsoft.com/en-us/library/system.linq.enumerable_methods(v=vs.110).aspxBem já que conhecemos alguns métodos básicos vamos para a parte que eu particularmente mais amo!Criar ExpressõesO C# e LINQ nos dá a autonomia de simplesmente seguir nossa imaginação e criarmos nossas próprias expressões que desejarmos em LINQ.Show!!!, as 2 coisas mais maravilhosas que o .NET tem é “LINQ e Reflection”, isso é o que escolhi para mim como uma das maravilhas do .NET  … 😉Agora vamos começar a sair de um básico para um nível de conhecimento melhor, que é criar uma expressão e uma função lambda, What’s? Yep!using System;using System.Collections.Generic;using System.Linq;using System.Linq.Expressions;namespace Linq{    class Pessoa    {        public int Codigo { get; set; }        public string Nome { get; set; }        public DateTime DataNascimento { get; set; }        public bool Ativo { get; set; }    }    class Program    {        static void Main(string[] args)        {            var listadePessoas = new List&lt;Pessoa&gt;            {                new Pessoa                {                    Codigo =1,                    Nome =&quot;Rafael Almeida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },                new Pessoa                {                    Codigo =2,                    Nome =&quot;Fulano de Tal&quot;,                    DataNascimento = DateTime.Now.AddYears(2),                    Ativo = false                },                new Pessoa                {                    Codigo =3,                    Nome =&quot;Pessoa Conhecida&quot;,                    DataNascimento = DateTime.Now,                    Ativo = true                },            };            // Aqui é a forma mais simples de usar expressões lambda            // em um método.            var pessoas1 = listadePessoas.Where(p =&gt; p.Codigo &gt; 1);            // Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo            // será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.            // Função básica em lambda            Func&lt;Pessoa, bool&gt; pessoaFunc = p =&gt; p.Codigo &gt; 1;            // Utilizando a função criada acima            var pessoas2 = listadePessoas.Where(pessoaFunc);            // Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.            // Expressão básica            Expression&lt;Func&lt;Pessoa, bool&gt;&gt; pessoaExpression = p =&gt; p.Codigo &gt; 1;            // Compilando a expressão e utilizando.            var pessoas3 = listadePessoas.Where(pessoaExpression.Compile());            Console.ReadKey();        }    }}Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse AquiAté o próxima!">
     <meta itemprop="datePublished" content="December 22, 2017">
     
 
@@ -308,20 +312,22 @@
           <h1 class="page__title" itemprop="headline">O básico do LINQ
 </h1>
           
-            <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
 
 
 
-  6 minuto(s) de leitura
-</p>
+  25 minuto(s) de leitura
+ - December 22, 2017</p>
           
         </header>
       
 
       <section class="page__content" itemprop="text">
         
-        <h2 id="nesse-pequeno-post-iremos-conhecer-um-pouco-de-linq">Nesse pequeno post iremos conhecer um pouco de LINQ</h2>
+        <p><img src="http://localhost:4000/assets/images/linq.jpg" alt="01" /></p>
+
+<h2 id="nesse-pequeno-post-iremos-conhecer-um-pouco-de-linq">Nesse pequeno post iremos conhecer um pouco de LINQ</h2>
 
 <ul>
   <li>Um pouco de história</li>
@@ -337,7 +343,7 @@ Uma das facilidades ao usar LINQ é a extensibilidade dos métodos, ou seja, pod
 Existe um programinha bem legal que gosto muito chamado LinqPad que inclusive uso muito para testes, geralmente ele é muito utilizado por quem pretende tirar uma certificação, e necessita testar seus conhecimento sem utilizar o IntelliSense do Visual Studio 😉</p>
 
 <h2 id="introdução-ao-linq">Introdução ao LINQ</h2>
-<p>Vamos entender um pouco como realmente o LINQ funciona, vamos escrever nosso primeiro exemplo básico, manipulando informações de uma string.</p>
+<p>Vamos entender um pouco como realmente o LINQ funciona, criaremos agora nosso primeiro exemplo básico, manipulando informações de uma string.</p>
 
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">//  String com palavras</span>
 <span class="kt">var</span> <span class="n">palavras</span> <span class="p">=</span> <span class="s">"Microsoft NET Framework Linq Consulta Linq NET"</span><span class="p">;</span>
@@ -587,27 +593,27 @@ Agora iremos trabalhar com uma classe para que possamos ver o comportamento util
             <span class="c1">// em um método.</span>
             <span class="kt">var</span> <span class="n">pessoas1</span> <span class="p">=</span> <span class="n">listadePessoas</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Codigo</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">);</span>
 
-		    <span class="c1">// Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo </span>
-			<span class="c1">// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.</span>
-           
+            <span class="c1">// Vejamos como criar uma função Lambda, para ser utilizada em método, essa função de exemplo</span>
+            <span class="c1">// será declarada explicitamente o tipo, mais podemos criar também usando de forma genérica.</span>
+
             <span class="c1">// Função básica em lambda</span>
-			<span class="n">Func</span><span class="p">&lt;</span><span class="n">Pessoa</span><span class="p">,</span> <span class="kt">bool</span><span class="p">&gt;</span> <span class="n">pessoaFunc</span> <span class="p">=</span> <span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Codigo</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">;</span>
-     
-			<span class="c1">// Utilizando a função criada acima</span>
+            <span class="n">Func</span><span class="p">&lt;</span><span class="n">Pessoa</span><span class="p">,</span> <span class="kt">bool</span><span class="p">&gt;</span> <span class="n">pessoaFunc</span> <span class="p">=</span> <span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Codigo</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">;</span>
+
+            <span class="c1">// Utilizando a função criada acima</span>
             <span class="kt">var</span> <span class="n">pessoas2</span> <span class="p">=</span> <span class="n">listadePessoas</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">pessoaFunc</span><span class="p">);</span>
 
-			<span class="c1">// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.</span>
+            <span class="c1">// Vejamos como criar também uma expressão para ser usada em método de extensão do LINQ.</span>
 
             <span class="c1">// Expressão básica</span>
             <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="n">Pessoa</span><span class="p">,</span> <span class="kt">bool</span><span class="p">&gt;&gt;</span> <span class="n">pessoaExpression</span> <span class="p">=</span> <span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Codigo</span> <span class="p">&gt;</span> <span class="m">1</span><span class="p">;</span>
 
-			 <span class="c1">// Compilando a expressão e utilizando.</span>
+            <span class="c1">// Compilando a expressão e utilizando.</span>
             <span class="kt">var</span> <span class="n">pessoas3</span> <span class="p">=</span> <span class="n">listadePessoas</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">pessoaExpression</span><span class="p">.</span><span class="nf">Compile</span><span class="p">());</span>
 
             <span class="n">Console</span><span class="p">.</span><span class="nf">ReadKey</span><span class="p">();</span>
         <span class="p">}</span>
     <span class="p">}</span>
-<span class="p">}</span> 
+<span class="p">}</span>
 </code></pre></div></div>
 
 <p>Pessoal como eu falei sobre Lambda também aqui no post, quero deixar um link de referência caso queiram dar uma olhada, acesse <a href="https://docs.microsoft.com/pt-br/dotnet/csharp/programming-guide/statements-expressions-operators/lambda-expressions">Aqui</a></p>
@@ -633,7 +639,7 @@ Agora iremos trabalhar com uma classe para que possamos ver o comportamento util
     
       
       
-      <a href="http://localhost:4000/#linq" class="page__taxonomy-item" rel="tag">LINQ</a>
+      <a href="http://localhost:4000/tags/#linq" class="page__taxonomy-item" rel="tag">LINQ</a>
     
     </span>
   </p>
@@ -654,14 +660,14 @@ Agora iremos trabalhar com uma classe para que possamos ver o comportamento util
     
       
       
-      <a href="http://localhost:4000/#linq" class="page__taxonomy-item" rel="tag">LINQ</a>
+      <a href="http://localhost:4000/categories/#linq" class="page__taxonomy-item" rel="tag">LINQ</a>
     
     </span>
   </p>
 
 
         
-          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-12-22T00:00:00-02:00">December 22, 2017</time></p>
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2017-12-22T00:00:00+00:00">December 22, 2017</time></p>
         
       </footer>
 
@@ -683,11 +689,12 @@ Agora iremos trabalhar com uma classe para que possamos ver o comportamento util
       
   <nav class="pagination">
     
-      <a href="http://localhost:4000/csharp/sql%20server/carregarinstancia/" class="pagination--pager" title="Carregando instâncias do SQL Server
+      <a href="http://localhost:4000/csharp/csharp-novidade/" class="pagination--pager" title="Novidade C# 7.3, o que vem por ai?
 ">Anterior</a>
     
     
-      <a href="#" class="pagination--pager disabled">Próxima</a>
+      <a href="http://localhost:4000/asp.net%20core/csharp/passoapassoaspnetcore/" class="pagination--pager" title="Passo a passo Asp.NET Core (básico)
+">Próxima</a>
     
   </nav>
 
@@ -711,112 +718,136 @@ Agora iremos trabalhar com uma classe para que possamos ver o comportamento util
     
     <h2 class="archive__item-title" itemprop="headline">
       
-        <a href="http://localhost:4000/csharp/sql%20server/carregarinstancia/" rel="permalink">Carregando instâncias do SQL Server
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
 </a>
       
     </h2>
     
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
 
 
 
 
-  1 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Carregando Instâncias do SQL SERVER
-
-Olá tudo bem?!
-
-Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco de dados SQL SERVER.
-
-P...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/csharp/csharp-novidade/" rel="permalink">Novidade C# 7.3, o que vem por ai?
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante do C#, est...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/sql%20server/sqlserverclr/" rel="permalink">Usando CLR no SQL Server
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  2 minuto(s) de leitura
-</p>
-    
-    <p class="archive__item-excerpt" itemprop="description">NET Framework CLR + SQL Server
-
-“A partir do SQL Server 2005, o SQL Server apresenta a integração do componente CLR do .NET Framework para o Microsoft Window...</p>
-  </article>
-</div>
-        
-          
-
-
-
-<div class="grid__item">
-  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
-    
-    <h2 class="archive__item-title" itemprop="headline">
-      
-        <a href="http://localhost:4000/provider/ordenarcoluna/" rel="permalink">Ordem das colunas no EF Core 2.1
-</a>
-      
-    </h2>
-    
-      <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
-
-
-
-
-  1 minuto(s) de leitura
-</p>
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
     
     <p class="archive__item-excerpt" itemprop="description">
 
-Hoje tenho uma ótima noticia para você usuário do EFCore. 
-Acabei de compilar os fontes do EFCore e já se encontra com o que muitos desejavam.
-Vale lembrar...</p>
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
   </article>
 </div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
         
       </div>
     </div>
@@ -826,6 +857,13 @@ Vale lembrar...</p>
 
     </div>
 
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
     
 
     <div class="page__footer">
@@ -849,7 +887,7 @@ Vale lembrar...</p>
   </ul>
 </div>
 
-<div class="page__footer-copyright">&copy; 2017 Rafael Almeida.</div>
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
 
       </footer>
     </div>
@@ -859,8 +897,29 @@ Vale lembrar...</p>
 
 
 
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
 
 
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/linq/basicolinq/";
+      this.page.identifier = "/linq/basicolinq";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
 
 
 

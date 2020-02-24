@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Será que o Regex é rápido?  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?!Curiosidade leva nos sempre a pensar fora da caixa!!!No artigo SNAKE CASE eu usei um REGEX para aplicar a nomenclatura snake-case em uma string, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.Certo, e?Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns métodos, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.Eu sou fã do projeto Newtonsoft por muito tempo ele entregou com maestria o que prometia, então fui estudar um pouco os fontes dele e me deparei com isso AQUI, então percebi que ele teve uma estratégia para aumentar a performance na serialização, eu poderia copiar esse método dele e fazer os testes que eu queria, mas, a minha experiência não seria a mesma, isso me motivou a criar alguns métodos que estão aqui neste pequeno artigo.Vamos começar?!Veja os métodos que foram utilizados nos testes que executei.Método usando RegexEsse foi o método usado no artigo citado acima. Simples e objetivo usando todo poder do Regex!public string ToSnakeCaseUsingRegex(){    return Regex        .Replace(            _frase,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled)        .ToLower();}Método usando LINQNão poderia passar por aqui sem falar da importancia do LINQ dentro do ecosistema .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. O LINQ é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo LINQ.public string ToSnakeCaseUsingLinq(){    return string        .Concat(_frase            .Select((c, i) =&gt;                i &gt; 0 &amp;&amp; char.IsUpper(c)                     ? &quot;_&quot; + c                     : c.ToString()))                .ToLower();}Método usando StringBuilder e SpanAqui vamos começar a brincadeira com essa nova implementação do .NET, o SPAN, quando se fala em gerenciamento de memória, lembre-se desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com SPAN e o StringBuilder para empilhar temporariamente nossos caracteres.public string ToSnakeCaseUsingStringBuildAndSpan(){    ReadOnlySpan&lt;char&gt; frase = _frase;    var stringBuilder = new StringBuilder();    for (var i = 0; i &lt; frase.Length; i++)    {        if (char.IsUpper(frase[i]) &amp;&amp; frase[0] != frase[i])        {            stringBuilder.Append(&#39;_&#39;);            stringBuilder.Append(frase[i]);        }        else        {            stringBuilder.Append(frase[i]);        }    }    return stringBuilder        .ToString()        .ToLower();}Método usando somente SpanAqui vamos usar o SPAN, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres. public string ToSnakeCaseUsingSpanOnBuffer(){    var undescores = 0;    for (var i = 0; i &lt; _frase.Length; i++)    {        if (char.IsUpper(_frase[i]))        {            undescores++;        }    }    var length = (undescores + _frase.Length) - 1;    Span&lt;char&gt; buffer = new char[length];    var possitionOfBuffer = 0;    var letterPosition = 0;    while (possitionOfBuffer &lt; buffer.Length)    {        if (letterPosition &gt; 0 &amp;&amp; char.IsUpper(_frase[letterPosition]))        {            buffer[possitionOfBuffer] = &#39;_&#39;;            buffer[possitionOfBuffer + 1] = _frase[letterPosition];            possitionOfBuffer += 2;            letterPosition++;            continue;        }        buffer[possitionOfBuffer] = _frase[letterPosition];        possitionOfBuffer++;        letterPosition++;    }    return buffer        .ToString()        .ToLower();}Resultado dos testesOs testes foram realizando com 10, 100.000 e 1.000.000 de interações.-----------------------------------------------------------------UsingStringBuilderAndSpan 10              Tempo: 00:00:00.0025257                          100_000         Tempo: 00:00:00.1162287                          1_000_000       Tempo: 00:00:02.0734867-----------------------------------------------------------------UsingSpanOnBuffer         10              Tempo: 00:00:00.0004815                          100_000         Tempo: 00:00:00.1087459                          1_000_000       Tempo: 00:00:01.0008935-----------------------------------------------------------------UsingRegex                10              Tempo: 00:00:00.0606576                          100_000         Tempo: 00:00:00.5761851                          1_000_000       Tempo: 00:00:06.2264039-----------------------------------------------------------------UsingLinq                 10              Tempo: 00:00:00.0089215                          100_000         Tempo: 00:00:00.2520451                          1_000_000       Tempo: 00:00:02.7254307-----------------------------------------------------------------Podemos observar que o REGEX teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas dos olhos, já o LINQ me surpreendeu novamente mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando SPAN tiveram a melhor performance. BenchmarkBenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores.NET Core SDK=3.1.100  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT  [AttachedDebugger]  DefaultJob : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT|                             Method |       Mean |     Error |    StdDev |     Median | Rank |  Gen 0 | Gen 1 | Gen 2 | Allocated ||----------------------------------- |-----------:|----------:|----------:|-----------:|-----:|-------:|------:|------:|----------:||       ToSnakeCaseUsingSpanOnBuffer |   387.2 ns |   6.99 ns |   6.54 ns |   387.0 ns |    1 | 0.1831 |     - |     - |     384 B || ToSnakeCaseUsingStringBuildAndSpan |   473.0 ns |   9.42 ns |  16.00 ns |   469.5 ns |    2 | 0.3328 |     - |     - |     696 B ||               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B ||              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |Podemos observar que o REGEX novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquanto o LINQ alocou apenas sua metade, e os métodos que usamos SPAN teve o melhor comportamento, alocando muito menos memória.Um pouco sobre SpanO Span é uma struct, uma nova feature do .NET, o objetivo principal do team do .NET ter escrito é, diminuir o impacto na memória gerenciada, a heap, e, para eu não ser muito redundante tem um artigo muito legal do Stephen Toub falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span. Fica dica de leitura: SPAN by Stephen Toub.O que aprendemos com isso?Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.FontesOs fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/performanceregex Fico por aqui e um forte abraço! 😄 #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore31 #netcore31 #span">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Será que o Regex é rápido?">
+
+
+  <link rel="canonical" href="http://localhost:4000/dica/performanceregexvsspan/">
+  <meta property="og:url" content="http://localhost:4000/dica/performanceregexvsspan/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?!Curiosidade leva nos sempre a pensar fora da caixa!!!No artigo SNAKE CASE eu usei um REGEX para aplicar a nomenclatura snake-case em uma string, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.Certo, e?Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns métodos, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.Eu sou fã do projeto Newtonsoft por muito tempo ele entregou com maestria o que prometia, então fui estudar um pouco os fontes dele e me deparei com isso AQUI, então percebi que ele teve uma estratégia para aumentar a performance na serialização, eu poderia copiar esse método dele e fazer os testes que eu queria, mas, a minha experiência não seria a mesma, isso me motivou a criar alguns métodos que estão aqui neste pequeno artigo.Vamos começar?!Veja os métodos que foram utilizados nos testes que executei.Método usando RegexEsse foi o método usado no artigo citado acima. Simples e objetivo usando todo poder do Regex!public string ToSnakeCaseUsingRegex(){    return Regex        .Replace(            _frase,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled)        .ToLower();}Método usando LINQNão poderia passar por aqui sem falar da importancia do LINQ dentro do ecosistema .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. O LINQ é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo LINQ.public string ToSnakeCaseUsingLinq(){    return string        .Concat(_frase            .Select((c, i) =&gt;                i &gt; 0 &amp;&amp; char.IsUpper(c)                     ? &quot;_&quot; + c                     : c.ToString()))                .ToLower();}Método usando StringBuilder e SpanAqui vamos começar a brincadeira com essa nova implementação do .NET, o SPAN, quando se fala em gerenciamento de memória, lembre-se desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com SPAN e o StringBuilder para empilhar temporariamente nossos caracteres.public string ToSnakeCaseUsingStringBuildAndSpan(){    ReadOnlySpan&lt;char&gt; frase = _frase;    var stringBuilder = new StringBuilder();    for (var i = 0; i &lt; frase.Length; i++)    {        if (char.IsUpper(frase[i]) &amp;&amp; frase[0] != frase[i])        {            stringBuilder.Append(&#39;_&#39;);            stringBuilder.Append(frase[i]);        }        else        {            stringBuilder.Append(frase[i]);        }    }    return stringBuilder        .ToString()        .ToLower();}Método usando somente SpanAqui vamos usar o SPAN, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres. public string ToSnakeCaseUsingSpanOnBuffer(){    var undescores = 0;    for (var i = 0; i &lt; _frase.Length; i++)    {        if (char.IsUpper(_frase[i]))        {            undescores++;        }    }    var length = (undescores + _frase.Length) - 1;    Span&lt;char&gt; buffer = new char[length];    var possitionOfBuffer = 0;    var letterPosition = 0;    while (possitionOfBuffer &lt; buffer.Length)    {        if (letterPosition &gt; 0 &amp;&amp; char.IsUpper(_frase[letterPosition]))        {            buffer[possitionOfBuffer] = &#39;_&#39;;            buffer[possitionOfBuffer + 1] = _frase[letterPosition];            possitionOfBuffer += 2;            letterPosition++;            continue;        }        buffer[possitionOfBuffer] = _frase[letterPosition];        possitionOfBuffer++;        letterPosition++;    }    return buffer        .ToString()        .ToLower();}Resultado dos testesOs testes foram realizando com 10, 100.000 e 1.000.000 de interações.-----------------------------------------------------------------UsingStringBuilderAndSpan 10              Tempo: 00:00:00.0025257                          100_000         Tempo: 00:00:00.1162287                          1_000_000       Tempo: 00:00:02.0734867-----------------------------------------------------------------UsingSpanOnBuffer         10              Tempo: 00:00:00.0004815                          100_000         Tempo: 00:00:00.1087459                          1_000_000       Tempo: 00:00:01.0008935-----------------------------------------------------------------UsingRegex                10              Tempo: 00:00:00.0606576                          100_000         Tempo: 00:00:00.5761851                          1_000_000       Tempo: 00:00:06.2264039-----------------------------------------------------------------UsingLinq                 10              Tempo: 00:00:00.0089215                          100_000         Tempo: 00:00:00.2520451                          1_000_000       Tempo: 00:00:02.7254307-----------------------------------------------------------------Podemos observar que o REGEX teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas dos olhos, já o LINQ me surpreendeu novamente mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando SPAN tiveram a melhor performance. BenchmarkBenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores.NET Core SDK=3.1.100  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT  [AttachedDebugger]  DefaultJob : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT|                             Method |       Mean |     Error |    StdDev |     Median | Rank |  Gen 0 | Gen 1 | Gen 2 | Allocated ||----------------------------------- |-----------:|----------:|----------:|-----------:|-----:|-------:|------:|------:|----------:||       ToSnakeCaseUsingSpanOnBuffer |   387.2 ns |   6.99 ns |   6.54 ns |   387.0 ns |    1 | 0.1831 |     - |     - |     384 B || ToSnakeCaseUsingStringBuildAndSpan |   473.0 ns |   9.42 ns |  16.00 ns |   469.5 ns |    2 | 0.3328 |     - |     - |     696 B ||               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B ||              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |Podemos observar que o REGEX novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquanto o LINQ alocou apenas sua metade, e os métodos que usamos SPAN teve o melhor comportamento, alocando muito menos memória.Um pouco sobre SpanO Span é uma struct, uma nova feature do .NET, o objetivo principal do team do .NET ter escrito é, diminuir o impacto na memória gerenciada, a heap, e, para eu não ser muito redundante tem um artigo muito legal do Stephen Toub falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span. Fica dica de leitura: SPAN by Stephen Toub.O que aprendemos com isso?Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.FontesOs fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/performanceregex Fico por aqui e um forte abraço! 😄 #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore31 #netcore31 #span">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-12-07T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Será que o Regex é rápido?">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?!Curiosidade leva nos sempre a pensar fora da caixa!!!No artigo SNAKE CASE eu usei um REGEX para aplicar a nomenclatura snake-case em uma string, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.Certo, e?Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns métodos, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.Eu sou fã do projeto Newtonsoft por muito tempo ele entregou com maestria o que prometia, então fui estudar um pouco os fontes dele e me deparei com isso AQUI, então percebi que ele teve uma estratégia para aumentar a performance na serialização, eu poderia copiar esse método dele e fazer os testes que eu queria, mas, a minha experiência não seria a mesma, isso me motivou a criar alguns métodos que estão aqui neste pequeno artigo.Vamos começar?!Veja os métodos que foram utilizados nos testes que executei.Método usando RegexEsse foi o método usado no artigo citado acima. Simples e objetivo usando todo poder do Regex!public string ToSnakeCaseUsingRegex(){    return Regex        .Replace(            _frase,             @&quot;([a-z0-9])([A-Z])&quot;,             &quot;$1_$2&quot;,             RegexOptions.Compiled)        .ToLower();}Método usando LINQNão poderia passar por aqui sem falar da importancia do LINQ dentro do ecosistema .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. O LINQ é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo LINQ.public string ToSnakeCaseUsingLinq(){    return string        .Concat(_frase            .Select((c, i) =&gt;                i &gt; 0 &amp;&amp; char.IsUpper(c)                     ? &quot;_&quot; + c                     : c.ToString()))                .ToLower();}Método usando StringBuilder e SpanAqui vamos começar a brincadeira com essa nova implementação do .NET, o SPAN, quando se fala em gerenciamento de memória, lembre-se desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com SPAN e o StringBuilder para empilhar temporariamente nossos caracteres.public string ToSnakeCaseUsingStringBuildAndSpan(){    ReadOnlySpan&lt;char&gt; frase = _frase;    var stringBuilder = new StringBuilder();    for (var i = 0; i &lt; frase.Length; i++)    {        if (char.IsUpper(frase[i]) &amp;&amp; frase[0] != frase[i])        {            stringBuilder.Append(&#39;_&#39;);            stringBuilder.Append(frase[i]);        }        else        {            stringBuilder.Append(frase[i]);        }    }    return stringBuilder        .ToString()        .ToLower();}Método usando somente SpanAqui vamos usar o SPAN, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres. public string ToSnakeCaseUsingSpanOnBuffer(){    var undescores = 0;    for (var i = 0; i &lt; _frase.Length; i++)    {        if (char.IsUpper(_frase[i]))        {            undescores++;        }    }    var length = (undescores + _frase.Length) - 1;    Span&lt;char&gt; buffer = new char[length];    var possitionOfBuffer = 0;    var letterPosition = 0;    while (possitionOfBuffer &lt; buffer.Length)    {        if (letterPosition &gt; 0 &amp;&amp; char.IsUpper(_frase[letterPosition]))        {            buffer[possitionOfBuffer] = &#39;_&#39;;            buffer[possitionOfBuffer + 1] = _frase[letterPosition];            possitionOfBuffer += 2;            letterPosition++;            continue;        }        buffer[possitionOfBuffer] = _frase[letterPosition];        possitionOfBuffer++;        letterPosition++;    }    return buffer        .ToString()        .ToLower();}Resultado dos testesOs testes foram realizando com 10, 100.000 e 1.000.000 de interações.-----------------------------------------------------------------UsingStringBuilderAndSpan 10              Tempo: 00:00:00.0025257                          100_000         Tempo: 00:00:00.1162287                          1_000_000       Tempo: 00:00:02.0734867-----------------------------------------------------------------UsingSpanOnBuffer         10              Tempo: 00:00:00.0004815                          100_000         Tempo: 00:00:00.1087459                          1_000_000       Tempo: 00:00:01.0008935-----------------------------------------------------------------UsingRegex                10              Tempo: 00:00:00.0606576                          100_000         Tempo: 00:00:00.5761851                          1_000_000       Tempo: 00:00:06.2264039-----------------------------------------------------------------UsingLinq                 10              Tempo: 00:00:00.0089215                          100_000         Tempo: 00:00:00.2520451                          1_000_000       Tempo: 00:00:02.7254307-----------------------------------------------------------------Podemos observar que o REGEX teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas dos olhos, já o LINQ me surpreendeu novamente mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando SPAN tiveram a melhor performance. BenchmarkBenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores.NET Core SDK=3.1.100  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT  [AttachedDebugger]  DefaultJob : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT|                             Method |       Mean |     Error |    StdDev |     Median | Rank |  Gen 0 | Gen 1 | Gen 2 | Allocated ||----------------------------------- |-----------:|----------:|----------:|-----------:|-----:|-------:|------:|------:|----------:||       ToSnakeCaseUsingSpanOnBuffer |   387.2 ns |   6.99 ns |   6.54 ns |   387.0 ns |    1 | 0.1831 |     - |     - |     384 B || ToSnakeCaseUsingStringBuildAndSpan |   473.0 ns |   9.42 ns |  16.00 ns |   469.5 ns |    2 | 0.3328 |     - |     - |     696 B ||               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B ||              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |Podemos observar que o REGEX novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquanto o LINQ alocou apenas sua metade, e os métodos que usamos SPAN teve o melhor comportamento, alocando muito menos memória.Um pouco sobre SpanO Span é uma struct, uma nova feature do .NET, o objetivo principal do team do .NET ter escrito é, diminuir o impacto na memória gerenciada, a heap, e, para eu não ser muito redundante tem um artigo muito legal do Stephen Toub falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span. Fica dica de leitura: SPAN by Stephen Toub.O que aprendemos com isso?Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.FontesOs fontes do exemplo usado está aqui:https://github.com/ralmsdeveloper/performanceregex Fico por aqui e um forte abraço! 😄 #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore31 #netcore31 #span">
+    <meta itemprop="datePublished" content="December 07, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Será que o Regex é rápido?
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+        <p><img src="http://localhost:4000/assets/images/PerformanceRegex.png" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?!</strong></center>
+<hr />
+
+<p>Curiosidade leva nos sempre a pensar fora da caixa!!!<br /></p>
+<div style="text-align: justify;">
+No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
+a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.
+</div>
+<p><br /></p>
+<h1 id="certo-e">Certo, e?</h1>
+<div style="text-align: justify;">
+Pois bem, fiquei inquieto e comecei a escrever alguns bits na tentativa de descobrir o que seria melhor em um 
+ambiente onde eu precisaria processar milhares ou milhões de dados, então cheguei a construir alguns <b>métodos</b>, para garantir a performance em um ambiente crítico, onde pode acontecer milhares ou milhões de interações por segundos.<br />
+<br />
+Eu sou fã do projeto <b>Newtonsoft</b> por muito tempo ele entregou com maestria o que prometia, então fui estudar um pouco os fontes dele e me deparei com isso 
+<a href="https://github.com/JamesNK/Newtonsoft.Json/blob/master/Src/Newtonsoft.Json/Utilities/StringUtils.cs#L218" target="_BLANK" alt="">AQUI</a>, então percebi que ele teve uma estratégia para aumentar a performance na serialização, eu poderia
+ copiar esse método dele e fazer os testes que eu queria, mas, a minha experiência não seria a mesma, isso me motivou a criar alguns métodos que 
+estão aqui neste pequeno artigo.
+</div>
+<p><br />
+Vamos começar?!<br />
+Veja os métodos que foram utilizados nos testes que executei.</p>
+<h1 id="método-usando-regex">Método usando Regex</h1>
+<p>Esse foi o método usado no artigo citado acima. Simples e objetivo usando todo poder do Regex!</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="kt">string</span> <span class="nf">ToSnakeCaseUsingRegex</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="n">Regex</span>
+        <span class="p">.</span><span class="nf">Replace</span><span class="p">(</span>
+            <span class="n">_frase</span><span class="p">,</span> 
+            <span class="s">@"([a-z0-9])([A-Z])"</span><span class="p">,</span> 
+            <span class="s">"$1_$2"</span><span class="p">,</span> 
+            <span class="n">RegexOptions</span><span class="p">.</span><span class="n">Compiled</span><span class="p">)</span>
+        <span class="p">.</span><span class="nf">ToLower</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h1 id="método-usando-linq">Método usando LINQ</h1>
+<div style="text-align: justify;">
+Não poderia passar por aqui sem falar da importancia do LINQ dentro do ecosistema .NET, sem sombra de dúvidas é uma das melhores implementações dentro da plataforma. 
+O <b>LINQ</b> é simplesmente fantástico, pode ser usado praticamente pra manipular qualquer informação, eu te amo <b>LINQ</b>.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="kt">string</span> <span class="nf">ToSnakeCaseUsingLinq</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="k">return</span> <span class="kt">string</span>
+        <span class="p">.</span><span class="nf">Concat</span><span class="p">(</span><span class="n">_frase</span>
+            <span class="p">.</span><span class="nf">Select</span><span class="p">((</span><span class="n">c</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span> <span class="p">=&gt;</span>
+                <span class="n">i</span> <span class="p">&gt;</span> <span class="m">0</span> <span class="p">&amp;&amp;</span> <span class="kt">char</span><span class="p">.</span><span class="nf">IsUpper</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> 
+                    <span class="p">?</span> <span class="s">"_"</span> <span class="p">+</span> <span class="n">c</span> 
+                    <span class="p">:</span> <span class="n">c</span><span class="p">.</span><span class="nf">ToString</span><span class="p">()))</span>
+                <span class="p">.</span><span class="nf">ToLower</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h1 id="método-usando-stringbuilder-e-span">Método usando StringBuilder e Span<T></T></h1>
+<div style="text-align: justify;">
+Aqui vamos começar a brincadeira com essa nova implementação do .NET, o <b>SPAN</b>, quando se fala em gerenciamento 
+de memória, lembre-se desse cara, nesse exemplo iremos fazer uma pequena mesclagem, com <b>SPAN</b> e o <b>StringBuilder</b> para empilhar temporariamente nossos caracteres.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="kt">string</span> <span class="nf">ToSnakeCaseUsingStringBuildAndSpan</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="n">ReadOnlySpan</span><span class="p">&lt;</span><span class="kt">char</span><span class="p">&gt;</span> <span class="n">frase</span> <span class="p">=</span> <span class="n">_frase</span><span class="p">;</span>
+
+    <span class="kt">var</span> <span class="n">stringBuilder</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">StringBuilder</span><span class="p">();</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">frase</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">char</span><span class="p">.</span><span class="nf">IsUpper</span><span class="p">(</span><span class="n">frase</span><span class="p">[</span><span class="n">i</span><span class="p">])</span> <span class="p">&amp;&amp;</span> <span class="n">frase</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="p">!=</span> <span class="n">frase</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="p">{</span>
+            <span class="n">stringBuilder</span><span class="p">.</span><span class="nf">Append</span><span class="p">(</span><span class="sc">'_'</span><span class="p">);</span>
+            <span class="n">stringBuilder</span><span class="p">.</span><span class="nf">Append</span><span class="p">(</span><span class="n">frase</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+        <span class="k">else</span>
+        <span class="p">{</span>
+            <span class="n">stringBuilder</span><span class="p">.</span><span class="nf">Append</span><span class="p">(</span><span class="n">frase</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">stringBuilder</span>
+        <span class="p">.</span><span class="nf">ToString</span><span class="p">()</span>
+        <span class="p">.</span><span class="nf">ToLower</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h1 id="método-usando-somente-span">Método usando somente Span<T></T></h1>
+<div style="text-align: justify;">
+Aqui vamos usar o <b>SPAN</b>, só que a única diferença é que mudei a estratégia e estou usando um buffer para mover a posição dos caracteres.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">public</span> <span class="kt">string</span> <span class="nf">ToSnakeCaseUsingSpanOnBuffer</span><span class="p">()</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">undescores</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">i</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">i</span> <span class="p">&lt;</span> <span class="n">_frase</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">i</span><span class="p">++)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="kt">char</span><span class="p">.</span><span class="nf">IsUpper</span><span class="p">(</span><span class="n">_frase</span><span class="p">[</span><span class="n">i</span><span class="p">]))</span>
+        <span class="p">{</span>
+            <span class="n">undescores</span><span class="p">++;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kt">var</span> <span class="n">length</span> <span class="p">=</span> <span class="p">(</span><span class="n">undescores</span> <span class="p">+</span> <span class="n">_frase</span><span class="p">.</span><span class="n">Length</span><span class="p">)</span> <span class="p">-</span> <span class="m">1</span><span class="p">;</span>
+    <span class="n">Span</span><span class="p">&lt;</span><span class="kt">char</span><span class="p">&gt;</span> <span class="n">buffer</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">char</span><span class="p">[</span><span class="n">length</span><span class="p">];</span>
+    <span class="kt">var</span> <span class="n">possitionOfBuffer</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+    <span class="kt">var</span> <span class="n">letterPosition</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span>
+
+    <span class="k">while</span> <span class="p">(</span><span class="n">possitionOfBuffer</span> <span class="p">&lt;</span> <span class="n">buffer</span><span class="p">.</span><span class="n">Length</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="n">letterPosition</span> <span class="p">&gt;</span> <span class="m">0</span> <span class="p">&amp;&amp;</span> <span class="kt">char</span><span class="p">.</span><span class="nf">IsUpper</span><span class="p">(</span><span class="n">_frase</span><span class="p">[</span><span class="n">letterPosition</span><span class="p">]))</span>
+        <span class="p">{</span>
+            <span class="n">buffer</span><span class="p">[</span><span class="n">possitionOfBuffer</span><span class="p">]</span> <span class="p">=</span> <span class="sc">'_'</span><span class="p">;</span>
+            <span class="n">buffer</span><span class="p">[</span><span class="n">possitionOfBuffer</span> <span class="p">+</span> <span class="m">1</span><span class="p">]</span> <span class="p">=</span> <span class="n">_frase</span><span class="p">[</span><span class="n">letterPosition</span><span class="p">];</span>
+            <span class="n">possitionOfBuffer</span> <span class="p">+=</span> <span class="m">2</span><span class="p">;</span>
+            <span class="n">letterPosition</span><span class="p">++;</span>
+            <span class="k">continue</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="n">buffer</span><span class="p">[</span><span class="n">possitionOfBuffer</span><span class="p">]</span> <span class="p">=</span> <span class="n">_frase</span><span class="p">[</span><span class="n">letterPosition</span><span class="p">];</span>
+
+        <span class="n">possitionOfBuffer</span><span class="p">++;</span>
+        <span class="n">letterPosition</span><span class="p">++;</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">buffer</span>
+        <span class="p">.</span><span class="nf">ToString</span><span class="p">()</span>
+        <span class="p">.</span><span class="nf">ToLower</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<h1 id="resultado-dos-testes">Resultado dos testes</h1>
+<p>Os testes foram realizando com 10, 100.000 e 1.000.000 de interações.</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-----------------------------------------------------------------
+UsingStringBuilderAndSpan 10              Tempo: 00:00:00.0025257
+                          100_000         Tempo: 00:00:00.1162287
+                          1_000_000       Tempo: 00:00:02.0734867
+-----------------------------------------------------------------
+UsingSpanOnBuffer         10              Tempo: 00:00:00.0004815
+                          100_000         Tempo: 00:00:00.1087459
+                          1_000_000       Tempo: 00:00:01.0008935
+-----------------------------------------------------------------
+UsingRegex                10              Tempo: 00:00:00.0606576
+                          100_000         Tempo: 00:00:00.5761851
+                          1_000_000       Tempo: 00:00:06.2264039
+-----------------------------------------------------------------
+UsingLinq                 10              Tempo: 00:00:00.0089215
+                          100_000         Tempo: 00:00:00.2520451
+                          1_000_000       Tempo: 00:00:02.7254307
+-----------------------------------------------------------------
+</code></pre></div></div>
+<div style="text-align: justify;">
+Podemos observar que o <b>REGEX</b> teve a pior performance aqui, na verdade quando o assunto foi processar muita informação, ele foi péssimo, nossa 
+mais de 6 segundos, em um ambiente de produção e crítico escorre até lágrimas dos olhos, já o <b>LINQ</b> me surpreendeu novamente 
+mostrando que ainda é muito eficiente em cenários críticos, os métodos implementados usando <b>SPAN</b> tiveram a melhor performance.
+ </div>
+<p><br /></p>
+<h1 id="benchmark">Benchmark</h1>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BenchmarkDotNet=v0.12.0, OS=Windows 10.0.18362
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET Core SDK=3.1.100
+  [Host]     : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT  [AttachedDebugger]
+  DefaultJob : .NET Core 3.1.0 (CoreCLR 4.700.19.56402, CoreFX 4.700.19.56404), X64 RyuJIT
+
+
+|                             Method |       Mean |     Error |    StdDev |     Median | Rank |  Gen 0 | Gen 1 | Gen 2 | Allocated |
+|----------------------------------- |-----------:|----------:|----------:|-----------:|-----:|-------:|------:|------:|----------:|
+|       ToSnakeCaseUsingSpanOnBuffer |   387.2 ns |   6.99 ns |   6.54 ns |   387.0 ns |    1 | 0.1831 |     - |     - |     384 B |
+| ToSnakeCaseUsingStringBuildAndSpan |   473.0 ns |   9.42 ns |  16.00 ns |   469.5 ns |    2 | 0.3328 |     - |     - |     696 B |
+|               ToSnakeCaseUsingLinq | 1,763.3 ns |  69.64 ns | 198.68 ns | 1,680.1 ns |    3 | 0.7839 |     - |     - |    1640 B |
+|              ToSnakeCaseUsingRegex | 5,438.9 ns | 193.14 ns | 531.95 ns | 5,292.9 ns |    4 | 1.1520 |     - |     - |    2416 B |
+</code></pre></div></div>
+<div style="text-align: justify;">
+Podemos observar que o <b>REGEX</b> novamente teve a pior performance aqui, chegando a alocar mais de 2K na memória, enquanto o <b>LINQ</b> alocou apenas sua metade, 
+e os métodos que usamos <b>SPAN</b> teve o melhor comportamento, alocando muito menos memória.
+</div>
+<p><br /></p>
+<h1 id="um-pouco-sobre-span">Um pouco sobre Span<T></T></h1>
+<div style="text-align: justify;">
+O <b>Span</b> é uma struct, uma nova feature do .NET, o objetivo principal do team do .NET ter escrito é, diminuir o impacto na memória gerenciada, a heap, e, para 
+eu não ser muito redundante tem um artigo muito legal do <b>Stephen Toub</b> 
+falando mais sobre o Span, é basicamente o Deep-Dive dentro do Span.<br /> 
+Fica dica de leitura: <a href="https://docs.microsoft.com/pt-br/archive/msdn-magazine/2018/january/csharp-all-about-span-exploring-a-new-net-mainstay" target="_BLANK" alt="">SPAN by Stephen Toub</a>.
+</div>
+<p><br /></p>
+
+<h1 id="o-que-aprendemos-com-isso">O que aprendemos com isso?</h1>
+<div class="notice--warning" style="text-align: justify;">
+Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com métodos quase prontos, não se acomode, em vez disso teste 
+e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.
+</div>
+<p><br /></p>
+<h1 id="fontes">Fontes</h1>
+<p>Os fontes do exemplo usado está aqui:<br />
+<a href="https://github.com/ralmsdeveloper/performanceregex" target="_BLANK" alt="">
+https://github.com/ralmsdeveloper/performanceregex
+</a></p>
+
+<p><br /></p>
+<div class="notice--success">
+<strong>
+ Fico por aqui e um forte abraço! 😄 
+</strong>
+</div>
+
+<p>#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore31 #netcore31 #span<br /><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dica" class="page__taxonomy-item" rel="tag">Dica</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2019-12-07T00:00:00+00:00">December 07, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Ser%C3%A1+que+o+Regex+%C3%A9+r%C3%A1pido%3F%20http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fperformanceregexvsspan%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fperformanceregexvsspan%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fperformanceregexvsspan%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdica%2Fperformanceregexvsspan%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/dica/efcore31_operations_interception/" class="pagination--pager" title="Interceptando comandos - EF Core 3.1
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/dica/feliz2020/" class="pagination--pager" title="Adeus 2019, bem vindo 2020!
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  16 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/snakecase_aspnetcore31/" rel="permalink">System.Text.JSON - ASPNET Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Porque estamos aqui?
+
+Eu acredito que você já sabe, e se não sabe, ficará agora, que a Microsoft escreveu seu proprio Serializ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dica/performanceregexvsspan/";
+      this.page.identifier = "/dica/performanceregexvsspan";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

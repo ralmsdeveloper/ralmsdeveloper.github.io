@@ -1,5 +1,9 @@
 # main links
 main:
+  - title: "Artigos"
+    url: /categories/
+  - title: "Palestras"
+    url: /talks
   #- title: "Sobre"
   #  url: https://ralms.net
   # - title: "About"
