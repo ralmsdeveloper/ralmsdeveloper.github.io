@@ -1,5 +1,13 @@
 ﻿################################################################################
 # This .gitignore file was automatically created by Microsoft(R) Visual Studio.
 ################################################################################
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
 
-/.sass-cache/**.*
+.vs/
+
+# Web workbench (sass)
+.sass-cache/

@@ -526,7 +526,7 @@ var idx = lunr(function () {
     idx.add({
       title: "Adeus 2019, bem vindo 2020!",
       excerpt: "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
-      categories: ["Dica"],
+      categories: ["Retrospectiva"],
       tags: [],
       id: 57
     });
@@ -1171,7 +1171,7 @@ var store = [
       
       {
         "title": "Adeus 2019, bem vindo 2020!",
-        "url": "http://localhost:4000/dica/feliz2020/",
+        "url": "http://localhost:4000/retrospectiva/feliz2020/",
         "excerpt": "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
         "teaser":
           
