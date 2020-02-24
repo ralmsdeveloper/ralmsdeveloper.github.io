@@ -87,7 +87,7 @@ var list = new List<string>{"A","B","C"};
 var item = list[2];
 ``` 
 O classe concreta `List<T>` sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do `IEnumerable<T>` que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.
-## IEnumerable<'T'> vs List<'T'>  
+## IEnumerable<`T`> vs List<`T`>  
 Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.
 ```csharp
 var tagsList = new List<string>
@@ -150,5 +150,6 @@ e deixa disponível para o consumidor, então qualquer alteração em minha list
 </strong>
 </div> 
 
-
+<br>
+<br>
  #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection<br><br>
