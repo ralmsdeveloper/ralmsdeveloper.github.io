@@ -143,6 +143,8 @@ Agora sim o retorno será exatamente:
 
 Isso porque quando executo o `ToList()` ele imediatamente carrega os objetos para memória 
 e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o metódo `ToList()` não terá mais nenhum efeito sobre a mesma.
+
+## Twitter
 <div class="notice--success">
 <strong>
  Fico por aqui e um forte abraço! 😄 <br />

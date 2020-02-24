@@ -524,7 +524,7 @@ var idx = lunr(function () {
     
   
     idx.add({
-      title: "IList<T>, ICollection<T> e IEnumerable<T>",
+      title: "IList<`T`>, ICollection<`T`> e IEnumerable<`T`>",
       excerpt: "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
       categories: ["Collections","Linq","NETCore"],
       tags: [],
@@ -1170,7 +1170,7 @@ var store = [
     
       
       {
-        "title": "IList<T>, ICollection<T> e IEnumerable<T>",
+        "title": "IList<`T`>, ICollection<`T`> e IEnumerable<`T`>",
         "url": "http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/",
         "excerpt": "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
         "teaser":

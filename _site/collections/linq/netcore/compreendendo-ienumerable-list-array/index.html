@@ -15,7 +15,7 @@
 
 
 
-<title>IList, ICollection e IEnumerable  Ralms.NET</title>
+<title>IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt;  Ralms.NET</title>
 
 
 
@@ -29,7 +29,7 @@
 
 <meta property="og:locale" content="pt_BR">
 <meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
-<meta property="og:title" content="IList, ICollection e IEnumerable">
+<meta property="og:title" content="IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt;">
 
 
   <link rel="canonical" href="http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/">
@@ -301,7 +301,7 @@
 
 
   <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
-    <meta itemprop="headline" content="IList, ICollection e IEnumerable">
+    <meta itemprop="headline" content="IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt;">
     <meta itemprop="description" content="Fala pessoal, tudo bem?!Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo a versão 2 deste artigo.IntroduçãoGostaria de falar um pouco com você sobre algumas implementações genéricas como IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; e algumas coisas sobre coleções, é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, que para mim foi a implmentação mais importante no ecosistema .NET, dado que é um assunto que eu particularmente gosto.No .NET basicamente podemso converter qualquer coisa pra uma coleção de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:IList&lt;T&gt;, ICollection&lt;T&gt; ou IEnumerable&lt;T&gt;, então deixa eu te explicar um pouco sobre cada um deles.Anatomia das coleçõesEsse é um exemplo simples, observe que estarei me referindo as interfaces genéricas IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; já que temos outras interfaces IList, ICollection e IEnumerable não genéricas para implementar comportamentos diferentes.Interface IEnumerable&lt;T&gt;public interface IEnumerable&lt;T&gt; : IEnumerable{    IEnumerator&lt;T&gt; GetEnumerator();} Quando usar?Quando você precisar apenas ler objetos de uma coleção.Interface ICollection&lt;T&gt;public interface ICollection&lt;T&gt; : IEnumerable&lt;T&gt;, IEnumerable{    int Count { get; }    bool IsReadOnly { get; }    void Add(T item);    void Clear();    bool Contains(T item);    void CopyTo(T[] array, int arrayIndex);    bool Remove(T item);} Quando usar?Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.Interface IList&lt;T&gt;public interface IList&lt;T&gt; : ICollection&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable{    T this[int index] { get; set; }    int IndexOf(T item);    void Insert(int index, T item);    void RemoveAt(int index);} Quando usar?Quando precisar de tudo que existe no IColletion&lt;`T`&gt; e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.var list = new List&lt;string&gt;{&quot;A&quot;,&quot;B&quot;,&quot;C&quot;};var item = list[2];O classe concreta List&lt;T&gt; sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do IEnumerable&lt;T&gt; que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.IEnumerable&lt;T&gt; vs List&lt;T&gt;Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.var tagsList = new List&lt;string&gt;{  &quot;CORE&quot;,  &quot;AZURE&quot;,  &quot;EFCORE&quot;,  &quot;SCYLLADB&quot;  &quot;ASPNETCORE&quot;,};Agora vamos efetuar uma consulta:var tags = tagsList.Where(t =&gt; t.Length &gt;= 8);tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:  SCYLLADB  ASPNETCOREque são maior ou igual a 8 caracteres.OK? …errado!Observe que logo após fazer meu where(minha consulta) eu modifiquei o item 0 deminha lista de tags.O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um IEnumerable&lt;T&gt;, na verdade ele não está trazendo os objetos para memória como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso ao objeto no momento de sua iteiração.Isso significa que a resposta para nossa pergunta acima seria:  SQLSERVER  SCYLLADB  ASPNETCOREo compilador preservou o estado de minha consulta, executando-a de fato, quando fiz a iteiração com a consulta.Agora vamos fazer a mesma consulta com ToList():var tags = tagsList.Where(t =&gt; t.Length &gt;= 8).ToList();tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Agora sim o retorno será exatamente:  SCYLLADB  ASPNETCOREIsso porque quando executo o ToList() ele imediatamente carrega os objetos para memória e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o metódo ToList() não terá mais nenhum efeito sobre a mesma. Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection">
     <meta itemprop="datePublished" content="February 24, 2020">
     
@@ -309,7 +309,7 @@
     <div class="page__inner-wrap">
       
         <header>
-          <h1 class="page__title" itemprop="headline">IList<T>, ICollection<T> e IEnumerable<T></T></T></T>
+          <h1 class="page__title" itemprop="headline">IList&lt;<code class="language-plaintext highlighter-rouge">T</code>&gt;, ICollection&lt;<code class="language-plaintext highlighter-rouge">T</code>&gt; e IEnumerable&lt;<code class="language-plaintext highlighter-rouge">T</code>&gt;
 </h1>
           
                              <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
@@ -528,7 +528,7 @@ e deixa disponível para o consumidor, então qualquer alteração em minha list
     <h4 class="page__share-title">Compartilhe em</h4>
   
 
-  <a href="https://twitter.com/intent/tweet?text=IList%3CT%3E%2C+ICollection%3CT%3E+e+IEnumerable%3CT%3E%20http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+  <a href="https://twitter.com/intent/tweet?text=IList%3C%60T%60%3E%2C+ICollection%3C%60T%60%3E+e+IEnumerable%3C%60T%60%3E%20http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
 
   <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
 
