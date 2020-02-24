@@ -148,7 +148,8 @@ e deixa disponível para o consumidor, então qualquer alteração em minha list
 <div class="notice--success">
 <strong>
  Fico por aqui e um forte abraço! 😄 <br />
- Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a>
+ Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
+ Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net
 </strong>
 </div> 
 
