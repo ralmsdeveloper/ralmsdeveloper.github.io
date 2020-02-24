@@ -13,8 +13,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Comprimindo Dados",
       excerpt: "Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo. Nos dias de hoje com HDs/SSDS para armazenamentos não...",
-      categories: ["CSharp"],
-      tags: ["CSharp"],
+      categories: ["C#"],
+      tags: ["C#"],
       id: 0
     });
     
@@ -31,8 +31,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Carregando instâncias do SQL Server",
       excerpt: "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
-      categories: ["CSharp","SQL Server"],
-      tags: ["CSharp"],
+      categories: ["C#","SQL Server"],
+      tags: ["C#"],
       id: 2
     });
     
@@ -59,7 +59,7 @@ var idx = lunr(function () {
       title: "EntityFrameworkCore For FirebirdSQL",
       excerpt: "EntityFrameworkCore For FirebirdSQL Lançamento EntityFrameworkCore for FirebirdSQL Com enorme prazer que venho informar que hoje o EntityframworkCore.FirebirdSQL está disponível, tomei...",
       categories: ["Provider"],
-      tags: ["CSharp","NetStandard","EntityFrameworkCore"],
+      tags: ["C#","NetStandard","EntityFrameworkCore"],
       id: 5
     });
     
@@ -67,8 +67,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Query Compilada no EntityFrameworkCore 2.0",
       excerpt: "Recentemente publiquei um pequeno artigo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função...",
-      categories: ["CSharp"],
-      tags: ["CSharp","EntityFrameworkCore"],
+      categories: ["C#"],
+      tags: ["C#","EntityFrameworkCore"],
       id: 6
     });
     
@@ -76,8 +76,8 @@ var idx = lunr(function () {
     idx.add({
       title: "SQL Injection EntityFrameworkCore",
       excerpt: "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
-      categories: ["CSharp"],
-      tags: ["CSharp","EntityFrameworkCore"],
+      categories: ["C#"],
+      tags: ["C#","EntityFrameworkCore"],
       id: 7
     });
     
@@ -86,7 +86,7 @@ var idx = lunr(function () {
       title: "EntityFrameworkCore.FirebirdSQL  2.0.8",
       excerpt: "Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdSql. Muitas melhorias e implementações em: Scaffold Insert em Lote Delete...",
       categories: ["Provider"],
-      tags: ["CSharp","NetStandard","EntityFrameworkCore"],
+      tags: ["C#","NetStandard","EntityFrameworkCore"],
       id: 8
     });
     
@@ -104,7 +104,7 @@ var idx = lunr(function () {
       title: "EntityFrameworkCore.FirebirdSQL  2.0.9",
       excerpt: "EntityFrameworkCore For FirebirdSQL Fala pessoal, acabei de disponibilizar para vocês a versão 2.0.9 “quentinha” do EntityFrameworkCore.FirebirdSql, o Framework de acesso...",
       categories: ["Provider"],
-      tags: ["CSharp","NetStandard","EntityFrameworkCore"],
+      tags: ["C#","NetStandard","EntityFrameworkCore"],
       id: 10
     });
     
@@ -112,8 +112,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Script Migração – EF Core",
       excerpt: "Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script...",
-      categories: ["CSharp"],
-      tags: ["CSharp","EntityFrameworkCore"],
+      categories: ["C#"],
+      tags: ["C#","EntityFrameworkCore"],
       id: 11
     });
     
@@ -121,8 +121,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Popular Dados (EF Core 2.1)",
       excerpt: "Fala pessoal tudo bem?! Estou fazendo mais esse pequeno post para mostrar mais um novo recurso que será disponibilizado na...",
-      categories: ["CSharp"],
-      tags: ["CSharp","EntityFrameworkCore"],
+      categories: ["C#"],
+      tags: ["C#","EntityFrameworkCore"],
       id: 12
     });
     
@@ -131,7 +131,7 @@ var idx = lunr(function () {
       title: "Ordem das colunas no EF Core 2.1",
       excerpt: "Hoje tenho uma ótima noticia para você usuário do EFCore. Acabei de compilar os fontes do EFCore e já se...",
       categories: ["Provider"],
-      tags: ["CSharp","NetStandard","EntityFrameworkCore"],
+      tags: ["C#","NetStandard","EntityFrameworkCore"],
       id: 13
     });
     
@@ -140,7 +140,7 @@ var idx = lunr(function () {
       title: "Usando CLR no SQL Server",
       excerpt: "NET Framework CLR + SQL Server “A partir do SQL Server 2005, o SQL Server apresenta a integração do componente...",
       categories: ["SQL Server"],
-      tags: ["CSharp","SQL Server"],
+      tags: ["C#","SQL Server"],
       id: 14
     });
     
@@ -166,8 +166,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Passo a passo Asp.NET Core (básico)",
       excerpt: "Passo a passo Asp.NET Core (básico) Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando passo a passo de...",
-      categories: ["Asp.Net Core","CSharp"],
-      tags: ["CSharp","Asp.Net Core"],
+      categories: ["Asp.Net Core","C#"],
+      tags: ["C#","Asp.Net Core"],
       id: 17
     });
     
@@ -175,8 +175,8 @@ var idx = lunr(function () {
     idx.add({
       title: "Traduzindo funções no EntityFramework Core",
       excerpt: "Traduzindo funções para o servidor com EntityFramework Core Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando como traduzir...",
-      categories: ["EFCore","CSharp"],
-      tags: ["CSharp","EFCore"],
+      categories: ["EFCore","C#"],
+      tags: ["C#","EFCore"],
       id: 18
     });
     
@@ -544,7 +544,7 @@ var store = [
       
       {
         "title": "Comprimindo Dados",
-        "url": "http://localhost:4000/csharp/compressaodados/",
+        "url": "http://localhost:4000/c%23/compressaodados/",
         "excerpt": "Quero falar hoje sobre um assunto bastante interessante “ESPAÇO”, isso mesmo. Nos dias de hoje com HDs/SSDS para armazenamentos não...",
         "teaser":
           
@@ -566,7 +566,7 @@ var store = [
       
       {
         "title": "Carregando instâncias do SQL Server",
-        "url": "http://localhost:4000/csharp/sql%20server/carregarinstancia/",
+        "url": "http://localhost:4000/c%23/sql%20server/carregarinstancia/",
         "excerpt": "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
         "teaser":
           
@@ -610,7 +610,7 @@ var store = [
       
       {
         "title": "Query Compilada no EntityFrameworkCore 2.0",
-        "url": "http://localhost:4000/csharp/querycompilada/",
+        "url": "http://localhost:4000/c%23/querycompilada/",
         "excerpt": "Recentemente publiquei um pequeno artigo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função...",
         "teaser":
           
@@ -621,7 +621,7 @@ var store = [
       
       {
         "title": "SQL Injection EntityFrameworkCore",
-        "url": "http://localhost:4000/csharp/sqlinjection/",
+        "url": "http://localhost:4000/c%23/sqlinjection/",
         "excerpt": "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
         "teaser":
           
@@ -665,7 +665,7 @@ var store = [
       
       {
         "title": "Script Migração – EF Core",
-        "url": "http://localhost:4000/csharp/scriptmigracao/",
+        "url": "http://localhost:4000/c%23/scriptmigracao/",
         "excerpt": "Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script...",
         "teaser":
           
@@ -676,7 +676,7 @@ var store = [
       
       {
         "title": "Popular Dados (EF Core 2.1)",
-        "url": "http://localhost:4000/csharp/populardados/",
+        "url": "http://localhost:4000/c%23/populardados/",
         "excerpt": "Fala pessoal tudo bem?! Estou fazendo mais esse pequeno post para mostrar mais um novo recurso que será disponibilizado na...",
         "teaser":
           
@@ -731,7 +731,7 @@ var store = [
       
       {
         "title": "Passo a passo Asp.NET Core (básico)",
-        "url": "http://localhost:4000/asp.net%20core/csharp/passoapassoaspnetcore/",
+        "url": "http://localhost:4000/asp.net%20core/c%23/passoapassoaspnetcore/",
         "excerpt": "Passo a passo Asp.NET Core (básico) Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando passo a passo de...",
         "teaser":
           
@@ -742,7 +742,7 @@ var store = [
       
       {
         "title": "Traduzindo funções no EntityFramework Core",
-        "url": "http://localhost:4000/efcore/csharp/traduzirfuncoesefcore/",
+        "url": "http://localhost:4000/efcore/c%23/traduzirfuncoesefcore/",
         "excerpt": "Traduzindo funções para o servidor com EntityFramework Core Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando como traduzir...",
         "teaser":
           

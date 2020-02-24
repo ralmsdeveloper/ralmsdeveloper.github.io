@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://localhost:4000/csharp/compressaodados/</loc>
+<loc>http://localhost:4000/c%23/compressaodados/</loc>
 <lastmod>2017-01-01T00:00:00+00:00</lastmod>
 </url>
 <url>
@@ -9,7 +9,7 @@
 <lastmod>2017-01-01T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/csharp/sql%20server/carregarinstancia/</loc>
+<loc>http://localhost:4000/c%23/sql%20server/carregarinstancia/</loc>
 <lastmod>2017-05-20T00:00:00+00:00</lastmod>
 </url>
 <url>
@@ -25,11 +25,11 @@
 <lastmod>2017-08-01T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/csharp/querycompilada/</loc>
+<loc>http://localhost:4000/c%23/querycompilada/</loc>
 <lastmod>2017-08-01T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/csharp/sqlinjection/</loc>
+<loc>http://localhost:4000/c%23/sqlinjection/</loc>
 <lastmod>2017-08-01T00:00:00+00:00</lastmod>
 </url>
 <url>
@@ -45,11 +45,11 @@
 <lastmod>2017-10-03T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/csharp/scriptmigracao/</loc>
+<loc>http://localhost:4000/c%23/scriptmigracao/</loc>
 <lastmod>2017-10-15T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/csharp/populardados/</loc>
+<loc>http://localhost:4000/c%23/populardados/</loc>
 <lastmod>2017-10-17T00:00:00+00:00</lastmod>
 </url>
 <url>
@@ -69,11 +69,11 @@
 <lastmod>2017-12-22T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/asp.net%20core/csharp/passoapassoaspnetcore/</loc>
+<loc>http://localhost:4000/asp.net%20core/c%23/passoapassoaspnetcore/</loc>
 <lastmod>2017-12-27T00:00:00+00:00</lastmod>
 </url>
 <url>
-<loc>http://localhost:4000/efcore/csharp/traduzirfuncoesefcore/</loc>
+<loc>http://localhost:4000/efcore/c%23/traduzirfuncoesefcore/</loc>
 <lastmod>2017-12-31T00:00:00+00:00</lastmod>
 </url>
 <url>
