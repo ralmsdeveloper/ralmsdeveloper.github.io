@@ -63,7 +63,7 @@ plugins:
 author:
   name   : "Rafael Almeida"
   avatar : /assets/images/bio.png
-  bio    : "Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL."
+  bio    : "Microsoft MVP, MCP, Arquiteto de sistemas, gosto alta performance, apaixonado por C#, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL."
   location: "Sergipe-Brasil"
   email: ralms@ralms.net
   github: ralmsdeveloper

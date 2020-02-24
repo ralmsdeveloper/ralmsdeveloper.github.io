@@ -1,0 +1,777 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>IList, ICollection e IEnumerable  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?!Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo a versão 2 deste artigo.IntroduçãoGostaria de falar um pouco com você sobre algumas implementações genéricas como IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; e algumas coisas sobre coleções, é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, dado que é um assunto que eu particularmente gosto.No .NET basicamente podemso converter qualquer coisa pra uma coleção de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:IList&lt;T&gt;, ICollection&lt;T&gt; ou IEnumerable&lt;T&gt;, então deixa eu te explicar um pouco sobre cada um deles.Anatomia das coleçõesEsse é um exemplo simples, observe que estarei me referindo as interfaces genéricas IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; já que temos outras interfaces IList, ICollection e IEnumerable não genéricas para implementar comportamentos diferentes.Interface IEnumerablepublic interface IEnumerable&lt;T&gt; : IEnumerable{    IEnumerator&lt;T&gt; GetEnumerator();} Quando usar?Quando você precisar apenas ler objetos de uma coleção.Interface ICollectionpublic interface ICollection&lt;T&gt; : IEnumerable&lt;T&gt;, IEnumerable{    int Count { get; }    bool IsReadOnly { get; }    void Add(T item);    void Clear();    bool Contains(T item);    void CopyTo(T[] array, int arrayIndex);    bool Remove(T item);} Quando usar?Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.Interface IListpublic interface IList&lt;T&gt; : ICollection&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable{    T this[int index] { get; set; }    int IndexOf(T item);    void Insert(int index, T item);    void RemoveAt(int index);} Quando usar?Quando precisar de tudo que existe no IColletion&lt;`T`&gt; e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.var list = new List&lt;string&gt;{&quot;A&quot;,&quot;B&quot;,&quot;C&quot;};var item = list[2];O classe concreta List&lt;T&gt; sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do IEnumerable&lt;T&gt; que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.IEnumerable&lt;’T’&gt; vs List&lt;’T’&gt;Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.var tagsList = new List&lt;string&gt;{  &quot;CORE&quot;,  &quot;AZURE&quot;,  &quot;EFCORE&quot;,  &quot;SCYLLADB&quot;  &quot;ASPNETCORE&quot;,};Agora vamos efetuar uma consulta:var tags = tagsList.Where(w =&gt; w.Length &gt;= 8);tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:  SCYLLADB  ASPNETCOREque são maior ou igual a 8 caracteres.OK? …errado!Observe que logo após fazer meu where(minha consulta) eu modifiquei o item 0 deminha lista de tags.O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um IEnumerable&lt;T&gt;, na verdade ele não está trazendo os objetos para memória como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso o acesso ao objeto no momento da iteiração.Isso significa que a resposta para nossa pergunta acima seria:  SQLSERVER  SCYLLADB  ASPNETCOREo compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.Agora vamos efetuar a mesma consulta com ToList():var tags = tagsList.Where(w =&gt; w.Length &gt;= 8).ToList();tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Agora sim o retorno será exatamente:  SCYLLADB  ASPNETCOREIsso porque quando executo o ToList() ele imediatamente carrega os objetos para memória e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar a consulta não terá mais nenhum efeito sobre a mesma. Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="IList, ICollection e IEnumerable">
+
+
+  <link rel="canonical" href="http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/">
+  <meta property="og:url" content="http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?!Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo a versão 2 deste artigo.IntroduçãoGostaria de falar um pouco com você sobre algumas implementações genéricas como IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; e algumas coisas sobre coleções, é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, dado que é um assunto que eu particularmente gosto.No .NET basicamente podemso converter qualquer coisa pra uma coleção de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:IList&lt;T&gt;, ICollection&lt;T&gt; ou IEnumerable&lt;T&gt;, então deixa eu te explicar um pouco sobre cada um deles.Anatomia das coleçõesEsse é um exemplo simples, observe que estarei me referindo as interfaces genéricas IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; já que temos outras interfaces IList, ICollection e IEnumerable não genéricas para implementar comportamentos diferentes.Interface IEnumerablepublic interface IEnumerable&lt;T&gt; : IEnumerable{    IEnumerator&lt;T&gt; GetEnumerator();} Quando usar?Quando você precisar apenas ler objetos de uma coleção.Interface ICollectionpublic interface ICollection&lt;T&gt; : IEnumerable&lt;T&gt;, IEnumerable{    int Count { get; }    bool IsReadOnly { get; }    void Add(T item);    void Clear();    bool Contains(T item);    void CopyTo(T[] array, int arrayIndex);    bool Remove(T item);} Quando usar?Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.Interface IListpublic interface IList&lt;T&gt; : ICollection&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable{    T this[int index] { get; set; }    int IndexOf(T item);    void Insert(int index, T item);    void RemoveAt(int index);} Quando usar?Quando precisar de tudo que existe no IColletion&lt;`T`&gt; e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.var list = new List&lt;string&gt;{&quot;A&quot;,&quot;B&quot;,&quot;C&quot;};var item = list[2];O classe concreta List&lt;T&gt; sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do IEnumerable&lt;T&gt; que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.IEnumerable&lt;’T’&gt; vs List&lt;’T’&gt;Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.var tagsList = new List&lt;string&gt;{  &quot;CORE&quot;,  &quot;AZURE&quot;,  &quot;EFCORE&quot;,  &quot;SCYLLADB&quot;  &quot;ASPNETCORE&quot;,};Agora vamos efetuar uma consulta:var tags = tagsList.Where(w =&gt; w.Length &gt;= 8);tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:  SCYLLADB  ASPNETCOREque são maior ou igual a 8 caracteres.OK? …errado!Observe que logo após fazer meu where(minha consulta) eu modifiquei o item 0 deminha lista de tags.O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um IEnumerable&lt;T&gt;, na verdade ele não está trazendo os objetos para memória como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso o acesso ao objeto no momento da iteiração.Isso significa que a resposta para nossa pergunta acima seria:  SQLSERVER  SCYLLADB  ASPNETCOREo compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.Agora vamos efetuar a mesma consulta com ToList():var tags = tagsList.Where(w =&gt; w.Length &gt;= 8).ToList();tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Agora sim o retorno será exatamente:  SCYLLADB  ASPNETCOREIsso porque quando executo o ToList() ele imediatamente carrega os objetos para memória e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar a consulta não terá mais nenhum efeito sobre a mesma. Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2019-10-24T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, MCP, MCC, Arquiteto de sistemas e apaixonado por C#, Contribuo com projetos no Github. Fundador do Developers Sergipe, Criador e mantenedor do provider EntityFrameworkCore.FirebirdSQL.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="IList, ICollection e IEnumerable">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?!Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo a versão 2 deste artigo.IntroduçãoGostaria de falar um pouco com você sobre algumas implementações genéricas como IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; e algumas coisas sobre coleções, é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, dado que é um assunto que eu particularmente gosto.No .NET basicamente podemso converter qualquer coisa pra uma coleção de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:IList&lt;T&gt;, ICollection&lt;T&gt; ou IEnumerable&lt;T&gt;, então deixa eu te explicar um pouco sobre cada um deles.Anatomia das coleçõesEsse é um exemplo simples, observe que estarei me referindo as interfaces genéricas IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt; já que temos outras interfaces IList, ICollection e IEnumerable não genéricas para implementar comportamentos diferentes.Interface IEnumerablepublic interface IEnumerable&lt;T&gt; : IEnumerable{    IEnumerator&lt;T&gt; GetEnumerator();} Quando usar?Quando você precisar apenas ler objetos de uma coleção.Interface ICollectionpublic interface ICollection&lt;T&gt; : IEnumerable&lt;T&gt;, IEnumerable{    int Count { get; }    bool IsReadOnly { get; }    void Add(T item);    void Clear();    bool Contains(T item);    void CopyTo(T[] array, int arrayIndex);    bool Remove(T item);} Quando usar?Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.Interface IListpublic interface IList&lt;T&gt; : ICollection&lt;T&gt;, IEnumerable&lt;T&gt;, IEnumerable{    T this[int index] { get; set; }    int IndexOf(T item);    void Insert(int index, T item);    void RemoveAt(int index);} Quando usar?Quando precisar de tudo que existe no IColletion&lt;`T`&gt; e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.var list = new List&lt;string&gt;{&quot;A&quot;,&quot;B&quot;,&quot;C&quot;};var item = list[2];O classe concreta List&lt;T&gt; sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do IEnumerable&lt;T&gt; que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.IEnumerable&lt;’T’&gt; vs List&lt;’T’&gt;Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.var tagsList = new List&lt;string&gt;{  &quot;CORE&quot;,  &quot;AZURE&quot;,  &quot;EFCORE&quot;,  &quot;SCYLLADB&quot;  &quot;ASPNETCORE&quot;,};Agora vamos efetuar uma consulta:var tags = tagsList.Where(w =&gt; w.Length &gt;= 8);tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:  SCYLLADB  ASPNETCOREque são maior ou igual a 8 caracteres.OK? …errado!Observe que logo após fazer meu where(minha consulta) eu modifiquei o item 0 deminha lista de tags.O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um IEnumerable&lt;T&gt;, na verdade ele não está trazendo os objetos para memória como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso o acesso ao objeto no momento da iteiração.Isso significa que a resposta para nossa pergunta acima seria:  SQLSERVER  SCYLLADB  ASPNETCOREo compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.Agora vamos efetuar a mesma consulta com ToList():var tags = tagsList.Where(w =&gt; w.Length &gt;= 8).ToList();tagsList[0] = &quot;SQLSERVER&quot;;foreach (var tag in tags){    Console.WriteLine(tag);}Agora sim o retorno será exatamente:  SCYLLADB  ASPNETCOREIsso porque quando executo o ToList() ele imediatamente carrega os objetos para memória e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar a consulta não terá mais nenhum efeito sobre a mesma. Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection">
+    <meta itemprop="datePublished" content="October 24, 2019">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">IList<T>, ICollection<T> e IEnumerable<T></T></T></T>
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  12 minuto(s) de leitura
+ - October 24, 2019</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Tópicos</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#introdução">Introdução</a></li>
+  <li><a href="#anatomia-das-coleções">Anatomia das coleções</a></li>
+  <li><a href="#interface-ienumerable">Interface IEnumerable</a></li>
+  <li><a href="#interface-icollection">Interface ICollection</a></li>
+  <li><a href="#interface-ilist">Interface IList</a></li>
+  <li><a href="#ienumerablet-vs-listt">IEnumerable&lt;’T’&gt; vs List&lt;’T’&gt;</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/IEnumarableList.png" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?!</strong></center>
+<hr />
+
+<div class="notice--warning">
+Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo a versão 2 deste artigo.
+</div>
+
+<h2 id="introdução">Introdução</h2>
+
+<p>Gostaria de falar um pouco com você sobre algumas implementações genéricas como <code class="language-plaintext highlighter-rouge">IList&lt;T&gt;</code>, <code class="language-plaintext highlighter-rouge">ICollection&lt;T&gt;</code> e <code class="language-plaintext highlighter-rouge">IEnumerable&lt;T&gt;</code> e algumas coisas sobre coleções, 
+é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, dado que é um assunto que eu particularmente gosto.
+No .NET basicamente podemso converter qualquer coisa pra uma <b>coleção</b> de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:
+<code class="language-plaintext highlighter-rouge">IList&lt;T&gt;</code>, <code class="language-plaintext highlighter-rouge">ICollection&lt;T&gt;</code> ou <code class="language-plaintext highlighter-rouge">IEnumerable&lt;T&gt;</code>, então deixa eu te explicar um pouco sobre cada um deles.</p>
+
+<h2 id="anatomia-das-coleções">Anatomia das coleções</h2>
+<p>Esse é um exemplo simples, observe que estarei me referindo as interfaces genéricas <code class="language-plaintext highlighter-rouge">IList&lt;T&gt;</code>, <code class="language-plaintext highlighter-rouge">ICollection&lt;T&gt;</code> e <code class="language-plaintext highlighter-rouge">IEnumerable&lt;T&gt;</code> já que temos outras interfaces <code class="language-plaintext highlighter-rouge">IList</code>, <code class="language-plaintext highlighter-rouge">ICollection</code> e <code class="language-plaintext highlighter-rouge">IEnumerable</code> não genéricas para implementar comportamentos diferentes.</p>
+
+<p><img src="http://localhost:4000/assets/images/anatomiacolecao.png" alt="01" /></p>
+
+<h2 id="interface-ienumerable">Interface IEnumerable<T></T></h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">IEnumerable</span>
+<span class="p">{</span>
+    <span class="n">IEnumerator</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="nf">GetEnumerator</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="notice--warning">
+<strong>
+ Quando usar?<br />
+</strong>
+Quando você precisar apenas ler objetos de uma coleção.
+</div>
+
+<h2 id="interface-icollection">Interface ICollection<T></T></h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">ICollection</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="n">IEnumerable</span>
+<span class="p">{</span>
+    <span class="kt">int</span> <span class="n">Count</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">bool</span> <span class="n">IsReadOnly</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">void</span> <span class="nf">Add</span><span class="p">(</span><span class="n">T</span> <span class="n">item</span><span class="p">);</span>
+    <span class="k">void</span> <span class="nf">Clear</span><span class="p">();</span>
+    <span class="kt">bool</span> <span class="nf">Contains</span><span class="p">(</span><span class="n">T</span> <span class="n">item</span><span class="p">);</span>
+    <span class="k">void</span> <span class="nf">CopyTo</span><span class="p">(</span><span class="n">T</span><span class="p">[]</span> <span class="n">array</span><span class="p">,</span> <span class="kt">int</span> <span class="n">arrayIndex</span><span class="p">);</span>
+    <span class="kt">bool</span> <span class="nf">Remove</span><span class="p">(</span><span class="n">T</span> <span class="n">item</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div class="notice--warning">
+<strong>
+ Quando usar?<br />
+</strong>
+Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.
+</div>
+
+<h2 id="interface-ilist">Interface IList<T></T></h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">interface</span> <span class="nc">IList</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">ICollection</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="n">IEnumerable</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;,</span> <span class="n">IEnumerable</span>
+<span class="p">{</span>
+    <span class="n">T</span> <span class="k">this</span><span class="p">[</span><span class="kt">int</span> <span class="n">index</span><span class="p">]</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="kt">int</span> <span class="nf">IndexOf</span><span class="p">(</span><span class="n">T</span> <span class="n">item</span><span class="p">);</span>
+    <span class="k">void</span> <span class="nf">Insert</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">,</span> <span class="n">T</span> <span class="n">item</span><span class="p">);</span>
+    <span class="k">void</span> <span class="nf">RemoveAt</span><span class="p">(</span><span class="kt">int</span> <span class="n">index</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="notice--warning">
+<strong>
+ Quando usar?<br />
+</strong>
+Quando precisar de tudo que existe no IColletion&lt;`T`&gt; e tiver a necessidade de acessar diratamento um objeto de sua coleção por meio de um índice.<br />
+</div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">list</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;{</span><span class="s">"A"</span><span class="p">,</span><span class="s">"B"</span><span class="p">,</span><span class="s">"C"</span><span class="p">};</span>
+<span class="kt">var</span> <span class="n">item</span> <span class="p">=</span> <span class="n">list</span><span class="p">[</span><span class="m">2</span><span class="p">];</span>
+</code></pre></div></div>
+<p>O classe concreta <code class="language-plaintext highlighter-rouge">List&lt;T&gt;</code> sempre terá todos objetos em memória, dado esse cenário já podemos observar que seu comportamento é diferente do <code class="language-plaintext highlighter-rouge">IEnumerable&lt;T&gt;</code> que não tem seus objetos em memória, ixi ficou confuso, calma vamos entender essa confusão.</p>
+<h2 id="ienumerablet-vs-listt">IEnumerable&lt;’T’&gt; vs List&lt;’T’&gt;</h2>
+<p>Vamos pensar em um cenário onde temos um lista de tags e precisaremos fazer uma consulta.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">tagsList</span> <span class="p">=</span> <span class="k">new</span> <span class="n">List</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">&gt;</span>
+<span class="p">{</span>
+  <span class="s">"CORE"</span><span class="p">,</span>
+  <span class="s">"AZURE"</span><span class="p">,</span>
+  <span class="s">"EFCORE"</span><span class="p">,</span>
+  <span class="s">"SCYLLADB"</span>
+  <span class="s">"ASPNETCORE"</span><span class="p">,</span>
+<span class="p">};</span>
+</code></pre></div></div>
+<p>Agora vamos efetuar uma consulta:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">tags</span> <span class="p">=</span> <span class="n">tagsList</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">w</span> <span class="p">=&gt;</span> <span class="n">w</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;=</span> <span class="m">8</span><span class="p">);</span>
+<span class="n">tagsList</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="p">=</span> <span class="s">"SQLSERVER"</span><span class="p">;</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">tag</span> <span class="k">in</span> <span class="n">tags</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">tag</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:</p>
+<ul>
+  <li>SCYLLADB</li>
+  <li>ASPNETCORE</li>
+</ul>
+
+<p>que são maior ou igual a 8 caracteres.</p>
+
+<p>OK? …errado!<br />
+Observe que logo após fazer meu <code class="language-plaintext highlighter-rouge">where</code>(minha consulta) eu modifiquei o item <code class="language-plaintext highlighter-rouge">0</code> de
+minha lista de tags.<br />
+O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um <code class="language-plaintext highlighter-rouge">IEnumerable&lt;T&gt;</code>, na verdade ele não está trazendo os objetos para memória 
+como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso o acesso ao objeto no momento da iteiração.
+Isso significa que a resposta para nossa pergunta acima seria:</p>
+<ul>
+  <li>SQLSERVER</li>
+  <li>SCYLLADB</li>
+  <li>ASPNETCORE</li>
+</ul>
+
+<p>o compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.
+<br />
+Agora vamos efetuar a mesma consulta com ToList():</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">tags</span> <span class="p">=</span> <span class="n">tagsList</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">w</span> <span class="p">=&gt;</span> <span class="n">w</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;=</span> <span class="m">8</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
+<span class="n">tagsList</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="p">=</span> <span class="s">"SQLSERVER"</span><span class="p">;</span>
+
+<span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">tag</span> <span class="k">in</span> <span class="n">tags</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">tag</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Agora sim o retorno será exatamente:</p>
+<ul>
+  <li>SCYLLADB</li>
+  <li>ASPNETCORE</li>
+</ul>
+
+<p>Isso porque quando executo o <code class="language-plaintext highlighter-rouge">ToList()</code> ele imediatamente carrega os objetos para memória 
+e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar a consulta não terá mais nenhum efeito sobre a mesma.</p>
+<div class="notice--success">
+<strong>
+ Fico por aqui e um forte abraço! 😄 <br />
+ Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a>
+</strong>
+</div>
+
+<p>#mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection<br /><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#collections" class="page__taxonomy-item" rel="tag">Collections</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#linq" class="page__taxonomy-item" rel="tag">Linq</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#netcore" class="page__taxonomy-item" rel="tag">NETCore</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2019-10-24T00:00:00+00:00">October 24, 2019</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=IList%3CT%3E%2C+ICollection%3CT%3E+e+IEnumerable%3CT%3E%20http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fcollections%2Flinq%2Fnetcore%2Fcompreendendo-ienumerable-list-array%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/eventos/vssummit2019/" class="pagination--pager" title="10 dicas de performance no EF Core
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/evento/developerssergipe2019/" class="pagination--pager" title="Developers Sergipe Summit 2019
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/retrospectiva/feliz2020/" rel="permalink">Adeus 2019, bem vindo 2020!
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  11 minuto(s) de leitura
+ - December 31, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala meu amigo(a), tudo bem?!
+
+
+Agradecimentos
+
+Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar a escrever minha retrospe...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/performance/entity%20framework%20core/regex/performanceregexvsspan/" rel="permalink">Será que o Regex é rápido?
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  19 minuto(s) de leitura
+ - December 07, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Curiosidade leva nos sempre a pensar fora da caixa!!!
+
+No artigo SNAKE CASE eu usei um REGEX para aplicar 
+a nomenclatura snake-...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/entity%20framework%20core/efcore31_operations_interception/" rel="permalink">Interceptando comandos - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  8 minuto(s) de leitura
+ - December 05, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+Sonho realizado
+
+Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de uma forma de interceptar toda op...</p>
+  </article>
+</div>
+
+        
+          
+
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dica/entity%20framework%20core/snakecase_efcore31/" rel="permalink">Breaking changes - EF Core 3.1
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  17 minuto(s) de leitura
+ - December 03, 2019</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?! 💚
+
+
+Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core 3.1
+
+
+
+FYI:
+Este artigo é uma...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/";
+      this.page.identifier = "/collections/linq/netcore/compreendendo-ienumerable-list-array";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

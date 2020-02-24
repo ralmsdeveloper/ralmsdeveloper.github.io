@@ -470,9 +470,9 @@ var idx = lunr(function () {
     
   
     idx.add({
-      title: "IEnumerable, List e Array",
-      excerpt: "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! Fico por aqui e um forte abraço!...",
-      categories: ["Dica"],
+      title: "IList<T>, ICollection<T> e IEnumerable<T>",
+      excerpt: "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
+      categories: ["Collections","Linq","NETCore"],
       tags: [],
       id: 51
     });
@@ -1104,9 +1104,9 @@ var store = [
     
       
       {
-        "title": "IEnumerable, List e Array",
-        "url": "http://localhost:4000/dica/compreendendo-ienumerable-list-array/",
-        "excerpt": "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! Fico por aqui e um forte abraço!...",
+        "title": "IList<T>, ICollection<T> e IEnumerable<T>",
+        "url": "http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/",
+        "excerpt": "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
         "teaser":
           
             null
