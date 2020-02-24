@@ -151,17 +151,17 @@ e deixa disponível para o consumidor, então qualquer alteração em minha list
 ## Considerações
 <div class="notice--success">
  <b>List<`T`></b>:<br />
- Lista implementa IEnumerable<`T`>, mas toda a coleção está na memória.
+ Lista implementa IEnumerable<`T`>, mas toda a coleção está na memória, ou seja o carregamento foi adiantado.
 </div> 
 
 <div class="notice--success">
  <b>IEnumerable<`T`></b>:<br />
  Os IEnumerable<`T`> contém um método que obtém o próximo item de sua coleção, ele não precisa alocar tudo em memória, ele nem sabe quantos itens existe em sua coleção, então basicamente
- o que ele faz é chamar o próximo item (`MoveNext()`), até que não existe mais nenhum dado para ser lido. 
+ o que ele faz é chamar o próximo item <b>MoveNext()</b>, até que não existe mais nenhum dado para ser lido. 
 </div> 
 
 ## Twitter
-<div class="notice--success">
+<div class="notice--info">
  Fico por aqui e um forte abraço! 😄 <br />
  Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
  Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net
