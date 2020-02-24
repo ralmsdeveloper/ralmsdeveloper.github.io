@@ -454,8 +454,8 @@ Isso significa que a resposta para nossa pergunta acima seria:</p>
 </ul>
 
 <p>o compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.
-<br />
-Agora vamos efetuar a mesma consulta com ToList():</p>
+<br /><br />
+Agora vamos efetuar a mesma consulta com <code class="language-plaintext highlighter-rouge">ToList()</code>:</p>
 <div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">var</span> <span class="n">tags</span> <span class="p">=</span> <span class="n">tagsList</span><span class="p">.</span><span class="nf">Where</span><span class="p">(</span><span class="n">t</span> <span class="p">=&gt;</span> <span class="n">t</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;=</span> <span class="m">8</span><span class="p">).</span><span class="nf">ToList</span><span class="p">();</span>
 <span class="n">tagsList</span><span class="p">[</span><span class="m">0</span><span class="p">]</span> <span class="p">=</span> <span class="s">"SQLSERVER"</span><span class="p">;</span>
 

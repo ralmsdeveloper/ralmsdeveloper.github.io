@@ -21,7 +21,7 @@ Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda opo
 ## Introdução
  
 Gostaria de falar um pouco com você sobre algumas implementações genéricas como `IList<T>`, `ICollection<T>` e `IEnumerable<T>` e algumas coisas sobre coleções, 
-é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, dado que é um assunto que eu particularmente gosto.
+é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, que para mim foi a implmentação mais importante no ecosistema .NET, dado que é um assunto que eu particularmente gosto.
 No .NET basicamente podemso converter qualquer coisa pra uma <b>coleção</b> de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:
 `IList<T>`, `ICollection<T>` ou `IEnumerable<T>`, então deixa eu te explicar um pouco sobre cada um deles.
  
@@ -119,13 +119,13 @@ OK? ...errado!<br>
 Observe que logo após fazer meu `where`(minha consulta) eu modifiquei o item `0` de
 minha lista de tags.<br />
 O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um `IEnumerable<T>`, na verdade ele não está trazendo os objetos para memória 
-como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso o acesso ao objeto no momento da iteiração.
+como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso ao objeto no momento de sua iteiração.
 Isso significa que a resposta para nossa pergunta acima seria:
  - SQLSERVER
  - SCYLLADB
  - ASPNETCORE
 
-o compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.
+o compilador preservou o estado de minha consulta, executando-a de fato, quando fiz a iteiração com a consulta.
 <br><br>
 Agora vamos efetuar a mesma consulta com `ToList()`:
 ```csharp
