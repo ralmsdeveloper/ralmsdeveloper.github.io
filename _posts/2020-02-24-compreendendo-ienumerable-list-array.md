@@ -1,5 +1,5 @@
 ﻿---
-title: "IList<T>, ICollection<T> e IEnumerable<T>"
+title: "IList<`T`>, ICollection<`T`> e IEnumerable<`T`>"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
