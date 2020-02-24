@@ -117,8 +117,9 @@ Vamos analisar aqui, fizemos uma consulta que esperariamos o seguinte resultado:
 que são maior ou igual a 8 caracteres.
 
 OK? ...errado!<br>
-Observe que logo após fazer meu `where`(minha consulta) eu modifiquei o item `0` de
-minha lista de tags.<br />
+Observe que logo após fazer meu `where`(minha consulta) eu modifiquei o item `tagsList[0]` de
+minha lista de tags, no qual eu atribui um novo valor para o mesmo `SQLSERVER`.<br />
+Onde quero chegar com isso?<br>
 O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um `IEnumerable<T>`, na verdade ele não está trazendo os objetos para memória 
 como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso ao objeto no momento de sua iteiração.
 Isso significa que a resposta para nossa pergunta acima seria:
@@ -126,7 +127,10 @@ Isso significa que a resposta para nossa pergunta acima seria:
  - SCYLLADB
  - ASPNETCORE
 
-o compilador preservou o estado de minha consulta, executando-a de fato, quando fiz a iteiração com a consulta.
+e não:
+ - SCYLLADB
+ - ASPNETCORE
+como algumas pessoas poderiam pensar, o que aconteceu foi que, o compilador preservou o estado de minha consulta, executando-a de fato quando fiz a iteiração com a consulta `foreach (var tag in tags)`.
 <br><br>
 Agora vamos fazer a mesma consulta com `ToList()`:
 ```csharp
@@ -144,16 +148,23 @@ Agora sim o retorno será exatamente:
 
 Isso porque quando executo o `ToList()` ele imediatamente carrega os objetos para memória 
 e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o método `ToList()` não terá mais nenhum efeito sobre a mesma.
+## Considerações
+<div class="notice--success">
+ <b>List<`T`></b>:<br />
+ Lista implementa IEnumerable<`T`>, mas toda a coleção está na memória.
+</div> 
+
+<div class="notice--success">
+ <b>IEnumerable<`T`></b>:<br />
+ Os IEnumerable<`T`> contém um método que obtém o próximo item de sua coleção, ele não precisa alocar tudo em memória, ele nem sabe quantos itens existe em sua coleção, então basicamente
+ o que ele faz é chamar o próximo item (`MoveNext()`), até que não existe mais nenhum dado para ser lido. 
+</div> 
 
 ## Twitter
 <div class="notice--success">
-<strong>
  Fico por aqui e um forte abraço! 😄 <br />
  Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
  Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net
-</strong>
 </div> 
 
 <br>
-<br>
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #ienumrable #netcore #ilist #icollection<br><br>

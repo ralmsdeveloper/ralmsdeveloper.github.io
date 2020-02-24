@@ -3,11 +3,11 @@ title: "Traduzindo funções no EntityFramework Core"
 comments: true
 excerpt_separator: "Ler mais"
 categories:
-  - EFCore
+  - "Entity Framework Core"
   - "C#"
 tags:
   - "C#"
-  - EFCore
+  - "Entity Framework Core"
 ---
 
 ## Traduzindo funções para o servidor com EntityFramework Core
