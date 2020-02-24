@@ -130,8 +130,10 @@ Isso significa que a resposta para nossa pergunta acima seria:
 e não:
  - SCYLLADB
  - ASPNETCORE
-como algumas pessoas poderiam pensar, o que aconteceu foi que, o compilador preservou o estado de minha consulta, executando-a de fato quando fiz a iteiração com a consulta `foreach (var tag in tags)`.
-<br><br>
+
+Como algumas pessoas poderiam pensar, o que aconteceu foi que, o compilador preservou o estado de minha consulta, executando-a de fato quando fiz a iteiração com a consulta `foreach (var tag in tags)`.
+<br>
+
 Agora vamos fazer a mesma consulta com `ToList()`:
 ```csharp
 var tags = tagsList.Where(t => t.Length >= 8).ToList();
@@ -142,6 +144,7 @@ foreach (var tag in tags)
     Console.WriteLine(tag);
 }
 ``` 
+
 Agora sim o retorno será exatamente:
  - SCYLLADB
  - ASPNETCORE
