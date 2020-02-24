@@ -127,7 +127,7 @@ Isso significa que a resposta para nossa pergunta acima seria:
 
 o compilador preservou o estado de minha consulta, executando-a de fato, quando fiz a iteiração com a consulta.
 <br><br>
-Agora vamos efetuar a mesma consulta com `ToList()`:
+Agora vamos fazer a mesma consulta com `ToList()`:
 ```csharp
 var tags = tagsList.Where(t => t.Length >= 8).ToList();
 tagsList[0] = "SQLSERVER";
@@ -142,7 +142,7 @@ Agora sim o retorno será exatamente:
  - ASPNETCORE
 
 Isso porque quando executo o `ToList()` ele imediatamente carrega os objetos para memória 
-e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar a consulta não terá mais nenhum efeito sobre a mesma.
+e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o metódo `ToList()` não terá mais nenhum efeito sobre a mesma.
 <div class="notice--success">
 <strong>
  Fico por aqui e um forte abraço! 😄 <br />
