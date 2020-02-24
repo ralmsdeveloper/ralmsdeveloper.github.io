@@ -30,7 +30,7 @@ Esse é um exemplo simples, observe que estarei me referindo as interfaces gené
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/anatomiacolecao.png)
 
-## Interface IEnumerable<T>
+## Interface IEnumerable<`T`>
 ```csharp
 public interface IEnumerable<T> : IEnumerable
 {
@@ -44,7 +44,7 @@ public interface IEnumerable<T> : IEnumerable
 Quando você precisar apenas ler objetos de uma coleção.
 </div> 
 
-## Interface ICollection<T>
+## Interface ICollection<`T`>
 ```csharp
 public interface ICollection<T> : IEnumerable<T>, IEnumerable
 {
@@ -64,7 +64,7 @@ public interface ICollection<T> : IEnumerable<T>, IEnumerable
 Quando você precisar ler objetos de uma coleção, saber o tamanho de sua coleção e até mesmo modificar determinados objetos em sua coleção.
 </div> 
 
-## Interface IList<T>
+## Interface IList<`T`>
 ```csharp
 public interface IList<T> : ICollection<T>, IEnumerable<T>, IEnumerable
 {
