@@ -42,7 +42,7 @@ public interface IEnumerable<T> : IEnumerable
  Quando usar?<br />
 </strong>
 Quando você precisar apenas ler objetos de uma coleção.<br>
-<b>Exemplo:<b> aquelas consultinhas que você faz no banco e apenas serializa o resultado.
+<b>Exemplo:</b> aquelas consultinhas que você faz no banco e apenas serializa o resultado.
 </div> 
 
 ## Interface ICollection<`T`>
