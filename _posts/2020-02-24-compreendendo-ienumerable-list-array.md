@@ -126,8 +126,8 @@ Isso significa que a resposta para nossa pergunta acima seria:
  - ASPNETCORE
 
 o compilador preservou o estado de minha consulta, executando a consulta de fato, quando fiz a iteiração com a consulta.
-<br>
-Agora vamos efetuar a mesma consulta com ToList():
+<br><br>
+Agora vamos efetuar a mesma consulta com `ToList()`:
 ```csharp
 var tags = tagsList.Where(t => t.Length >= 8).ToList();
 tagsList[0] = "SQLSERVER";

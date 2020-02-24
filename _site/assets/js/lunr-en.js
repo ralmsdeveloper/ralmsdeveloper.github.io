@@ -470,20 +470,11 @@ var idx = lunr(function () {
     
   
     idx.add({
-      title: "IList<T>, ICollection<T> e IEnumerable<T>",
-      excerpt: "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
-      categories: ["Collections","Linq","NETCore"],
-      tags: [],
-      id: 51
-    });
-    
-  
-    idx.add({
       title: "Developers Sergipe Summit 2019",
       excerpt: "Fala pessoal, tudo bem?! 👍 Developers Sergipe Summit 2019 No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit,...",
       categories: ["Evento"],
       tags: [],
-      id: 52
+      id: 51
     });
     
   
@@ -492,7 +483,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Porque estamos aqui? Eu acredito que você já sabe, e se não sabe, ficará agora,...",
       categories: ["Dica","ASPNET Core"],
       tags: [],
-      id: 53
+      id: 52
     });
     
   
@@ -501,7 +492,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 54
+      id: 53
     });
     
   
@@ -510,7 +501,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Sonho realizado Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 55
+      id: 54
     });
     
   
@@ -519,7 +510,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! No artigo SNAKE CASE eu usei um...",
       categories: ["Performance","Entity Framework Core","Regex"],
       tags: [],
-      id: 56
+      id: 55
     });
     
   
@@ -527,6 +518,15 @@ var idx = lunr(function () {
       title: "Adeus 2019, bem vindo 2020!",
       excerpt: "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
       categories: ["Retrospectiva"],
+      tags: [],
+      id: 56
+    });
+    
+  
+    idx.add({
+      title: "IList<T>, ICollection<T> e IEnumerable<T>",
+      excerpt: "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
+      categories: ["Collections","Linq","NETCore"],
       tags: [],
       id: 57
     });
@@ -1104,17 +1104,6 @@ var store = [
     
       
       {
-        "title": "IList<T>, ICollection<T> e IEnumerable<T>",
-        "url": "http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/",
-        "excerpt": "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
-        "teaser":
-          
-            null
-          
-      },
-    
-      
-      {
         "title": "Developers Sergipe Summit 2019",
         "url": "http://localhost:4000/evento/developerssergipe2019/",
         "excerpt": "Fala pessoal, tudo bem?! 👍 Developers Sergipe Summit 2019 No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit,...",
@@ -1173,6 +1162,17 @@ var store = [
         "title": "Adeus 2019, bem vindo 2020!",
         "url": "http://localhost:4000/retrospectiva/feliz2020/",
         "excerpt": "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
+        "teaser":
+          
+            null
+          
+      },
+    
+      
+      {
+        "title": "IList<T>, ICollection<T> e IEnumerable<T>",
+        "url": "http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/",
+        "excerpt": "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
         "teaser":
           
             null
