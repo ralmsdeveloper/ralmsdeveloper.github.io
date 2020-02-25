@@ -153,13 +153,11 @@ Isso porque quando executo o `ToList()` ele imediatamente carrega os objetos par
 e deixa disponível para o consumidor, então qualquer alteração em minha lista após executar o método `ToList()` não terá mais nenhum efeito sobre a mesma.
 ## Considerações
 <div class="notice--success">
- <b>List<`T`></b>:<br />
- Lista implementa IEnumerable<`T`>, mas toda a coleção está na memória, ou seja o carregamento foi adiantado.
+ <b>List<`T`></b> implementa IEnumerable<`T`>, mas toda a coleção está na memória, ou seja o carregamento foi adiantado.
 </div> 
 
 <div class="notice--success">
- <b>IEnumerable<`T`></b>:<br />
- Os IEnumerable<`T`> contém um método que obtém o próximo item de sua coleção, ele não precisa alocar tudo em memória, ele nem sabe quantos itens existe em sua coleção, então basicamente
+ <b>IEnumerable<`T`></b> contém um método que obtém o próximo item de sua coleção, ele não precisa alocar tudo em memória, ele nem sabe quantos itens existe em sua coleção, então basicamente
  o que ele faz é chamar o próximo item <b>MoveNext()</b>, até que não existe mais nenhum dado para ser lido. 
 </div> 
 
