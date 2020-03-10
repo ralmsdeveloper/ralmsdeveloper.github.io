@@ -21,8 +21,8 @@ Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda opo
 ## Introdução
  
 Gostaria de falar um pouco com você sobre algumas implementações genéricas como `IList<T>`, `ICollection<T>` e `IEnumerable<T>` e algumas coisas sobre coleções, 
-é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, que para mim foi a implmentação mais importante no ecosistema .NET, dado que é um assunto que eu particularmente gosto.
-No .NET basicamente podemso converter qualquer coisa pra uma <b>coleção</b> de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:
+é um assunto interessante de falar, e toda vez que falo sobre coleções, eu me sinto feliz, pela possibilidade de utilizar Linq, que para mim foi a implementação mais importante no ecosistema .NET, dado que é um assunto que eu particularmente gosto.
+No .NET basicamente podemos converter qualquer coisa pra uma <b>coleção</b> de dados, mas existe algumas coisas que você precisa saber, quando usar por exemplo um:
 `IList<T>`, `ICollection<T>` ou `IEnumerable<T>`, então deixa eu te explicar um pouco sobre cada um deles.
  
 ## Anatomia das coleções
@@ -121,7 +121,7 @@ Observe que logo após fazer meu `where`(minha consulta) eu modifiquei o item `t
 minha lista de tags, no qual eu atribui um novo valor para o mesmo `SQLSERVER`.<br />
 Onde quero chegar com isso?<br>
 O que quero dizer aqui é, quando você executa uma consulta que seu retorno é um `IEnumerable<T>`, na verdade ele não está trazendo os objetos para memória 
-como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso ao objeto no momento de sua iteiração.
+como falei um pouco acima, essa consulta é retardada, essa tarefa é adiada para o compilador, e você só vai ter acesso ao objeto no momento de sua iteração.
 Isso significa que a resposta para nossa pergunta acima seria:
  - SQLSERVER
  - SCYLLADB
@@ -131,7 +131,7 @@ e não:
  - SCYLLADB
  - ASPNETCORE
 
-Como algumas pessoas poderiam pensar, o que aconteceu foi que, o compilador preservou o estado de minha consulta, executando-a de fato quando fiz a iteiração com a consulta `foreach (var tag in tags)`.
+Como algumas pessoas poderiam pensar, o que aconteceu foi que, o compilador preservou o estado de minha consulta, executando-a de fato quando fiz a iteração com a consulta `foreach (var tag in tags)`.
 <br>
 
 Agora vamos fazer a mesma consulta com `ToList()`:
