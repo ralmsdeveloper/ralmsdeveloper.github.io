@@ -63,14 +63,14 @@ Showww, serialização perfeita!
 ![01]({{site.url}}{{site.baseurl}}/assets/images/serializacaook.PNG)
 
 ## Deserializar
-Ao tentar deserializar, é lançada um exception informando que não existe suporte para construtores parametrizados.
+Ao tentar deserializar, é lançada uma exception informando que não existe suporte para construtores parametrizados.
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/problemajsondeserialize.PNG)
  
 ## Solução
 Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.
 
-# JsonConverter Customizado
+## JsonConverter Customizado
 ```csharp
 public class MyJsonConverter : JsonConverter<object>
 {
@@ -146,12 +146,14 @@ static void Main(string[] args)
     Console.WriteLine(json);
 }
 ```
+<hr />
 ![01]({{site.url}}{{site.baseurl}}/assets/images/deserializacaook.PNG)
+<hr />
 
-# Approach
+## Approach
 Esse seria a melhor abordagem? Para suprir esse GAP sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis, aqui eu procurei apenas mostrar que é possível adicionar serializadores customizados.
 
-# News
+## News
 A novidade é que iremos ter esse suporte na versão .NET Core 5!
 
 
