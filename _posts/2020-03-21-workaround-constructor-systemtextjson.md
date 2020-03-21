@@ -63,9 +63,74 @@ Showww, serialização perfeita!
 ![01]({{site.url}}{{site.baseurl}}/assets/images/serializacaook.PNG)
 
 ## Deserializar
-Vamos tentar deserializar 
+Ao tentar deserializar, é lançada um exception informando que não existe suporte para construtores parametrizados.
+
 ![01]({{site.url}}{{site.baseurl}}/assets/images/problemajsondeserialize.PNG)
  
+## Solução
+Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.
+
+# JsonConverter Customizado
+```csharp
+public class MyJsonConverter : JsonConverter<object>
+{
+    public override bool CanConvert(Type typeToConvert)
+        => typeToConvert
+            .GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+            .Length == 1; 
+
+    public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+    {
+        var valueOfProperty = new Dictionary<PropertyInfo, object>();
+
+        var properties = typeToConvert
+            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+        var mapping = properties.ToDictionary(p => p.Name, p => p);
+
+        reader.Read();
+
+        for (; ; )
+        {
+            if (reader.TokenType != JsonTokenType.PropertyName && reader.TokenType != JsonTokenType.String)
+            {
+                break;
+            }
+
+            var propertyName = reader.GetString();
+
+            if (!mapping.TryGetValue(propertyName, out var property))
+            {
+                reader.Read();
+            }
+            else
+            {
+                var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
+                reader.Read();
+                valueOfProperty[property] = value;
+            }
+        }
+
+        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
+        var parameters = constructorInfo.GetParameters();
+        var parameterValues = new object[parameters.Length];
+
+        for (var index = 0; index < parameters.Length; index++)
+        {
+            var parameterInfo = parameters[index];
+            var value = valueOfProperty.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+            parameterValues[index] = value;
+        }
+
+        var @object = constructorInfo.Invoke(parameterValues);
+
+        return @object;
+    }
+
+    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+        => throw new NotImplementedException();
+}
+```
 
 ## Twitter
 <div class="notice--info">
