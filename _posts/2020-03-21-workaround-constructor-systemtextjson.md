@@ -15,18 +15,20 @@ categories:
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.<br>
+<b>FYI:</b> Isso não é um Deep-Dive em System.Text.Json.
 </div> 
 
 ## Introdução
-Acredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória, pois bem, maravilha isso!
+Acredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela <b>Microsoft</b> e pelo próprio criador do <b>Newtonsoft.Json</b>, seu objetivo principal é performance e alocar menos dados na memória.<br>
+Quer saber sobre? acessa esse <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-overview" alt="">link</a>, vamos focar em um problema que talvez você já tenha enfrentado.
 
 ## GAP
-Como nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram <b>readonly</b> (Immutable), então fui analisar melhor o que estava acontecendo, e o que descobri(ou não me lembrava) não foi nada agradável, 
+Como nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram <b>readonly</b> (Immutable), como eu fui ingênuo 🤖, então fui analisar melhor o que estava acontecendo, e o que descobri(<i>ou não me lembrava</i>) não foi nada agradável, 
 simplesmente não temos suporte, e o backlog de pendências é enorme! Veja <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#table-of-differences-between-newtonsoftjson-and-systemtextjson" alt="">aqui</a>
 
 ## Cenário
-Vamos montar um cenário para ver como podemos resolver
+Vamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.
 
 ## Classe
 Vamos ter como base a seguinte <b>class</b>
