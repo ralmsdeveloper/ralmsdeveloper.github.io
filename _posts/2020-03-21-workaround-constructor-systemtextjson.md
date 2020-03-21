@@ -62,7 +62,7 @@ Observe na imagem abaixo que ao tentar fazer a deserialização é lançada uma 
 Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.
 
 ## JsonConverter Customizado
-Esse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de <b>JsonConverter</b> alguns comportamentos e sobreescrevendo os mesmo.
+Esse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de <b>JsonConverter</b> alguns comportamentos e sobrescrevendo os mesmo.
 
 ```csharp 
 namespace System.Text.Json.Serialization
