@@ -15,7 +15,8 @@ categories:
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.<br>
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.
+<br><br>
 <b>FYI:</b> Isso não é um Deep-Dive em System.Text.Json.
 </div> 
 
@@ -61,6 +62,23 @@ Observe na imagem abaixo que ao tentar fazer a deserialização é lançada uma 
 Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.
 
 ## JsonConverter Customizado
+Esse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de <b>JsonConverter</b> alguns comportamentos e sobreescrevendo os mesmo.
+
+```csharp 
+namespace System.Text.Json.Serialization
+{
+    public abstract class JsonConverter<T> : JsonConverter
+    {
+        protected internal JsonConverter();
+        public override bool CanConvert(Type typeToConvert);
+        public abstract T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options);
+        public abstract void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options);
+    }
+}
+```
+
+Se você querer ver mais informações sobre a API clique <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/api/system.text.json.serialization.jsonconverter-1?view=netcore-3.1" alt="">aqui</a>, mas por hora vamos ver nosso código como ficou.
+
 ```csharp
 public class MyJsonConverter : JsonConverter<object>
 {
