@@ -71,7 +71,7 @@ public class MyJsonConverter : JsonConverter<object>
 
     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var propretiesInfo = new Dictionary<PropertyInfo, object>();
+        var propertiesInfo = new Dictionary<PropertyInfo, object>();
         var properties = typeToConvert.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
         var mapping = properties.ToDictionary(p => p.Name, p => p);
@@ -95,7 +95,7 @@ public class MyJsonConverter : JsonConverter<object>
             {
                 var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
                 reader.Read();
-                propretiesInfo[property] = value;
+                propertiesInfo[property] = value;
             }
         }
 
@@ -106,7 +106,7 @@ public class MyJsonConverter : JsonConverter<object>
         for (var index = 0; index < parameters.Length; index++)
         {
             var parameterInfo = parameters[index];
-            var value = propretiesInfo.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+            var value = propertiesInfo.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
             parameterValues[index] = value;
         }
 
@@ -137,6 +137,107 @@ static void Main(string[] args)
 <hr />
 ![01]({{site.url}}{{site.baseurl}}/assets/images/deserializacaook.PNG)
 <hr />
+
+## Código completo
+```csharp
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+
+namespace SystemTextJsonWorkAround
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            var pessoa = new Pessoa("Rafael", DateTime.Now);
+            // Serializar
+            var json = JsonSerializer.Serialize(pessoa);
+
+            // Deserializar
+            var options = new JsonSerializerOptions();
+            options.Converters.Add(new MyJsonConverter());
+            var objectPessoa = JsonSerializer.Deserialize<Pessoa>(json, options);
+
+            Console.WriteLine(json);
+        }
+    }
+
+    public class Pessoa
+    {
+        public string Nome { get; }
+        public DateTime DataNascimento { get; }
+
+        public Pessoa(string nome, DateTime dataNascimento)
+        {
+            Nome = nome;
+            DataNascimento = dataNascimento;
+        }
+    }
+
+    public class MyJsonConverter : JsonConverter<object>
+    {
+        public override bool CanConvert(Type typeToConvert)
+            => typeToConvert
+                .GetConstructors(BindingFlags.Public | BindingFlags.Instance)
+                .Length == 1;
+
+        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            var propertiesInfo = new Dictionary<PropertyInfo, object>();
+
+            var properties = typeToConvert
+                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+
+            var mapping = properties.ToDictionary(p => p.Name, p => p);
+
+            reader.Read();
+
+            for (; ; )
+            {
+                if (reader.TokenType != JsonTokenType.PropertyName && reader.TokenType != JsonTokenType.String)
+                {
+                    break;
+                }
+
+                var propertyName = reader.GetString();
+
+                if (!mapping.TryGetValue(propertyName, out var property))
+                {
+                    reader.Read();
+                }
+                else
+                {
+                    var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
+                    reader.Read();
+                    propertiesInfo[property] = value;
+                }
+            }
+
+            var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];
+            var parameters = constructorInfo.GetParameters();
+            var parameterValues = new object[parameters.Length];
+
+            for (var index = 0; index < parameters.Length; index++)
+            {
+                var parameterInfo = parameters[index];
+                var value = propertiesInfo.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+                parameterValues[index] = value;
+            }
+
+            var @object = constructorInfo.Invoke(parameterValues);
+
+            return @object;
+        }
+
+        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)
+            => throw new NotImplementedException();
+    }
+}
+```
 
 ## Approach
 Esse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.
