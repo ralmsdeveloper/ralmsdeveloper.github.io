@@ -15,11 +15,11 @@ categories:
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Nesse arquito iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json<b> como nosso serializador.
 </div> 
 
 ## Introdução
-Acredito que todos sabem que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória, pois bem, maravilha isso!
+Acredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória, pois bem, maravilha isso!
 
 ## GAP
 Como nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram <b>readonly</b> (Immutable), então fui analisar melhor o que estava acontecendo, e o que descobri(ou não me lembrava) não foi nada agradável, 
@@ -149,7 +149,7 @@ static void Main(string[] args)
 <hr />
 
 ## Approach
-Esse seria a melhor abordagem? Para suprir esse GAP sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis, aqui eu procurei apenas mostrar que é possível adicionar serializadores customizados.
+Esse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.
 
 ## News
 A novidade é que iremos ter esse suporte na versão .NET Core 5!
