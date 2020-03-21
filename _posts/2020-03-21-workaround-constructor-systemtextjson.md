@@ -132,6 +132,25 @@ public class MyJsonConverter : JsonConverter<object>
 }
 ```
 
+```csharp
+static void Main(string[] args)
+{
+    var pessoa = new Pessoa("Rafael", DateTime.Now);
+    var json = JsonSerializer.Serialize(pessoa);
+
+    var options = new JsonSerializerOptions();
+    options.Converters.Add(new MyJsonConverter());
+
+    var objectPessoa = JsonSerializer.Deserialize<Pessoa>(json, options);
+
+    Console.WriteLine(json);
+}
+```
+![01]({{site.url}}{{site.baseurl}}/assets/images/deserializacaook.PNG)
+
+# Approach
+Esse seria a melhor abordagem? Para suprir esse GAP sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis, aqui eu procurei apenas mostrar que é possível adicionar serializadores customizados.
+
 ## Twitter
 <div class="notice--info">
  Fico por aqui e um forte abraço! 😄 <br />
