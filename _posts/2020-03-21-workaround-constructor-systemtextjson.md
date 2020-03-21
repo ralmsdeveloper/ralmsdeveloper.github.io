@@ -152,7 +152,7 @@ static void Main(string[] args)
 Esse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.
 
 ## News
-A novidade é que iremos ter esse suporte na versão .NET Core 5!
+A novidade é que iremos ter esse suporte na versão <b>.NET 5</b>!
 
 
 ## Twitter
