@@ -81,10 +81,8 @@ public class MyJsonConverter : JsonConverter<object>
 
     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
     {
-        var valueOfProperty = new Dictionary<PropertyInfo, object>();
-
-        var properties = typeToConvert
-            .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+        var propretiesInfo = new Dictionary<PropertyInfo, object>();
+        var properties = typeToConvert.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
 
         var mapping = properties.ToDictionary(p => p.Name, p => p);
 
@@ -107,18 +105,18 @@ public class MyJsonConverter : JsonConverter<object>
             {
                 var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);
                 reader.Read();
-                valueOfProperty[property] = value;
+                propretiesInfo[property] = value;
             }
         }
 
-        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance).First();
+        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];
         var parameters = constructorInfo.GetParameters();
         var parameterValues = new object[parameters.Length];
 
         for (var index = 0; index < parameters.Length; index++)
         {
             var parameterInfo = parameters[index];
-            var value = valueOfProperty.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
+            var value = propretiesInfo.First(prop => prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;
             parameterValues[index] = value;
         }
 
