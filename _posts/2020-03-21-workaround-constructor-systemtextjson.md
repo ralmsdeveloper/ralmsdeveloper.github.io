@@ -31,7 +31,7 @@ simplesmente não temos suporte, e o backlog de pendências é enorme! Veja <a t
 Vamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.
 
 ## Classe
-Vamos ter como base a seguinte <b>class</b>
+Vamos ter como base a seguinte <b>classe</b> concreta, apenas com 2 (duas) propriedades para facilitar nosso exemplo.
 ```csharp
 public class Pessoa
 {
@@ -47,29 +47,17 @@ public class Pessoa
 ```
 
 ## Serializar
-Vamos tentar serializar 
-```csharp
-public class Pessoa
-{
-    public string Nome { get; }
-    public DateTime DataNascimento { get;} 
+Vamos tentar serializar um objeto.<br>
 
-    public Pessoa(string nome, DateTime dataNascimento)
-    {
-        Nome = nome;
-        DataNascimento = dataNascimento;
-    }
-}
-```
-Showww, serialização perfeita!
+Showww, como você pode ver na imagem abaixo a serialização funcionou perfeitamente (como esperado 😎).
 ![01]({{site.url}}{{site.baseurl}}/assets/images/serializacaook.PNG)
 
-## Deserializar
-Ao tentar deserializar, é lançada uma exception informando que não existe suporte para construtores parametrizados.
+## Agora vamos tentar deserializar
+Observe na imagem abaixo que ao tentar fazer a deserialização é lançada uma exception, informando que não existe suporte para construtores parametrizados.
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/problemajsondeserialize.PNG)
  
-## Solução
+## Tem solução?
 Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.
 
 ## JsonConverter Customizado
