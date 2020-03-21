@@ -15,7 +15,7 @@ categories:
 <center><strong>Fala pessoal, tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json<b> como nosso serializador.
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.
 </div> 
 
 ## Introdução
