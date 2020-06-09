@@ -19,13 +19,14 @@ categories:
 Durante alguns anos tenho visto muita pessoas se perguntando sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
 lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto para contribuir também com aqueles não saiba a real diferença.
 <br><br>
-<b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e, irei te mostrar o porque!
+<b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
 </div> 
 
 ## Preferência
+<div style="text-align: justify;">
 Bom, eu particularmente uso palavras chaves como identificadores e existe uma razão para isso, primeiramente quero que fique claro para
 você que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
-
+</div>
 ```csharp
 using System;
 
@@ -51,13 +52,13 @@ namespace Exemplo
 Para o exemplo acima ambos produzem o mesmo valor, alguma diferença? 
 Resposta: Não, até eu remover o Namespace System.
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/erroNamespace.PNG)
- 
+<div style="text-align: justify;">
 Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas o a palavra-chave <b>string</b> permanece
-sem nenhum tipo de impacto, isso é porque <b>string</string> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. 
+sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. 
 Essa já uma das vantagens em utilizar palavras-chaves, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
 sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas, <b>code style</b>(estilo de código/perfumaria), 
 por que isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
-
+</div>
 ```csharp
 using System;
 
@@ -83,10 +84,12 @@ namespace Exemplo
     }
 }
 ```
+<div style="text-align: justify;">
 Observe que eu adicionei o namespace <b>System</b> e criei uma simples classe <b>String</b> isso não causou nenhum erro no momento do desenvolvimento, 
-mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que escrevi em vez de <b>System.String</b>  mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+</div>
 ## Meu conselho
-Eu já falei que a decisão é sua, mas se quiser seguir um conselho simples, use palavras reservadas quando puder!!!
+Eu já falei que a decisão é sua, mas se quiser seguir um conselho simples, use palavras reservadas quando puder, e evite surpresas!
 
 ## Twitter
 <div class="notice--info">
