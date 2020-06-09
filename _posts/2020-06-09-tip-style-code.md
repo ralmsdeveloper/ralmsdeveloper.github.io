@@ -26,7 +26,7 @@ Isso não é um Deep-Dive de tipos de
 
 ## Preferência
 <div style="text-align: justify;">
-Bom, eu particularmente uso palavras chaves para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
+Bom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
 você, que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
 </div>
 ```csharp
@@ -55,9 +55,9 @@ Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença?
 a resposta é Não, até eu remover o Namespace <b>System</b>.
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorNamespace.PNG)
 <div style="text-align: justify;">
-Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas o a palavra-chave <b>string</b> permanece
-sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. <br><br>
-Essa já é basicamente uma das vantagens em utilizar palavras-chaves, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
+Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas a variável que faz uso de palavras-chave (<b>string</b>) permanece
+sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (<i>System.String</i>). <br><br>
+Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
 sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas, <b>code style</b>(estilo de código/perfumaria), 
 isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
 </div>
@@ -99,27 +99,17 @@ Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo 
 Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
 </div>
 ## Meu conselho
-Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras chaves quando puder, e evite surpresas!
+Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!
 <br><br>
 Palavras chaves C#, clique <a alt="" target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/">aqui</a>!
 <br>
 <div class="notice--warning">
-Não sabe o que é "palavras chaves"? <br>
-De uma forma resumida são palavras que você não poderá usar como nome de variáveis e nenhuma parte de seu código, a não ser que use @ antes do nome da variável, veja o exemplo abaixo.
+Não sabe o que é palavras-chave? <br>
+De uma forma resumida são palavras que você não poderá usar como nome de variáveis e nenhuma parte de seu código, a não ser que use <b>@</b> antes do nome da variável, veja um exemplo abaixo.
 </div> 
-```csharp
-class Program
-{
-    static void Main(string[] args)
-    {
-        string @string = "Exemplo"; // OK
-        int @int = "Exemplo"; // OK
 
-        string string = "Exemplo"; // ERROR
-        int int = "Exemplo"; // ERROR
-    }
-}
-```
+![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorPalavrasChave.PNG)
+
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
