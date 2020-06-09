@@ -16,7 +16,7 @@ categories:
 <center><strong>Olá tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Durante alguns anos tenho visto muitas pessoas se discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
+Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
 lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto para contribuir também com aqueles não saiba a real diferença.
 <br><br>
 <b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
