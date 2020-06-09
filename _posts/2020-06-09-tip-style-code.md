@@ -16,8 +16,8 @@ categories:
 <center><strong>Olá tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
-lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto para contribuir também com aqueles não saiba a real diferença.
+Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> com letra minúscula, talvez você que está 
+lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto, para contribuir também com aqueles não sabem a real diferença.
 <br><br>
 <b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
 <br><br>
@@ -87,7 +87,7 @@ namespace Exemplo
 }
 ```
 
-Observe na classe acima que eu adicionei o namespace <b>System</b> e criei uma simples classe <b>String</b>:
+Observe no código acima que eu adicionei o namespace <b>System</b> e escrevi uma simples classe <b>String</b>:
 ```csharp
 class String
 {
@@ -95,9 +95,13 @@ class String
 }
 ```
 <div style="text-align: justify;">
-Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b>.<br><br>
-Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(<b>String</b>) no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b>.<br><br>
+Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.<br>
+Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema, e encontrar o motivo.
 </div>
+## O problema
+Basicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.
+
 ## Meu conselho
 Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!
 <br><br>
