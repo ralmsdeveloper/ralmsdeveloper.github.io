@@ -20,11 +20,13 @@ Durante alguns anos tenho visto muitas pessoas se discutindo sobre o uso de <b>S
 lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto para contribuir também com aqueles não saiba a real diferença.
 <br><br>
 <b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
+<br><br>
+Isso não é um Deep-Dive de tipos de
 </div> 
 
 ## Preferência
 <div style="text-align: justify;">
-Bom, eu particularmente uso palavras chaves como identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
+Bom, eu particularmente uso palavras chaves para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
 você, que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
 </div>
 ```csharp
@@ -73,7 +75,7 @@ namespace Exemplo
     {
         static void Main(string[] args)
         {
-            String str1 = "Exemplo";
+            String str1 = "Exemplo"; // Classe que escrevi
             string str2 = "Exemplo";
 
             Console.WriteLine(str1 is System.String); // False
@@ -93,13 +95,30 @@ class String
 }
 ```
 <div style="text-align: justify;">
-Isso não causou nenhum erro no momento do desenvolvimento, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b> mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b> mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
 </div>
 ## Meu conselho
 Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras chaves quando puder, e evite surpresas!
 <br><br>
 Palavras chaves C#, clique <a alt="" target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/">aqui</a>!
+<br>
+<div class="notice--warning">
+Não sabe o que é "palavras chaves"? <br>
+De uma forma resumida são palavras que você não poderá usar como nome de variáveis e nenhuma parte de seu código, a não ser que use @ antes do nome da variável, veja o exemplo abaixo.
+</div> 
+```csharp
+class Program
+{
+    static void Main(string[] args)
+    {
+        string @string = "Exemplo"; // OK
+        int @int = "Exemplo"; // OK
 
+        string string = "Exemplo"; // ERROR
+        int int = "Exemplo"; // ERROR
+    }
+}
+```
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
