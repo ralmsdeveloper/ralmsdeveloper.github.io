@@ -59,7 +59,7 @@ Veja que agora o compilador já reclama por não encontrar o identificador <b>St
 sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. <br><br>
 Essa já é basicamente uma das vantagens em utilizar palavras-chaves, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
 sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas, <b>code style</b>(estilo de código/perfumaria), 
-por que isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
+isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
 </div>
 ```csharp
 using System;
@@ -95,7 +95,8 @@ class String
 }
 ```
 <div style="text-align: justify;">
-Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b> mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b>.<br><br>
+Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
 </div>
 ## Meu conselho
 Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras chaves quando puder, e evite surpresas!
@@ -123,7 +124,6 @@ class Program
 <div class="notice--info">
  Fico por aqui! 😄 <br />
  Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
- Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net
 </div> 
 
 <br>
