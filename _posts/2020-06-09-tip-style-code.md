@@ -54,7 +54,7 @@ Resposta: Não, até eu remover o Namespace <b>System</b>.
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorNamespace.PNG)
 <div style="text-align: justify;">
 Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas o a palavra-chave <b>string</b> permanece
-sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. 
+sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. <br>
 Essa já uma das vantagens em utilizar palavras-chaves, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
 sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas, <b>code style</b>(estilo de código/perfumaria), 
 por que isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
@@ -84,12 +84,19 @@ namespace Exemplo
     }
 }
 ```
+
+Observe na classe acima que eu adicionei o namespace <b>System</b> e criei uma simples classe <b>String</b>:
+```csharp
+class String
+{
+  public static implicit operator String(string str) => null;
+}
+```
 <div style="text-align: justify;">
-Observe que eu adicionei o namespace <b>System</b> e criei uma simples classe <b>String</b> isso não causou nenhum erro no momento do desenvolvimento, 
-, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que escrevi em vez de <b>System.String</b>  mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
+Isso não causou nenhum erro no momento do desenvolvimento, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b> mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
 </div>
 ## Meu conselho
-Eu já falei que a decisão é sua, mas se quiser seguir um conselho simples, use palavras chaves quando puder, e evite surpresas!
+Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras chaves quando puder, e evite surpresas!
 
 ## Twitter
 <div class="notice--info">
