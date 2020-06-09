@@ -24,8 +24,8 @@ lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centa
 
 ## Preferência
 <div style="text-align: justify;">
-Bom, eu particularmente uso palavras chaves como identificadores e existe uma razão para isso, primeiramente quero que fique claro para
-você que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
+Bom, eu particularmente uso palavras chaves como identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
+você, que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
 </div>
 ```csharp
 using System;
