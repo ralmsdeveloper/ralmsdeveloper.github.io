@@ -97,6 +97,8 @@ Isso não causou nenhum erro no momento do desenvolvimento, pelo contrário, o c
 </div>
 ## Meu conselho
 Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras chaves quando puder, e evite surpresas!
+<br><br>
+Palavras chaves C#, clique <a alt="" target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/">aqui</a>!
 
 ## Twitter
 <div class="notice--info">
