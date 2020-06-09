@@ -49,8 +49,8 @@ namespace Exemplo
     }
 }
 ```
-Para o exemplo acima ambos produzem o mesmo valor, alguma diferença? 
-Resposta: Não, até eu remover o Namespace <b>System</b>.
+Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença? 
+a resposta é Não, até eu remover o Namespace <b>System</b>.
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorNamespace.PNG)
 <div style="text-align: justify;">
 Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas o a palavra-chave <b>string</b> permanece
