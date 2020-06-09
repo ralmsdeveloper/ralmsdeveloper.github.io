@@ -89,7 +89,7 @@ Observe que eu adicionei o namespace <b>System</b> e criei uma simples classe <b
 , pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que escrevi em vez de <b>System.String</b>  mas isso poderá lhe causas realmente dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.
 </div>
 ## Meu conselho
-Eu já falei que a decisão é sua, mas se quiser seguir um conselho simples, use palavras reservadas quando puder, e evite surpresas!
+Eu já falei que a decisão é sua, mas se quiser seguir um conselho simples, use palavras chaves quando puder, e evite surpresas!
 
 ## Twitter
 <div class="notice--info">
