@@ -16,7 +16,7 @@ categories:
 <center><strong>Olá tudo bem?!</strong></center>
 <hr /> 
 <div class="notice--warning">
-Durante alguns anos tenho visto muita pessoas se perguntando sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
+Durante alguns anos tenho visto muitas pessoas se discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> em com letra minúscula, talvez você que está 
 lendo este artigo já saiba a sua real diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto para contribuir também com aqueles não saiba a real diferença.
 <br><br>
 <b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
@@ -50,8 +50,8 @@ namespace Exemplo
 }
 ```
 Para o exemplo acima ambos produzem o mesmo valor, alguma diferença? 
-Resposta: Não, até eu remover o Namespace System.
-![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/erroNamespace.PNG)
+Resposta: Não, até eu remover o Namespace <b>System</b>.
+![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorNamespace.PNG)
 <div style="text-align: justify;">
 Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas o a palavra-chave <b>string</b> permanece
 sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence. 
