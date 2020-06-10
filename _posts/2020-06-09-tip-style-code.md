@@ -27,7 +27,7 @@ Isso não é um Deep-Dive sobre tipos em .NET!
 ## Preferência
 <div style="text-align: justify;">
 Bom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
-você, que isso tem muito mais haver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
+você, que isso tem muito mais a ver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
 </div>
 ```csharp
 using System;
