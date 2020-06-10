@@ -42,7 +42,7 @@ namespace Exemplo
             string str2 = "Exemplo";
 
             Console.WriteLine(str1);
-            Console.WriteLine(str1);
+            Console.WriteLine(str2);
 
             // Output:
             //        Exemplo
