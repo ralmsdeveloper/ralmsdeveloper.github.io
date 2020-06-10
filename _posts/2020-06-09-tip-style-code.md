@@ -97,7 +97,7 @@ class String
 <div style="text-align: justify;">
 Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(<b>String</b>) no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b>.<br><br>
 Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.<br>
-Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema, e encontrar o motivo.
+Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema até encontrar o motivo.
 </div>
 ## O problema
 Basicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.
