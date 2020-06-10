@@ -57,9 +57,9 @@ a resposta é Não, até eu remover o Namespace <b>System</b>.
 <div style="text-align: justify;">
 Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas a variável que faz uso de palavras-chave (<b>string</b>) permanece
 sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (<i>System.String</i>). <br><br>
-Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro quem vai dar manuntenção em seu projeto
-sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas, <b>code style</b>(estilo de código/perfumaria), 
-isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, vamos imaginar o seguinte cenário:
+Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro, quem vai dar manuntenção em seu projeto
+sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas uma simples interpretação de <b>code style</b>(estilo de código/perfumaria), 
+isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, para não ficar em poucas palavras vamos imaginar o seguinte cenário:
 </div>
 ```csharp
 using System;
