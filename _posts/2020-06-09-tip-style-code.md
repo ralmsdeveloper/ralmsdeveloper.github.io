@@ -21,7 +21,7 @@ lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e
 <br><br>
 <b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
 <br><br>
-Isso não é um Deep-Dive de tipos de
+Isso não é um Deep-Dive sobre tipos em .NET!
 </div> 
 
 ## Preferência
