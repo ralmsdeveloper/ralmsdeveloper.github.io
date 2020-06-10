@@ -109,7 +109,7 @@ Palavras chaves C#, clique <a alt="" target="_BLANK" href="https://docs.microsof
 <br>
 <div class="notice--warning">
 Não sabe o que é palavras-chave? <br>
-De uma forma resumida são palavras que você não poderá usar como nome de variáveis e nenhuma parte de seu código, a não ser que use <b>@</b> antes do nome da variável, veja um exemplo abaixo.
+De uma forma resumida são palavras que você não poderá usar como nome de variáveis em nenhuma parte de seu código, a não ser que use <b>@</b> antes do nome da variável, veja um exemplo abaixo.
 </div> 
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/tipsstring/errorPalavrasChave.PNG)
