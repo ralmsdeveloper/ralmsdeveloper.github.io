@@ -50,11 +50,11 @@ Vamos pegar o seguinte cenário onde eu tenho:<br>
 Se sua consulta retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
 isso pode ser um problema de uso de <b>memória</b>, e pode causar lentidão em sua aplicação, o team do <b>Entity Framework Core</b> 
 vem fazendo um ótimo trabalho e fazendo com que o <b>ORM</b> a cada versão seja mais produtivo e performático, mas aqui
-neste ponto específico temos um problema, que alocamento de objetos em memória, o qual poderia ser resolvido de maneira mais inteligente.<br><br>
+neste ponto específico temos um pequeno problema, que é o alocamento de objetos em memória, o qual poderia ser resolvido de maneira mais inteligente.<br><br>
 </div>
 ## Perform Identity Resolution
 <div style="text-align: justify;">
-Certo temos um problema e qual é a solução? <br />
+Certo, temos um problema e qual é a solução? <br />
 Existe uma nova feature, que é um método de extensão (<i>PerformIdentityResolution</i>), extremamente inteligente e capaz de resolver esse problema de alocação de objetos em memória,
 assim em vez de ter 1.000(mil) instâncias de <b>Pedido</b>, passa agora ter uma única instância e a lista de <b>Itens</b> agora passa a usar esta única referência, 
 além de deixar aplicação mais performática, veja como ficou simples de resolver isso na nova versão do <b>EF Core 5</b>:
