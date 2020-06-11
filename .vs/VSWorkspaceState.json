@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\_posts"
+    "\\_posts",
+    "\\_sass"
   ],
-  "SelectedNode": "\\_posts\\2020-03-21-workaround-constructor-systemtextjson.md",
+  "SelectedNode": "\\_sass\\minimal-mistakes.scss",
   "PreviewInSolutionExplorer": false
 }
