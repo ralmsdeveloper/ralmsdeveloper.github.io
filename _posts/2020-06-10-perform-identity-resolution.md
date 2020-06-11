@@ -25,7 +25,7 @@ AsNoTracking é um dos recursos mais utilizados por usuários do <b>Entity Frame
 banco de dados, costumamos dizer que é uma consulta somente leitura, por que os dados retornados pelo banco de dados não 
 serão rastreados e pode existir situações que essa abordagem se torna muito mais rápida, por não ter a necessidade de 
 gerenciar o estado dos objetos.
-<br />
+<br /><br />
 Veja um exemplo de uma consulta utilizando <b>AsNoTracking</b>:
 </div>
 ```csharp
@@ -55,7 +55,7 @@ neste ponto específico temos um problema, que alocamento de objetos em memória
 ## Perform Identity Resolution
 <div style="text-align: justify;">
 Certo temos um problema e qual é a solução? <br />
-Existe uma nova feature, que é um método de extensão, extremamente inteligente e capaz de resolver esse problema de alocação de objetos em memória,
+Existe uma nova feature, que é um método de extensão (<i>PerformIdentityResolution</i>), extremamente inteligente e capaz de resolver esse problema de alocação de objetos em memória,
 assim em vez de ter 1.000(mil) instâncias de <b>Pedido</b>, passa agora ter uma única instância e a lista de <b>Itens</b> agora passa a usar esta única referência, 
 além de deixar aplicação mais performática, veja como ficou simples de resolver isso na nova versão do <b>EF Core 5</b>:
 </div>
