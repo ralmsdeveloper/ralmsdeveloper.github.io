@@ -6,7 +6,7 @@ toc: true
 toc_label: "Tópicos"
 categories:
   - EF5
-  - EntityFrameworkCore
+  - Entity Framework Core
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png)
