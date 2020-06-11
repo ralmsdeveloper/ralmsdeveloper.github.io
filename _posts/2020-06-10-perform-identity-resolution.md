@@ -25,7 +25,7 @@ AsNoTracking é um dos recursos mais utilizados por usuários do <b>Entity Frame
 constumamos dizer que é uma consulta somente leitura, isso significa que os dados retornados pela consulta não 
 serão rastreados e pode existir situações que se torna muito mais rápido, por não ter essa responsabilidade de 
 gerenciar o estado do objeto.
-<br /><br />
+<br />
 Veja uma exemplo de uma consulta utilizando <b>AsNoTracking</b>:
 </div>
 ```csharp
@@ -35,16 +35,23 @@ var itens = db
     .Itens
     .AsNoTracking()
     .Include(p => p.Pedido)
+    .Where(p => p.PedidoId == "EXEF001")
     .ToList()
 ```
 <div style="text-align: justify;">
 Basicamente esse é o comportamento que todos conhecem, mas existe algo que você precisa saber, na consulta acima
-para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>, de forma resumida é o seguinte, se sua consulta 
-retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
-isso pode ser um problema de uso de <b>memória</b>, e pode causar lentidão em sua aplicação, o time do <b>Entity Framework Core</b> 
+para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>.<br><br>
+Vamos pegar o seguinte cenário onde eu tenho:<br>
+<pre>
+1    (um)  - Pedido (Código do pedido = <b>EXEF001<b>)
+1000 (mil) - Itens (Esse itens são do pedido = <b>EXEF001<b>)
+</pre>
+<hr />
+Se sua consulta retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
+isso pode ser um problema de uso de <b>memória</b>, e pode causar lentidão em sua aplicação, o team do <b>Entity Framework Core</b> 
 vem fazendo um ótimo trabalho e fazendo com que o <b>ORM</b> a cada versão seja mais produtivo e performático.<br><br>
 </div>
-## PerformIdentityResolution
+## Perform Identity Resolution
 <div style="text-align: justify;">
 Certo temos um problema e qual é a solução?
 Existe uma nova feature, que é um método de extensão, extremamente inteligente e capaz de resolver esse problema de alocar objetos em memória,
