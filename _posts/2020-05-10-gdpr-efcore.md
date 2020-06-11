@@ -33,8 +33,9 @@ sua base de dados, mas, que sejam criptografadas, para garantir a integridade da
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
 <pre>
-<b>Fulando:</b> Rafael com todo respeito isso é fácil!<br>
-<b>Rafael:</b> Tudo bem, só acredito que posso tornar ainda mais fácil.<br><br>
+<b>Fulando:</b> Rafael com todo respeito isso é fácil!<
+<b>Rafael:</b> Tudo bem, só acredito que posso 
+               tornar ainda mais fácil.
 </pre>
 Bom vamos começar a montar nosso sistema de cadastro de clientes, onde termos uma classe <b>Cliente</b> com a seguinte estrutura.
 </div>
