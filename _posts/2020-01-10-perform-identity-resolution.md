@@ -43,7 +43,9 @@ para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>, de form
 retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
 isso pode ser um problema de uso de <b>memória</b>, e pode causar lentidão em sua aplicação, o time do <b>Entity Framework Core</b> 
 vem fazendo um ótimo trabalho e fazendo com que o <b>ORM</b> a cada versão seja mais produtivo e performático.<br><br>
-
+</div>
+## PerformIdentityResolution
+<div style="text-align: justify;">
 Certo temos um problema e qual é a solução?
 Existe uma nova feature, que é um método de extensão, extremamente inteligente e capaz de resolver esse problema de alocar objetos em memória,
 assim em vez de ter 1.000(mil) instâncias de <b>Pedido</b>, passa agora ter uma única instância e a lista de <b>Itens</b> agora passa a usar esta única referência, 
