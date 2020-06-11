@@ -43,8 +43,8 @@ Basicamente esse é o comportamento que todos conhecem, mas existe algo que voc�
 para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>.<br><br>
 Vamos pegar o seguinte cenário onde eu tenho:<br>
 <pre>
-1    (um)  - Pedido (Código do pedido = <b>EXEF001<b>)
-1000 (mil) - Itens (Esse itens são do pedido = <b>EXEF001<b>)
+1    (um)  - Pedido (Código do pedido = <b>EXEF001</b>)
+1000 (mil) - Itens (Esse itens são do pedido = <b>EXEF001</b>)
 </pre>
 <hr />
 Se sua consulta retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
@@ -69,6 +69,11 @@ var itens = db
     .ToList()
 ```
 Observe que agora usamos o seguinte metódo (<b>PerformIdentityResolution</b>) ele é o responsável por resolver esse pequeno problema de alocação de objetos em memória.
+
+<div class="notice--warning">
+<b>FYI:</b> Esse novo recurso aplica-se apenas para consultas quando usado o <b>AsNoTracking</b>.
+</div> 
+
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
