@@ -19,7 +19,7 @@ Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se 
 apenas mostrar que podemos proteger nossos dados de forma segura e simples usando <b>Entity Framework Core</b>.
 <br><br>
 Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (<i>Lei Geral de Proteção de Dados Pessoais</i>) que
-basicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse esta segura.<br>
+basicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse estar segura.<br>
 Basicamente de forma muito resumida é isso... antes de criticas observe que falei "BASICAMENTE".<br>
 Você pode acessar os links abaixo para obter mais informações:<br>
 <a target="_BLANK" href="https://pt.wikipedia.org/wiki/Regulamento_Geral_sobre_a_Prote%C3%A7%C3%A3o_de_Dados" alt="">GDPR</a><br>
@@ -33,8 +33,8 @@ sua base de dados, mas, que sejam criptografadas, para garantir a integridade da
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
 <pre>
-Fulando: Rafael com todo respeito isso é fácil!<br>
-Rafael: Tudo bem, só acredito que posso tornar ainda mais fácil.<br><br>
+<b>Fulando:</b> Rafael com todo respeito isso é fácil!<br>
+<b>Rafael:</b> Tudo bem, só acredito que posso tornar ainda mais fácil.<br><br>
 </pre>
 Bom vamos começar a montar nosso sistema de cadastro de clientes, onde termos uma classe <b>Cliente</b> com a seguinte estrutura.
 </div>
