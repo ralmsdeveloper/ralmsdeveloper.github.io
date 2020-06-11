@@ -174,9 +174,10 @@ public class Cliente
 ```
 <div style="text-align: justify;">
 Agora vamos criar uma classe customizada para ficar responsável pela conversão dos valores que serão persistidos e lidos de nossa base de dados,
-a partir do <b>EF Core 2.1</b> temos uma nova funcionalidade que é a possibilidade de nos fornecer uma forma em que podemos manipular o dado antes de ser persistido e quando for lido também, 
+a partir do <b>EF Core 2.1</b> temos uma nova funcionalidade que basicamente nos fornece uma forma na qual podemos manipular o dado antes de ser persistido e quando for lido também, 
 essa funcionalidade se chama <b>ValueConverter</b>, em breve irei fazer um artigo falando mais sobre ela, por enquanto vamos focar aqui, e nossa classe customizada ficou da 
-seguinte forma:
+seguinte forma com 2 metódos, para critografar e descriptografar os dados, o que fiz foi criar um classe que herda da classe <b>ValueConverter</b> alguns comportamentos, onde em nosso construtor eu passo 
+a expressão que eu quero utilizar para persitir e ler dados.
 </div>
 ```csharp
 public class DataProtectionConverter : ValueConverter<string, string>
@@ -392,7 +393,7 @@ SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'kOI/e7VQZhs='
 ```
-![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.PNG)
+![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.png)
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
