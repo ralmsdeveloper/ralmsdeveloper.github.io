@@ -86,9 +86,13 @@ public class Program
 
         db.SaveChanges();
 
-        var cliente = db.Clientes.AsNoTracking().FirstOrDefault(p => p.CPF == "123456");
+        var cliente = db
+            .Clientes
+            .AsNoTracking()
+            .FirstOrDefault(p => p.CPF == "123456");
     }
 }
+## Comandos gerados
 ```
 Os comandos produzidos pelo <b>EF Core</b> foram esses:<br>
 Comando <b>Inserir</b>
@@ -110,6 +114,7 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'123456'
 ```
 
+## Protegendo dados explicitamente
 Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
 Então você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
 Perfeito, então vejo você fazendo algo assim:
@@ -130,7 +135,10 @@ public class Program
 
         db.SaveChanges();
 
-        var cliente = db.Clientes.AsNoTracking().FirstOrDefault(p => p.CPF == LockView("123456"));
+        var cliente = db
+            .Clientes
+            .AsNoTracking()
+            .FirstOrDefault(p => p.CPF == LockView("123456"));
 
         var cpf = UnLockView(cliente.CPF);
     }
@@ -151,6 +159,7 @@ public class Program
     }
 }
 ```
+## Delegando responsabilidade
 Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
 proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.
 ```csharp
@@ -260,6 +269,7 @@ public class DatabaseContext : DbContext
     }
 }
 ```
+## Código final
 Agora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:
 ```csharp
 public class Program
@@ -372,6 +382,7 @@ public class DataProtectionConverter : ValueConverter<string, string>
     }
 }
 ```
+## Output SQL
 Os comandos produzidos ficaram assim:<br>
 Comando <b>Inserir</b>
 ```sql
