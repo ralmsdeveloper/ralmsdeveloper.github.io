@@ -44,7 +44,7 @@ para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>.<br><br>
 Vamos pegar o seguinte cenário onde eu tenho:<br>
 <pre>
 1    (um)  - Pedido (Código do pedido = <b>EXEF001</b>)
-1000 (mil) - Itens (Esse itens são do pedido = <b>EXEF001</b>)
+1000 (mil) - Itens (Esses itens são do pedido -> <b>EXEF001</b>)
 </pre>
 <hr />
 Se sua consulta retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
