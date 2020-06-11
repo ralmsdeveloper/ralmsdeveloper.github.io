@@ -16,7 +16,7 @@ categories:
 <div class="notice--warning">
 O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro deste ano, como parte do <b>Entity Framework Core 5</b>.
 <br><br>
-<b>Entity Framework Core 5</b> será umas das versões mais esperadas até o momento e está recheada de várias novidades, hoje irei apresentar um recurso muito interessante e extremamente importante.
+É muito bom lembrar também que o <b>EF Core 5</b> será umas das versões mais esperadas e está recheada de várias novidades, hoje irei apresentar um recurso muito interessante e extremamente importante.
 </div> 
 
 ## AsNoTracking
