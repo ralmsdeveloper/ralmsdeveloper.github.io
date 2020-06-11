@@ -15,7 +15,7 @@ categories:
 <hr /> 
 <h3>Mais 1 artigo??? Desculpa estou de férias!!!</h3>
 <div class="notice--warning">
-Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... Nada disso!<br>
+Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,
 apenas mostrar que podemos proteger nossos dados de forma segura e simples usando <b>Entity Framework Core</b>.
 <br><br>
 Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (<i>Lei Geral de Proteção de Dados Pessoais</i>) que
@@ -28,12 +28,14 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 
 ## Cenário
 <div style="text-align: justify;">
-Imagine que você está usando o <b>EF Core</b> e precisar armazenar informações de algumas propriedas específicas em
-sua base de dados, mas, de forma criptografada, para garantir a integridade da informação e que os dados sejam exibidos apenas 
+Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas em
+sua base de dados, mas, que sejam criptografadas, para garantir a integridade da informação e que os dados sejam exibidos apenas 
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
+<pre>
 Fulando: Rafael com todo respeito isso é fácil!<br>
 Rafael: Tudo bem, só acredito que posso tornar ainda mais fácil.<br><br>
+</pre>
 Bom vamos começar a montar nosso sistema de cadastro de clientes, onde termos uma classe <b>Cliente</b> com a seguinte estrutura.
 </div>
 ```csharp
@@ -389,6 +391,7 @@ SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'kOI/e7VQZhs='
 ```
+![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.PNG)
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
