@@ -21,19 +21,45 @@ O novo recurso que irei apresentar está em preview ainda, e será lançada de o
 
 ## AsNoTracking
 <div style="text-align: justify;">
-AsNoTracking é um recurso muito utilizado para fazer consultas com Entity Framework Core, é uma consulta 
-somente leitura, isso significa que os dados retornados pela consulta não será rastreado e existe situações que 
-se torna muito mais rápido, por não ter essa responsabilidade de gerenciar o objeto.
-<br>
+AsNoTracking é um dos recursos mais utilizados por usuários do <b>Entity Framework Core</b> para fazer consultas, 
+constumamos dizer que é uma consulta somente leitura, isso significa que os dados retornados pela consulta não 
+serão rastreados e pode existir situações que se torna muito mais rápido, por não ter essa responsabilidade de 
+gerenciar o estado do objeto.
+<br /><br />
 Veja uma exemplo de uma consulta utilizando <b>AsNoTracking</b>:
 </div>
 ```csharp
 using var db = new ExemploContext();
 
-var itens = db.Itens.Include(p => p.Pedido).ToList()
+var itens = db
+    .Itens
+    .AsNoTracking()
+    .Include(p => p.Pedido)
+    .ToList()
 ```
- 
+<div style="text-align: justify;">
+Basicamente esse é o comportamento que todos conhecem, mas existe algo que você precisa saber, na consulta acima
+para cada <b>Item</b> será criada uma nova instância de <b>Pedido</b>, de forma resumida é o seguinte, se sua consulta 
+retornou 1.000 (mil itens) e todos fazem parte de um único <b>Pedido</b>, teremos 2.000 (duas mil) instâncias de objetos agora, 
+isso pode ser um problema de uso de <b>memória</b>, e pode causar lentidão em sua aplicação, o time do <b>Entity Framework Core</b> 
+vem fazendo um ótimo trabalho e fazendo com que o <b>ORM</b> a cada versão seja mais produtivo e performático.<br><br>
 
+Certo temos um problema e qual é a solução?
+Existe uma nova feature, que é um método de extensão, extremamente inteligente e capaz de resolver esse problema de alocar objetos em memória,
+assim em vez de ter 1.000(mil) instâncias de <b>Pedido</b>, passa agora ter uma única instância e a lista de <b>Itens</b> agora passa a usar esta única referência, 
+veja como ficou simples de resolver isso:
+</div>
+```csharp
+using var db = new ExemploContext();
+
+var itens = db
+    .Itens
+    .AsNoTracking()
+    .PerformIdentityResolution() // Aqui está a solução
+    .Include(p => p.Pedido)
+    .ToList()
+```
+Observe que agora usamos o seguinte metódo (<b>PerformIdentityResolution</b>) ele é o responsável por resolver esse pequeno problema de alocação de objetos em memória.
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
