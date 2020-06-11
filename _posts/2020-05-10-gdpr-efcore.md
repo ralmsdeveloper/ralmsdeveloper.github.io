@@ -33,11 +33,11 @@ sua base de dados, mas, que sejam criptografadas, para garantir a integridade da
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
 <pre>
-<b>Fulando:</b> Rafael com todo respeito isso é fácil!<
+<b>Fulando:</b> Rafael com todo respeito isso é fácil!
 <b>Rafael:</b> Tudo bem, só acredito que posso 
-               tornar ainda mais fácil.
+           tornar ainda mais fácil.
 </pre>
-Bom vamos começar a montar nosso sistema de cadastro de clientes, onde termos uma classe <b>Cliente</b> com a seguinte estrutura.
+Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe <b>Cliente</b> com a seguinte estrutura.
 </div>
 ```csharp
 public class Cliente
@@ -90,8 +90,8 @@ public class Program
     }
 }
 ```
-Os comandos produzidos pelo EF Core foram esses:<br>
-Inserir
+Os comandos produzidos pelo <b>EF Core</b> foram esses:<br>
+Comando <b>Inserir</b>
 ```sql
 exec sp_executesql N'SET NOCOUNT ON;
 INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
@@ -103,7 +103,7 @@ WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
 ',N'@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)',
 @p0=N'123456',@p1=N'Aqui mesmo',@p2=N'Rafael Almeida',@p3=N'7998829XXXX'
 ```
-Consultar
+Comando <b>Consultar</b>
 ```sql
 SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
@@ -373,7 +373,7 @@ public class DataProtectionConverter : ValueConverter<string, string>
 }
 ```
 Os comandos produzidos ficaram assim:<br>
-Insert
+Comando <b>Inserir</b>
 ```sql
 exec sp_executesql N'SET NOCOUNT ON;
 INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
@@ -387,7 +387,7 @@ WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
 @p1=N'Aqui mesmo',@p2=N'Rafael Almeida',
 @p3=N'T2wQKyR8w28fKOgBXp0ytg=='    -- Criptografado
 ```
-Consulta
+Comando <b>Consultar</b>
 ```sql
 SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
