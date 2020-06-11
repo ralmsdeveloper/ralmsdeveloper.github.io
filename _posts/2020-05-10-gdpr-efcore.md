@@ -110,7 +110,7 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'123456'
 ```
 
-Bom até aqui tudo normal, agora vamos voltar ao assunto de proteger os dados?!<br>
+Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
 Então você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
 Perfeito, então vejo você fazendo algo assim:
 ```csharp
@@ -151,15 +151,15 @@ public class Program
     }
 }
 ```
-Bom funciona, mas podemos melhorar isso, então vamos criar um atributo e extrair funcionalidades que o EF Core, nos
-proporciona, primeiramente vamos criar o atributo.
+Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
+proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.
 ```csharp
 [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
 public sealed class SensitiveDataAttribute : Attribute
 {
 }
 ```
-Agora vamos adicionar o atributo as propriedades que queremos que o EF Core fique responsável pelo trabalho pessado!
+Agora vamos adicionar o atributo em todas propriedades que queremos que o <b>EF Core</b> fique responsável pelo trabalho pessado!
 ```csharp
 public class Cliente
 {
