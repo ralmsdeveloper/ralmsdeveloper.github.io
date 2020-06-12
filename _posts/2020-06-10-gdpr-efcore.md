@@ -26,7 +26,7 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 <a target="_BLANK" href="https://pt.wikipedia.org/wiki/Lei_Geral_de_Prote%C3%A7%C3%A3o_de_Dados_Pessoais" alt="">LGPD</a>
 </div> 
 
-# Cenário
+<h3>Cenário</h3>
 <div style="text-align: justify;">
 Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas em
 sua base de dados criptografadas, para garantir a integridade da informação e que os dados sejam exibidos apenas 
@@ -92,7 +92,8 @@ public class Program
     }
 }
 ```
-# Comandos gerados
+
+<h3>Comandos gerados</h3>
 Os comandos produzidos pelo <b>EF Core</b> foram esses:<br>
 <b>Comando Inserir</b>
 ```sql
@@ -113,7 +114,7 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'123456'
 ```
 
-# Protegendo dados explícitamente 
+## Protegendo dados explícitamente 
 Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
 Você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
 Perfeito, então vejo você fazendo algo assim:
@@ -158,7 +159,7 @@ public class Program
     }
 }
 ```
-# Delegando responsabilidade
+## Delegando responsabilidade
 Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
 proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.
 ```csharp
@@ -268,7 +269,7 @@ public class DatabaseContext : DbContext
     }
 }
 ```
-# Código final
+## Código final
 Agora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:
 ```csharp
 public class Program
@@ -386,7 +387,7 @@ public class DataProtectionConverter : ValueConverter<string, string>
     }
 }
 ```
-# Output SQL
+## Output SQL
 Os comandos produzidos ficaram assim:<br>
 Comando <b>Inserir</b>
 ```sql
@@ -409,12 +410,12 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'kOI/e7VQZhs='
 ```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.png)
-# Observações
+## Observações
 <div class="notice--warning">
 Alguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho 
 na profissão de DPO (<i>Data Protection Officer</i>), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.
 </div> 
-# Twitter
+## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
  Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
