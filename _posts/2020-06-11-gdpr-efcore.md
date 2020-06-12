@@ -1,5 +1,5 @@
 ﻿---
-title: "GDPR + EF CORE + ValueConverter"
+title: "LGPD + EF CORE + ValueConverter"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
