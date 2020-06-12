@@ -13,7 +13,7 @@ categories:
 
 <center><strong>Olá tudo bem?!</strong></center>
 <hr /> 
-<h2>Mais 1 artigo??? Desculpa estou de férias!!!</h2>
+## Mais 1 artigo??? Desculpa estou de férias!!!
 <div class="notice--warning">
 Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,
 apenas mostrar que podemos proteger nossos dados de forma segura e simples usando <b>Entity Framework Core</b>.
@@ -26,7 +26,7 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 <a target="_BLANK" href="https://pt.wikipedia.org/wiki/Lei_Geral_de_Prote%C3%A7%C3%A3o_de_Dados_Pessoais" alt="">LGPD</a>
 </div> 
 
-<h2>Cenário</h2>
+## Cenário
 <div style="text-align: justify;">
 Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas criptografadas em
 sua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas 
@@ -93,7 +93,7 @@ public class Program
 }
 ```
 
-<h2>Comandos gerados</h2>
+## Comandos gerados
 Os comandos produzidos pelo <b>EF Core</b> foram esses:<br>
 <b>Comando Inserir</b>
 ```sql
@@ -114,7 +114,7 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'123456'
 ```
 
-<h2>Protegendo dados explícitamente </h2>
+## Protegendo dados explícitamente 
 Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
 Mas eu gostaria que <b>Telefone e CPF</b>, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.<br>
 Perfeito, então vejo você fazendo algo assim:
@@ -160,7 +160,7 @@ public class Program
 }
 ```
 
-<h2>Delegando responsabilidade</h2>
+## Delegando responsabilidade
 Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o <b>EF Core</b>, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
 proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.
 ```csharp
@@ -271,7 +271,7 @@ public class DatabaseContext : DbContext
 }
 ```
 
-<h2>Código final</h2>
+## Código final
 Agora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:
 ```csharp
 public class Program
@@ -390,7 +390,7 @@ public class DataProtectionConverter : ValueConverter<string, string>
 }
 ```
 
-<h2>Output SQL</h2>
+## Output SQL
 Os comandos produzidos ficaram assim:<br>
 Comando <b>Inserir</b>
 ```sql
@@ -415,14 +415,14 @@ WHERE [c].[CPF] = N'kOI/e7VQZhs='
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.png)
 
 
-<h2>Observações</h2>
+## Observações
 <div class="notice--warning">
 Alguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho 
 na profissão de DPO (<i>Data Protection Officer</i>), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.
 </div> 
 
 
-<h2>Twitter</h2>
+## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
  Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
