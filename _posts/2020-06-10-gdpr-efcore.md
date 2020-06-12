@@ -29,14 +29,15 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 ## Cenário
 <div style="text-align: justify;">
 Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas em
-sua base de dados, mas, que sejam criptografadas, para garantir a integridade da informação e que os dados sejam exibidos apenas 
+sua base de dados criptografadas, para garantir a integridade da informação e que os dados sejam exibidos apenas 
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
 <pre>
 <b>Fulando:</b> Rafael com todo respeito isso é fácil!
 <b>Rafael:</b> Tudo bem, só acredito que posso 
-           tornar ainda mais fácil.
+        tornar ainda mais fácil.
 </pre>
+<br>
 Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe <b>Cliente</b> com a seguinte estrutura.
 </div>
 ```csharp
@@ -50,7 +51,7 @@ public class Cliente
 }
 ```
 <div style="text-align: justify;">
-Agora vamos criar nossa classe de contexto para acessar o banco de dados, ela ficará assim:
+Agora vamos criar nossa classe de contexto para acessar o banco de dados, basicamente essa é a estrutura da classe:
 </div>
 ```csharp
  public class DatabaseContext : DbContext
@@ -60,22 +61,20 @@ Agora vamos criar nossa classe de contexto para acessar o banco de dados, ela fi
     protected override void OnConfiguring(
         DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder
-            .UseSqlServer(
-                @"Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;"
-            );
+            .UseSqlServer(@"Server=(localdb)\msSqlLocalDB;Integrated Security=True;Database=EFCoreValueConvertion;MultipleActiveResultSets=true;");
 }
 ```
 <div style="text-align: justify;">
-Vamos agora inserir um cliente em nossa base de dados e fazer uma consulta também.
+Vamos inserir um cliente em nossa base de dados e fazer uma consulta.
 </div>
 ```csharp
 public class Program
 {
     static void Main(string[] args)
     {
-
         using var db = new DatabaseContext();
         db.Database.EnsureCreated();
+
         db.Clientes.Add(new Cliente
         {
             Nome = "Rafael Almeida",
@@ -92,10 +91,10 @@ public class Program
             .FirstOrDefault(p => p.CPF == "123456");
     }
 }
-## Comandos gerados
 ```
+## Comandos gerados
 Os comandos produzidos pelo <b>EF Core</b> foram esses:<br>
-Comando <b>Inserir</b>
+<b>Comando Inserir</b>
 ```sql
 exec sp_executesql N'SET NOCOUNT ON;
 INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
@@ -107,16 +106,16 @@ WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
 ',N'@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)',
 @p0=N'123456',@p1=N'Aqui mesmo',@p2=N'Rafael Almeida',@p3=N'7998829XXXX'
 ```
-Comando <b>Consultar</b>
+<b>Comando Consultar</b>
 ```sql
 SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'123456'
 ```
 
-## Protegendo dados explicitamente
+## Protegendo dados explícitamente 
 Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
-Então você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
+Você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
 Perfeito, então vejo você fazendo algo assim:
 ```csharp
 public class Program
@@ -168,7 +167,7 @@ public sealed class SensitiveDataAttribute : Attribute
 {
 }
 ```
-Agora vamos adicionar o atributo em todas propriedades que queremos que o <b>EF Core</b> fique responsável pelo trabalho pessado!
+Agora vamos adicionar o atributo em todas propriedades que queremos que o <b>EF Core</b> fique responsável pelo trabalho pesado, de armazenar e ler os dados sensíveis.
 ```csharp
 public class Cliente
 {
@@ -405,6 +404,11 @@ FROM [Clientes] AS [c]
 WHERE [c].[CPF] = N'kOI/e7VQZhs='
 ```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/consulta.png)
+## Observações
+<div class="notice--warning">
+Alguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho 
+na profissão de DPO (<i>Data Protection Officer</i>), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.
+</div> 
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
