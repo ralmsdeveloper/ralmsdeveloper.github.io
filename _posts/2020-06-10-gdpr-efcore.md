@@ -28,8 +28,8 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 
 <h2>Cenário</h2>
 <div style="text-align: justify;">
-Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas em
-sua base de dados criptografadas, para garantir a integridade da informação e que os dados sejam exibidos apenas 
+Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas criptografadas em
+sua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas 
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
 <br />
 <pre>
@@ -116,7 +116,7 @@ WHERE [c].[CPF] = N'123456'
 
 <h2>Protegendo dados explícitamente </h2>
 Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br>
-Você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.
+Mas eu gostaria que <b>Telefone e CPF</b>, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.<br>
 Perfeito, então vejo você fazendo algo assim:
 ```csharp
 public class Program
