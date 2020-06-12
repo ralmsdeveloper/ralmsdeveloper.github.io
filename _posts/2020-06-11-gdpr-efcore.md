@@ -355,8 +355,8 @@ public class DataProtectionConverter : ValueConverter<string, string>
     {
     }
 
-    static Expression<Func<string, string>> _convertTo = x => LockView(x);
-    static Expression<Func<string, string>> _convertFrom = x => UnLockView(x);
+    private static Expression<Func<string, string>> _convertTo = x => LockView(x);
+    private static Expression<Func<string, string>> _convertFrom = x => UnLockView(x);
 
     static string LockView(string texto)
     {
