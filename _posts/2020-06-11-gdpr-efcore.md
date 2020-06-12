@@ -31,7 +31,7 @@ Você pode acessar os links abaixo para obter mais informações:<br>
 Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas criptografadas em
 sua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas 
 pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
-<br />
+<br /><br />
 <pre>
 <b>Fulando:</b> Rafael com todo respeito isso é fácil!
 <b>Rafael:</b> Tudo bem, só acredito que posso 
@@ -192,7 +192,7 @@ a expressão que eu quero utilizar para persitir e ler dados.
 ```csharp
 public class DataProtectionConverter : ValueConverter<string, string>
 {
-    private static byte[] _chave = Encoding.UTF8.GetBytes("#gdpr+ef");
+    private static byte[] _chave = Encoding.UTF8.GetBytes("#lgpd+ef");
 
     public DataProtectionConverter()
         : base(_convertTo, _convertFrom, default)
@@ -348,7 +348,7 @@ public class DatabaseContext : DbContext
 // DataProtectionConverter
 public class DataProtectionConverter : ValueConverter<string, string>
 {
-    private static byte[] _chave = Encoding.UTF8.GetBytes("#gdpr+ef");
+    private static byte[] _chave = Encoding.UTF8.GetBytes("#lgpd+ef");
 
     public DataProtectionConverter()
         : base(_convertTo, _convertFrom, default)
