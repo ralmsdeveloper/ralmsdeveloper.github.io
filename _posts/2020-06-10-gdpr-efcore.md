@@ -161,7 +161,7 @@ public class Program
 ```
 
 <h2>Delegando responsabilidade</h2>
-Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
+Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o <b>EF Core</b>, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
 proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.
 ```csharp
 [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
