@@ -292,11 +292,13 @@ public class Program
     }
 }
 
+// SensitiveDataAttribute
 [AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]
 public sealed class SensitiveDataAttribute : Attribute
 {
 }
 
+// Cliente
 public class Cliente
 {
     public int Id { get; set; }
@@ -308,6 +310,8 @@ public class Cliente
     public string CPF { get; set; }
 }
 
+
+// DatabaseContext
 public class DatabaseContext : DbContext
 {
     public DbSet<Cliente> Clientes { get; set; }
@@ -338,6 +342,7 @@ public class DatabaseContext : DbContext
     }
 }
 
+// DataProtectionConverter
 public class DataProtectionConverter : ValueConverter<string, string>
 {
     private static byte[] _chave = Encoding.UTF8.GetBytes("#gdpr+ef");
