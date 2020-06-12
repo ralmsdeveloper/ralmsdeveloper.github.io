@@ -392,7 +392,7 @@ public class DataProtectionConverter : ValueConverter<string, string>
 
 ## Output SQL
 Os comandos produzidos ficaram assim:<br>
-Comando <b>Inserir</b>
+<b>Comando Inserir</b>
 ```sql
 exec sp_executesql N'SET NOCOUNT ON;
 INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
@@ -406,7 +406,7 @@ WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
 @p1=N'Aqui mesmo',@p2=N'Rafael Almeida',
 @p3=N'T2wQKyR8w28fKOgBXp0ytg=='    -- Criptografado
 ```
-Comando <b>Consultar</b>
+<b>Comando Consultar</b>
 ```sql
 SELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]
 FROM [Clientes] AS [c]
