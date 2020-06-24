@@ -7,6 +7,12 @@ toc_label: "Tópicos"
 categories:
   - EF5
   - Entity Framework Core
+header:
+    image: /assets/images/gdpr/LGPD_EFCORE.png
+    overlay_image: /assets/images/gdpr/LGPD_EFCORE.png
+    overlay_filter: 0.15
+    teaser: /assets/images/gdpr/LGPD_EFCORE.png
+    caption: ""
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/LGPD_EFCORE.png)
