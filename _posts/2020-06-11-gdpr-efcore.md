@@ -8,8 +8,8 @@ categories:
   - EF5
   - Entity Framework Core
 header:
-    teaser: {{site.url}}{{site.baseurl}}/assets/images/gdpr/LGPD_EFCORE.png
-    caption: "Test"
+  teaser: {{site.url}}{{site.baseurl}}/assets/images/gdpr/LGPD_EFCORE.png
+  caption: "Test"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/LGPD_EFCORE.png)
