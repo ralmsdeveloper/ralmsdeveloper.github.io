@@ -7,6 +7,9 @@ toc_label: "Tópicos"
 categories:
   - EF5
   - Entity Framework Core
+header:
+  teaser: /assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png)

@@ -8,6 +8,9 @@ categories:
   - Collections
   - Linq
   - NETCore
+header:
+  teaser: /assets/images/IEnumarableList.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/IEnumarableList.png)

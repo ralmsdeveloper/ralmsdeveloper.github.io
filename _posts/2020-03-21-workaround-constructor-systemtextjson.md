@@ -8,6 +8,9 @@ categories:
   - Workaround
   - Json
   - AspNetCore
+header:
+  teaser: /assets/images/SystemTextJson.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/SystemTextJson.png)

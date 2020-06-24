@@ -9,7 +9,7 @@ categories:
   - Entity Framework Core
 header:
   teaser: /assets/images/gdpr/LGPD_EFCORE.png
-  caption: "Test"
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/gdpr/LGPD_EFCORE.png)

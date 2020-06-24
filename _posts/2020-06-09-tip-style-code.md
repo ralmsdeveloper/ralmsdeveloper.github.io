@@ -9,6 +9,9 @@ categories:
   - Tips
   - C#
   - .NET
+header:
+  teaser: /assets/images/StringVSstring.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/StringVSstring.png)

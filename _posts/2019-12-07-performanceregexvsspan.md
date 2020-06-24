@@ -6,6 +6,9 @@ categories:
   - Performance
   - "Entity Framework Core"
   - Regex
+header:
+  teaser: /assets/images/PerformanceRegex.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/PerformanceRegex.png)

@@ -5,6 +5,9 @@ excerpt_separator: "Ler mais"
 categories:
   - Dica
   - "Entity Framework Core"
+header:
+  teaser: /assets/images/efcoreinterception.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcoreinterception.png)
