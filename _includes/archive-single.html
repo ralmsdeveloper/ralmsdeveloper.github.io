@@ -9,7 +9,8 @@
 {% else %}
   {% assign title = post.title %}
 {% endif %}
-
+<h1>TESTE XXX</h1>
+<h2>{{ post.header.teaser }}</h2>
 <div class="{{ include.type | default: "list" }}__item">
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     {% if include.type == "grid" and teaser %}
