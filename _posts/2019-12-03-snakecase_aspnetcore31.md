@@ -5,6 +5,9 @@ excerpt_separator: "Ler mais"
 categories:
   - Dica
   - "ASPNET Core"
+header:
+  teaser: /assets/images/JsonNamePolicy.png
+  caption: "www.ralms.net"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/JsonNamePolicy.png)

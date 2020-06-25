@@ -278,6 +278,9 @@ gallery:
   - url: /assets/images/devse2019/evento (91).jpeg
     image_path: /assets/images/devse2019/evento (91).jpeg
     alt: "Developers Sergipe Summit 2019"
+header:
+  teaser: /assets/images/devse2019/evento (12).jpeg
+  caption: "www.ralms.net"
 ---
 
 <center><strong>Fala pessoal, tudo bem?! 👍 </strong></center> <br>
