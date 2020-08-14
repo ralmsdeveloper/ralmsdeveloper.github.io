@@ -15,27 +15,28 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/manytomanyef5.png)
 <h1>WIP</h1>
 <hr /> 
-<div class="notice--success">
+<div class="notice--warning">
 Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
+<br />
+<strong>FYI:</strong>
 Para o exemplo que será apresentado aqui estou utilizando build noturno veja <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md">aqui</a>
 o que você precisa fazer.
 </div> 
 
-## Versão anterior
+## EF Core 3.1
 <div style="text-align: justify;">
-Até a versão EF Core 3.1, era necessário criar uma terceira class para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mais os desenvolvedores
-não gostaram da ideia de conviver com essa nova abordagem, além de poluir seu dominio.
+Até a versão EF Core 3.1, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mais os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de poluir seu domínio.
 <br /><br />
 </div>
 ## Cenário
-Vamos pensar em um cenário onde precisamos cadastrar alunos e cursos, logo um aluno poderá ter varios cursos, da mesma
+<div style="text-align: justify;">
+Vamos pensar em um cenário onde precisamos cadastrar alunos e cursos, logo um aluno poderá ter vários cursos, da mesma
 forma um curso pode ter vários alunos, esse tipo de cardinalidade é utilizado para o relacionamento entre duas tabelas, 
 geralmente você irá ver de forma <b>N:N</b> é como abreviamos.
-
-
-## Como funcionava no EF Core 3.1?
- Para o cenário que falei logo acima, temos as seguintes classes para representar nossas entidades, até aqui tudo bem, basicamente 
- no mundo da programação orienta a objetos é assim que criamos nossas classes, bom até aqui nada de anormal, certo?!
+<br/>
+Para o cenário que falei logo acima, temos as seguintes classes para representar nossas entidades, até aqui tudo bem, basicamente 
+no mundo da programação orientada a objetos é assim que criamos nossas classes, bom até aqui nada de anormal, certo?!
+</div>
 ```csharp
 public class Student
 {
@@ -51,6 +52,7 @@ public class Course
     public IList<Student> Students { get; } = new List<Student>();
 }
 ``` 
+## Como funcionava no EF Core 3.1?
 O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core até a versão 3.1, é necessário criar uma terceira classe, basicamente da seguinte forma:
 ```csharp
 public class CourseStudent
