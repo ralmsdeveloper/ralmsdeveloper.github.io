@@ -13,12 +13,12 @@ header:
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/manytomanyef5.png)
-
+<h1>WIP</h1>
 <hr /> 
-<div class="notice--warning">
+<div class="notice--success">
 Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
-Para o exemplo que será apresentado aqui estou utilizando build noturno:
-https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md
+Para o exemplo que será apresentado aqui estou utilizando build noturno veja <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md">aqui</a>
+o que você precisa fazer.
 </div> 
 
 ## Versão anterior
