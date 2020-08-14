@@ -32,7 +32,7 @@ geralmente você irá ver de forma <b>N:N</b> é como abreviamos.
 
 
 ## Como funcionava no EF Core 3.1?
- 
+ Para o cenário que falei logo acima, teremos as seguintes class para representar nossas entidades, até aqui tudo bem?!
 ```csharp
 public class Student
 {
@@ -50,8 +50,14 @@ public class Course
     public IList<Student> Students { get; } = new List<Student>();
 }
 ``` 
-
-
+O problema é que para que esse relacionamento realmente funcionasse, também é necessário criar uma terceira class
+```csharp
+public class CourseStudent
+{
+    public int CourseId { get; set; }
+    public int StudentId { get; set; }
+} 
+``` 
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
