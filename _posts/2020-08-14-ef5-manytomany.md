@@ -16,8 +16,7 @@ header:
 
 <hr /> 
 <div class="notice--warning">
-Neste post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
-<br>
+Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
 </div> 
 
 ## Versão anterior
@@ -25,7 +24,32 @@ Neste post irei falar sobre um dos recursos mais solicitados do <b>Entity Framew
 Até a versão EF Core 3.1, era necessário criar uma terceira class para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mais os desenvolvedores
 não gostaram da ideia de conviver com essa nova abordagem, além de poluir seu dominio.
 <br /><br />
-<br>
+</div>
+## Cenário
+Vamos pensar em um cenário onde precisamos cadastrar alunos e cursos, logo um aluno poderá ter varios cursos, da mesma
+forma um curso pode ter vários alunos, esse tipo de cardinalidade é utilizado para o relacionamento entre duas tabelas, 
+geralmente você irá ver de forma <b>N:N</b> é como abreviamos.
+
+
+## Como funcionava no EF Core 3.1?
+ 
+```csharp
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public IList<Course> Courses { get; } = new List<Course>();
+}
+
+public class Course
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
+
+    public IList<Student> Students { get; } = new List<Student>();
+}
+``` 
 
 
 ## Twitter
