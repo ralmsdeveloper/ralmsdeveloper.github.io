@@ -17,6 +17,8 @@ header:
 <hr /> 
 <div class="notice--warning">
 Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
+Para o exemplo que será apresentado aqui estou utilizando build noturno:
+https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md
 </div> 
 
 ## Versão anterior
