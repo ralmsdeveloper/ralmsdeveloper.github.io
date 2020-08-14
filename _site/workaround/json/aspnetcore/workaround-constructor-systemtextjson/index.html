@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>Workaround para System.Text.Json  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Fala pessoal, tudo bem?!Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.FYI: Isso não é um Deep-Dive em System.Text.Json.IntroduçãoAcredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória.Quer saber sobre? acessa esse link, vamos focar em um problema que talvez você já tenha enfrentado.GAPComo nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram readonly (Immutable), como eu fui ingênuo 🤖, então fui analisar melhor o que estava acontecendo, e o que descobri(ou não me lembrava) não foi nada agradável, simplesmente não temos suporte, e o backlog de pendências é enorme! Veja aquiCenárioVamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.ClasseVamos ter como base a seguinte classe concreta, apenas com 2 (duas) propriedades para facilitar nosso exemplo.public class Pessoa{    public string Nome { get; }    public DateTime DataNascimento { get;}     public Pessoa(string nome, DateTime dataNascimento)    {        Nome = nome;        DataNascimento = dataNascimento;    }}SerializarVamos tentar serializar um objeto.Showww, como você pode ver na imagem abaixo a serialização funcionou perfeitamente (como esperado 😎).Agora vamos tentar deserializarObserve na imagem abaixo que ao tentar fazer a deserialização é lançada uma exception, informando que não existe suporte para construtores parametrizados.Tem solução?Como diz o velho ditado para todo problema existe uma solução e ela veio olhando para esse exemplo aqui, que basicamente é fazer uma implementação de JsonConverter e adicionar ao pipeline de customização. Vamos para um exemplo prático.JsonConverter CustomizadoEsse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de JsonConverter alguns comportamentos e sobrescrevendo os mesmo.namespace System.Text.Json.Serialization{    public abstract class JsonConverter&lt;T&gt; : JsonConverter    {        protected internal JsonConverter();        public override bool CanConvert(Type typeToConvert);        public abstract T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options);        public abstract void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options);    }}Se você querer ver mais informações sobre a API clique aqui, mas por hora vamos ver nosso código como ficou.public class MyJsonConverter : JsonConverter&lt;object&gt;{    public override bool CanConvert(Type typeToConvert)        =&gt; typeToConvert            .GetConstructors(BindingFlags.Public | BindingFlags.Instance)            .Length == 1;     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)    {        var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();        var properties = typeToConvert.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);        var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);        reader.Read();        for (; ; )        {            if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)            {                break;            }            var propertyName = reader.GetString();            if (!mapping.TryGetValue(propertyName, out var property))            {                reader.Read();            }            else            {                var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                reader.Read();                propertiesInfo[property] = value;            }        }        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];        var parameters = constructorInfo.GetParameters();        var parameterValues = new object[parameters.Length];        for (var index = 0; index &lt; parameters.Length; index++)        {            var parameterInfo = parameters[index];            var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;            parameterValues[index] = value;        }        var @object = constructorInfo.Invoke(parameterValues);        return @object;    }    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)        =&gt; throw new NotImplementedException();}static void Main(string[] args){    var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);    var json = JsonSerializer.Serialize(pessoa);    var options = new JsonSerializerOptions();    options.Converters.Add(new MyJsonConverter());    var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);    Console.WriteLine(json);}Código completousing System;using System.Collections.Generic;using System.Linq;using System.Reflection;using System.Text.Json;using System.Text.Json.Serialization;namespace SystemTextJsonWorkAround{    class Program    {        static void Main(string[] args)        {            var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);            // Serializar            var json = JsonSerializer.Serialize(pessoa);            // Deserializar            var options = new JsonSerializerOptions();            options.Converters.Add(new MyJsonConverter());            var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);            Console.WriteLine(json);        }    }    public class Pessoa    {        public string Nome { get; }        public DateTime DataNascimento { get; }        public Pessoa(string nome, DateTime dataNascimento)        {            Nome = nome;            DataNascimento = dataNascimento;        }    }    public class MyJsonConverter : JsonConverter&lt;object&gt;    {        public override bool CanConvert(Type typeToConvert)            =&gt; typeToConvert                .GetConstructors(BindingFlags.Public | BindingFlags.Instance)                .Length == 1;        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)        {            var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();            var properties = typeToConvert                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);            var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);            reader.Read();            for (; ; )            {                if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)                {                    break;                }                var propertyName = reader.GetString();                if (!mapping.TryGetValue(propertyName, out var property))                {                    reader.Read();                }                else                {                    var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                    reader.Read();                    propertiesInfo[property] = value;                }            }            var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];            var parameters = constructorInfo.GetParameters();            var parameterValues = new object[parameters.Length];            for (var index = 0; index &lt; parameters.Length; index++)            {                var parameterInfo = parameters[index];                var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;                parameterValues[index] = value;            }            var @object = constructorInfo.Invoke(parameterValues);            return @object;        }        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)            =&gt; throw new NotImplementedException();    }}ApproachEsse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.NewsA novidade é que iremos ter esse suporte na versão .NET 5 que inclusive já temos a Preview veja aqui.Twitter Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="Workaround para System.Text.Json">
+
+
+  <link rel="canonical" href="http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/">
+  <meta property="og:url" content="http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/">
+
+
+
+  <meta property="og:description" content="Fala pessoal, tudo bem?!Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.FYI: Isso não é um Deep-Dive em System.Text.Json.IntroduçãoAcredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória.Quer saber sobre? acessa esse link, vamos focar em um problema que talvez você já tenha enfrentado.GAPComo nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram readonly (Immutable), como eu fui ingênuo 🤖, então fui analisar melhor o que estava acontecendo, e o que descobri(ou não me lembrava) não foi nada agradável, simplesmente não temos suporte, e o backlog de pendências é enorme! Veja aquiCenárioVamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.ClasseVamos ter como base a seguinte classe concreta, apenas com 2 (duas) propriedades para facilitar nosso exemplo.public class Pessoa{    public string Nome { get; }    public DateTime DataNascimento { get;}     public Pessoa(string nome, DateTime dataNascimento)    {        Nome = nome;        DataNascimento = dataNascimento;    }}SerializarVamos tentar serializar um objeto.Showww, como você pode ver na imagem abaixo a serialização funcionou perfeitamente (como esperado 😎).Agora vamos tentar deserializarObserve na imagem abaixo que ao tentar fazer a deserialização é lançada uma exception, informando que não existe suporte para construtores parametrizados.Tem solução?Como diz o velho ditado para todo problema existe uma solução e ela veio olhando para esse exemplo aqui, que basicamente é fazer uma implementação de JsonConverter e adicionar ao pipeline de customização. Vamos para um exemplo prático.JsonConverter CustomizadoEsse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de JsonConverter alguns comportamentos e sobrescrevendo os mesmo.namespace System.Text.Json.Serialization{    public abstract class JsonConverter&lt;T&gt; : JsonConverter    {        protected internal JsonConverter();        public override bool CanConvert(Type typeToConvert);        public abstract T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options);        public abstract void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options);    }}Se você querer ver mais informações sobre a API clique aqui, mas por hora vamos ver nosso código como ficou.public class MyJsonConverter : JsonConverter&lt;object&gt;{    public override bool CanConvert(Type typeToConvert)        =&gt; typeToConvert            .GetConstructors(BindingFlags.Public | BindingFlags.Instance)            .Length == 1;     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)    {        var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();        var properties = typeToConvert.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);        var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);        reader.Read();        for (; ; )        {            if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)            {                break;            }            var propertyName = reader.GetString();            if (!mapping.TryGetValue(propertyName, out var property))            {                reader.Read();            }            else            {                var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                reader.Read();                propertiesInfo[property] = value;            }        }        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];        var parameters = constructorInfo.GetParameters();        var parameterValues = new object[parameters.Length];        for (var index = 0; index &lt; parameters.Length; index++)        {            var parameterInfo = parameters[index];            var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;            parameterValues[index] = value;        }        var @object = constructorInfo.Invoke(parameterValues);        return @object;    }    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)        =&gt; throw new NotImplementedException();}static void Main(string[] args){    var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);    var json = JsonSerializer.Serialize(pessoa);    var options = new JsonSerializerOptions();    options.Converters.Add(new MyJsonConverter());    var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);    Console.WriteLine(json);}Código completousing System;using System.Collections.Generic;using System.Linq;using System.Reflection;using System.Text.Json;using System.Text.Json.Serialization;namespace SystemTextJsonWorkAround{    class Program    {        static void Main(string[] args)        {            var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);            // Serializar            var json = JsonSerializer.Serialize(pessoa);            // Deserializar            var options = new JsonSerializerOptions();            options.Converters.Add(new MyJsonConverter());            var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);            Console.WriteLine(json);        }    }    public class Pessoa    {        public string Nome { get; }        public DateTime DataNascimento { get; }        public Pessoa(string nome, DateTime dataNascimento)        {            Nome = nome;            DataNascimento = dataNascimento;        }    }    public class MyJsonConverter : JsonConverter&lt;object&gt;    {        public override bool CanConvert(Type typeToConvert)            =&gt; typeToConvert                .GetConstructors(BindingFlags.Public | BindingFlags.Instance)                .Length == 1;        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)        {            var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();            var properties = typeToConvert                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);            var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);            reader.Read();            for (; ; )            {                if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)                {                    break;                }                var propertyName = reader.GetString();                if (!mapping.TryGetValue(propertyName, out var property))                {                    reader.Read();                }                else                {                    var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                    reader.Read();                    propertiesInfo[property] = value;                }            }            var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];            var parameters = constructorInfo.GetParameters();            var parameterValues = new object[parameters.Length];            for (var index = 0; index &lt; parameters.Length; index++)            {                var parameterInfo = parameters[index];                var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;                parameterValues[index] = value;            }            var @object = constructorInfo.Invoke(parameterValues);            return @object;        }        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)            =&gt; throw new NotImplementedException();    }}ApproachEsse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.NewsA novidade é que iremos ter esse suporte na versão .NET 5 que inclusive já temos a Preview veja aqui.Twitter Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/SystemTextJson.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-03-21T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, Speaker, Solution Architect, passionate about C#, Loves EF Core, gRPC, Apache Kafka, ScyllaDB and access to high performance data.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="Workaround para System.Text.Json">
+    <meta itemprop="description" content="Fala pessoal, tudo bem?!Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.FYI: Isso não é um Deep-Dive em System.Text.Json.IntroduçãoAcredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela Microsoft e pelo próprio criador do Newtonsoft.Json, seu objetivo principal é performance e alocar menos dados na memória.Quer saber sobre? acessa esse link, vamos focar em um problema que talvez você já tenha enfrentado.GAPComo nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram readonly (Immutable), como eu fui ingênuo 🤖, então fui analisar melhor o que estava acontecendo, e o que descobri(ou não me lembrava) não foi nada agradável, simplesmente não temos suporte, e o backlog de pendências é enorme! Veja aquiCenárioVamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.ClasseVamos ter como base a seguinte classe concreta, apenas com 2 (duas) propriedades para facilitar nosso exemplo.public class Pessoa{    public string Nome { get; }    public DateTime DataNascimento { get;}     public Pessoa(string nome, DateTime dataNascimento)    {        Nome = nome;        DataNascimento = dataNascimento;    }}SerializarVamos tentar serializar um objeto.Showww, como você pode ver na imagem abaixo a serialização funcionou perfeitamente (como esperado 😎).Agora vamos tentar deserializarObserve na imagem abaixo que ao tentar fazer a deserialização é lançada uma exception, informando que não existe suporte para construtores parametrizados.Tem solução?Como diz o velho ditado para todo problema existe uma solução e ela veio olhando para esse exemplo aqui, que basicamente é fazer uma implementação de JsonConverter e adicionar ao pipeline de customização. Vamos para um exemplo prático.JsonConverter CustomizadoEsse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de JsonConverter alguns comportamentos e sobrescrevendo os mesmo.namespace System.Text.Json.Serialization{    public abstract class JsonConverter&lt;T&gt; : JsonConverter    {        protected internal JsonConverter();        public override bool CanConvert(Type typeToConvert);        public abstract T Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options);        public abstract void Write(Utf8JsonWriter writer, T value, JsonSerializerOptions options);    }}Se você querer ver mais informações sobre a API clique aqui, mas por hora vamos ver nosso código como ficou.public class MyJsonConverter : JsonConverter&lt;object&gt;{    public override bool CanConvert(Type typeToConvert)        =&gt; typeToConvert            .GetConstructors(BindingFlags.Public | BindingFlags.Instance)            .Length == 1;     public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)    {        var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();        var properties = typeToConvert.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);        var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);        reader.Read();        for (; ; )        {            if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)            {                break;            }            var propertyName = reader.GetString();            if (!mapping.TryGetValue(propertyName, out var property))            {                reader.Read();            }            else            {                var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                reader.Read();                propertiesInfo[property] = value;            }        }        var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];        var parameters = constructorInfo.GetParameters();        var parameterValues = new object[parameters.Length];        for (var index = 0; index &lt; parameters.Length; index++)        {            var parameterInfo = parameters[index];            var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;            parameterValues[index] = value;        }        var @object = constructorInfo.Invoke(parameterValues);        return @object;    }    public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)        =&gt; throw new NotImplementedException();}static void Main(string[] args){    var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);    var json = JsonSerializer.Serialize(pessoa);    var options = new JsonSerializerOptions();    options.Converters.Add(new MyJsonConverter());    var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);    Console.WriteLine(json);}Código completousing System;using System.Collections.Generic;using System.Linq;using System.Reflection;using System.Text.Json;using System.Text.Json.Serialization;namespace SystemTextJsonWorkAround{    class Program    {        static void Main(string[] args)        {            var pessoa = new Pessoa(&quot;Rafael&quot;, DateTime.Now);            // Serializar            var json = JsonSerializer.Serialize(pessoa);            // Deserializar            var options = new JsonSerializerOptions();            options.Converters.Add(new MyJsonConverter());            var objectPessoa = JsonSerializer.Deserialize&lt;Pessoa&gt;(json, options);            Console.WriteLine(json);        }    }    public class Pessoa    {        public string Nome { get; }        public DateTime DataNascimento { get; }        public Pessoa(string nome, DateTime dataNascimento)        {            Nome = nome;            DataNascimento = dataNascimento;        }    }    public class MyJsonConverter : JsonConverter&lt;object&gt;    {        public override bool CanConvert(Type typeToConvert)            =&gt; typeToConvert                .GetConstructors(BindingFlags.Public | BindingFlags.Instance)                .Length == 1;        public override object Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)        {            var propertiesInfo = new Dictionary&lt;PropertyInfo, object&gt;();            var properties = typeToConvert                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);            var mapping = properties.ToDictionary(p =&gt; p.Name, p =&gt; p);            reader.Read();            for (; ; )            {                if (reader.TokenType != JsonTokenType.PropertyName &amp;&amp; reader.TokenType != JsonTokenType.String)                {                    break;                }                var propertyName = reader.GetString();                if (!mapping.TryGetValue(propertyName, out var property))                {                    reader.Read();                }                else                {                    var value = JsonSerializer.Deserialize(ref reader, property.PropertyType, options);                    reader.Read();                    propertiesInfo[property] = value;                }            }            var constructorInfo = typeToConvert.GetConstructors(BindingFlags.Public | BindingFlags.Instance)[0];            var parameters = constructorInfo.GetParameters();            var parameterValues = new object[parameters.Length];            for (var index = 0; index &lt; parameters.Length; index++)            {                var parameterInfo = parameters[index];                var value = propertiesInfo.First(prop =&gt; prop.Key.Name.Equals(parameterInfo.Name, StringComparison.InvariantCultureIgnoreCase)).Value;                parameterValues[index] = value;            }            var @object = constructorInfo.Invoke(parameterValues);            return @object;        }        public override void Write(Utf8JsonWriter writer, object value, JsonSerializerOptions options)            =&gt; throw new NotImplementedException();    }}ApproachEsse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.NewsA novidade é que iremos ter esse suporte na versão .NET 5 que inclusive já temos a Preview veja aqui.Twitter Fico por aqui e um forte abraço! 😄  Me siga no twitter: @ralmsdeveloper Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net">
+    <meta itemprop="datePublished" content="March 21, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">Workaround para System.Text.Json
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  18 minuto(s) de leitura
+ - March 21, 2020</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Tópicos</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#introdução">Introdução</a></li>
+  <li><a href="#gap">GAP</a></li>
+  <li><a href="#cenário">Cenário</a></li>
+  <li><a href="#classe">Classe</a></li>
+  <li><a href="#serializar">Serializar</a></li>
+  <li><a href="#agora-vamos-tentar-deserializar">Agora vamos tentar deserializar</a></li>
+  <li><a href="#tem-solução">Tem solução?</a></li>
+  <li><a href="#jsonconverter-customizado">JsonConverter Customizado</a></li>
+  <li><a href="#código-completo">Código completo</a></li>
+  <li><a href="#approach">Approach</a></li>
+  <li><a href="#news">News</a></li>
+  <li><a href="#twitter">Twitter</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/SystemTextJson.png" alt="01" /></p>
+
+<center><strong>Fala pessoal, tudo bem?!</strong></center>
+<hr />
+
+<div class="notice--warning">
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o <b>System.Text.Json</b> como nosso serializador.
+<br /><br />
+<b>FYI:</b> Isso não é um Deep-Dive em System.Text.Json.
+</div>
+
+<h2 id="introdução">Introdução</h2>
+<p>Acredito que você já saiba que System.Text.Json é uma nova opção para serializar objetos, escrita pela <b>Microsoft</b> e pelo próprio criador do <b>Newtonsoft.Json</b>, seu objetivo principal é performance e alocar menos dados na memória.<br />
+Quer saber sobre? acessa esse <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-overview" alt="">link</a>, vamos focar em um problema que talvez você já tenha enfrentado.</p>
+
+<h2 id="gap">GAP</h2>
+<p>Como nem tudo é mil maravilhas, ontem(20/03/2020) juntamente com meus amigos de trabalho estavamos tentando deserializar um JSON para uma classe que tinha construtores parametrizados e as propriedades eram <b>readonly</b> (Immutable), como eu fui ingênuo 🤖, então fui analisar melhor o que estava acontecendo, e o que descobri(<i>ou não me lembrava</i>) não foi nada agradável, 
+simplesmente não temos suporte, e o backlog de pendências é enorme! Veja <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#table-of-differences-between-newtonsoftjson-and-systemtextjson" alt="">aqui</a></p>
+
+<h2 id="cenário">Cenário</h2>
+<p>Vamos montar um cenário para ver como podemos resolver esse GAP, mas já vou te dizendo que precisa escrever alguns BITS 👨‍💻.</p>
+
+<h2 id="classe">Classe</h2>
+<p>Vamos ter como base a seguinte <b>classe</b> concreta, apenas com 2 (duas) propriedades para facilitar nosso exemplo.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Pessoa</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="n">DateTime</span> <span class="n">DataNascimento</span> <span class="p">{</span> <span class="k">get</span><span class="p">;}</span> 
+
+    <span class="k">public</span> <span class="nf">Pessoa</span><span class="p">(</span><span class="kt">string</span> <span class="n">nome</span><span class="p">,</span> <span class="n">DateTime</span> <span class="n">dataNascimento</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="n">Nome</span> <span class="p">=</span> <span class="n">nome</span><span class="p">;</span>
+        <span class="n">DataNascimento</span> <span class="p">=</span> <span class="n">dataNascimento</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="serializar">Serializar</h2>
+<p>Vamos tentar serializar um objeto.<br /></p>
+
+<p>Showww, como você pode ver na imagem abaixo a serialização funcionou perfeitamente (como esperado 😎).
+<img src="http://localhost:4000/assets/images/serializacaook.PNG" alt="01" /></p>
+
+<h2 id="agora-vamos-tentar-deserializar">Agora vamos tentar deserializar</h2>
+<p>Observe na imagem abaixo que ao tentar fazer a deserialização é lançada uma exception, informando que não existe suporte para construtores parametrizados.</p>
+
+<p><img src="http://localhost:4000/assets/images/problemajsondeserialize.PNG" alt="01" /></p>
+
+<h2 id="tem-solução">Tem solução?</h2>
+<p>Como diz o velho ditado <b>para todo problema existe uma solução</b> e ela veio olhando para esse exemplo <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/standard/serialization/system-text-json-migrate-from-newtonsoft-how-to#deserialize-to-immutable-classes-and-structs" alt="">aqui</a>, que basicamente é fazer uma implementação de <b>JsonConverter</b> e adicionar ao pipeline de customização. Vamos para um exemplo prático.</p>
+
+<h2 id="jsonconverter-customizado">JsonConverter Customizado</h2>
+<p>Esse é o código que escrevi para resolver o problema aborado aqui, observe que estou herdando de <b>JsonConverter</b> alguns comportamentos e sobrescrevendo os mesmo.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">namespace</span> <span class="nn">System.Text.Json.Serialization</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">abstract</span> <span class="k">class</span> <span class="nc">JsonConverter</span><span class="p">&lt;</span><span class="n">T</span><span class="p">&gt;</span> <span class="p">:</span> <span class="n">JsonConverter</span>
+    <span class="p">{</span>
+        <span class="k">protected</span> <span class="k">internal</span> <span class="nf">JsonConverter</span><span class="p">();</span>
+        <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">CanConvert</span><span class="p">(</span><span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">abstract</span> <span class="n">T</span> <span class="nf">Read</span><span class="p">(</span><span class="k">ref</span> <span class="n">Utf8JsonReader</span> <span class="n">reader</span><span class="p">,</span> <span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">);</span>
+        <span class="k">public</span> <span class="k">abstract</span> <span class="k">void</span> <span class="nf">Write</span><span class="p">(</span><span class="n">Utf8JsonWriter</span> <span class="n">writer</span><span class="p">,</span> <span class="n">T</span> <span class="k">value</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Se você querer ver mais informações sobre a API clique <a target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/api/system.text.json.serialization.jsonconverter-1?view=netcore-3.1" alt="">aqui</a>, mas por hora vamos ver nosso código como ficou.</p>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">MyJsonConverter</span> <span class="p">:</span> <span class="n">JsonConverter</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">CanConvert</span><span class="p">(</span><span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="n">typeToConvert</span>
+            <span class="p">.</span><span class="nf">GetConstructors</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span><span class="p">)</span>
+            <span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">1</span><span class="p">;</span> 
+
+    <span class="k">public</span> <span class="k">override</span> <span class="kt">object</span> <span class="nf">Read</span><span class="p">(</span><span class="k">ref</span> <span class="n">Utf8JsonReader</span> <span class="n">reader</span><span class="p">,</span> <span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="kt">var</span> <span class="n">propertiesInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">PropertyInfo</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;();</span>
+        <span class="kt">var</span> <span class="n">properties</span> <span class="p">=</span> <span class="n">typeToConvert</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">NonPublic</span><span class="p">);</span>
+
+        <span class="kt">var</span> <span class="n">mapping</span> <span class="p">=</span> <span class="n">properties</span><span class="p">.</span><span class="nf">ToDictionary</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">);</span>
+
+        <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+
+        <span class="k">for</span> <span class="p">(;</span> <span class="p">;</span> <span class="p">)</span>
+        <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">TokenType</span> <span class="p">!=</span> <span class="n">JsonTokenType</span><span class="p">.</span><span class="n">PropertyName</span> <span class="p">&amp;&amp;</span> <span class="n">reader</span><span class="p">.</span><span class="n">TokenType</span> <span class="p">!=</span> <span class="n">JsonTokenType</span><span class="p">.</span><span class="n">String</span><span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="kt">var</span> <span class="n">propertyName</span> <span class="p">=</span> <span class="n">reader</span><span class="p">.</span><span class="nf">GetString</span><span class="p">();</span>
+
+            <span class="k">if</span> <span class="p">(!</span><span class="n">mapping</span><span class="p">.</span><span class="nf">TryGetValue</span><span class="p">(</span><span class="n">propertyName</span><span class="p">,</span> <span class="k">out</span> <span class="kt">var</span> <span class="n">property</span><span class="p">))</span>
+            <span class="p">{</span>
+                <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+            <span class="p">}</span>
+            <span class="k">else</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Deserialize</span><span class="p">(</span><span class="k">ref</span> <span class="n">reader</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="n">PropertyType</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+                <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+                <span class="n">propertiesInfo</span><span class="p">[</span><span class="n">property</span><span class="p">]</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">constructorInfo</span> <span class="p">=</span> <span class="n">typeToConvert</span><span class="p">.</span><span class="nf">GetConstructors</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span><span class="p">)[</span><span class="m">0</span><span class="p">];</span>
+        <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="n">constructorInfo</span><span class="p">.</span><span class="nf">GetParameters</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">parameterValues</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[</span><span class="n">parameters</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">index</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">index</span> <span class="p">&lt;</span> <span class="n">parameters</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">index</span><span class="p">++)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">parameterInfo</span> <span class="p">=</span> <span class="n">parameters</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+            <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">propertiesInfo</span><span class="p">.</span><span class="nf">First</span><span class="p">(</span><span class="n">prop</span> <span class="p">=&gt;</span> <span class="n">prop</span><span class="p">.</span><span class="n">Key</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Equals</span><span class="p">(</span><span class="n">parameterInfo</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">StringComparison</span><span class="p">.</span><span class="n">InvariantCultureIgnoreCase</span><span class="p">)).</span><span class="n">Value</span><span class="p">;</span>
+            <span class="n">parameterValues</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="kt">var</span> <span class="n">@object</span> <span class="p">=</span> <span class="n">constructorInfo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">parameterValues</span><span class="p">);</span>
+
+        <span class="k">return</span> <span class="n">@object</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Write</span><span class="p">(</span><span class="n">Utf8JsonWriter</span> <span class="n">writer</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="kt">var</span> <span class="n">pessoa</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Pessoa</span><span class="p">(</span><span class="s">"Rafael"</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+    <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Serialize</span><span class="p">(</span><span class="n">pessoa</span><span class="p">);</span>
+
+    <span class="kt">var</span> <span class="n">options</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JsonSerializerOptions</span><span class="p">();</span>
+    <span class="n">options</span><span class="p">.</span><span class="n">Converters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">MyJsonConverter</span><span class="p">());</span>
+
+    <span class="kt">var</span> <span class="n">objectPessoa</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">Pessoa</span><span class="p">&gt;(</span><span class="n">json</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+
+    <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<hr />
+
+<p><img src="http://localhost:4000/assets/images/deserializacaook.PNG" alt="01" /></p>
+<hr />
+
+<h2 id="código-completo">Código completo</h2>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Collections.Generic</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Linq</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Reflection</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Text.Json</span><span class="p">;</span>
+<span class="k">using</span> <span class="nn">System.Text.Json.Serialization</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">SystemTextJsonWorkAround</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">pessoa</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">Pessoa</span><span class="p">(</span><span class="s">"Rafael"</span><span class="p">,</span> <span class="n">DateTime</span><span class="p">.</span><span class="n">Now</span><span class="p">);</span>
+            <span class="c1">// Serializar</span>
+            <span class="kt">var</span> <span class="n">json</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Serialize</span><span class="p">(</span><span class="n">pessoa</span><span class="p">);</span>
+
+            <span class="c1">// Deserializar</span>
+            <span class="kt">var</span> <span class="n">options</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">JsonSerializerOptions</span><span class="p">();</span>
+            <span class="n">options</span><span class="p">.</span><span class="n">Converters</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="nf">MyJsonConverter</span><span class="p">());</span>
+            <span class="kt">var</span> <span class="n">objectPessoa</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="n">Deserialize</span><span class="p">&lt;</span><span class="n">Pessoa</span><span class="p">&gt;(</span><span class="n">json</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">json</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">Pessoa</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+        <span class="k">public</span> <span class="n">DateTime</span> <span class="n">DataNascimento</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="p">}</span>
+
+        <span class="k">public</span> <span class="nf">Pessoa</span><span class="p">(</span><span class="kt">string</span> <span class="n">nome</span><span class="p">,</span> <span class="n">DateTime</span> <span class="n">dataNascimento</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="n">nome</span><span class="p">;</span>
+            <span class="n">DataNascimento</span> <span class="p">=</span> <span class="n">dataNascimento</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">class</span> <span class="nc">MyJsonConverter</span> <span class="p">:</span> <span class="n">JsonConverter</span><span class="p">&lt;</span><span class="kt">object</span><span class="p">&gt;</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">override</span> <span class="kt">bool</span> <span class="nf">CanConvert</span><span class="p">(</span><span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">)</span>
+            <span class="p">=&gt;</span> <span class="n">typeToConvert</span>
+                <span class="p">.</span><span class="nf">GetConstructors</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span><span class="p">)</span>
+                <span class="p">.</span><span class="n">Length</span> <span class="p">==</span> <span class="m">1</span><span class="p">;</span>
+
+        <span class="k">public</span> <span class="k">override</span> <span class="kt">object</span> <span class="nf">Read</span><span class="p">(</span><span class="k">ref</span> <span class="n">Utf8JsonReader</span> <span class="n">reader</span><span class="p">,</span> <span class="n">Type</span> <span class="n">typeToConvert</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="kt">var</span> <span class="n">propertiesInfo</span> <span class="p">=</span> <span class="k">new</span> <span class="n">Dictionary</span><span class="p">&lt;</span><span class="n">PropertyInfo</span><span class="p">,</span> <span class="kt">object</span><span class="p">&gt;();</span>
+
+            <span class="kt">var</span> <span class="n">properties</span> <span class="p">=</span> <span class="n">typeToConvert</span>
+                <span class="p">.</span><span class="nf">GetProperties</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">NonPublic</span><span class="p">);</span>
+
+            <span class="kt">var</span> <span class="n">mapping</span> <span class="p">=</span> <span class="n">properties</span><span class="p">.</span><span class="nf">ToDictionary</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">);</span>
+
+            <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+
+            <span class="k">for</span> <span class="p">(;</span> <span class="p">;</span> <span class="p">)</span>
+            <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="n">reader</span><span class="p">.</span><span class="n">TokenType</span> <span class="p">!=</span> <span class="n">JsonTokenType</span><span class="p">.</span><span class="n">PropertyName</span> <span class="p">&amp;&amp;</span> <span class="n">reader</span><span class="p">.</span><span class="n">TokenType</span> <span class="p">!=</span> <span class="n">JsonTokenType</span><span class="p">.</span><span class="n">String</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+
+                <span class="kt">var</span> <span class="n">propertyName</span> <span class="p">=</span> <span class="n">reader</span><span class="p">.</span><span class="nf">GetString</span><span class="p">();</span>
+
+                <span class="k">if</span> <span class="p">(!</span><span class="n">mapping</span><span class="p">.</span><span class="nf">TryGetValue</span><span class="p">(</span><span class="n">propertyName</span><span class="p">,</span> <span class="k">out</span> <span class="kt">var</span> <span class="n">property</span><span class="p">))</span>
+                <span class="p">{</span>
+                    <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+                <span class="p">}</span>
+                <span class="k">else</span>
+                <span class="p">{</span>
+                    <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">JsonSerializer</span><span class="p">.</span><span class="nf">Deserialize</span><span class="p">(</span><span class="k">ref</span> <span class="n">reader</span><span class="p">,</span> <span class="n">property</span><span class="p">.</span><span class="n">PropertyType</span><span class="p">,</span> <span class="n">options</span><span class="p">);</span>
+                    <span class="n">reader</span><span class="p">.</span><span class="nf">Read</span><span class="p">();</span>
+                    <span class="n">propertiesInfo</span><span class="p">[</span><span class="n">property</span><span class="p">]</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+
+            <span class="kt">var</span> <span class="n">constructorInfo</span> <span class="p">=</span> <span class="n">typeToConvert</span><span class="p">.</span><span class="nf">GetConstructors</span><span class="p">(</span><span class="n">BindingFlags</span><span class="p">.</span><span class="n">Public</span> <span class="p">|</span> <span class="n">BindingFlags</span><span class="p">.</span><span class="n">Instance</span><span class="p">)[</span><span class="m">0</span><span class="p">];</span>
+            <span class="kt">var</span> <span class="n">parameters</span> <span class="p">=</span> <span class="n">constructorInfo</span><span class="p">.</span><span class="nf">GetParameters</span><span class="p">();</span>
+            <span class="kt">var</span> <span class="n">parameterValues</span> <span class="p">=</span> <span class="k">new</span> <span class="kt">object</span><span class="p">[</span><span class="n">parameters</span><span class="p">.</span><span class="n">Length</span><span class="p">];</span>
+
+            <span class="k">for</span> <span class="p">(</span><span class="kt">var</span> <span class="n">index</span> <span class="p">=</span> <span class="m">0</span><span class="p">;</span> <span class="n">index</span> <span class="p">&lt;</span> <span class="n">parameters</span><span class="p">.</span><span class="n">Length</span><span class="p">;</span> <span class="n">index</span><span class="p">++)</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">parameterInfo</span> <span class="p">=</span> <span class="n">parameters</span><span class="p">[</span><span class="n">index</span><span class="p">];</span>
+                <span class="kt">var</span> <span class="k">value</span> <span class="p">=</span> <span class="n">propertiesInfo</span><span class="p">.</span><span class="nf">First</span><span class="p">(</span><span class="n">prop</span> <span class="p">=&gt;</span> <span class="n">prop</span><span class="p">.</span><span class="n">Key</span><span class="p">.</span><span class="n">Name</span><span class="p">.</span><span class="nf">Equals</span><span class="p">(</span><span class="n">parameterInfo</span><span class="p">.</span><span class="n">Name</span><span class="p">,</span> <span class="n">StringComparison</span><span class="p">.</span><span class="n">InvariantCultureIgnoreCase</span><span class="p">)).</span><span class="n">Value</span><span class="p">;</span>
+                <span class="n">parameterValues</span><span class="p">[</span><span class="n">index</span><span class="p">]</span> <span class="p">=</span> <span class="k">value</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="kt">var</span> <span class="n">@object</span> <span class="p">=</span> <span class="n">constructorInfo</span><span class="p">.</span><span class="nf">Invoke</span><span class="p">(</span><span class="n">parameterValues</span><span class="p">);</span>
+
+            <span class="k">return</span> <span class="n">@object</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">public</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">Write</span><span class="p">(</span><span class="n">Utf8JsonWriter</span> <span class="n">writer</span><span class="p">,</span> <span class="kt">object</span> <span class="k">value</span><span class="p">,</span> <span class="n">JsonSerializerOptions</span> <span class="n">options</span><span class="p">)</span>
+            <span class="p">=&gt;</span> <span class="k">throw</span> <span class="k">new</span> <span class="nf">NotImplementedException</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="approach">Approach</h2>
+<p>Esse seria a melhor abordagem? Para suprir esse GAP talvez sim, mas o código obviamente precisaria de melhorias para cobrir todos cenários possíveis e colocar em produção, aqui eu procurei apenas mostrar como é possível adicionar serializadores customizados.</p>
+
+<h2 id="news">News</h2>
+<p>A novidade é que iremos ter esse suporte na versão <b>.NET 5</b> que inclusive já temos a <b>Preview</b> veja <a target="_BLANK" alt="" href="https://devblogs.microsoft.com/dotnet/announcing-net-5-0-preview-1/">aqui</a>.</p>
+
+<h2 id="twitter">Twitter</h2>
+<div class="notice--info">
+ Fico por aqui e um forte abraço! 😄 <br />
+ Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
+ Dúvidas, quer bater um papo? Entre em contato comigo: ralms@ralms.net
+</div>
+
+<p><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#aspnetcore" class="page__taxonomy-item" rel="tag">AspNetCore</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#json" class="page__taxonomy-item" rel="tag">Json</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#workaround" class="page__taxonomy-item" rel="tag">Workaround</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2020-03-21T00:00:00+00:00">March 21, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=Workaround+para+System.Text.Json%20http%3A%2F%2Flocalhost%3A4000%2Fworkaround%2Fjson%2Faspnetcore%2Fworkaround-constructor-systemtextjson%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fworkaround%2Fjson%2Faspnetcore%2Fworkaround-constructor-systemtextjson%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fworkaround%2Fjson%2Faspnetcore%2Fworkaround-constructor-systemtextjson%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fworkaround%2Fjson%2Faspnetcore%2Fworkaround-constructor-systemtextjson%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/collections/linq/netcore/compreendendo-ienumerable-list-array/" class="pagination--pager" title="IList&lt;T&gt;, ICollection&lt;T&gt; e IEnumerable&lt;T&gt;
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/" class="pagination--pager" title="String vs string
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/manytomanyef5.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/many-to-many-efcore5/" rel="permalink">Many To Many
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  5 minuto(s) de leitura
+ - August 14, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+
+
+Nesse post irei falar sobre um dos recursos mais solicitados do Entity Framework Core, e que estará disponível na versão 5 do EF Core.
+Para o exemplo qu...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/gdpr/LGPD_EFCORE.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/" rel="permalink">LGPD + EF CORE + ValueConverter
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  30 minuto(s) de leitura
+ - June 11, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+Mais 1 artigo??? Desculpa estou de férias!!!
+
+Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como f...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/" rel="permalink">Perform Identity Resolution
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  9 minuto(s) de leitura
+ - June 10, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+
+O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro deste ano, como parte do Entity Fram...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/StringVSstring.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/" rel="permalink">String vs string
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  12 minuto(s) de leitura
+ - June 09, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+
+Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou string com letra minúscula, talvez...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/";
+      this.page.identifier = "/workaround/json/aspnetcore/workaround-constructor-systemtextjson";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

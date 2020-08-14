@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>String vs string  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Olá tudo bem?!Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou string com letra minúscula, talvez você que está lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto, para contribuir também com aqueles não sabem a real diferença.FYI: Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!Isso não é um Deep-Dive sobre tipos em .NET!PreferênciaBom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro paravocê, que isso tem muito mais a ver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.using System;namespace Exemplo{    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;;            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1);            Console.WriteLine(str2);            // Output:            //        Exemplo            //        Exemplo         }    }}Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença? a resposta é Não, até eu remover o Namespace System.Veja que agora o compilador já reclama por não encontrar o identificador String, mas a variável que faz uso de palavras-chave (string) permanecesem nenhum tipo de impacto, isso é porque string é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (System.String). Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro, quem vai dar manuntenção em seu projetosem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas uma simples interpretação de code style(estilo de código/perfumaria), isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, para não ficar em poucas palavras vamos imaginar o seguinte cenário:using System;namespace Exemplo{    class String    {        public static implicit operator String(string str) =&gt; null;    }    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;; // Classe que escrevi            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1 is System.String); // False            Console.WriteLine(str2 is System.String); // True            Console.WriteLine(str1); // NULL            Console.WriteLine(str2); // Exemplo        }    }}Observe no código acima que eu adicionei o namespace System e escrevi uma simples classe String:class String{  public static implicit operator String(string str) =&gt; null;}Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(String) no namespace System, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de System.String.Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema até encontrar o motivo.O problemaBasicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.Meu conselhoEu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!Palavras chaves C#, clique aqui!Não sabe o que é palavras-chave? De uma forma resumida são palavras que você não poderá usar como nome de variáveis em nenhuma parte de seu código, a não ser que use @ antes do nome da variável, veja um exemplo abaixo.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="String vs string">
+
+
+  <link rel="canonical" href="http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/">
+  <meta property="og:url" content="http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/">
+
+
+
+  <meta property="og:description" content="Olá tudo bem?!Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou string com letra minúscula, talvez você que está lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto, para contribuir também com aqueles não sabem a real diferença.FYI: Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!Isso não é um Deep-Dive sobre tipos em .NET!PreferênciaBom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro paravocê, que isso tem muito mais a ver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.using System;namespace Exemplo{    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;;            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1);            Console.WriteLine(str2);            // Output:            //        Exemplo            //        Exemplo         }    }}Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença? a resposta é Não, até eu remover o Namespace System.Veja que agora o compilador já reclama por não encontrar o identificador String, mas a variável que faz uso de palavras-chave (string) permanecesem nenhum tipo de impacto, isso é porque string é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (System.String). Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro, quem vai dar manuntenção em seu projetosem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas uma simples interpretação de code style(estilo de código/perfumaria), isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, para não ficar em poucas palavras vamos imaginar o seguinte cenário:using System;namespace Exemplo{    class String    {        public static implicit operator String(string str) =&gt; null;    }    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;; // Classe que escrevi            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1 is System.String); // False            Console.WriteLine(str2 is System.String); // True            Console.WriteLine(str1); // NULL            Console.WriteLine(str2); // Exemplo        }    }}Observe no código acima que eu adicionei o namespace System e escrevi uma simples classe String:class String{  public static implicit operator String(string str) =&gt; null;}Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(String) no namespace System, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de System.String.Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema até encontrar o motivo.O problemaBasicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.Meu conselhoEu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!Palavras chaves C#, clique aqui!Não sabe o que é palavras-chave? De uma forma resumida são palavras que você não poderá usar como nome de variáveis em nenhuma parte de seu código, a não ser que use @ antes do nome da variável, veja um exemplo abaixo.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/StringVSstring.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-06-09T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, Speaker, Solution Architect, passionate about C#, Loves EF Core, gRPC, Apache Kafka, ScyllaDB and access to high performance data.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="String vs string">
+    <meta itemprop="description" content="Olá tudo bem?!Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou string com letra minúscula, talvez você que está lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto, para contribuir também com aqueles não sabem a real diferença.FYI: Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!Isso não é um Deep-Dive sobre tipos em .NET!PreferênciaBom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro paravocê, que isso tem muito mais a ver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.using System;namespace Exemplo{    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;;            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1);            Console.WriteLine(str2);            // Output:            //        Exemplo            //        Exemplo         }    }}Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença? a resposta é Não, até eu remover o Namespace System.Veja que agora o compilador já reclama por não encontrar o identificador String, mas a variável que faz uso de palavras-chave (string) permanecesem nenhum tipo de impacto, isso é porque string é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (System.String). Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro, quem vai dar manuntenção em seu projetosem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas uma simples interpretação de code style(estilo de código/perfumaria), isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, para não ficar em poucas palavras vamos imaginar o seguinte cenário:using System;namespace Exemplo{    class String    {        public static implicit operator String(string str) =&gt; null;    }    class Program    {        static void Main(string[] args)        {            String str1 = &quot;Exemplo&quot;; // Classe que escrevi            string str2 = &quot;Exemplo&quot;;            Console.WriteLine(str1 is System.String); // False            Console.WriteLine(str2 is System.String); // True            Console.WriteLine(str1); // NULL            Console.WriteLine(str2); // Exemplo        }    }}Observe no código acima que eu adicionei o namespace System e escrevi uma simples classe String:class String{  public static implicit operator String(string str) =&gt; null;}Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(String) no namespace System, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de System.String.Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema até encontrar o motivo.O problemaBasicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.Meu conselhoEu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!Palavras chaves C#, clique aqui!Não sabe o que é palavras-chave? De uma forma resumida são palavras que você não poderá usar como nome de variáveis em nenhuma parte de seu código, a não ser que use @ antes do nome da variável, veja um exemplo abaixo.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+    <meta itemprop="datePublished" content="June 09, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">String vs string
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  12 minuto(s) de leitura
+ - June 09, 2020</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Tópicos</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#preferência">Preferência</a></li>
+  <li><a href="#o-problema">O problema</a></li>
+  <li><a href="#meu-conselho">Meu conselho</a></li>
+  <li><a href="#twitter">Twitter</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/StringVSstring.png" alt="01" /></p>
+
+<center><strong>Olá tudo bem?!</strong></center>
+<hr />
+
+<div class="notice--warning">
+Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de <b>String</b> com letra maiúscula ou <b>string</b> com letra minúscula, talvez você que está 
+lendo este artigo já saiba a sua diferença, mas irei deixar meus 50 centavos e pensamentos que tenho sobre esse assunto, para contribuir também com aqueles não sabem a real diferença.
+<br /><br />
+<b>FYI:</b> Esses são meus pensamentos com base em anos de experiência com .NET, mas Rafael isso é básico? nem tanto, e irei te mostrar o porque!
+<br /><br />
+Isso não é um Deep-Dive sobre tipos em .NET!
+</div>
+
+<h2 id="preferência">Preferência</h2>
+<div style="text-align: justify;">
+Bom, eu particularmente uso palavras-chave para meus identificadores e existe uma razão para isso, primeiramente gostaria que ficasse muito claro para
+você, que isso tem muito mais a ver com semântica e não com apenas uma simples escolha de estilo de código, deixa te mostrar algumas coisas.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Exemplo</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">String</span> <span class="n">str1</span> <span class="p">=</span> <span class="s">"Exemplo"</span><span class="p">;</span>
+            <span class="kt">string</span> <span class="n">str2</span> <span class="p">=</span> <span class="s">"Exemplo"</span><span class="p">;</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str1</span><span class="p">);</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str2</span><span class="p">);</span>
+
+            <span class="c1">// Output:</span>
+            <span class="c1">//        Exemplo</span>
+            <span class="c1">//        Exemplo </span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Para o exemplo acima, ambos produzem os mesmos valores, alguma diferença? 
+a resposta é Não, até eu remover o Namespace <b>System</b>.
+<img src="http://localhost:4000/assets/images/tipsstring/errorNamespace.PNG" alt="01" /></p>
+<div style="text-align: justify;">
+Veja que agora o compilador já reclama por não encontrar o identificador <b>String</b>, mas a variável que faz uso de palavras-chave (<b>string</b>) permanece
+sem nenhum tipo de impacto, isso é porque <b>string</b> é uma palavra-chave da linguagem C#, logo o compilador sabe a quem pertence (<i>System.String</i>). <br /><br />
+Essa já é basicamente uma das vantagens em utilizar palavras-chave, háaa, mas eu posso escolher o que eu quiser, claro, quem vai dar manuntenção em seu projeto
+sem dúvidas é você, os problemas de segurança também são de sua responsabilidade, só não fale que isso é apenas uma simples interpretação de <b>code style</b>(estilo de código/perfumaria), 
+isso está muito mais para semâtica de código, como falei a segurança é de sua responsabilidade, para não ficar em poucas palavras vamos imaginar o seguinte cenário:
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">using</span> <span class="nn">System</span><span class="p">;</span>
+
+<span class="k">namespace</span> <span class="nn">Exemplo</span>
+<span class="p">{</span>
+    <span class="k">class</span> <span class="nc">String</span>
+    <span class="p">{</span>
+        <span class="k">public</span> <span class="k">static</span> <span class="k">implicit</span> <span class="k">operator</span> <span class="nf">String</span><span class="p">(</span><span class="kt">string</span> <span class="n">str</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">class</span> <span class="nc">Program</span>
+    <span class="p">{</span>
+        <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+        <span class="p">{</span>
+            <span class="n">String</span> <span class="n">str1</span> <span class="p">=</span> <span class="s">"Exemplo"</span><span class="p">;</span> <span class="c1">// Classe que escrevi</span>
+            <span class="kt">string</span> <span class="n">str2</span> <span class="p">=</span> <span class="s">"Exemplo"</span><span class="p">;</span>
+
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str1</span> <span class="k">is</span> <span class="n">System</span><span class="p">.</span><span class="n">String</span><span class="p">);</span> <span class="c1">// False</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str2</span> <span class="k">is</span> <span class="n">System</span><span class="p">.</span><span class="n">String</span><span class="p">);</span> <span class="c1">// True</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str1</span><span class="p">);</span> <span class="c1">// NULL</span>
+            <span class="n">Console</span><span class="p">.</span><span class="nf">WriteLine</span><span class="p">(</span><span class="n">str2</span><span class="p">);</span> <span class="c1">// Exemplo</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>Observe no código acima que eu adicionei o namespace <b>System</b> e escrevi uma simples classe <b>String</b>:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">String</span>
+<span class="p">{</span>
+  <span class="k">public</span> <span class="k">static</span> <span class="k">implicit</span> <span class="k">operator</span> <span class="nf">String</span><span class="p">(</span><span class="kt">string</span> <span class="n">str</span><span class="p">)</span> <span class="p">=&gt;</span> <span class="k">null</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div style="text-align: justify;">
+Isso não causou nenhum erro no momento do desenvolvimento, mesmo já existindo uma classe(<b>String</b>) no namespace <b>System</b>, pelo contrário, o compilador reconheceu minha classe e agora passou a usar a classe que eu escrevi em vez de <b>System.String</b>.<br /><br />
+Bom, talvez isso poderá lhe causar algumas dores de cabeça, implementamos diariamente inúmeras bibliotecas de terceiros e na maioria das vezes não conhecemos de forma mais aprofundada sua implementação, então basicamente podemos cair em armadilhas.<br />
+Também não estou dizendo que deverá conhecer... mas sem dúvidas pode nos custar algum tempo para analisar o problema até encontrar o motivo.
+</div>
+<h2 id="o-problema">O problema</h2>
+<p>Basicamente o que fiz acima foi simular um problema que aparentemente era inofensivo, com poucas linhas de código produzimos uma classe que implicitamente recebe uma string de forma idêntica ao System.String.</p>
+
+<h2 id="meu-conselho">Meu conselho</h2>
+<p>Eu já falei que a decisão é sua, mas se quiser seguir um conselho, use palavras-chave quando puder, e evite surpresas!
+<br /><br />
+Palavras chaves C#, clique <a alt="" target="_BLANK" href="https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/">aqui</a>!
+<br /></p>
+<div class="notice--warning">
+Não sabe o que é palavras-chave? <br />
+De uma forma resumida são palavras que você não poderá usar como nome de variáveis em nenhuma parte de seu código, a não ser que use <b>@</b> antes do nome da variável, veja um exemplo abaixo.
+</div>
+
+<p><img src="http://localhost:4000/assets/images/tipsstring/errorPalavrasChave.PNG" alt="01" /></p>
+
+<h2 id="twitter">Twitter</h2>
+<div class="notice--info">
+ Fico por aqui! 😄 <br />
+ Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
+</div>
+
+<p><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#net" class="page__taxonomy-item" rel="tag">.NET</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/" class="page__taxonomy-item" rel="tag"></a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#dicas" class="page__taxonomy-item" rel="tag">Dicas</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#tips" class="page__taxonomy-item" rel="tag">Tips</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2020-06-09T00:00:00+00:00">June 09, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=String+vs+string%20http%3A%2F%2Flocalhost%3A4000%2Fdicas%2Ftips%2Fc%2523%2F.net%2Ftip-style-code%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fdicas%2Ftips%2Fc%2523%2F.net%2Ftip-style-code%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fdicas%2Ftips%2Fc%2523%2F.net%2Ftip-style-code%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fdicas%2Ftips%2Fc%2523%2F.net%2Ftip-style-code%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/" class="pagination--pager" title="Workaround para System.Text.Json
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/" class="pagination--pager" title="Perform Identity Resolution
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/manytomanyef5.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/many-to-many-efcore5/" rel="permalink">Many To Many
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  5 minuto(s) de leitura
+ - August 14, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+
+
+Nesse post irei falar sobre um dos recursos mais solicitados do Entity Framework Core, e que estará disponível na versão 5 do EF Core.
+Para o exemplo qu...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/gdpr/LGPD_EFCORE.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/" rel="permalink">LGPD + EF CORE + ValueConverter
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  30 minuto(s) de leitura
+ - June 11, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+Mais 1 artigo??? Desculpa estou de férias!!!
+
+Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como f...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/" rel="permalink">Perform Identity Resolution
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  9 minuto(s) de leitura
+ - June 10, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+
+O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro deste ano, como parte do Entity Fram...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/SystemTextJson.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/" rel="permalink">Workaround para System.Text.Json
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  18 minuto(s) de leitura
+ - March 21, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.
+
+FYI: ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/";
+      this.page.identifier = "/dicas/tips/c%23/.net/tip-style-code";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>

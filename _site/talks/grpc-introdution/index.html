@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Introdução ao gRPC</title>
+
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section class="stack" data-id="3da95c3a2248eac6127d7a1521a1f3d6"><section data-id="02982acf8376e1a8db9b480996088bb1"><div class="sl-block" data-block-type="image" data-name="image-5677d2" data-block-id="1e3dad5c6bf1fe67ae63537efaa41217" style="width: 518px; height: 518px; left: 221px; top: 0px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="1350" data-natural-height="1350" style="" data-lazy-loaded="" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-a7a32b" data-block-id="a5638147ffbfba74bce02077fcb97abf" style="height: auto; width: 859px; left: 53px; top: 429px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 159%; color: rgb(7, 55, 99);">
+<p>+ Performance para suas aplicações!</p>
+</div></div></section><section data-id="3493b250d295889fdb886234b8f13f4c">
+<div class="sl-block" data-block-type="image" data-name="image-bb07ea" style="width: 83px; height: 83px; left: 355.881px; top: 518.5px; min-width: 1px; min-height: 1px;" data-block-id="c301102689b8ee1dccf4dd18125470c2"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="225" data-natural-height="225" style="" data-lazy-loaded="" data-src="grpc/d464e43164a91f1c86c4e5c96d89eb9c.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-cb4def" data-block-id="fedec51549f686c15bdb9ac34441b5cd" style="width: 118px; height: 118px; left: 507px; top: 499.5px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="256" data-natural-height="256" style="" data-lazy-loaded="" data-src="grpc/bbe5395cc1d1bdc9be110df6d684abf6.ico"></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-a621ea" data-block-id="f5a0c4223aa8dd1c0ef0ef8ae3ef65b8" style="height: auto; width: 600px; left: 190.75px; top: 236px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 234%;">
+<p>Rafael Almeida</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-8960fc" data-block-id="95390011cb1535dbb2bf39974a6c0be1" style="height: auto; width: 600px; left: 180.75px; top: 327px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>www.ralms.net</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 336px; left: 312px; top: 473px;" data-block-id="06ed0272cf4ada5f6e2c9154352768a6" data-name="text-c5aea1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p>@ralmsdeveloper</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-b983de" data-block-id="a53c10fa1ed6c9c4df0dcf26ddd5695a" style="width: 122.5px; height: 122.5px; left: 416.5px; top: 495px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 15;"><img style="" data-natural-width="256" data-natural-height="256" data-lazy-loaded="" data-src="grpc/8c11089275d74bbef10ca8608229d93a.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-040214" data-block-id="658482fb41130d3625dc6e20058e7088" style="width: 248.238px; height: 228.748px; left: 355.881px; top: 16.252px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 16; border-style: solid; border-radius: 200px;"><img style="left: -133px; top: -6px; width: 387px; height: 258px;" data-natural-width="1440" data-natural-height="960" data-crop-x="0.344913" data-crop-y="0.024164" data-crop-width="0.641439" data-crop-height="0.886617" data-lazy-loaded="" data-src="grpc/bdfff46522a08de969ad4a14dce972fe.jpg"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-871b6c" data-block-id="1028f0475504b2b37d1a1c1ea71ec4b5" style="width: 140.752px; height: 56.7881px; left: 410.374px; top: 366px;"><div class="sl-block-content" style="z-index: 17;"><img style="" data-natural-width="751" data-natural-height="303" data-src="grpc/1fe3ff381d9a306bc4e6c7bfc41cc2c9.png"></div></div></section><section data-id="83b7f53e8a0d204dcf5eed2edd04b8df"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 403px; height: auto;" data-block-id="cb93afbf855954339ca7424051ca273c"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(204, 0, 0);">
+<h1>Quem desenvolveu?</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-5677d2" style="width: 518px; height: 518px; left: 221px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="40f15e32ac1497b38e8fefcd5e9bef52"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="1350" data-natural-height="1350" style="" data-lazy-loaded="" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-97c361" data-block-id="4e4e5be093cce35283f6b88977ecde83" style="width: 272px; height: 92px; left: 104px; top: 527.542px; min-width: 1px; min-height: 1px;"><div class="sl-block-content fragment" style="z-index: 12;" data-fragment-index="0"><img data-natural-width="272" data-natural-height="92" style="" data-lazy-loaded="" data-src="grpc/96400d858e1a21f48b3f38af8ef79ca7.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-3c4794" data-block-id="c58f740eb4ab75af38d82a506de182d4" style="width: 447.536px; height: 71.084px; left: 446.664px; top: 538px; min-width: 1px; min-height: 1px;"><div class="sl-block-content fragment" style="z-index: 13;" data-fragment-index="1"><img style="" data-natural-width="1681" data-natural-height="267" data-lazy-loaded="" data-src="grpc/b8f3fd0a2e0e2ab5e39af8826f0c61ae.png"></div></div></section><section data-id="7897a5cabce8e0721ef2751f95cab972"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 414px; height: auto;" data-block-id="b51b5c5082381922a5c22d1a76d6fe82"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(61, 133, 198);">
+<h1>Introdução ao gRPC</h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-5677d2" style="width: 518px; height: 518px; left: 221px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="3fe8d42dd8312741876335785e197222"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="1350" data-natural-height="1350" style="" data-lazy-loaded="" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div></section><section data-id="8db0dfc0d6492e0ebd9b3de984b2d69e"><div class="sl-block" data-block-type="image" data-name="image-5677d2" style="width: 350px; height: 350px; left: 305px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="86682265ee4d1e07b42487f365239b56"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="1350" data-natural-height="1350" style="" data-lazy-loaded="" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-4e8549" data-block-id="fcaab3592f7d69fef73bbd4453d1d875" style="height: auto; width: 889px; left: 35.5px; top: 373.5px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 151%; text-align: justify; color: rgb(166, 28, 0);">
+<p style="color:rgb(23, 23, 23); text-align:start"><span style="color:#2F4F4F">É uma estrutura de RPC (Chamada de Procedimento Remoto) <span style="font-size:45.3px; text-align:start">independente </span>de linguagem e  de alto desempenho.</span></p>
+
+<p style="color:rgb(23, 23, 23); text-align:start"> </p>
+</div></div></section><section data-id="6ec0bd3e0b6c31ab2e981ba1ea50f44e"><div class="sl-block" data-block-type="text" data-name="text-4e8549" style="height: auto; width: 839px; left: 80px; top: 210px;" data-block-id="bb36ec1ebb152444096088bebd2460d4"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 76%;" data-fragment-index="0">
+<p style="color:rgb(23, 23, 23); text-align:left">Estrutura RPC leve, de alto desempenho e moderna.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-29c691" data-block-id="baeea1b0865e9f9e54a0e9853a70156e" style="height: auto; width: 600px; left: 80px; top: 82px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; font-size: 105%; color: rgb(0, 255, 0);">
+<p><span style="color:#0000FF"><span style="font-size:1.6em"><span style="text-align:start">Benefícios </span></span></span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 531px;" data-block-id="685b7cbfdbfec833d3a0dea503e43694" data-name="text-7f5d7f"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 76%;" data-fragment-index="4">
+<p style="color:rgb(23, 23, 23); text-align:left">Uso de rede reduzida com a serialização binária Protobuf.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 461px;" data-block-id="2702d3999380104016dde923643cd217" data-name="text-4fe9e1"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 76%;" data-fragment-index="3">
+<p style="color:rgb(23, 23, 23); text-align:left"><span style="font-size:22.8px; text-align:left">Dá suporte ao cliente, servidor e chamadas bi-direcionais de streaming.</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 369px;" data-block-id="82681fb5791437c19be1baebe62b8c1b" data-name="text-e365f5"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 76%;" data-fragment-index="2">
+<p style="color:rgb(23, 23, 23); text-align:left"><span style="font-size:22.8px; text-align:left">As ferramentas disponíveis para várias linguagens gerarem clientes e servidores fortemente tipados.</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 280px;" data-block-id="3ef8c11df47d6818a9ea0032468a4054" data-name="text-c2ceb4"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 15; font-size: 76%;" data-fragment-index="1">
+<p style="text-align:left">Desenvolvimento da API de primeiro contrato, usando buffers de protocolo, por padrão, permitindo implementações independente de linguagem.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-4ca4d7" style="height: auto; width: 600px; left: 174px; top: 630px;" data-block-id="2de1b03209249358fb032984ae4271ef"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 16; font-size: 50%;">
+<p><a href="https://docs.microsoft.com/pt-br/aspnet/core/grpc/?view=aspnetcore-3.1" target="_blank">https://docs.microsoft.com/pt-br/aspnet/core/grpc/?view=aspnetcore-3.1</a></p>
+</div></div></section><section data-id="c2fe1c0322e1ed36bf9d1362edb040db"><div class="sl-block" data-block-type="text" data-name="text-4e8549" style="height: auto; width: 839px; left: 80px; top: 210px;" data-block-id="a1df21ecd1e0b3dfdf0a5e07de8548e0"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 76%;" dir="ui" data-fragment-index="0">
+<p style="color:rgb(23, 23, 23); font-size:22.8px; text-align:start">Em serviços no qual a eficiência é crítica.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-29c691" style="height: auto; width: 600px; left: 80px; top: 82px;" data-block-id="3ab91c626570f11e793702e9bff84e0f"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; font-size: 105%; color: rgb(201, 49, 49);">
+<p><span style="color:#0000FF"><span style="font-size:1.6em"><span style="text-align:start">Onde posso usar?</span></span></span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 280px;" data-block-id="f387df6d674d5fa9d8e18f80aa71e270" data-name="text-df18b1"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 76%;" dir="ui" data-fragment-index="1">
+<p style="color:rgb(23, 23, 23); font-size:22.8px; text-align:start">Sistemas poliglotas, nos quais múltiplas linguagens são necessárias para o desenvolvimento.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 839px; left: 80px; top: 371px;" data-block-id="3a8fb5f6db84a1662e3223b5d5bcd11f" data-name="text-2192bf"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 76%;" dir="ui" data-fragment-index="2">
+<p style="color:rgb(23, 23, 23); font-size:22.8px; text-align:start">Serviços ponto a ponto em tempo real que precisam lidar com solicitações ou respostas de streaming.</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-4ca4d7" data-block-id="890b6a58094e6be01077c7f1c9234809" style="height: auto; width: 600px; left: 170px; top: 630px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; font-size: 50%;">
+<p><a href="https://docs.microsoft.com/pt-br/aspnet/core/grpc/?view=aspnetcore-3.1" target="_blank">https://docs.microsoft.com/pt-br/aspnet/core/grpc/?view=aspnetcore-3.1</a></p>
+</div></div></section><section data-id="68b5a9d2750059092ca1ea37a883bb71"><div class="sl-block" data-block-type="image" data-name="image-5677d2" style="width: 518px; height: 292px; left: 221px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="a0f67b49096565073205fc864aa40b47"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="1350" data-natural-height="1350" style="left: 0px; top: -105px; width: 518px; height: 518px;" data-lazy-loaded="" data-crop-x="0" data-crop-y="0.202703" data-crop-width="1" data-crop-height="0.563707" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div>
+<div class="sl-block" data-block-type="line" data-name="line-0b36fa" data-block-id="3a7f98e395f92b0185b33975ee22b2f5" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 364px; top: 44px;"><div class="sl-block-content" data-line-x1="0" data-line-y1="236" data-line-x2="305" data-line-y2="0" data-line-color="#ff0000" data-line-start-type="none" data-line-end-type="none" style="z-index: 11;" data-line-width="7px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="305" height="236" viewbox="0 0 305 236"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="236.5" x2="305.5" y2="0.5"></line><line class="line-element" stroke="#ff0000" stroke-width="7" x1="0.5" y1="236.5" x2="305.5" y2="0.5"></line></svg></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 364px; top: 44px;" data-block-id="ca6b2758d71329f519ce4f65dde3322d" data-name="line-bb492b"><div class="sl-block-content" data-line-x1="276" data-line-y1="236" data-line-x2="0" data-line-y2="0" data-line-color="#ff0000" data-line-start-type="none" data-line-end-type="none" style="z-index: 12;" data-line-width="7px"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="276" height="236" viewbox="0 0 276 236"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="276.5" y1="236.5" x2="0.5" y2="0.5"></line><line class="line-element" stroke="#ff0000" stroke-width="7" x1="276.5" y1="236.5" x2="0.5" y2="0.5"></line></svg></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-7a58a9" data-block-id="09fba8a4b4340824abf06aff0bd877fa" style="height: auto; width: 600px; left: 180px; top: 330.5px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 500%; color: rgb(0, 0, 255);">
+<p>HTTP/<span style="color:#008000">2</span></p>
+</div></div></section><section data-id="8136ec1e22a5d5b3347ffe4ebda8335a">
+
+<div class="sl-block" data-block-type="text" style="height: auto; width: 911px; left: 24.5px; top: 320.5px;" data-block-id="c24238ef02a6e19c0064b4f458009052" data-name="text-b7ffd3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; text-align: left; font-size: 167%; color: rgb(74, 134, 232);">
+<ul>
+	<li>Dados trafegados de forma binária</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 786px; left: 32.5px; top: 398.5px;" data-block-id="efa617ac6f269d9873800222cc3fb495" data-name="text-2f8013"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left; font-size: 167%; color: rgb(74, 134, 232);">
+<ul>
+	<li>Requisições multiplexadas</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-3734ad" data-block-id="9c4ca51d811daba263b16687cab49093" style="height: auto; width: 600px; left: 186px; top: 630px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 60%;">
+<p>Demo: <a href="http://www.http2demo.io/" target="_blank">http://www.http2demo.io/</a></p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-7a58a9" style="height: auto; width: 600px; left: 180px; top: 57.5px;" data-block-id="26d7c6a608fd6f81b174994966cc59a2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; font-size: 500%; color: rgb(0, 0, 255);">
+<p>HTTP/<span style="color:#008000">2</span></p>
+</div></div></section><section data-id="af6b6a338d0c3520734fe7df6454c62f"><div class="sl-block" data-block-type="image" data-name="image-59f037" data-block-id="aaa84c0b7db04e667fc894fa68432723" style="width: 565.333px; height: 424px; left: 400px; top: 146px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 10;"><img style="" data-natural-width="640" data-natural-height="480" data-lazy-loaded="" data-src="grpc/abe744c12a9f4dae8b223c870d64cd25.jpg"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-1440fa" data-block-id="053a0c9df8d28a718183f0dc9f6bde83" style="width: 330px; height: 483px; left: 46px; top: 87px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="330" data-natural-height="483" data-lazy-loaded="" data-src="grpc/cd4ac478a7ca6e280a3e6cb3c2f723c0.png"></div></div>
+<div class="sl-block" data-block-type="line" data-name="line-2763d4" data-block-id="ff9b54cc67148efef98170eb7114ec88" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 400px; top: 0px;"><div class="sl-block-content" data-line-x1="0" data-line-y1="700" data-line-x2="0" data-line-y2="0" data-line-color="#4a86e8" data-line-start-type="none" data-line-end-type="none" style="z-index: 12;" data-line-width="5px" data-line-style="dashed"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="1" height="700" viewbox="0 0 1 700"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0.5" y1="700.5" x2="0.5" y2="0.5"></line><line class="line-element" stroke="#4a86e8" stroke-width="5" stroke-dasharray="14.891304347826086 14.891304347826086" x1="0.5" y1="700.5" x2="0.5" y2="0.5"></line></svg></div></div></section><section data-id="add318f38f617d258a1bcfa61c671b2c">
+
+<div class="sl-block" data-block-type="image" data-name="image-5677d2" style="width: 518px; height: 292px; left: 221px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="0ce2f546463ba6ff1764a26f784f02c1"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="1350" data-natural-height="1350" style="left: 0px; top: -105px; width: 518px; height: 518px;" data-lazy-loaded="" data-crop-x="0" data-crop-y="0.202703" data-crop-width="1" data-crop-height="0.563707" data-src="grpc/660254833f8e3a974fe4840aa9a489b3.png"></div></div>
+
+<div class="sl-block" data-block-type="text" data-name="text-d9c4c5" data-block-id="8ee5f8c0583733bfecb6224304b0f846" style="height: auto; width: 600px; left: 180px; top: 330.5px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; background-color: rgb(255, 255, 0); font-size: 256%; text-align: center; transition-duration: 0.6s; transition-delay: 0.6s;" data-animation-type="fade-in">
+<p>IDL</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 434.5px;" data-block-id="772d111842c9be4dff5c33c92b715269" data-name="text-5ffbaa"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; background-color: rgb(0, 255, 0); font-size: 256%; text-align: center; transition-duration: 0.6s; transition-delay: 0.6s;" data-animation-type="fade-in">
+<p>HTTP/2</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 600px; left: 180px; top: 541px;" data-block-id="a3c1527dc75763f1bfe8700c018d34ac" data-name="text-955005"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14; background-color: rgb(0, 255, 255); font-size: 256%; text-align: center; transition-duration: 0.6s; transition-delay: 0.6s;" data-animation-type="fade-in">
+<p>Protobuf</p>
+</div></div></section><section data-id="579fcf5ce25e6112c0db305ae4073c15">
+
+<div class="sl-block" data-block-type="image" data-name="image-c571fd" data-block-id="7465934228cfe339d23f25fe1c77630d" style="width: 512px; height: 150px; left: 240px; top: 18px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 10;"><img style="" data-natural-width="512" data-natural-height="150" data-lazy-loaded="" data-src="grpc/33454e67dfe8a2e17c13b5eb34780b86.png"></div></div>
+<div class="sl-block" data-block-type="code" data-name="code-5c8256" data-block-id="4f4593cff51f999c198d0854c637e231" style="width: 761px; height: 483px; left: 115.5px; top: 178.5px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 11;"><pre><code data-line-numbers="|1|3|5-7|9-22">syntax = "proto3";
+
+option csharp_namespace = "Ralms"; 
+ 
+service PaymentService {
+  rpc SendPayment (PaymentRequest) returns (PaymentResponse);
+}
+ 
+message PaymentRequest {
+  string BrandCard = 1;
+  int64 Amount = 2;
+  repeated Product Product = 3; 
+}
+
+message Product {
+  int32 Id = 2;	
+  string description = 1;
+}
+ 
+message PaymentResponse {
+  string Message = 1;
+}
+</code></pre></div></div></section><section data-id="f38293f32b054208c8eff4310ef78a95"><div class="sl-block" data-block-type="image" data-name="image-34f4e0" data-block-id="6a7c547e882f9a9445d2d4c8939fe824" style="width: 741px; height: 472px; left: 109.5px; top: 0px;"><div class="sl-block-content" style="z-index: 10;"><img style="" data-natural-width="741" data-natural-height="472" data-lazy-loaded="" data-src="grpc/835c9fa245d961143f4bd4f456eb97ac.jpg"></div></div></section><section data-id="7408773ed89bf1e6fd2cf78f413c6c75"><div class="sl-block" data-block-type="text" style="width: 856px; left: 46px; top: 202px; height: auto;" data-name="text-38ee44" data-block-id="37f4e8d235321fdadf40394978724d11"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>Obrigado!!!</h1>
+
+<p> </p>
+
+<p>http://ralms.net</p>
+
+<p>Twitter: @ralmsdeveloper</p>
+</div></div></section></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":1743464,"slug":"grpc","title":"Introdução ao gRPC","description":"","width":960,"height":700,"margin":0.05,"visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/1e2974becf5a784f7dbd4fe69b69fc0f/thumb.jpg?1584325334","view_count":0,"user":{"id":1276267,"username":"ralmsdeveloper","name":"Rafael Almeida","description":"","thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/avatars/1276267/pp.jpg","paid":true,"pro":true,"lite":false,"team_id":null,"settings":{"id":4930180,"present_controls":true,"present_upsizing":true,"present_pointer":true,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":false,"should_loop":false,"share_notes":true,"slide_number":false,"slide_count":15,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":3,"data_updated_at":1585325043662,"font_typekit":null,"font_google":null,"time_limit":null,"upsizing_enabled":true,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: true,
+				slideNumber: false,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				autoAnimateMatcher: SL.deck.AutoAnimate.matcher,
+
+				center: false,
+				shuffle: false,
+				loop: false,
+				rtl: false,
+
+				transition: "slide",
+				backgroundTransition: "slide",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js' },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'lib/reveal-plugins/zoom/zoom.js', async: true }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>

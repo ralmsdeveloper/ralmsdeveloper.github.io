@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>DEEP-DIVE-EF-CORE</title>
+
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section class="stack" data-id="845ec1c843259d48824faf660142f0ed"><section data-id="0020a847700607b470f3a74d6b748451"><div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 350px; height: auto;" data-block-id="cde66516e7cf2c4d8857eacf149a65d4"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" dir="ui" style="color: rgb(166, 28, 0); z-index: 10;">
+<h1>
+<span style="color:#800080"><span style="font-size:0.7em">ENTITY FRAMEWORK CORE</span></span> </h1>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-66890f" data-block-id="53287bc622e590c41c6122ca9f6994a1" style="height: auto; width: 800px; left: 80px; top: 177px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; color: rgb(204, 0, 0);">
+<h1 style="color:rgb(166, 28, 0)"><span style="color:#000000"><span style="font-size:2.5em">DEEP</span></span></h1>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-16339a" data-block-id="da04a83e83f74c097680b6622b4e2561" style="height: auto; width: 600px; left: 180px; top: 377px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 300%;">
+<h1 style="color:rgb(166, 28, 0)"><span style="color:#4B0082">DIVE</span></h1>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-44a6fe" data-block-id="962155b24dc793b96b6c0cc8cf1aa723" style="width: 212px; height: 212px; left: 388px; top: 19px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 13;"><img style="" data-natural-width="512" data-natural-height="512" data-lazy-loaded="" data-src="deep-dive-ef-core/14c423d03e37d4f4b9245956e1d38d5c.png"></div></div></section><section data-id="5f05ee453899e52b21bd311baa2f0a0e"><div class="sl-block" data-block-type="text" style="width: 413px; left: 29px; top: 84px; height: auto;" data-block-id="04a54d9d77abe810f4b6aaf9b5409243"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="text-align: left; z-index: 10;">
+<h2>WHOAMI</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 564px; left: 29px; top: 177.5px; height: auto;" data-block-id="548930af59b1f9dba7044d15db5c5445"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi nec metus justo. Aliquam erat volutpat." style="z-index: 12; text-align: left; font-size: 80%;">
+<ul>
+	<li>Rafael Almeida</li>
+	<li>Head Software Engineering At Stone Payments</li>
+	<li>Moro em Itabaiana/SE</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="image" style="width: 250px; height: 250px; left: 627.417px; top: 85px; min-width: 1px; min-height: 1px;" data-block-id="18cc411d8899f4e86f807622f4c1a430"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="309" data-natural-height="309" style="" data-lazy-loaded="" data-src="deep-dive-ef-core/cd04447f8605bdb35ff463c740525cb0.jpg"></div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 483.5px; left: 43.25px; top: 560px;" data-block-id="1825580179ef250b67109e8a0ae0cce7" data-name="text-fc95cf"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; text-align: center; color: rgb(12, 52, 61); font-size: 150%;">
+<p>RalmsDeveloper</p>
+</div></div>
+
+
+<div class="sl-block" data-block-type="image" data-name="image-948576" data-block-id="cf5ada6916c74fa4902c54b3aa6eb9c9" style="width: 58.25px; height: 58.25px; left: 43.25px; top: 560px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 14;"><img style="" data-natural-width="225" data-natural-height="225" data-lazy-loaded="" data-src="deep-dive-ef-core/d464e43164a91f1c86c4e5c96d89eb9c.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-4af7ac" data-block-id="ea1f2f1c9dc34c0eea9a6cf6e73b558d" style="width: 228.748px; height: 115.944px; left: 640px; top: 518.056px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 15;"><img style="" data-natural-width="2040" data-natural-height="1034" data-lazy-loaded="" data-src="deep-dive-ef-core/55eae0c7ac8883b3f7d2e7521a664dfe.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-cb9de1" data-block-id="6a99bb220c772784f361d3f853ffff1b" style="width: 219.829px; height: 91.71px; left: 640px; top: 435.556px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 16;"><img data-natural-width="1280" data-natural-height="534" style="" data-lazy-loaded="" data-src="deep-dive-ef-core/502e79798d6309fd1775a39518728049.jpeg"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-909e54" data-block-id="1deaa0c6d19e244d6714d3e7dcaf37ba" style="width: 241.658px; height: 97.5px; left: 631.588px; top: 335px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 17;"><img style="" data-natural-width="751" data-natural-height="303" data-lazy-loaded="" data-src="deep-dive-ef-core/1fe3ff381d9a306bc4e6c7bfc41cc2c9.png"></div></div></section><section data-id="a730e5350f6379c17e9fe1071831f947"><div class="sl-block" data-block-type="text" style="width: 889px; left: 35.5px; top: 207px; height: auto;" data-block-id="52a663ac52eeb4a693917c46c46bc97b"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>ENTITY FRAMEWORK CORE</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 98px; top: 305px; height: auto;" data-block-id="1618777062c6a38ab9c88b0648e02399"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; text-align: left;">
+<ul>
+	<li>Versão Atual 3.1.2</li>
+	<li>Versão em Desenvolvimento 5.0</li>
+</ul>
+</div></div></section><section data-id="b5677040c36d4896e32384a7e3882e5b"><div class="sl-block" data-block-type="text" style="width: 806px; left: 74px; top: 99px; height: auto;" data-block-id="383e24d7bcadf4b53d0f41e69d485762"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>O que você pode esperar nessa apresentação?</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 77px; top: 337px; height: auto;" data-block-id="0594ab18196df0851c44ed70655ba59a"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li>Um pouco de arquitetura</li>
+	<li>Desempenho</li>
+	<li>Como realmente o EF funciona por baixo dos panos</li>
+	<li>Demos e Dicas / hands-on-code</li>
+</ul>
+</div></div></section><section data-id="fe24b9d4fcca081cf6e4cdeda58095c1"><div class="sl-block" data-block-type="text" style="width: 856px; left: 43px; top: 50.5px; height: auto;" data-block-id="91eed4608a7caab7b2ceebbbcb33d93f"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>O QUE É O EF?</h1>
+</div></div>
+<div class="sl-block" data-block-type="text" style="width: 806px; left: 104px; top: 170px; height: auto;" data-block-id="d2df4f5f8d5b5618fb903b0515a8aafe"><div class="sl-block-content" data-placeholder-tag="h2" data-placeholder-text="Subtitle" style="z-index: 11;">
+<ul>
+	<li>
+	<p>Ele é escrito em C#</p>
+	</li>
+	<li>
+	<p>Não é uma continuidade do EF 6.x</p>
+	</li>
+	<li>
+	<p>Podemos usar LINQ(C<span style="color:rgb(23, 23, 23); text-align:start">onsulta integrada a linguagem</span>)</p>
+	</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="code" data-name="code-5accc4" data-block-id="c8dfba2615c4cfee5882d2dc581e3817" style="width: 736px; height: 267px; left: 124px; top: 326px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai-sublime" data-code-frame="osx" style="z-index: 12; border-style: solid; border-width: 1px; font-size: 140%;"><pre><code data-line-numbers="">var talksList = new[] { "EF", "DDD", "ARQUITETURA" };
+var talks = talksList
+    .Where(p =&gt; p == "EF")
+    .OrderBy(p =&gt; p)
+    .Skip(1)
+    .Take(1)
+    .ToArray();</code></pre></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-2e9ff2" data-block-id="6cd0615f36666dd6adeed846bba78323" style="height: auto; width: 725px; left: 127px; top: 604.5px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>Essas consultas são executadas em memória</p>
+</div></div></section><section data-id="0cb4ffd08c32975429737153fd2d330f"><div class="sl-block" data-block-type="text" style="width: 856px; left: 43px; top: 10.5px; height: auto;" data-name="text-fcc31e" data-block-id="bc808af930b8392848aebcce3ebff170"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Expressions</h1>
+</div></div>
+<div class="sl-block" data-block-type="code" data-name="code-eb72fd" style="width: 901px; height: 83.5px; left: 43px; top: 109.5px;" data-block-id="0940a31311f8b6ca7a669a9848283074"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 11; font-size: 128%;" data-fragment-index="0"><pre><code style="padding: 10px;">Func&lt;int, bool&gt; maiorQue10 = i =&gt; i &gt; 10;</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 901px; height: 90px; left: 43px; top: 200px;" data-name="code-4ee774" data-block-id="bfb4612339a7e596c07ee477ace15742"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 12; font-size: 119%;" data-fragment-index="1"><pre><code style="padding: 5px;">Expression&lt;Func&lt;int, bool&gt;&gt; maiorQue10Expression = i =&gt; i &gt; 10;
+Func&lt;int, bool&gt; maiorQue10ExpressionCompilada = maiorQue10Expression.Compile();</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 901px; height: 273px; left: 44px; top: 295px;" data-name="code-96642a" data-block-id="1799a22c63c2f9b0a9c9977bbc3eee72"><div class="sl-block-content notranslate fragment" data-highlight-theme="xcode" data-code-frame="none" style="z-index: 13; font-size: 132%;" data-fragment-index="2"><pre class="cs"><code data-fragment-index="3" data-line-numbers="|5-7">var parametro1 = Expression.Parameter(typeof(int), "i");
+ 
+Expression&lt;Func&lt;int, bool&gt;&gt; expressionLambda =
+    Expression.Lambda&lt;Func&lt;int, bool&gt;&gt;(
+        Expression.GreaterThan(
+            parametro1,
+            Expression.Constant(10)),
+        parametro1);
+ 
+var maiorQue10Lambda = expressionLambda.Compile();</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 901px; height: 124px; left: 43px; top: 567px;" data-name="code-704503" data-block-id="e5ab80c05a2a1ddf2e23edbf5cd30a7e"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 14; font-size: 132%;" data-fragment-index="3"><pre><code data-fragment-index="4" style="padding: 3px;">new[] { 10, 11, 12 }.Where(maiorQue10);
+new[] { 10, 11, 12 }.Where(maiorQue10ExpressionCompilada);
+new[] { 10, 11, 12 }.Where(maiorQue10Lambda);</code></pre></div></div></section><section data-id="9000f6803881d20c9067d2c5db4a1523"><div class="sl-block" data-block-type="text" style="width: 893px; left: 33px; top: 24.5px; height: auto;" data-name="text-fcc31e" data-block-id="e3580b951f7234841c66f7893f962a00"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h2>Mais um pouco de Expressions</h2>
+</div></div>
+<div class="sl-block" data-block-type="code" data-name="code-eb72fd" style="width: 901px; height: 229.75px; left: 35px; top: 120.25px;" data-block-id="f934e6e47def3af00155938f51a18df6"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 11; font-size: 128%;" data-fragment-index="0"><pre><code style="padding: 10px;">Func&lt;string, string&gt; toLower = str =&gt; str.ToLower();
+
+new[] { "Rafael", "Almeida" }.Select(p =&gt; toLower(p)).ToList();
+/* Count = 2
+    [0]: "rafael"
+    [1]: "almeida"
+*/</code></pre></div></div>
+
+<div class="sl-block" data-block-type="code" style="width: 910px; height: 161px; left: 33px; top: 355px;" data-name="code-96642a" data-block-id="9e9d84e42e45f93e50409050a59c6302"><div class="sl-block-content notranslate fragment" data-highlight-theme="xcode" data-code-frame="none" style="z-index: 12; font-size: 132%;" data-fragment-index="1"><pre class="cs"><code data-fragment-index="0" data-line-numbers="">var parametro = Expression.Parameter(typeof(string), "str");
+var toLower   = typeof(string).GetMethod("ToLower", Type.EmptyTypes);
+var body      = Expression.Call(parametro, toLower);
+var lambda    = Expression.Lambda&lt;Func&lt;string, string&gt;&gt;(body, parametro);
+var compiledToLower = lambda.Compile();</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 901px; height: 170px; left: 35px; top: 516px;" data-name="code-704503" data-block-id="a27aeefe9797f90e32afa0078bff1ddb"><div class="sl-block-content notranslate fragment" data-highlight-theme="monokai" data-code-frame="osx" style="z-index: 13; font-size: 132%;" data-fragment-index="2"><pre class="cs"><code data-fragment-index="4" style="padding: 3px;">new[] { "Rafael", "Almeida" }.Select(p =&gt; compiledToLower(p)).ToList();
+/* Count = 2
+    [0]: "rafael"
+    [1]: "almeida"
+*/</code></pre></div></div></section><section data-id="a919d9cde2dfc07bcf2e567a0c3a7a75"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 140px; height: auto;" data-block-id="20a3004220a5b0220d7232d86254d220" data-name="text-fcc31e"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1><span style="color:#4B0082"><span style="font-size:1.4em">IQueryable</span></span></h1>
+
+<h3><span style="color:#FF0000"><span style="font-size:1.6em">vs</span></span></h3>
+
+<h1><span style="color:#008080"><span style="font-size:1.4em">IEnumerable</span></span></h1>
+</div></div>
+
+
+
+</section><section data-id="b18fe659c35fd5da20f2a7f3535a8aef"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 140px; height: auto;" data-name="text-fcc31e" data-block-id="f285618727d8cd00deab444ef939b3e1"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1><span style="color:#008080"><span style="font-size:1.4em">IEnumerable</span></span></h1>
+
+<h3> </h3>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-144399" data-block-id="65f81caea9c4247c4c12ce9ce4fafdd4" style="width: 878px; height: 140px; left: 52px; top: 337px;"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 11; font-size: 199%;"><pre class="cs"><code data-line-numbers="">IEnumerable&lt;T&gt;.Where(Func&lt;T, bool&gt; predicate)</code></pre></div></div></section><section data-id="b283d6e2a31b13ae76e18647a82f02db"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 70px; height: auto;" data-name="text-fcc31e" data-block-id="96e692f6a521ef82c99544c9e3cd5450"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1><span style="color:#008080"><span style="font-size:1.4em">IQueryable</span></span></h1>
+
+<h3> </h3>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-144399" style="width: 878px; height: 140px; left: 52px; top: 246px;" data-block-id="c371387057aab96724f1421be186d04c"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 11; font-size: 162%;"><pre class="cs"><code data-line-numbers="">IQueryable&lt;T&gt;.Where(Expression&lt;Func&lt;T, bool&gt;&gt; predicate)</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 407px; height: auto;" data-block-id="e89ad2218edcb870c3de22b1fe16ffc9" data-name="text-4c4d07"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 12;">
+<h2><font color="#008080">Aqui é interpretado e otimizado em tempo de execução!!!</font></h2>
+
+<h3> </h3>
+</div></div></section><section data-id="9c101f5f31c26b3c019b1377950063af"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 113px; height: auto;" data-name="text-fcc31e" data-block-id="267ba1079e38162aa6f7b219d019c9fd"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1><span style="font-size:1.2em"><span style="color:#008080">Entendo melhor...</span></span></h1>
+
+<h3> </h3>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-144399" style="width: 878px; height: 198px; left: 52px; top: 263px;" data-block-id="ac1b0f09e778d7a48e4826f07e0cfc10"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 11; font-size: 162%;"><pre class="cs"><code data-line-numbers="">var resultado = db
+    .Livros
+    .Where(p =&gt; p.Descricao == "EF Core")
+    .OrderByDescending(p =&gt; p.Preco);</code></pre></div></div></section><section data-id="4fcb7eeb3b5c6a56c56fff571703a8ad"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 338px; height: auto;" data-name="text-fcc31e" data-block-id="87c4f03682124cb259a6ecc358564e3a"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10;">
+<h1>Traduz para o SQL</h1>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-144399" style="width: 878px; height: 150px; left: 52px; top: 181px;" data-block-id="e68fe441ce1b13e1d8fc61d8ce37f6fb"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 11; font-size: 162%;"><pre class="cs"><code data-line-numbers="">... Where(p =&gt; p.Descricao == "EF Core")</code></pre></div></div>
+<div class="sl-block" data-block-type="code" style="width: 878px; height: 125px; left: 52px; top: 475px;" data-block-id="c4a07c55f45a27211ff4f3783dbc010b" data-name="code-5f2a06"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 12; font-size: 162%;"><pre class="cs"><code data-line-numbers="">WHERE Descricao = 'EF CORE'</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 36px; top: 51px; height: auto;" data-block-id="918265911e20df5fca9d3cdbccfd64dd" data-name="text-38ee44"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 13;">
+<h1>Expressão</h1>
+</div></div></section><section data-id="bed5fba27985e38c5306359641af0c5b"><div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 400px; height: auto;" data-name="text-fcc31e" data-block-id="37be7ee271cf49d922f13868a06148b8"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(103, 78, 167);">
+<h1><span style="font-size:0.7em">Isso é uma expressão com um operador binário</span></h1>
+</div></div>
+
+
+
+<div class="sl-block" data-block-type="code" data-name="code-144399" style="width: 878px; height: 119px; left: 52px; top: 181px;" data-block-id="817ee7d988206b62a00a575142635cae"><div class="sl-block-content notranslate" data-highlight-theme="github-gist" data-code-frame="osx" style="z-index: 11; font-size: 162%;"><pre class="cs"><code data-line-numbers="">p =&gt; p.Descricao == "EF Core"    // BinaryExpression</code></pre></div></div>
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 36px; top: 51px; height: auto;" data-name="text-38ee44" data-block-id="34e3fb84aafb307b5ea5d323be6fe120"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 12; color: rgb(61, 133, 198);">
+<h1>Compreendendo...</h1>
+</div></div>
+<div class="sl-block" data-block-type="line" data-name="line-f8cee4" data-block-id="ca16f769449c332ec35f0319975efde9" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 258px; top: 263px;"><div class="sl-block-content" data-line-x1="222" data-line-y1="157" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 13;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="222" height="157" viewbox="0 0 222 157"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="222" y1="157" x2="0" y2="0"></line><line class="line-element" stroke="#000000" stroke-width="2" x1="222" y1="157" x2="0" y2="0"></line></svg></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 369px; top: 263px;" data-block-id="9d5a7d96ec0f26b3400013f9a3636719" data-name="line-35ca96"><div class="sl-block-content" data-line-x1="111" data-line-y1="157" data-line-x2="0" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 14;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="111" height="157" viewbox="0 0 111 157"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="111" y1="157" x2="0" y2="0"></line><line class="line-element" stroke="#000000" stroke-width="2" x1="111" y1="157" x2="0" y2="0"></line></svg></div></div>
+<div class="sl-block" data-block-type="line" style="width: auto; height: auto; min-width: 0px; min-height: 0px; left: 480px; top: 263px;" data-block-id="fadc858ac606a842b4bf321f3abf72f6" data-name="line-4e94fd"><div class="sl-block-content" data-line-x1="0" data-line-y1="157" data-line-x2="11" data-line-y2="0" data-line-color="#000000" data-line-start-type="none" data-line-end-type="none" style="z-index: 15;"><svg xmlns="http://www.w3.org/2000/svg" version="1.1" preserveaspectratio="xMidYMid" width="11" height="157" viewbox="0 0 11 157"><line stroke="rgba(0,0,0,0)" stroke-width="15" x1="0" y1="157" x2="11" y2="0"></line><line class="line-element" stroke="#000000" stroke-width="2" x1="0" y1="157" x2="11" y2="0"></line></svg></div></div></section><section data-id="29534fe1775c90a90b7e359e36ab2ec1">
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 36px; top: 51px; height: auto;" data-name="text-38ee44" data-block-id="5ba4eb92a190935135bb3d402758fefc"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(28, 69, 135);">
+<h2>Anatomia BinaryExpression</h2>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-a78053" data-block-id="f74db6a90bfc3e0e20c06f692d0e1904" style="height: auto; width: 843px; left: 58.5px; top: 513px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<p><a href="https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netstandard-2.1" target="_blank">https://docs.microsoft.com/pt-br/dotnet/api/system.linq.expressions.binaryexpression?view=netstandard-2.1</a></p>
+</div></div>
+<div class="sl-block" data-block-type="table" data-name="table-a20a6e" data-block-id="083307339795f19810f9b766dabc7a95" style="height: auto; min-width: 120px; width: 800px; left: 73px; top: 199.5px;"><div class="sl-block-content" style="z-index: 12; background-color: rgb(207, 226, 243);" data-table-rows="4" data-table-cols="2" data-table-border-color="rgb(238, 238, 238)" data-table-has-header="true"><table><tbody>
+<tr>
+<th style="border-color: rgb(238, 238, 238);">Propriedade</th>
+<th style="border-color: rgb(238, 238, 238);"> O que é?</th>
+</tr>
+<tr>
+<td style="border-color: rgb(238, 238, 238);">Left</td>
+<td style="border-color: rgb(238, 238, 238);">Expression</td>
+</tr>
+<tr>
+<td style="border-color: rgb(238, 238, 238);">Right</td>
+<td style="border-color: rgb(238, 238, 238);">Expression</td>
+</tr>
+<tr>
+<td style="border-color: rgb(238, 238, 238);">NodeType</td>
+<td style="border-color: rgb(238, 238, 238);">Equal, AndAlso, ......</td>
+</tr>
+</tbody></table></div></div></section><section data-id="77a1fa1d88723cd44c5895419026604a">
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 45px; top: 210px; height: auto;" data-name="text-38ee44" data-block-id="2c1e37f145701f78427338655c2f99d4"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>ExpressionVisitor</h1>
+</div></div>
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 35px; top: 336px; height: auto;" data-block-id="9863ffad437be6c40b44af8628ab102f" data-name="text-e4515c"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 11; color: rgb(28, 69, 135);">
+<h2>O pipeline principal!</h2>
+</div></div></section><section data-id="34d3f04c49418a300bd601426a3a72cc">
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 70px; height: auto;" data-name="text-38ee44" data-block-id="d7101e21b078e0c897b4d88aa49fb4e6"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>ExpressionVisitor</h1>
+</div></div>
+
+<div class="sl-block" data-block-type="code" data-name="code-4fe381" data-block-id="b30bdf325e69b49ba32b259cc486216a" style="width: 774px; height: 333px; left: 91px; top: 200px;"><div class="sl-block-content notranslate" data-highlight-theme="monokai-sublime" data-code-frame="osx" style="z-index: 11;"><pre class="cs"><code data-line-numbers="">public class MeuVisitor : ExpressionVisitor
+{
+    public override Expression Visit(Expression node)
+    {
+        // Identificar a expressão e montar o comando SQL
+        
+        return base.Visit(node);
+    }
+}</code></pre></div></div></section><section data-id="88fd647637d91ed7d6bf623075502d4d">
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 52px; top: 70px; height: auto;" data-name="text-38ee44" data-block-id="e81fd82a06cf399a8287848067c709d7"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>ExpressionVisitor</h1>
+</div></div>
+
+<div class="sl-block" data-block-type="code" data-name="code-4fe381" style="width: 953px; height: 401px; left: 2px; top: 203px;" data-block-id="89cad68255f4f0c95e2990762cf2f950"><div class="sl-block-content notranslate" data-highlight-theme="monokai-sublime" data-code-frame="osx" style="z-index: 11;"><pre class="cs"><code data-line-numbers="">public virtual Expression Process(Expression query)
+{
+    query = new EnumerableToQueryableMethodConvertingExpressionVisitor().Visit(query);
+    query = new QueryMetadataExtractingExpressionVisitor(_queryCompilationContext).Visit(query);
+    query = new AllAnyToContainsRewritingExpressionVisitor().Visit(query);
+    query = new GroupJoinFlatteningExpressionVisitor().Visit(query);
+    query = new NullCheckRemovingExpressionVisitor().Visit(query);
+    query = new EntityEqualityRewritingExpressionVisitor(_queryCompilationContext).Rewrite(query);
+    query = new SubqueryMemberPushdownExpressionVisitor().Visit(query);
+    query = new NavigationExpandingExpressionVisitor(...).Expand(query);
+    query = new FunctionPreprocessingExpressionVisitor().Visit(query);
+    new EnumerableVerifyingExpressionVisitor().Visit(query);
+ 
+    return query;
+}</code></pre></div></div></section><section data-id="8b879c495a86977b9f34420431c3a2fd">
+
+
+
+<div class="sl-block" data-block-type="text" style="width: 856px; left: 46px; top: 202px; height: auto;" data-name="text-38ee44" data-block-id="05dc587aded44fff31bee8367cd0e83c"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>Obrigado!!!</h1>
+
+<p> </p>
+
+<p>http://ralms.net</p>
+
+<p>Twitter: @ralmsdeveloper</p>
+</div></div>
+
+</section></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":1727555,"slug":"deep-dive-ef-core","title":"DEEP-DIVE-EF-CORE","description":"","width":960,"height":700,"margin":0.05,"visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/e231b4d27847e26eed11aa82d11bb3fb/thumb.jpg?1582858981","view_count":0,"user":{"id":1276267,"username":"ralmsdeveloper","name":"Rafael Almeida","description":"","thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/avatars/1276267/pp.jpg","paid":true,"pro":true,"lite":false,"team_id":null,"settings":{"id":4930180,"present_controls":true,"present_upsizing":true,"present_pointer":true,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":true,"should_loop":false,"share_notes":false,"slide_number":true,"slide_count":19,"rtl":false,"version":2,"collaborative":null,"deck_user_editor_limit":3,"data_updated_at":1585257384992,"font_typekit":null,"font_google":null,"time_limit":null,"upsizing_enabled":true,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.min.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: false,
+				slideNumber: true,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				autoAnimateMatcher: SL.deck.AutoAnimate.matcher,
+
+				center: false,
+				shuffle: true,
+				loop: false,
+				rtl: false,
+
+				transition: "slide",
+				backgroundTransition: "slide",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				dependencies: [
+					{ src: 'lib/reveal-plugins/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'lib/reveal-plugins/highlight/highlight.js' },
+					{ src: 'lib/reveal-plugins/notes/notes.js', async: true, condition: function() { return !!document.body.classList; } },
+					{ src: 'lib/reveal-plugins/zoom/zoom.js', async: true }
+				]
+			});
+		</script>
+
+		
+
+	</body>
+</html>

@@ -20,29 +20,11 @@ var idx = lunr(function () {
     
   
     idx.add({
-      title: "Códigos de Rejeição da Sefaz",
-      excerpt: "201 – Rejeição: Número máximo de numeração de NF-e a inutilizar ultrapassou o limite Essa rejeição ocorre quando a quantidade...",
-      categories: ["Sefaz"],
-      tags: ["Sefaz"],
-      id: 1
-    });
-    
-  
-    idx.add({
       title: "Carregando instâncias do SQL Server",
       excerpt: "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
       categories: ["C#","SQL Server"],
       tags: ["C#"],
-      id: 2
-    });
-    
-  
-    idx.add({
-      title: "Injeção de Dependência Asp.Net Core 2 (Razor)",
-      excerpt: "Fala Pessoal, Tudo Bem?! Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página. Para isso antes...",
-      categories: ["Razor"],
-      tags: ["Razor",".Net Core"],
-      id: 3
+      id: 1
     });
     
   
@@ -51,7 +33,7 @@ var idx = lunr(function () {
       excerpt: "Boa noite, Olhando para tantas novidades no .Net Core hoje resolvi escrever esse pequeno post, onde mostro como criar e...",
       categories: ["C#"],
       tags: ["C#"],
-      id: 4
+      id: 2
     });
     
   
@@ -60,7 +42,7 @@ var idx = lunr(function () {
       excerpt: "EntityFrameworkCore For FirebirdSQL Lançamento EntityFrameworkCore for FirebirdSQL Com enorme prazer que venho informar que hoje o EntityframworkCore.FirebirdSQL está disponível, tomei...",
       categories: ["Provider"],
       tags: ["C#","NetStandard","EntityFrameworkCore"],
-      id: 5
+      id: 3
     });
     
   
@@ -69,7 +51,7 @@ var idx = lunr(function () {
       excerpt: "Recentemente publiquei um pequeno artigo no portal IMASTERS, mostrando o ganho de performance que ganhamos quando utilizamos corretamente a função...",
       categories: ["C#"],
       tags: ["C#","EntityFrameworkCore"],
-      id: 6
+      id: 4
     });
     
   
@@ -78,7 +60,7 @@ var idx = lunr(function () {
       excerpt: "Olá pessoal! Isso não é um ARTIGO, é uma dica. Hoje quero falar sobre um assunto bastante pertinente a segurança...",
       categories: ["C#"],
       tags: ["C#","EntityFrameworkCore"],
-      id: 7
+      id: 5
     });
     
   
@@ -87,16 +69,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdSql. Muitas melhorias e implementações em: Scaffold Insert em Lote Delete...",
       categories: ["Provider"],
       tags: ["C#","NetStandard","EntityFrameworkCore"],
-      id: 8
-    });
-    
-  
-    idx.add({
-      title: "Razor + EntityFramework Core 2.0",
-      excerpt: "Básico Razor + EntityFramworkCore 2.0 Olá pessoal tudo bem?! Resolvi escrever esse pequeno post sobre Razor para os iniciantes no...",
-      categories: ["Razor"],
-      tags: ["Razor, Asp.NET"],
-      id: 9
+      id: 6
     });
     
   
@@ -105,7 +78,7 @@ var idx = lunr(function () {
       excerpt: "EntityFrameworkCore For FirebirdSQL Fala pessoal, acabei de disponibilizar para vocês a versão 2.0.9 “quentinha” do EntityFrameworkCore.FirebirdSql, o Framework de acesso...",
       categories: ["Provider"],
       tags: ["C#","NetStandard","EntityFrameworkCore"],
-      id: 10
+      id: 7
     });
     
   
@@ -114,7 +87,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal esse final de semana resolvi fazer esse pequeno post, pois bem, aqui quero mostrar como gerar um script...",
       categories: ["C#"],
       tags: ["C#","EntityFrameworkCore"],
-      id: 11
+      id: 8
     });
     
   
@@ -123,7 +96,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal tudo bem?! Estou fazendo mais esse pequeno post para mostrar mais um novo recurso que será disponibilizado na...",
       categories: ["C#"],
       tags: ["C#","EntityFrameworkCore"],
-      id: 12
+      id: 9
     });
     
   
@@ -132,7 +105,7 @@ var idx = lunr(function () {
       excerpt: "Hoje tenho uma ótima noticia para você usuário do EFCore. Acabei de compilar os fontes do EFCore e já se...",
       categories: ["Provider"],
       tags: ["C#","NetStandard","EntityFrameworkCore"],
-      id: 13
+      id: 10
     });
     
   
@@ -141,7 +114,7 @@ var idx = lunr(function () {
       excerpt: "NET Framework CLR + SQL Server “A partir do SQL Server 2005, o SQL Server apresenta a integração do componente...",
       categories: ["SQL Server"],
       tags: ["C#","SQL Server"],
-      id: 14
+      id: 11
     });
     
   
@@ -150,7 +123,7 @@ var idx = lunr(function () {
       excerpt: "Apesar da minha vontade ser compartilhar mais conteúdos relacionados às tecnologias EntityFramework Core e AspNet Core, sendo programador e amante...",
       categories: ["C#","News"],
       tags: ["C#"],
-      id: 15
+      id: 12
     });
     
   
@@ -159,7 +132,7 @@ var idx = lunr(function () {
       excerpt: "Nesse pequeno post iremos conhecer um pouco de LINQ Um pouco de história Introdução ao LINQ Conhecendo métodos do LINQ...",
       categories: ["Linq"],
       tags: ["Linq"],
-      id: 16
+      id: 13
     });
     
   
@@ -168,16 +141,16 @@ var idx = lunr(function () {
       excerpt: "Passo a passo Asp.NET Core (básico) Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando passo a passo de...",
       categories: ["Asp.Net Core","C#"],
       tags: ["C#","Asp.Net Core"],
-      id: 17
+      id: 14
     });
     
   
     idx.add({
       title: "Traduzindo funções no EntityFramework Core",
       excerpt: "Traduzindo funções para o servidor com EntityFramework Core Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando como traduzir...",
-      categories: ["EFCore","C#"],
-      tags: ["C#","EFCore"],
-      id: 18
+      categories: ["Entity Framework Core","C#"],
+      tags: ["C#","Entity Framework Core"],
+      id: 15
     });
     
   
@@ -186,7 +159,7 @@ var idx = lunr(function () {
       excerpt: "A Microsoft estará realizando a Maratona de Bots a partir do 15/01/2018 A Maratona Bots 100% online e gratuito. O...",
       categories: ["News"],
       tags: ["News"],
-      id: 19
+      id: 16
     });
     
   
@@ -195,7 +168,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Dia 25/01(Quinta-Feira) às 21:00h(horário de Brasília), estarei fazendo um Webinar no canal da MVP Glaucia Lemos...",
       categories: ["Webinar"],
       tags: ["News"],
-      id: 20
+      id: 17
     });
     
   
@@ -204,7 +177,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Irei mostrar aqui como configurar seu Visual Studio para baixar os pacotes do Asp.Net Core e...",
       categories: ["Configuração"],
       tags: ["Configuração"],
-      id: 21
+      id: 18
     });
     
   
@@ -213,7 +186,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Nesse artigo estarei mostrando uma das grandes novidades do Entity Framework Core 2.1, o LazyLoad, (vale...",
       categories: ["Entity Framework Core"],
       tags: ["Entity Framework Core"],
-      id: 22
+      id: 19
     });
     
   
@@ -222,7 +195,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Conforme mencionado no anúncio do roteiro .NET Core 2.1 , hoje, neste momento, conhecemos a...",
       categories: ["Roadmap"],
       tags: ["Roadmap"],
-      id: 23
+      id: 20
     });
     
   
@@ -231,7 +204,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Dica EF Core Esses dias estava conversando com alguém e me fez uma pergunta sobre...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 24
+      id: 21
     });
     
   
@@ -240,7 +213,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Minhas primeiras impressões Recentemente a Oracle divulgou a primeira versão do Oracle Data Provider for...",
       categories: ["Dica"],
       tags: [],
-      id: 25
+      id: 22
     });
     
   
@@ -249,7 +222,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 🔑 Proteção de dados Esses dias estava lendo algo sobre uma lei de proteção de dados...",
       categories: ["Dica"],
       tags: [],
-      id: 26
+      id: 23
     });
     
   
@@ -258,7 +231,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Entity Framework Core 2.1 Preview1 for FirebirdSQL Acaba de sair do forno a versão do EntityFrameworkCore.FirebirdSQL...",
       categories: ["Dica"],
       tags: [],
-      id: 27
+      id: 24
     });
     
   
@@ -267,7 +240,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Entity Framework Core 2.1 Preview1 Essa sem dúvidas é uma ótima notícia, pois é, os...",
       categories: ["Dica"],
       tags: [],
-      id: 28
+      id: 25
     });
     
   
@@ -276,7 +249,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion. Criptografia...",
       categories: ["Dica"],
       tags: [],
-      id: 29
+      id: 26
     });
     
   
@@ -285,7 +258,7 @@ var idx = lunr(function () {
       excerpt: "\n\nFala pessoal, tudo bem?! 👍 \n\n\n\n\n",
       categories: ["Dica"],
       tags: [],
-      id: 30
+      id: 27
     });
     
   
@@ -294,7 +267,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 21 de abril de 2018 , todas as comunidades se reunirão novamente, somos uma de...",
       categories: ["Evento"],
       tags: [],
-      id: 31
+      id: 28
     });
     
   
@@ -303,7 +276,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Foi uma manhã maravilhosa, um evento show, mesmo como muitas dificuldades como a chuva forte...",
       categories: ["Evento"],
       tags: [],
-      id: 32
+      id: 29
     });
     
   
@@ -312,7 +285,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Venho apresentar a vocês nosso canal DEVTALKS, é um canal diferente de tudo que você...",
       categories: ["DevTalk"],
       tags: [],
-      id: 33
+      id: 30
     });
     
   
@@ -321,7 +294,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Entity Framework Core 2.1 for FirebirdSQL É com um imenso prazer e alegria que venho informar...",
       categories: ["Dica"],
       tags: [],
-      id: 34
+      id: 31
     });
     
   
@@ -330,7 +303,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Visual Studio Summit 2018, foi espetacular!!! Foram dois dias maravilhosos, um evento show, reunindo diversos...",
       categories: ["Evento"],
       tags: [],
-      id: 35
+      id: 32
     });
     
   
@@ -339,7 +312,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Extensão para EntityFramework Core Exatamente dia 02/06/2018 02:00 AM, em um quarto de hotel de...",
       categories: ["Extensions","Entity Framework Core"],
       tags: [],
-      id: 36
+      id: 33
     });
     
   
@@ -348,7 +321,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Entity Framework Core 2.1.1 for FirebirdSQL Já está disponível a versão do EntityFrameworkCore.FirebirdSQL 2.1.1, essa versão...",
       categories: ["Dica"],
       tags: [],
-      id: 37
+      id: 34
     });
     
   
@@ -357,7 +330,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Interop - São Paulo, foi espetacular!!! Dessa vez nada de EntityFramework Core rs, falamos sobre...",
       categories: ["Evento"],
       tags: [],
-      id: 38
+      id: 35
     });
     
   
@@ -366,7 +339,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Introdução Bom para começarmos nosso pequeno artigo, vamos falar um pouco sobre o \"EU TER\",...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 39
+      id: 36
     });
     
   
@@ -375,7 +348,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Bom pessoal esse será o primeiro artigo de uma série que pretendo escrever sobre Reflection/Lambda/Expression/Expression...",
       categories: ["C#",".NET","Reflection"],
       tags: [],
-      id: 40
+      id: 37
     });
     
   
@@ -384,7 +357,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Como aplicar tecnologia no setor da saúda a nosso favor? Palestra HACKATHON UFS 2018 http://www.ufs.br/agenda/629-maratona-hackathon-ocorre-no-campus-de-lagarto-2018-9-14...",
       categories: ["Evento"],
       tags: [],
-      id: 41
+      id: 38
     });
     
   
@@ -393,7 +366,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Microsoft Ignite 2018, foi espetacular!!! Foi uma semana maravilhosa, um evento show, reunindo diversos especialistas...",
       categories: ["Evento"],
       tags: [],
-      id: 42
+      id: 39
     });
     
   
@@ -402,7 +375,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 VII Jornada de Tecnologia da FANSE No 19/10/2018 fiz uma apresentação na FANESE, falei um...",
       categories: ["Evento"],
       tags: [],
-      id: 43
+      id: 40
     });
     
   
@@ -411,7 +384,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase para o EntityFramework Core! FYI: Nosso objetivo aqui...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 44
+      id: 41
     });
     
   
@@ -420,7 +393,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Hoje iremos falar do Visual Studio Code + Postgresql o fantástico editor de código, considerado...",
       categories: ["Dica"],
       tags: [],
-      id: 45
+      id: 42
     });
     
   
@@ -429,7 +402,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Developers Sergipe Summit 2018 No dia 15/12/2018 realizamos o primeiro Developers Sergipe Summit, em nosso...",
       categories: ["Evento"],
       tags: [],
-      id: 46
+      id: 43
     });
     
   
@@ -438,7 +411,7 @@ var idx = lunr(function () {
       excerpt: "Um ano Simplesmente FOD* 😜 🤘 👊 Muitas águas rolaram em 2018 Em janeiro foi onde tudo começou, realmente eu...",
       categories: ["Retrospectiva"],
       tags: [],
-      id: 47
+      id: 44
     });
     
   
@@ -447,7 +420,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoALL, tudo bem?! 👊 Bom essa dica pode lhe ajudar a eliminar uma boa parte de código de sua...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 48
+      id: 45
     });
     
   
@@ -456,7 +429,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoALL, tudo bem?! 👊 MVPCONF Latam 2019 Nos dias 12/13 de abril de 2019, ocorreu a segunda edição do...",
       categories: ["Eventos"],
       tags: [],
-      id: 49
+      id: 46
     });
     
   
@@ -465,7 +438,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoALL, tudo bem?! 😜 VSSUMMIT 2019 Nos dias 21/22 de junho de 2019, participei pela segunda vez do VSSUMMIT....",
       categories: ["Eventos"],
       tags: [],
-      id: 50
+      id: 47
     });
     
   
@@ -474,7 +447,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 👍 Developers Sergipe Summit 2019 No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit,...",
       categories: ["Evento"],
       tags: [],
-      id: 51
+      id: 48
     });
     
   
@@ -483,7 +456,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Porque estamos aqui? Eu acredito que você já sabe, e se não sabe, ficará agora,...",
       categories: ["Dica","ASPNET Core"],
       tags: [],
-      id: 52
+      id: 49
     });
     
   
@@ -492,7 +465,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 53
+      id: 50
     });
     
   
@@ -501,7 +474,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Sonho realizado Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de...",
       categories: ["Dica","Entity Framework Core"],
       tags: [],
-      id: 54
+      id: 51
     });
     
   
@@ -510,7 +483,7 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! No artigo SNAKE CASE eu usei um...",
       categories: ["Performance","Entity Framework Core","Regex"],
       tags: [],
-      id: 55
+      id: 52
     });
     
   
@@ -519,7 +492,7 @@ var idx = lunr(function () {
       excerpt: "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
       categories: ["Retrospectiva"],
       tags: [],
-      id: 56
+      id: 53
     });
     
   
@@ -528,7 +501,52 @@ var idx = lunr(function () {
       excerpt: "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
       categories: ["Collections","Linq","NETCore"],
       tags: [],
+      id: 54
+    });
+    
+  
+    idx.add({
+      title: "Workaround para System.Text.Json",
+      excerpt: "Fala pessoal, tudo bem?! Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como...",
+      categories: ["Workaround","Json","AspNetCore"],
+      tags: [],
+      id: 55
+    });
+    
+  
+    idx.add({
+      title: "String vs string",
+      excerpt: "Olá tudo bem?! Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou...",
+      categories: ["Dicas","Tips","C#",".NET"],
+      tags: [],
+      id: 56
+    });
+    
+  
+    idx.add({
+      title: "Perform Identity Resolution",
+      excerpt: "Olá tudo bem?! O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro...",
+      categories: ["EF5","Entity Framework Core"],
+      tags: [],
       id: 57
+    });
+    
+  
+    idx.add({
+      title: "LGPD + EF CORE + ValueConverter",
+      excerpt: "Olá tudo bem?! Mais 1 artigo??? Desculpa estou de férias!!! Bom, primeiramente o objetivo não é falar sobre LGPD, como...",
+      categories: ["EF5","Entity Framework Core"],
+      tags: [],
+      id: 58
+    });
+    
+  
+    idx.add({
+      title: "Many To Many",
+      excerpt: "Nesse post irei falar sobre um dos recursos mais solicitados do Entity Framework Core, e que estará disponível na versão...",
+      categories: ["EF5","Entity Framework Core"],
+      tags: [],
+      id: 59
     });
     
   
@@ -554,31 +572,9 @@ var store = [
     
       
       {
-        "title": "Códigos de Rejeição da Sefaz",
-        "url": "http://localhost:4000/sefaz/sefazcodigos/",
-        "excerpt": "201 – Rejeição: Número máximo de numeração de NF-e a inutilizar ultrapassou o limite Essa rejeição ocorre quando a quantidade...",
-        "teaser":
-          
-            null
-          
-      },
-    
-      
-      {
         "title": "Carregando instâncias do SQL Server",
         "url": "http://localhost:4000/c%23/sql%20server/carregarinstancia/",
         "excerpt": "Carregando Instâncias do SQL SERVER Olá tudo bem?! Nesse pequeno POST, quero mostrar como carregar instâncias do mecanismo de banco...",
-        "teaser":
-          
-            null
-          
-      },
-    
-      
-      {
-        "title": "Injeção de Dependência Asp.Net Core 2 (Razor)",
-        "url": "http://localhost:4000/razor/injecaodependencia/",
-        "excerpt": "Fala Pessoal, Tudo Bem?! Nesse pequeno post irei mostrar como utilizar injeção de dependência em uma página. Para isso antes...",
         "teaser":
           
             null
@@ -634,17 +630,6 @@ var store = [
         "title": "EntityFrameworkCore.FirebirdSQL  2.0.8",
         "url": "http://localhost:4000/provider/efcorefirebirdv208/",
         "excerpt": "Fala pessoal, acabei de lançar a versão 2.0.8 do EntityFrameworkCore.FirebirdSql. Muitas melhorias e implementações em: Scaffold Insert em Lote Delete...",
-        "teaser":
-          
-            null
-          
-      },
-    
-      
-      {
-        "title": "Razor + EntityFramework Core 2.0",
-        "url": "http://localhost:4000/razor/efcorefirebird/",
-        "excerpt": "Básico Razor + EntityFramworkCore 2.0 Olá pessoal tudo bem?! Resolvi escrever esse pequeno post sobre Razor para os iniciantes no...",
         "teaser":
           
             null
@@ -742,7 +727,7 @@ var store = [
       
       {
         "title": "Traduzindo funções no EntityFramework Core",
-        "url": "http://localhost:4000/efcore/c%23/traduzirfuncoesefcore/",
+        "url": "http://localhost:4000/entity%20framework%20core/c%23/traduzirfuncoesefcore/",
         "excerpt": "Traduzindo funções para o servidor com EntityFramework Core Olá tudo bem?! Escrevi um artigo no Microsoft Wiki, mostrando como traduzir...",
         "teaser":
           
@@ -1098,7 +1083,7 @@ var store = [
         "excerpt": "Fala pessoALL, tudo bem?! 😜 VSSUMMIT 2019 Nos dias 21/22 de junho de 2019, participei pela segunda vez do VSSUMMIT....",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/vssummit2019/1.jpeg"
           
       },
     
@@ -1109,7 +1094,7 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! 👍 Developers Sergipe Summit 2019 No dia 15/11/2018 realizamos a segunda edição do Developers Sergipe Summit,...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/devse2019/evento%20(12).jpeg"
           
       },
     
@@ -1120,7 +1105,7 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! 💚 Porque estamos aqui? Eu acredito que você já sabe, e se não sabe, ficará agora,...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/JsonNamePolicy.png"
           
       },
     
@@ -1131,7 +1116,7 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! 💚 Veja como fazer convenções de nomenclatura SnakeCase de forma fácil para o Entity Framework Core...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/efcorecsharp.png"
           
       },
     
@@ -1142,7 +1127,7 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! Sonho realizado Você nem imagina o quanto de pessoas esperando por isso, sim, estou falando de...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/efcoreinterception.png"
           
       },
     
@@ -1153,7 +1138,7 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! Curiosidade leva nos sempre a pensar fora da caixa!!! No artigo SNAKE CASE eu usei um...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/PerformanceRegex.png"
           
       },
     
@@ -1164,7 +1149,7 @@ var store = [
         "excerpt": "Fala meu amigo(a), tudo bem?! Agradecimentos Nossa, que ano foi esse 2019, muitas conquistas e realizações, e antes de começar...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/2020/feliz2020.png"
           
       },
     
@@ -1175,7 +1160,62 @@ var store = [
         "excerpt": "Fala pessoal, tudo bem?! Esse artigo é uma pequena introdução a coleções no .NET, em uma segunda oportunidade estarei escrevendo...",
         "teaser":
           
-            null
+            "http://localhost:4000/assets/images/IEnumarableList.png"
+          
+      },
+    
+      
+      {
+        "title": "Workaround para System.Text.Json",
+        "url": "http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/",
+        "excerpt": "Fala pessoal, tudo bem?! Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como...",
+        "teaser":
+          
+            "http://localhost:4000/assets/images/SystemTextJson.png"
+          
+      },
+    
+      
+      {
+        "title": "String vs string",
+        "url": "http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/",
+        "excerpt": "Olá tudo bem?! Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou...",
+        "teaser":
+          
+            "http://localhost:4000/assets/images/StringVSstring.png"
+          
+      },
+    
+      
+      {
+        "title": "Perform Identity Resolution",
+        "url": "http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/",
+        "excerpt": "Olá tudo bem?! O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro...",
+        "teaser":
+          
+            "http://localhost:4000/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png"
+          
+      },
+    
+      
+      {
+        "title": "LGPD + EF CORE + ValueConverter",
+        "url": "http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/",
+        "excerpt": "Olá tudo bem?! Mais 1 artigo??? Desculpa estou de férias!!! Bom, primeiramente o objetivo não é falar sobre LGPD, como...",
+        "teaser":
+          
+            "http://localhost:4000/assets/images/gdpr/LGPD_EFCORE.png"
+          
+      },
+    
+      
+      {
+        "title": "Many To Many",
+        "url": "http://localhost:4000/ef5/entity%20framework%20core/many-to-many-efcore5/",
+        "excerpt": "Nesse post irei falar sobre um dos recursos mais solicitados do Entity Framework Core, e que estará disponível na versão...",
+        "teaser":
+          
+            "http://localhost:4000/assets/images/manytomanyef5.png"
           
       }
     

@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="no-js">
+<head>
+    <meta charset="utf-8">
+    <meta charset="utf-8">
+
+<!-- begin SEO -->
+<meta name="robots" content="index, follow">
+
+
+
+
+
+
+
+
+
+<title>LGPD + EF CORE + ValueConverter  Ralms.NET</title>
+
+
+
+
+<meta name="description" content="Olá tudo bem?!Mais 1 artigo??? Desculpa estou de férias!!!Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,apenas mostrar que podemos proteger nossos dados de forma segura e simples usando Entity Framework Core.Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (Lei Geral de Proteção de Dados Pessoais) quebasicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse estar segura.Basicamente de forma muito resumida é isso... antes de criticas observe que falei &quot;BASICAMENTE&quot;.Você pode acessar os links abaixo para obter mais informações:GDPRLGPDCenárioImagine que você está usando o EF Core e precisa armazenar informações de algumas propriedas específicas criptografadas emsua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.Fulando: Rafael com todo respeito isso é fácil!Rafael: Tudo bem, só acredito que posso         tornar ainda mais fácil.Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe Cliente com a seguinte estrutura.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    public string Telefone { get; set; }    public string Endereco { get; set; }    public string CPF { get; set; }}Agora vamos criar nossa classe de contexto para acessar o banco de dados, basicamente essa é a estrutura da classe: public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(@&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True;Database=EFCoreValueConvertion;MultipleActiveResultSets=true;&quot;);}Vamos inserir um cliente em nossa base de dados e fazer uma consulta.public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}Comandos geradosOs comandos produzidos pelo EF Core foram esses:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;123456&#39;,@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;7998829XXXX&#39;Comando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;123456&#39;Protegendo dados explícitamenteAté aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!Mas eu gostaria que Telefone e CPF, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.Perfeito, então vejo você fazendo algo assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = LockView(&quot;7998829XXXX&quot;), //Criptografando            CPF = LockView(&quot;123456&quot;) // Criptografando        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == LockView(&quot;123456&quot;));        var cpf = UnLockView(cliente.CPF);    }    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Delegando responsabilidadeFunciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o EF Core, vamos criar um atributo e extrair funcionalidades que o EF Core nosproporciona, nesse caso primeiramente vamos criar nosso atributo SensitiveData.[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}Agora vamos adicionar o atributo em todas propriedades que queremos que o EF Core fique responsável pelo trabalho pesado, de armazenar e ler os dados sensíveis.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]    public string CPF { get; set; }}Agora vamos criar uma classe customizada para ficar responsável pela conversão dos valores que serão persistidos e lidos de nossa base de dados,a partir do EF Core 2.1 temos uma nova funcionalidade que basicamente nos fornece uma forma na qual podemos manipular o dado antes de ser persistido e quando for lido também, essa funcionalidade se chama ValueConverter, em breve irei fazer um artigo falando mais sobre ela, por enquanto vamos focar aqui, e nossa classe customizada ficou da seguinte forma com 2 metódos, para critografar e descriptografar os dados, o que fiz foi criar um classe que herda da classe ValueConverter alguns comportamentos, onde em nosso construtor eu passo a expressão que eu quero utilizar para persitir e ler dados.public class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Classe criada, agora vamos ajustar nosso DatabaseContext da seguinte forma:public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );        protected override void OnModelCreating(ModelBuilder modelBuilder)    {        // Selecionar todas propriedades que tem a anotação SensitiveData        // e aplicar o conversor de valores para o que criamos.        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}Código finalAgora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db.Clientes.AsNoTracking().FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}// SensitiveDataAttribute[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}// Clientepublic class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]                     // SensitiveData    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]                     // SensitiveData    public string CPF { get; set; }}// DatabaseContextpublic class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}// DataProtectionConverterpublic class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Output SQLOs comandos produzidos ficaram assim:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;kOI/e7VQZhs=&#39;, -- Criptografado@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;T2wQKyR8w28fKOgBXp0ytg==&#39;    -- CriptografadoComando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;kOI/e7VQZhs=&#39;ObservaçõesAlguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho na profissão de DPO (Data Protection Officer), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+
+
+
+
+<meta name="author" content="Rafael Almeida">
+
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Ralms.NET .NETCore EFCore EFCOR31 EntityFrameworkCore ASPNET Core PostgreSQL Kafka Google PubSub REGEX Performance Span<T> Dicas Software Tecnologia Sistemas Distribuidos Mensageria SQL Server Developers Sergipe System>Text.JSON Apply Configuration Deep-Dive EFCore dicas de performance SnakeCase CamelCase PascalCase">
+<meta property="og:title" content="LGPD + EF CORE + ValueConverter">
+
+
+  <link rel="canonical" href="http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/">
+  <meta property="og:url" content="http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/">
+
+
+
+  <meta property="og:description" content="Olá tudo bem?!Mais 1 artigo??? Desculpa estou de férias!!!Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,apenas mostrar que podemos proteger nossos dados de forma segura e simples usando Entity Framework Core.Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (Lei Geral de Proteção de Dados Pessoais) quebasicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse estar segura.Basicamente de forma muito resumida é isso... antes de criticas observe que falei &quot;BASICAMENTE&quot;.Você pode acessar os links abaixo para obter mais informações:GDPRLGPDCenárioImagine que você está usando o EF Core e precisa armazenar informações de algumas propriedas específicas criptografadas emsua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.Fulando: Rafael com todo respeito isso é fácil!Rafael: Tudo bem, só acredito que posso         tornar ainda mais fácil.Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe Cliente com a seguinte estrutura.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    public string Telefone { get; set; }    public string Endereco { get; set; }    public string CPF { get; set; }}Agora vamos criar nossa classe de contexto para acessar o banco de dados, basicamente essa é a estrutura da classe: public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(@&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True;Database=EFCoreValueConvertion;MultipleActiveResultSets=true;&quot;);}Vamos inserir um cliente em nossa base de dados e fazer uma consulta.public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}Comandos geradosOs comandos produzidos pelo EF Core foram esses:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;123456&#39;,@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;7998829XXXX&#39;Comando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;123456&#39;Protegendo dados explícitamenteAté aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!Mas eu gostaria que Telefone e CPF, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.Perfeito, então vejo você fazendo algo assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = LockView(&quot;7998829XXXX&quot;), //Criptografando            CPF = LockView(&quot;123456&quot;) // Criptografando        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == LockView(&quot;123456&quot;));        var cpf = UnLockView(cliente.CPF);    }    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Delegando responsabilidadeFunciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o EF Core, vamos criar um atributo e extrair funcionalidades que o EF Core nosproporciona, nesse caso primeiramente vamos criar nosso atributo SensitiveData.[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}Agora vamos adicionar o atributo em todas propriedades que queremos que o EF Core fique responsável pelo trabalho pesado, de armazenar e ler os dados sensíveis.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]    public string CPF { get; set; }}Agora vamos criar uma classe customizada para ficar responsável pela conversão dos valores que serão persistidos e lidos de nossa base de dados,a partir do EF Core 2.1 temos uma nova funcionalidade que basicamente nos fornece uma forma na qual podemos manipular o dado antes de ser persistido e quando for lido também, essa funcionalidade se chama ValueConverter, em breve irei fazer um artigo falando mais sobre ela, por enquanto vamos focar aqui, e nossa classe customizada ficou da seguinte forma com 2 metódos, para critografar e descriptografar os dados, o que fiz foi criar um classe que herda da classe ValueConverter alguns comportamentos, onde em nosso construtor eu passo a expressão que eu quero utilizar para persitir e ler dados.public class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Classe criada, agora vamos ajustar nosso DatabaseContext da seguinte forma:public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );        protected override void OnModelCreating(ModelBuilder modelBuilder)    {        // Selecionar todas propriedades que tem a anotação SensitiveData        // e aplicar o conversor de valores para o que criamos.        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}Código finalAgora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db.Clientes.AsNoTracking().FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}// SensitiveDataAttribute[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}// Clientepublic class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]                     // SensitiveData    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]                     // SensitiveData    public string CPF { get; set; }}// DatabaseContextpublic class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}// DataProtectionConverterpublic class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Output SQLOs comandos produzidos ficaram assim:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;kOI/e7VQZhs=&#39;, -- Criptografado@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;T2wQKyR8w28fKOgBXp0ytg==&#39;    -- CriptografadoComando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;kOI/e7VQZhs=&#39;ObservaçõesAlguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho na profissão de DPO (Data Protection Officer), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <meta property="og:image" content="http://localhost:4000/assets/images/gdpr/LGPD_EFCORE.png">
+
+
+
+  <meta property="og:type" content="article">
+  <meta property="article:published_time" content="2020-06-11T00:00:00+00:00">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- end SEO -->
+
+
+<link href="http://localhost:4000/feed.xml" type="application/atom+xml" rel="alternate" title="Ralms.NET Feed">
+
+<!-- http://t.co/dKP3o1e -->
+<meta name="HandheldFriendly" content="True">
+<meta name="MobileOptimized" content="320">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script>
+  document.documentElement.className = document.documentElement.className.replace(/\bno-js\b/g, '') + ' js ';
+</script>
+
+<!-- For all browsers -->
+<link rel="stylesheet" href="http://localhost:4000/assets/css/main.css">
+
+<!--[if lte IE 9]>
+  <style>
+    /* old IE unsupported flexbox fixes */
+    .greedy-nav .site-title {
+      padding-right: 3em;
+    }
+    .greedy-nav button {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+    }
+  </style>
+<![endif]-->
+
+
+    <!-- start custom head snippets -->
+
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/ico/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/ico/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/ico/favicon-16x16.png">
+<link rel="manifest" href="/assets/ico/site.webmanifest">
+<link rel="mask-icon" href="/assets/ico/safari-pinned-tab.svg" color="#5bbad5">
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+
+<!-- end custom head snippets -->
+</head>
+
+  <body class="layout--single wide">
+
+    <!--[if lt IE 9]>
+<div class="notice--danger align-center" style="margin: 0;">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience.</div>
+<![endif]-->
+
+    <div class="masthead">
+  <div class="masthead__inner-wrap">
+    <div class="masthead__menu">
+      <nav id="site-nav" class="greedy-nav">
+        <a class="site-title" href="http://localhost:4000/">Ralms.NET</a>
+        <ul class="visible-links">
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/categories/" >Artigos</a>
+            </li>
+          
+            
+            <li class="masthead__menu-item">
+              <a href="http://localhost:4000/talks" >Palestras</a>
+            </li>
+          
+        </ul>
+        
+        <button class="search__toggle" type="button">
+          <svg class="icon" width="16" height="16" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.99 16">
+            <path d="M15.5,13.12L13.19,10.8a1.69,1.69,0,0,0-1.28-.55l-0.06-.06A6.5,6.5,0,0,0,5.77,0,6.5,6.5,0,0,0,2.46,11.59a6.47,6.47,0,0,0,7.74.26l0.05,0.05a1.65,1.65,0,0,0,.5,1.24l2.38,2.38A1.68,1.68,0,0,0,15.5,13.12ZM6.4,2A4.41,4.41,0,1,1,2,6.4,4.43,4.43,0,0,1,6.4,2Z" transform="translate(-.01)"></path>
+          </svg>
+        </button>
+        
+        <button class="greedy-nav__toggle" type="button">
+          <span class="visually-hidden">Toggle Menu</span>
+          <div class="navicon"></div>
+        </button>
+        <ul class="hidden-links hidden"></ul>
+      </nav>
+    </div>
+  </div>
+</div>
+
+    <div class="initial-content">
+      
+
+
+
+<div id="main" role="main">
+  
+  <div class="sidebar sticky">
+  
+
+<div itemscope itemtype="http://schema.org/Person">
+
+  
+    <div class="author__avatar">
+      
+
+      
+        <img src="http://localhost:4000/assets/images/bio.png" alt="Rafael Almeida" itemprop="image">
+      
+    </div>
+  
+
+  <div class="author__content">
+    
+      <h3 class="author__name" itemprop="name">Rafael Almeida</h3>
+    
+    
+      <p class="author__bio" itemprop="description">
+        Microsoft MVP, Speaker, Solution Architect, passionate about C#, Loves EF Core, gRPC, Apache Kafka, ScyllaDB and access to high performance data.
+      </p>
+    
+  </div>
+
+  <div class="author__urls-wrapper">
+    <button class="btn btn--inverse">Acompanhe em</button>
+    <ul class="author__urls social-icons">
+      
+        <li itemprop="homeLocation" itemscope itemtype="http://schema.org/Place">
+          <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i> <span itemprop="name">Sergipe-Brasil</span>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="mailto:ralms@ralms.net">
+            <meta itemprop="email" content="ralms@ralms.net" />
+            <i class="fa fa-fw fa-envelope-square" aria-hidden="true"></i> Email
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://twitter.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-twitter-square" aria-hidden="true"></i> Twitter
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://www.linkedin.com/in/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-linkedin-square" aria-hidden="true"></i> LinkedIn
+          </a>
+        </li>
+      
+
+      
+
+      
+        <li>
+          <a href="https://instagram.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-instagram" aria-hidden="true"></i> Instagram
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+        <li>
+          <a href="https://github.com/ralmsdeveloper" itemprop="sameAs">
+            <i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub
+          </a>
+        </li>
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      
+
+      <!--
+  <li>
+    <a href="http://link-to-whatever-social-network.com/user/" itemprop="sameAs">
+      <i class="fa fa-fw" aria-hidden="true"></i> Custom Social Profile Link
+    </a>
+  </li>
+-->
+    </ul>
+  </div>
+</div>
+
+  
+  </div>
+
+
+  <article class="page" itemscope itemtype="http://schema.org/CreativeWork">
+    <meta itemprop="headline" content="LGPD + EF CORE + ValueConverter">
+    <meta itemprop="description" content="Olá tudo bem?!Mais 1 artigo??? Desculpa estou de férias!!!Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,apenas mostrar que podemos proteger nossos dados de forma segura e simples usando Entity Framework Core.Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (Lei Geral de Proteção de Dados Pessoais) quebasicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse estar segura.Basicamente de forma muito resumida é isso... antes de criticas observe que falei &quot;BASICAMENTE&quot;.Você pode acessar os links abaixo para obter mais informações:GDPRLGPDCenárioImagine que você está usando o EF Core e precisa armazenar informações de algumas propriedas específicas criptografadas emsua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.Fulando: Rafael com todo respeito isso é fácil!Rafael: Tudo bem, só acredito que posso         tornar ainda mais fácil.Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe Cliente com a seguinte estrutura.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    public string Telefone { get; set; }    public string Endereco { get; set; }    public string CPF { get; set; }}Agora vamos criar nossa classe de contexto para acessar o banco de dados, basicamente essa é a estrutura da classe: public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(@&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True;Database=EFCoreValueConvertion;MultipleActiveResultSets=true;&quot;);}Vamos inserir um cliente em nossa base de dados e fazer uma consulta.public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}Comandos geradosOs comandos produzidos pelo EF Core foram esses:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;123456&#39;,@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;7998829XXXX&#39;Comando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;123456&#39;Protegendo dados explícitamenteAté aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!Mas eu gostaria que Telefone e CPF, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.Perfeito, então vejo você fazendo algo assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = LockView(&quot;7998829XXXX&quot;), //Criptografando            CPF = LockView(&quot;123456&quot;) // Criptografando        });        db.SaveChanges();        var cliente = db            .Clientes            .AsNoTracking()            .FirstOrDefault(p =&gt; p.CPF == LockView(&quot;123456&quot;));        var cpf = UnLockView(cliente.CPF);    }    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Delegando responsabilidadeFunciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o EF Core, vamos criar um atributo e extrair funcionalidades que o EF Core nosproporciona, nesse caso primeiramente vamos criar nosso atributo SensitiveData.[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}Agora vamos adicionar o atributo em todas propriedades que queremos que o EF Core fique responsável pelo trabalho pesado, de armazenar e ler os dados sensíveis.public class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]    public string CPF { get; set; }}Agora vamos criar uma classe customizada para ficar responsável pela conversão dos valores que serão persistidos e lidos de nossa base de dados,a partir do EF Core 2.1 temos uma nova funcionalidade que basicamente nos fornece uma forma na qual podemos manipular o dado antes de ser persistido e quando for lido também, essa funcionalidade se chama ValueConverter, em breve irei fazer um artigo falando mais sobre ela, por enquanto vamos focar aqui, e nossa classe customizada ficou da seguinte forma com 2 metódos, para critografar e descriptografar os dados, o que fiz foi criar um classe que herda da classe ValueConverter alguns comportamentos, onde em nosso construtor eu passo a expressão que eu quero utilizar para persitir e ler dados.public class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Classe criada, agora vamos ajustar nosso DatabaseContext da seguinte forma:public class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );        protected override void OnModelCreating(ModelBuilder modelBuilder)    {        // Selecionar todas propriedades que tem a anotação SensitiveData        // e aplicar o conversor de valores para o que criamos.        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}Código finalAgora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:public class Program{    static void Main(string[] args)    {        using var db = new DatabaseContext();        db.Database.EnsureCreated();        db.Clientes.Add(new Cliente        {            Nome = &quot;Rafael Almeida&quot;,            Endereco = &quot;Aqui mesmo&quot;,            Telefone = &quot;7998829XXXX&quot;,            CPF = &quot;123456&quot;        });        db.SaveChanges();        var cliente = db.Clientes.AsNoTracking().FirstOrDefault(p =&gt; p.CPF == &quot;123456&quot;);    }}// SensitiveDataAttribute[AttributeUsage(AttributeTargets.Property, Inherited = false, AllowMultiple = false)]public sealed class SensitiveDataAttribute : Attribute{}// Clientepublic class Cliente{    public int Id { get; set; }    public string Nome { get; set; }    [SensitiveData]                     // SensitiveData    public string Telefone { get; set; }    public string Endereco { get; set; }    [SensitiveData]                     // SensitiveData    public string CPF { get; set; }}// DatabaseContextpublic class DatabaseContext : DbContext{    public DbSet&lt;Cliente&gt; Clientes { get; set; }    protected override void OnConfiguring(        DbContextOptionsBuilder optionsBuilder)        =&gt; optionsBuilder            .UseSqlServer(                @&quot;Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;&quot;            );    protected override void OnModelCreating(ModelBuilder modelBuilder)    {        foreach (var entity in modelBuilder.Model.GetEntityTypes())        {            foreach (var property in entity.GetProperties())            {                var attributes = property                    .PropertyInfo                    .GetCustomAttributes(typeof(SensitiveDataAttribute), false);                if (attributes.Length &gt; 0)                {                    property.SetValueConverter(new DataProtectionConverter());                }            }        }    }}// DataProtectionConverterpublic class DataProtectionConverter : ValueConverter&lt;string, string&gt;{    private static byte[] _chave = Encoding.UTF8.GetBytes(&quot;#lgpd+ef&quot;);    public DataProtectionConverter()        : base(_convertTo, _convertFrom, default)    {    }    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertTo = x =&gt; LockView(x);    private static Expression&lt;Func&lt;string, string&gt;&gt; _convertFrom = x =&gt; UnLockView(x);    static string LockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var encriptar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = encriptar.CreateEncryptor();        var dados = Encoding.UTF8.GetBytes(texto);        return Convert.ToBase64String(transforme.TransformFinalBlock(dados, 0, dados.Length));    }    static string UnLockView(string texto)    {        using var hashProvider = new MD5CryptoServiceProvider();        var descriptografar = new TripleDESCryptoServiceProvider        {            Mode = CipherMode.ECB,            Key = hashProvider.ComputeHash(_chave),            Padding = PaddingMode.PKCS7        };        using var transforme = descriptografar.CreateDecryptor();        var dados = Convert.FromBase64String(texto.Replace(&quot; &quot;, &quot;+&quot;));        return Encoding.UTF8.GetString(transforme.TransformFinalBlock(dados, 0, dados.Length));    }}Output SQLOs comandos produzidos ficaram assim:Comando Inserirexec sp_executesql N&#39;SET NOCOUNT ON;INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])VALUES (@p0, @p1, @p2, @p3);SELECT [Id]FROM [Clientes]WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();&#39;,N&#39;@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)&#39;,@p0=N&#39;kOI/e7VQZhs=&#39;, -- Criptografado@p1=N&#39;Aqui mesmo&#39;,@p2=N&#39;Rafael Almeida&#39;,@p3=N&#39;T2wQKyR8w28fKOgBXp0ytg==&#39;    -- CriptografadoComando ConsultarSELECT TOP(1) [c].[Id], [c].[CPF], [c].[Endereco], [c].[Nome], [c].[Telefone]FROM [Clientes] AS [c]WHERE [c].[CPF] = N&#39;kOI/e7VQZhs=&#39;ObservaçõesAlguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho na profissão de DPO (Data Protection Officer), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.Twitter Fico por aqui! 😄  Me siga no twitter: @ralmsdeveloper">
+    <meta itemprop="datePublished" content="June 11, 2020">
+    
+
+    <div class="page__inner-wrap">
+      
+        <header>
+          <h1 class="page__title" itemprop="headline">LGPD + EF CORE + ValueConverter
+</h1>
+          
+                             <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  30 minuto(s) de leitura
+ - June 11, 2020</p>
+          
+        </header>
+      
+
+      <section class="page__content" itemprop="text">
+        
+          <aside class="sidebar__right">
+            <nav class="toc">
+              <header><h4 class="nav__title"><i class="fa fa-file-text"></i> Tópicos</h4></header>
+              <ul class="toc__menu">
+  <li><a href="#mais-1-artigo-desculpa-estou-de-férias">Mais 1 artigo??? Desculpa estou de férias!!!</a></li>
+  <li><a href="#cenário">Cenário</a></li>
+  <li><a href="#comandos-gerados">Comandos gerados</a></li>
+  <li><a href="#protegendo-dados-explícitamente">Protegendo dados explícitamente</a></li>
+  <li><a href="#delegando-responsabilidade">Delegando responsabilidade</a></li>
+  <li><a href="#código-final">Código final</a></li>
+  <li><a href="#output-sql">Output SQL</a></li>
+  <li><a href="#observações">Observações</a></li>
+  <li><a href="#twitter">Twitter</a></li>
+</ul>
+            </nav>
+          </aside>
+        
+        <p><img src="http://localhost:4000/assets/images/gdpr/LGPD_EFCORE.png" alt="01" /></p>
+
+<center><strong>Olá tudo bem?!</strong></center>
+<hr />
+
+<h2 id="mais-1-artigo-desculpa-estou-de-férias">Mais 1 artigo??? Desculpa estou de férias!!!</h2>
+<div class="notice--warning">
+Bom, primeiramente o objetivo não é falar sobre LGPD, como conceitos, onde se aplica, como funciona,... nada disso,
+apenas mostrar que podemos proteger nossos dados de forma segura e simples usando <b>Entity Framework Core</b>.
+<br /><br />
+Mas pera aí, você não vai falar nada de LGPD?... tá bom, LGPD é um acrônimo para (<i>Lei Geral de Proteção de Dados Pessoais</i>) que
+basicamente o Brasil adotou depois que alguns paises da Europa começaram exigir que o GDPR fosse implementado, para que os dados dos cidadões e sua privacidade pudesse estar segura.<br />
+Basicamente de forma muito resumida é isso... antes de criticas observe que falei "BASICAMENTE".<br />
+Você pode acessar os links abaixo para obter mais informações:<br />
+<a target="_BLANK" href="https://pt.wikipedia.org/wiki/Regulamento_Geral_sobre_a_Prote%C3%A7%C3%A3o_de_Dados" alt="">GDPR</a><br />
+<a target="_BLANK" href="https://pt.wikipedia.org/wiki/Lei_Geral_de_Prote%C3%A7%C3%A3o_de_Dados_Pessoais" alt="">LGPD</a>
+</div>
+
+<h2 id="cenário">Cenário</h2>
+<div style="text-align: justify;">
+Imagine que você está usando o <b>EF Core</b> e precisa armazenar informações de algumas propriedas específicas criptografadas em
+sua base de dados, para garantir a integridade da informação e que os dados sejam exibidos apenas 
+pelo sistema, ou pelo dono da informação, que para nosso exemplo será nossa própria aplicação.
+<br /><br />
+<pre>
+<b>Fulando:</b> Rafael com todo respeito isso é fácil!
+<b>Rafael:</b> Tudo bem, só acredito que posso 
+        tornar ainda mais fácil.
+</pre>
+<br />
+Bom vamos começar a montar nosso sistema de cadastro de clientes, onde teremos uma classe <b>Cliente</b> com a seguinte estrutura.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Cliente</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Telefone</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Endereco</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">CPF</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div style="text-align: justify;">
+Agora vamos criar nossa classe de contexto para acessar o banco de dados, basicamente essa é a estrutura da classe:
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="k">public</span> <span class="k">class</span> <span class="nc">DatabaseContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Cliente</span><span class="p">&gt;</span> <span class="n">Clientes</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span>
+        <span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="n">optionsBuilder</span>
+            <span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span><span class="s">@"Server=(localdb)\msSqlLocalDB;Integrated Security=True;Database=EFCoreValueConvertion;MultipleActiveResultSets=true;"</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div style="text-align: justify;">
+Vamos inserir um cliente em nossa base de dados e fazer uma consulta.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DatabaseContext</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+
+        <span class="n">db</span><span class="p">.</span><span class="n">Clientes</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Cliente</span>
+        <span class="p">{</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
+            <span class="n">Endereco</span> <span class="p">=</span> <span class="s">"Aqui mesmo"</span><span class="p">,</span>
+            <span class="n">Telefone</span> <span class="p">=</span> <span class="s">"7998829XXXX"</span><span class="p">,</span>
+            <span class="n">CPF</span> <span class="p">=</span> <span class="s">"123456"</span>
+        <span class="p">});</span>
+
+        <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+        <span class="kt">var</span> <span class="n">cliente</span> <span class="p">=</span> <span class="n">db</span>
+            <span class="p">.</span><span class="n">Clientes</span>
+            <span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">CPF</span> <span class="p">==</span> <span class="s">"123456"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="comandos-gerados">Comandos gerados</h2>
+<p>Os comandos produzidos pelo <b>EF Core</b> foram esses:<br />
+<b>Comando Inserir</b></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">exec</span> <span class="n">sp_executesql</span> <span class="n">N</span><span class="s1">'SET NOCOUNT ON;
+INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
+VALUES (@p0, @p1, @p2, @p3);
+SELECT [Id]
+FROM [Clientes]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+
+'</span><span class="p">,</span><span class="n">N</span><span class="s1">'@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)'</span><span class="p">,</span>
+<span class="o">@</span><span class="n">p0</span><span class="o">=</span><span class="n">N</span><span class="s1">'123456'</span><span class="p">,</span><span class="o">@</span><span class="n">p1</span><span class="o">=</span><span class="n">N</span><span class="s1">'Aqui mesmo'</span><span class="p">,</span><span class="o">@</span><span class="n">p2</span><span class="o">=</span><span class="n">N</span><span class="s1">'Rafael Almeida'</span><span class="p">,</span><span class="o">@</span><span class="n">p3</span><span class="o">=</span><span class="n">N</span><span class="s1">'7998829XXXX'</span>
+</code></pre></div></div>
+<p><b>Comando Consultar</b></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">TOP</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Id</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">CPF</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Endereco</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Nome</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Telefone</span><span class="p">]</span>
+<span class="k">FROM</span> <span class="p">[</span><span class="n">Clientes</span><span class="p">]</span> <span class="k">AS</span> <span class="p">[</span><span class="k">c</span><span class="p">]</span>
+<span class="k">WHERE</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">CPF</span><span class="p">]</span> <span class="o">=</span> <span class="n">N</span><span class="s1">'123456'</span>
+</code></pre></div></div>
+
+<h2 id="protegendo-dados-explícitamente">Protegendo dados explícitamente</h2>
+<p>Até aqui tudo normal, nada de novo, então vamos voltar ao assunto de proteger os dados?!<br />
+Mas eu gostaria que <b>Telefone e CPF</b>, seja armazenado de forma criptografada, você poderia apenas criar uma função para criptografar os dados no momento que for persistir, e quando consultar descriptografar os dados.<br />
+Perfeito, então vejo você fazendo algo assim:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DatabaseContext</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Clientes</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Cliente</span>
+        <span class="p">{</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
+            <span class="n">Endereco</span> <span class="p">=</span> <span class="s">"Aqui mesmo"</span><span class="p">,</span>
+            <span class="n">Telefone</span> <span class="p">=</span> <span class="nf">LockView</span><span class="p">(</span><span class="s">"7998829XXXX"</span><span class="p">),</span> <span class="c1">//Criptografando</span>
+            <span class="n">CPF</span> <span class="p">=</span> <span class="nf">LockView</span><span class="p">(</span><span class="s">"123456"</span><span class="p">)</span> <span class="c1">// Criptografando</span>
+        <span class="p">});</span>
+
+        <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+        <span class="kt">var</span> <span class="n">cliente</span> <span class="p">=</span> <span class="n">db</span>
+            <span class="p">.</span><span class="n">Clientes</span>
+            <span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">()</span>
+            <span class="p">.</span><span class="nf">FirstOrDefault</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">CPF</span> <span class="p">==</span> <span class="nf">LockView</span><span class="p">(</span><span class="s">"123456"</span><span class="p">));</span>
+
+        <span class="kt">var</span> <span class="n">cpf</span> <span class="p">=</span> <span class="nf">UnLockView</span><span class="p">(</span><span class="n">cliente</span><span class="p">.</span><span class="n">CPF</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">string</span> <span class="nf">LockView</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">encriptar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+        <span class="p">{</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+            <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+            <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+        <span class="p">};</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">encriptar</span><span class="p">.</span><span class="nf">CreateEncryptor</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">texto</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToBase64String</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="delegando-responsabilidade">Delegando responsabilidade</h2>
+<p>Funciona perfeitamente, não é a melhor maneira de fazer, então podemos melhorar isso e delegar a responsabilidade para o <b>EF Core</b>, vamos criar um atributo e extrair funcionalidades que o <b>EF Core</b> nos
+proporciona, nesse caso primeiramente vamos criar nosso atributo <b>SensitiveData</b>.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">[</span><span class="nf">AttributeUsage</span><span class="p">(</span><span class="n">AttributeTargets</span><span class="p">.</span><span class="n">Property</span><span class="p">,</span> <span class="n">Inherited</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span> <span class="n">AllowMultiple</span> <span class="p">=</span> <span class="k">false</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">SensitiveDataAttribute</span> <span class="p">:</span> <span class="n">Attribute</span>
+<span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>Agora vamos adicionar o atributo em todas propriedades que queremos que o <b>EF Core</b> fique responsável pelo trabalho pesado, de armazenar e ler os dados sensíveis.</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Cliente</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">SensitiveData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Telefone</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Endereco</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">SensitiveData</span><span class="p">]</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">CPF</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div style="text-align: justify;">
+Agora vamos criar uma classe customizada para ficar responsável pela conversão dos valores que serão persistidos e lidos de nossa base de dados,
+a partir do <b>EF Core 2.1</b> temos uma nova funcionalidade que basicamente nos fornece uma forma na qual podemos manipular o dado antes de ser persistido e quando for lido também, 
+essa funcionalidade se chama <b>ValueConverter</b>, em breve irei fazer um artigo falando mais sobre ela, por enquanto vamos focar aqui, e nossa classe customizada ficou da 
+seguinte forma com 2 metódos, para critografar e descriptografar os dados, o que fiz foi criar um classe que herda da classe <b>ValueConverter</b> alguns comportamentos, onde em nosso construtor eu passo 
+a expressão que eu quero utilizar para persitir e ler dados.
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">DataProtectionConverter</span> <span class="p">:</span> <span class="n">ValueConverter</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_chave</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="s">"#lgpd+ef"</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="nf">DataProtectionConverter</span><span class="p">()</span>
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">_convertTo</span><span class="p">,</span> <span class="n">_convertFrom</span><span class="p">,</span> <span class="k">default</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;&gt;</span> <span class="n">_convertTo</span> <span class="p">=</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">LockView</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">static</span> <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;&gt;</span> <span class="n">_convertFrom</span> <span class="p">=</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">UnLockView</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="kt">string</span> <span class="nf">LockView</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">encriptar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+        <span class="p">{</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+            <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+            <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+        <span class="p">};</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">encriptar</span><span class="p">.</span><span class="nf">CreateEncryptor</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">texto</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToBase64String</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">string</span> <span class="nf">UnLockView</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">descriptografar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+        <span class="p">{</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+            <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+            <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+        <span class="p">};</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">descriptografar</span><span class="p">.</span><span class="nf">CreateDecryptor</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">FromBase64String</span><span class="p">(</span><span class="n">texto</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="s">"+"</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetString</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<div style="text-align: justify;">
+Classe criada, agora vamos ajustar nosso <b>DatabaseContext</b> da seguinte forma:
+</div>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">DatabaseContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Cliente</span><span class="p">&gt;</span> <span class="n">Clientes</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span>
+        <span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="n">optionsBuilder</span>
+            <span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span>
+                <span class="s">@"Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;"</span>
+            <span class="p">);</span>
+
+    
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="c1">// Selecionar todas propriedades que tem a anotação SensitiveData</span>
+        <span class="c1">// e aplicar o conversor de valores para o que criamos.</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entity</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">property</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">attributes</span> <span class="p">=</span> <span class="n">property</span>
+                    <span class="p">.</span><span class="n">PropertyInfo</span>
+                    <span class="p">.</span><span class="nf">GetCustomAttributes</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SensitiveDataAttribute</span><span class="p">),</span> <span class="k">false</span><span class="p">);</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">attributes</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">property</span><span class="p">.</span><span class="nf">SetValueConverter</span><span class="p">(</span><span class="k">new</span> <span class="nf">DataProtectionConverter</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="código-final">Código final</h2>
+<p>Agora como você pode ver não iremos precisar mais ficar criptografando explicitamente as informações, nosso exemplo completo ficou assim:</p>
+<div class="language-csharp highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">public</span> <span class="k">class</span> <span class="nc">Program</span>
+<span class="p">{</span>
+    <span class="k">static</span> <span class="k">void</span> <span class="nf">Main</span><span class="p">(</span><span class="kt">string</span><span class="p">[]</span> <span class="n">args</span><span class="p">)</span>
+    <span class="p">{</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">db</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">DatabaseContext</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Database</span><span class="p">.</span><span class="nf">EnsureCreated</span><span class="p">();</span>
+        <span class="n">db</span><span class="p">.</span><span class="n">Clientes</span><span class="p">.</span><span class="nf">Add</span><span class="p">(</span><span class="k">new</span> <span class="n">Cliente</span>
+        <span class="p">{</span>
+            <span class="n">Nome</span> <span class="p">=</span> <span class="s">"Rafael Almeida"</span><span class="p">,</span>
+            <span class="n">Endereco</span> <span class="p">=</span> <span class="s">"Aqui mesmo"</span><span class="p">,</span>
+            <span class="n">Telefone</span> <span class="p">=</span> <span class="s">"7998829XXXX"</span><span class="p">,</span>
+            <span class="n">CPF</span> <span class="p">=</span> <span class="s">"123456"</span>
+        <span class="p">});</span>
+
+        <span class="n">db</span><span class="p">.</span><span class="nf">SaveChanges</span><span class="p">();</span>
+
+        <span class="kt">var</span> <span class="n">cliente</span> <span class="p">=</span> <span class="n">db</span><span class="p">.</span><span class="n">Clientes</span><span class="p">.</span><span class="nf">AsNoTracking</span><span class="p">().</span><span class="nf">FirstOrDefault</span><span class="p">(</span><span class="n">p</span> <span class="p">=&gt;</span> <span class="n">p</span><span class="p">.</span><span class="n">CPF</span> <span class="p">==</span> <span class="s">"123456"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// SensitiveDataAttribute</span>
+<span class="p">[</span><span class="nf">AttributeUsage</span><span class="p">(</span><span class="n">AttributeTargets</span><span class="p">.</span><span class="n">Property</span><span class="p">,</span> <span class="n">Inherited</span> <span class="p">=</span> <span class="k">false</span><span class="p">,</span> <span class="n">AllowMultiple</span> <span class="p">=</span> <span class="k">false</span><span class="p">)]</span>
+<span class="k">public</span> <span class="k">sealed</span> <span class="k">class</span> <span class="nc">SensitiveDataAttribute</span> <span class="p">:</span> <span class="n">Attribute</span>
+<span class="p">{</span>
+<span class="p">}</span>
+
+<span class="c1">// Cliente</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">Cliente</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="kt">int</span> <span class="n">Id</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Nome</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">SensitiveData</span><span class="p">]</span>                     <span class="c1">// SensitiveData</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Telefone</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">Endereco</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+    <span class="p">[</span><span class="n">SensitiveData</span><span class="p">]</span>                     <span class="c1">// SensitiveData</span>
+    <span class="k">public</span> <span class="kt">string</span> <span class="n">CPF</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="c1">// DatabaseContext</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">DatabaseContext</span> <span class="p">:</span> <span class="n">DbContext</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="n">DbSet</span><span class="p">&lt;</span><span class="n">Cliente</span><span class="p">&gt;</span> <span class="n">Clientes</span> <span class="p">{</span> <span class="k">get</span><span class="p">;</span> <span class="k">set</span><span class="p">;</span> <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnConfiguring</span><span class="p">(</span>
+        <span class="n">DbContextOptionsBuilder</span> <span class="n">optionsBuilder</span><span class="p">)</span>
+        <span class="p">=&gt;</span> <span class="n">optionsBuilder</span>
+            <span class="p">.</span><span class="nf">UseSqlServer</span><span class="p">(</span>
+                <span class="s">@"Server=(localdb)\msSqlLocalDB;Integrated Security=True; Database=EFCoreValueConvertion; MultipleActiveResultSets=true;"</span>
+            <span class="p">);</span>
+
+    <span class="k">protected</span> <span class="k">override</span> <span class="k">void</span> <span class="nf">OnModelCreating</span><span class="p">(</span><span class="n">ModelBuilder</span> <span class="n">modelBuilder</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">entity</span> <span class="k">in</span> <span class="n">modelBuilder</span><span class="p">.</span><span class="n">Model</span><span class="p">.</span><span class="nf">GetEntityTypes</span><span class="p">())</span>
+        <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="kt">var</span> <span class="n">property</span> <span class="k">in</span> <span class="n">entity</span><span class="p">.</span><span class="nf">GetProperties</span><span class="p">())</span>
+            <span class="p">{</span>
+                <span class="kt">var</span> <span class="n">attributes</span> <span class="p">=</span> <span class="n">property</span>
+                    <span class="p">.</span><span class="n">PropertyInfo</span>
+                    <span class="p">.</span><span class="nf">GetCustomAttributes</span><span class="p">(</span><span class="k">typeof</span><span class="p">(</span><span class="n">SensitiveDataAttribute</span><span class="p">),</span> <span class="k">false</span><span class="p">);</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="n">attributes</span><span class="p">.</span><span class="n">Length</span> <span class="p">&gt;</span> <span class="m">0</span><span class="p">)</span>
+                <span class="p">{</span>
+                    <span class="n">property</span><span class="p">.</span><span class="nf">SetValueConverter</span><span class="p">(</span><span class="k">new</span> <span class="nf">DataProtectionConverter</span><span class="p">());</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// DataProtectionConverter</span>
+<span class="k">public</span> <span class="k">class</span> <span class="nc">DataProtectionConverter</span> <span class="p">:</span> <span class="n">ValueConverter</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="kt">byte</span><span class="p">[]</span> <span class="n">_chave</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="s">"#lgpd+ef"</span><span class="p">);</span>
+
+    <span class="k">public</span> <span class="nf">DataProtectionConverter</span><span class="p">()</span>
+        <span class="p">:</span> <span class="k">base</span><span class="p">(</span><span class="n">_convertTo</span><span class="p">,</span> <span class="n">_convertFrom</span><span class="p">,</span> <span class="k">default</span><span class="p">)</span>
+    <span class="p">{</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">static</span> <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;&gt;</span> <span class="n">_convertTo</span> <span class="p">=</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">LockView</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+    <span class="k">private</span> <span class="k">static</span> <span class="n">Expression</span><span class="p">&lt;</span><span class="n">Func</span><span class="p">&lt;</span><span class="kt">string</span><span class="p">,</span> <span class="kt">string</span><span class="p">&gt;&gt;</span> <span class="n">_convertFrom</span> <span class="p">=</span> <span class="n">x</span> <span class="p">=&gt;</span> <span class="nf">UnLockView</span><span class="p">(</span><span class="n">x</span><span class="p">);</span>
+
+    <span class="k">static</span> <span class="kt">string</span> <span class="nf">LockView</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">encriptar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+        <span class="p">{</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+            <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+            <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+        <span class="p">};</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">encriptar</span><span class="p">.</span><span class="nf">CreateEncryptor</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetBytes</span><span class="p">(</span><span class="n">texto</span><span class="p">);</span>
+        <span class="k">return</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">ToBase64String</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+    <span class="p">}</span>
+
+    <span class="k">static</span> <span class="kt">string</span> <span class="nf">UnLockView</span><span class="p">(</span><span class="kt">string</span> <span class="n">texto</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">hashProvider</span> <span class="p">=</span> <span class="k">new</span> <span class="nf">MD5CryptoServiceProvider</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">descriptografar</span> <span class="p">=</span> <span class="k">new</span> <span class="n">TripleDESCryptoServiceProvider</span>
+        <span class="p">{</span>
+            <span class="n">Mode</span> <span class="p">=</span> <span class="n">CipherMode</span><span class="p">.</span><span class="n">ECB</span><span class="p">,</span>
+            <span class="n">Key</span> <span class="p">=</span> <span class="n">hashProvider</span><span class="p">.</span><span class="nf">ComputeHash</span><span class="p">(</span><span class="n">_chave</span><span class="p">),</span>
+            <span class="n">Padding</span> <span class="p">=</span> <span class="n">PaddingMode</span><span class="p">.</span><span class="n">PKCS7</span>
+        <span class="p">};</span>
+
+        <span class="k">using</span> <span class="nn">var</span> <span class="n">transforme</span> <span class="p">=</span> <span class="n">descriptografar</span><span class="p">.</span><span class="nf">CreateDecryptor</span><span class="p">();</span>
+        <span class="kt">var</span> <span class="n">dados</span> <span class="p">=</span> <span class="n">Convert</span><span class="p">.</span><span class="nf">FromBase64String</span><span class="p">(</span><span class="n">texto</span><span class="p">.</span><span class="nf">Replace</span><span class="p">(</span><span class="s">" "</span><span class="p">,</span> <span class="s">"+"</span><span class="p">));</span>
+        <span class="k">return</span> <span class="n">Encoding</span><span class="p">.</span><span class="n">UTF8</span><span class="p">.</span><span class="nf">GetString</span><span class="p">(</span><span class="n">transforme</span><span class="p">.</span><span class="nf">TransformFinalBlock</span><span class="p">(</span><span class="n">dados</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="n">dados</span><span class="p">.</span><span class="n">Length</span><span class="p">));</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="output-sql">Output SQL</h2>
+<p>Os comandos produzidos ficaram assim:<br />
+<b>Comando Inserir</b></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">exec</span> <span class="n">sp_executesql</span> <span class="n">N</span><span class="s1">'SET NOCOUNT ON;
+INSERT INTO [Clientes] ([CPF], [Endereco], [Nome], [Telefone])
+VALUES (@p0, @p1, @p2, @p3);
+SELECT [Id]
+FROM [Clientes]
+WHERE @@ROWCOUNT = 1 AND [Id] = scope_identity();
+
+'</span><span class="p">,</span><span class="n">N</span><span class="s1">'@p0 nvarchar(4000),@p1 nvarchar(4000),@p2 nvarchar(4000),@p3 nvarchar(4000)'</span><span class="p">,</span>
+<span class="o">@</span><span class="n">p0</span><span class="o">=</span><span class="n">N</span><span class="s1">'kOI/e7VQZhs='</span><span class="p">,</span> <span class="c1">-- Criptografado</span>
+<span class="o">@</span><span class="n">p1</span><span class="o">=</span><span class="n">N</span><span class="s1">'Aqui mesmo'</span><span class="p">,</span><span class="o">@</span><span class="n">p2</span><span class="o">=</span><span class="n">N</span><span class="s1">'Rafael Almeida'</span><span class="p">,</span>
+<span class="o">@</span><span class="n">p3</span><span class="o">=</span><span class="n">N</span><span class="s1">'T2wQKyR8w28fKOgBXp0ytg=='</span>    <span class="c1">-- Criptografado</span>
+</code></pre></div></div>
+<p><b>Comando Consultar</b></p>
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="n">TOP</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Id</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">CPF</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Endereco</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Nome</span><span class="p">],</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">Telefone</span><span class="p">]</span>
+<span class="k">FROM</span> <span class="p">[</span><span class="n">Clientes</span><span class="p">]</span> <span class="k">AS</span> <span class="p">[</span><span class="k">c</span><span class="p">]</span>
+<span class="k">WHERE</span> <span class="p">[</span><span class="k">c</span><span class="p">].[</span><span class="n">CPF</span><span class="p">]</span> <span class="o">=</span> <span class="n">N</span><span class="s1">'kOI/e7VQZhs='</span>
+</code></pre></div></div>
+<p><img src="http://localhost:4000/assets/images/gdpr/consulta.png" alt="01" /></p>
+
+<h2 id="observações">Observações</h2>
+<div class="notice--warning">
+Alguns banco de dados já fornecem criptografia de ponta-a-ponta, um banco de dados é apenas uma das ferramentas que podemos usar para que possamos estar em conformidade com LGPD/GDPR, uma dica é fique de olho 
+na profissão de DPO (<i>Data Protection Officer</i>), será uma profissão que terá muitas vagas para os próximos anos, muitas empresas vão precisar desse profissional.
+</div>
+
+<h2 id="twitter">Twitter</h2>
+<div class="notice--info">
+ Fico por aqui! 😄 <br />
+ Me siga no twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
+</div>
+
+<p><br /></p>
+
+        
+      </section>
+
+      <footer class="page__meta">
+        
+        
+
+
+  
+
+
+  
+  
+  
+
+  <p class="page__taxonomy">
+    <strong><i class="fa fa-fw fa-folder-open" aria-hidden="true"></i> Categorias: </strong>
+    <span itemprop="keywords">
+    
+      
+      
+      <a href="http://localhost:4000/categories/#ef5" class="page__taxonomy-item" rel="tag">EF5</a><span class="sep">, </span>
+    
+      
+      
+      <a href="http://localhost:4000/categories/#entity-framework-core" class="page__taxonomy-item" rel="tag">Entity Framework Core</a>
+    
+    </span>
+  </p>
+
+
+        
+          <p class="page__date"><strong><i class="fa fa-fw fa-calendar" aria-hidden="true"></i> Atualizado em:</strong> <time datetime="2020-06-11T00:00:00+00:00">June 11, 2020</time></p>
+        
+      </footer>
+
+      <section class="page__share">
+  
+    <h4 class="page__share-title">Compartilhe em</h4>
+  
+
+  <a href="https://twitter.com/intent/tweet?text=LGPD+%2B+EF+CORE+%2B+ValueConverter%20http%3A%2F%2Flocalhost%3A4000%2Fef5%2Fentity%2520framework%2520core%2Fgdpr-efcore%2F" class="btn btn--twitter" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Twitter"><i class="fa fa-fw fa-twitter" aria-hidden="true"></i><span> Twitter</span></a>
+
+  <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Flocalhost%3A4000%2Fef5%2Fentity%2520framework%2520core%2Fgdpr-efcore%2F" class="btn btn--facebook" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Facebook"><i class="fa fa-fw fa-facebook" aria-hidden="true"></i><span> Facebook</span></a>
+
+  <a href="https://plus.google.com/share?url=http%3A%2F%2Flocalhost%3A4000%2Fef5%2Fentity%2520framework%2520core%2Fgdpr-efcore%2F" class="btn btn--google-plus" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em Google Plus"><i class="fa fa-fw fa-google-plus" aria-hidden="true"></i><span> Google+</span></a>
+
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Flocalhost%3A4000%2Fef5%2Fentity%2520framework%2520core%2Fgdpr-efcore%2F" class="btn btn--linkedin" onclick="window.open(this.href, 'window', 'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'); return false;" title="Compartilhe em LinkedIn"><i class="fa fa-fw fa-linkedin" aria-hidden="true"></i><span> LinkedIn</span></a>
+</section>
+
+
+      
+  <nav class="pagination">
+    
+      <a href="http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/" class="pagination--pager" title="Perform Identity Resolution
+">Anterior</a>
+    
+    
+      <a href="http://localhost:4000/ef5/entity%20framework%20core/many-to-many-efcore5/" class="pagination--pager" title="Many To Many
+">Próxima</a>
+    
+  </nav>
+
+    </div>
+
+    
+  </article>
+
+  
+  
+    <div class="page__related">
+      <h4 class="page__related-title">Talvez você goste também</h4>
+      <div class="grid__wrapper">
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/manytomanyef5.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/many-to-many-efcore5/" rel="permalink">Many To Many
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  5 minuto(s) de leitura
+ - August 14, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+
+
+
+Nesse post irei falar sobre um dos recursos mais solicitados do Entity Framework Core, e que estará disponível na versão 5 do EF Core.
+Para o exemplo qu...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/ef5/entity%20framework%20core/perform-identity-resolution/" rel="permalink">Perform Identity Resolution
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  9 minuto(s) de leitura
+ - June 10, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+
+O novo recurso que irei apresentar está em preview ainda, e será lançada de oficialmente em Novembro deste ano, como parte do Entity Fram...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/StringVSstring.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/dicas/tips/c%23/.net/tip-style-code/" rel="permalink">String vs string
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  12 minuto(s) de leitura
+ - June 09, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Olá tudo bem?!
+
+
+
+Durante alguns anos tenho visto muitas pessoas discutindo sobre o uso de String com letra maiúscula ou string com letra minúscula, talvez...</p>
+  </article>
+</div>
+
+        
+          
+
+
+<div class="grid__item">
+  <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
+    
+      <div class="archive__item-teaser">
+        <img src=
+          
+            "http://localhost:4000/assets/images/SystemTextJson.png"
+          
+          alt="">
+      </div>
+    
+    <h2 class="archive__item-title" itemprop="headline">
+      
+        <a href="http://localhost:4000/workaround/json/aspnetcore/workaround-constructor-systemtextjson/" rel="permalink">Workaround para System.Text.Json
+</a>
+      
+    </h2>
+    
+    <p class="page__meta"><i class="fa fa-clock-o" aria-hidden="true"></i> 
+
+
+
+
+  18 minuto(s) de leitura
+ - March 21, 2020</p>
+    
+    <p class="archive__item-excerpt" itemprop="description">
+
+Fala pessoal, tudo bem?!
+
+
+
+Nesse artigo iremos descobrir como resolver um pequeno GAP que temos ao usar o System.Text.Json como nosso serializador.
+
+FYI: ...</p>
+  </article>
+</div>
+
+        
+      </div>
+    </div>
+  
+  
+</div>
+
+    </div>
+
+    
+      <div class="search-content">
+        <div class="search-content__inner-wrap">
+  <input type="text" id="search" class="search-input" tabindex="-1" placeholder="Digite o que está pesquisando..." />
+  <div id="results" class="results"></div>
+</div>
+      </div>
+    
+
+    <div class="page__footer">
+      <footer>
+        <!-- start custom footer snippets -->
+
+<!-- end custom footer snippets -->
+        <div class="page__footer-follow">
+  <ul class="social-icons">
+    
+      <li><strong>Acompanhe em</strong></li>
+    
+    
+    
+    
+      <li><a href="https://github.com/ralmsdeveloper"><i class="fa fa-fw fa-github" aria-hidden="true"></i> GitHub</a></li>
+    
+    
+    
+    <li><a href="http://localhost:4000/feed.xml"><i class="fa fa-fw fa-rss-square" aria-hidden="true"></i> Feed</a></li>
+  </ul>
+</div>
+
+<div class="page__footer-copyright">&copy; 2020 Rafael Almeida.</div>
+
+      </footer>
+    </div>
+
+    
+  <script src="http://localhost:4000/assets/js/main.min.js"></script>
+
+
+
+  <script src="http://localhost:4000/assets/js/lunr.min.js"></script>
+  <script src="http://localhost:4000/assets/js/lunr-en.js"></script>
+
+
+
+
+
+    
+<script>
+    var disqus_config = function () {
+      this.page.url = "http://localhost:4000/ef5/entity%20framework%20core/gdpr-efcore/";
+      this.page.identifier = "/ef5/entity%20framework%20core/gdpr-efcore";
+    };
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://ralmsdeveloper.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+
+  
+
+
+
+  </body>
+</html>
