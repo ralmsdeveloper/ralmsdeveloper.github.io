@@ -5,10 +5,10 @@ email: ralms@ralms.net
 description: "Rafael Almeida, Entity Framework Core, gRPC, Apache Kafka, ScyllaDB, Brazil, Dicas e Truques, C#, Performance, Performance .NET, Dicas EF Core, Advanced, Acesso a dados, Banco de dados, .NET Core, .NET 5, ASP.NET Core, ASP.NET 5, System.Text.JSON, JSON, Microsoft, Microsoft .NET, DOTNET CORE"
 twitter_username: ralmsdeveloper
 github: [metadata]
-github_username: ralmsdeveloper/ralmsdeveloper.github.io
+github_username: ralmsdeveloper
 words_per_minute: 50
 search: true
-repository: ralmsdeveloper
+repository: ralmsdeveloper/ralmsdeveloper.github.io
 # Build settings
 markdown: kramdown
 # Outputting
