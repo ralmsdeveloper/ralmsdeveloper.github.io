@@ -34,13 +34,13 @@ geralmente você irá ver de forma <b>N:N</b> é como abreviamos.
 
 
 ## Como funcionava no EF Core 3.1?
- Para o cenário que falei logo acima, teremos as seguintes class para representar nossas entidades, até aqui tudo bem?!
+ Para o cenário que falei logo acima, temos as seguintes classes para representar nossas entidades, até aqui tudo bem, basicamente 
+ no mundo da programação orienta a objetos é assim que criamos nossas classes, bom até aqui nada de anormal, certo?!
 ```csharp
 public class Student
 {
     public int Id { get; set; }
     public string Name { get; set; }
-
     public IList<Course> Courses { get; } = new List<Course>();
 }
 
@@ -48,18 +48,20 @@ public class Course
 {
     public int Id { get; set; }
     public string Description { get; set; }
-
     public IList<Student> Students { get; } = new List<Student>();
 }
 ``` 
-O problema é que para que esse relacionamento realmente funcionasse, também é necessário criar uma terceira class
+O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core até a versão 3.1, é necessário criar uma terceira classe, basicamente da seguinte forma:
 ```csharp
 public class CourseStudent
 {
     public int CourseId { get; set; }
+    public Course Course { get; set; }
     public int StudentId { get; set; }
+    public Student Student { get; set; }
 } 
 ``` 
+E isso realmente é o que muitos não concordam em fazer, também era necessário a configuração explicita com Fluent API para fazer o mapeamento correto de seu modelo de dados.
 ## Twitter
 <div class="notice--info">
  Fico por aqui! 😄 <br />
