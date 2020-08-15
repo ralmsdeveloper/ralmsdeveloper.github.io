@@ -1,4 +1,4 @@
-@charset "UTF-8";
+﻿@charset "UTF-8";
 /* ========================================================================== Default skin ========================================================================== */
 /*!
  * Minimal Mistakes Jekyll Theme 4.8.0 by Michael Rose
@@ -1927,7 +1927,17 @@ tr, td, th { vertical-align: middle; }
 .notice--info ul:last-child { margin-bottom: 0; /* override*/ }
 
 /* Warning notice */
-.notice--warning { margin: 2em 0 !important; /* override*/ padding: 1em; color: #494e52; font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif; font-size: 0.75em !important; text-indent: initial; /* override*/ background-color: #fef4e6; border-radius: 4px; box-shadow: 0 1px 1px rgba(248, 148, 6, 0.25); }
+.notice--warning {
+    margin: 2em 0 !important; /* override*/
+    padding: 1em;
+    color: #494e52;
+    font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
+    font-size: 0.75em !important;
+    text-indent: initial; /* override*/
+    background-color: #f8ffd5;
+    border-radius: 4px;
+    box-shadow: 0 1px 1px rgba(248, 148, 6, 0.25);
+}
 .notice--warning h4 { margin-top: 0 !important; /* override*/ margin-bottom: 0.75em; }
 .page__content .notice--warning h4 { /* using at-root to override .page-content h4 font size*/ margin-bottom: 0; font-size: 1em; }
 .notice--warning p:last-child { margin-bottom: 0 !important; /* override*/ }

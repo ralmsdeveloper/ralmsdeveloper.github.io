@@ -15,23 +15,27 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/manytomanyef5.png)
 <hr /> 
 <div class="notice--warning">
-Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
-<br />
+Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core o Many-To-Many, ou, muitos-para-muitos.
+<br /><br />
 <strong>FYI:</strong>
-Para o exemplo que será apresentado aqui estou utilizando build noturno veja <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a>
+Para o exemplo que será apresentado aqui estou utilizando build noturno
+e você pode também instalar esses pacotes em seu projeto, assim você sempre terá a ultima compilação do projeto, para testar
+todas funcionalidades novas que estão sendo implementadas, veja <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a>
 o que você precisa fazer.
 </div> 
 
 ## EF Core 3.1
 <div style="text-align: justify;">
-Até a versão EF Core 3.1, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mas os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de não ser a melhor abordagem para o que realmente é proposto.
+Até a versão <b>EF Core 3.1</b>, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, 
+isso funcionava bem, mas os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de não ser a melhor abordagem para o que realmente é proposto,
+dado que um dos objetivos ao usar um ORM, é que ele fique com essa complexidade, assim ajudando manter um código mais limpo.
 <br />
 </div>
 ## Cenário
 <div style="text-align: justify;">
 Vamos pensar em um cenário onde precisamos cadastrar alunos e cursos, logo um aluno poderá ter vários cursos, da mesma
 forma um curso pode ter vários alunos, esse tipo de cardinalidade é utilizado para o relacionamento entre duas entidades, 
-geralmente você irá ver muitos exemplo assim "<b>N:N</b>", é como abreviamos.
+geralmente você irá ver muitos exemplos assim "<b>N:N</b>", é como abreviamos.
 </div>
 ## Como funcionava no EF Core 3.1?
 <div style="text-align: justify;">
@@ -63,11 +67,12 @@ public class CourseStudent
     public Student Student { get; set; }
 }
 ``` 
-## Workaround
+## Work around
 <div style="text-align: justify;">
-O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core 3.1 e ele seja capaz fazer o mapeado correto de seu modelo de dados, é necessário criar uma terceira classe "<b>CourseStudent</b>", e 
-isso realmente é o que muitos não concordam em fazer, e eu concordo plenamente com isso, pois essa complexidade o <b>Entity Framework Core</b> deveria ser capaz resolver, também era necessário a 
-configuração explícita com <b>Fluent API</b> para fazer o mapeamento correto de seu modelo de dados, já que o <b>Entity Framework Core</b> não era capaz de fazer esse mapeamento de forma mais inteligente, então era necessário fazer algo assim:
+O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core 3.1 e seja capaz fazer o mapeamento correto do seu modelo de dados, é necessário criar uma terceira classe "<b>CourseStudent</b>", e 
+isso realmente é o que muitos não concordam em fazer, e eu concordo plenamente com isso, pois essa complexidade o <b>Entity Framework Core</b> deveria ser capaz abstrair, também você era forçado a fazer uma
+configuração explícita usando <b>Fluent API</b> para que o mapeamento correto do seu modelo de dados funcionasse, então já que o <b>Entity Framework Core</b> não era capaz de fazer esse mapeamento de forma mais 
+inteligente, então era necessário fazer algo assim:
 </div>
 ```csharp
 public class SampleManyToManyContext : DbContext
@@ -98,9 +103,10 @@ public class SampleManyToManyContext : DbContext
 }
 ``` 
 <div style="text-align: justify;">
-Detalhe, mesmo que você tente expor sua entidade na propriedade <b>DbSet</b> de seu contexto, já que EF Core é capaz de
-configurar seu modelo de dados com base nessas propriedades expostas em seu contexto, ele irá tentar, mas falhará, ele não é capaz de resolver 
-esse mapeamento de forma automática para você, sendo assim necessário fazer a configuração acima, caso contrário você receberá o seguinte erro:
+Eu já falei em algumas palestras minhas, que se você apenas expor suas entidades em propriedades DbSet em seu contexto o <b>EF Core</b>
+irá tentar fazer o mapeamento do seu modelo de dados automaticamente, mas, mesmo que você tente expor sua entidade na propriedade <b>DbSet</b> de seu contexto, 
+já que <b>EF Core</b> é capaz de configurar seu modelo de dados com base nessas propriedades, ele irá tentar e falhará, ele não é capaz de resolver 
+esse mapeamento <b>N:N</b> de forma automática para você, sendo assim necessário fazer a configuração acima, caso contrário você receberá o seguinte erro:
 </div>
 ```csharp
 System.InvalidOperationException: 'The entity type 'CourseStudent' requires a primary key to be defined. 
@@ -109,13 +115,16 @@ If you intended to use a keyless entity type call 'HasNoKey()'.'
 
 ## Equipe
 <div style="text-align: justify;">
-A equipe do <b>Entity Framework Core</b> vem fazendo um excelente trabalho, sempre focado na qualidade e melhoria do ORM, para entregar para você uma ferramenta poderosa e performática, então tendo implementado outras diversas features ao produto, chegou a vez do <b>Many-To-Many</b>, com um suporte e mapeamento mais adequado que anteriormente mostrado.
-Inclusive você pode acompanhar a discussão sobre a feature <a href="https://github.com/dotnet/efcore/issues/1368" target="_BLANK">clicando aqui</a>.
-</div>
+A equipe do <b>Entity Framework Core</b> vem fazendo um excelente trabalho, sempre focado na qualidade e melhoria do ORM, para entregar para você uma ferramenta poderosa e performática, então 
+tendo implementado outras diversas features ao produto, chegou a vez do <b>Many-To-Many</b>, com um suporte e mapeamento mais adequado que anteriormente mostrado.
+Inclusive você pode acompanhar a discussão sobre a feature <a href="https://github.com/dotnet/efcore/issues/1368" target="_BLANK">clicando aqui</a>, essa nova feature
+está em boas mãos e está sendo desenvolvida e liderada por <b>Andriy Svyryd</b> e <b>Smit Patel</b>.
+</div> 
 ## E agora como ficou?
 <div style="text-align: justify;">
-O suporte <b>N:N</b> basicamente posso dizer que está finalizado, dado que está em fase de <b>Release Candidate</b>, e será lançado oficialmente em novembro, mas como citei no topo desse post, você pode já experimentar usando builds noturnos,
-nossas classes agora ficaram muito mais simples, com base nas classes apresentadas acima, fiz pequenas alterações, observe que para o contexto do que é realmente proposto fica muito mais legível, então nossas classes ficaram assim:
+O suporte <b>N:N</b> basicamente posso dizer que está finalizado, dado que está em fase de <b>Release Candidate</b>, e será lançado oficialmente em novembro, mas como citei no topo 
+desse post, você pode já experimentar usando builds noturnos, sendo assim nossas classes agora ficaram muito mais simples, com base nas classes apresentadas acima, 
+fiz pequenas alterações, observe que para o contexto do que é realmente proposto fica muito mais legível, então nossas classes ficaram assim:
 </div>
 ```csharp
 public class Student
@@ -134,7 +143,9 @@ public class Course
     public IList<Student> Students { get; } = new List<Student>();
 }
 ```
-E em nosso contexto basta apenas expor as entitdades em uma propriedade DbSet da seguinte forma:
+<b>Student</b> agora tem a lista de <b>Courses</b> e não mais a lista de uma terceira classe, da mesma forma <b>Course</b> agora tem a lista de <b>Students</b>, isso
+faz muito mais sentido.<br>
+Veja também como nosso contexto ficou muito mais simples, basta apenas expor as entitdades em uma propriedade DbSet da seguinte forma:
 ```csharp
 public class SampleManyToManyContext : DbContext
 {
@@ -151,7 +162,9 @@ O <b>Entity Framework Core</b> agora é capaz de fazer o mapeamento correto apen
 no exemplo acima, isso porque o <b>Entity Framework Core</b> por conversão já faz todo mapemento pra gente de forma automatizada.
 ## Mepeamento Explícito
 Eu sou capaz de fazer essa junção de tabelas explicitamente?<br>
-A responsta é sim, e é muito simples de fazer isso, Veja um exemplo completo:
+A resposta é sim, e é muito simples de fazer isso, Veja um exemplo completo, onde eu criei mais uma classe <b>CourseStudent</b> que contém algumas 
+propriedades adicionais como <b>Protocol</b> e <b>CreatedAt</b> e usando <b>Fluent API</b> você pode fazer o mapeamento explicitamente,
+observe que agora eu tenho um novo método de extensão para fazer isso que é o <b>UsingEntity</b> vejo o exemplo:
 ```csharp
 
 public class Student
