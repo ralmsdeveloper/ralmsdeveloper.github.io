@@ -13,6 +13,12 @@
   <article class="archive__item" itemscope itemtype="http://schema.org/CreativeWork">
     {% if teaser %}
       <div class="archive__item-teaser">
+          <a href=
+                {% if post.link %}
+                "{{ post.link }}">{{ title }}
+                {% else %}
+                "{{ post.url | absolute_url }}" rel="permalink">
+                {% endif %}>
         <img src=
           {% if teaser contains "://" %}
             "{{ teaser }}"
@@ -20,6 +26,8 @@
             "{{ teaser | absolute_url }}"
           {% endif %}
           alt="">
+
+          </a>
       </div>
     {% endif %}
     <h2 class="archive__item-title" itemprop="headline">
