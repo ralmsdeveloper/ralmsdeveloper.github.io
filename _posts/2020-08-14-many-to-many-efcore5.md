@@ -26,7 +26,7 @@ o que você precisa fazer.
 
 ## EF Core 3.1
 <div style="text-align: justify;">
-Até a versão <b>EF Core 3.1</b>, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, 
+Até a versão <b>EF Core 3.1</b>, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeamento do modelo de dados corretamente, 
 isso funcionava bem, mas os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de não ser a melhor abordagem para o que realmente é proposto,
 dado que um dos objetivos ao usar um ORM, é que ele fique com essa complexidade, assim ajudando manter um código mais limpo.
 <br />
