@@ -1,5 +1,5 @@
 ﻿---
-title: "Many To Many"
+title: "Many-To-Many"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
@@ -13,7 +13,6 @@ header:
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/manytomanyef5.png)
-<h1>WIP</h1>
 <hr /> 
 <div class="notice--warning">
 Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core.
@@ -66,7 +65,7 @@ public class CourseStudent
 ## Workaround
 <div style="text-align: justify;">
 O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core até a versão 3.1, é necessário criar uma terceira classe "<b>CourseStudent</b>", e 
-isso realmente é o que muitos não concordam em fazer, e concordo, pois a complexidade deveria ser de responsabilidade do </b>EF Core</b> resolver, também era necessário a 
+isso realmente é o que muitos não concordam em fazer, e concordo, pois a complexidade deveria ser de responsabilidade do <b>EF Core</b> resolver, também era necessário a 
 configuração explícita com <b>Fluent API</b> para fazer o mapeamento correto de seu modelo de dados, já que o <b>EF Core</b> não era capaz de resolver, então era necessário fazer algo assim:
 </div>
 ```csharp
@@ -140,8 +139,8 @@ public class SampleManyToManyContext : DbContext
 }
 ```
 Ficou muito simples não é?!<br>
-O <b>Entity Framework Core</b> agora é capaz de fazer o mapeamento correto apenas expondo nossas entidades em nosso contexto!
-
+O <b>Entity Framework Core</b> agora é capaz de fazer o mapeamento correto apenas expondo nossas entidades em nosso contexto, observe que não precisei configurar nada 
+exemplo acima, isso porque o Entity Framework Core por conversão já fiz pra gente.
 
 ## Twitter
 <div class="notice--info">
