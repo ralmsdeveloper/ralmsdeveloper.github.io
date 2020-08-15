@@ -1934,7 +1934,7 @@ tr, td, th { vertical-align: middle; }
     font-family: -apple-system, BlinkMacSystemFont, "Roboto", "Segoe UI", "Helvetica Neue", "Lucida Grande", Arial, sans-serif;
     font-size: 0.75em !important;
     text-indent: initial; /* override*/
-    background-color: #fbffa8;
+    background-color: #fbffa8 !important;
     border-radius: 4px;
     box-shadow: 0 1px 1px rgba(248, 148, 6, 0.25);
 }
