@@ -240,7 +240,8 @@ static void Main(string[] args)
 Many-To-Many está sendo rastreado em:<br>
 <a alt="" href="https://github.com/dotnet/efcore/issues/10508">Issue-10508</a><br />
 <a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br /><br />
-Build noturno clique <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a>
+Build noturno clique <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a><br />
+Exemplo apresentados <a href="https://github.com/ralmsdeveloper/posts"  target="_BLANK">aqui</a><br />
 
 ## Twitter
 <div class="notice--info">
