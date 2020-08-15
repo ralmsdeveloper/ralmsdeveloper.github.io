@@ -18,7 +18,7 @@
                 "{{ post.link }}">{{ title }}
                 {% else %}
                 "{{ post.url | absolute_url }}" rel="permalink">
-                {% endif %}>
+                {% endif %}
         <img src=
           {% if teaser contains "://" %}
             "{{ teaser }}"
