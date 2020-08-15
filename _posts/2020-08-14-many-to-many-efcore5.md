@@ -113,7 +113,7 @@ Inclusive você pode acompanhar a discussão sobre a feature <a href="https://gi
 </div>
 ## E agora como ficou?
 <div style="text-align: justify;">
-O suporte <b>N:N</b> basicamente posso dizer que está finalizado, dado que está em fase de Release <b>Candidate</b>, e será lançado oficialmente em novembro, mas como citei no topo desse post, você pode já experimentar usando builds noturnos,
+O suporte <b>N:N</b> basicamente posso dizer que está finalizado, dado que está em fase de <b>Release Candidate</b>, e será lançado oficialmente em novembro, mas como citei no topo desse post, você pode já experimentar usando builds noturnos,
 nossas classes agora ficaram muito mais simples, com base nas classes apresentadas acima, fazendo pequenas alterações agora temos o seguinte:
 </div>
 ```csharp
@@ -225,7 +225,8 @@ static void Main(string[] args)
 ## Links
 Many-To-Many está sendo rastreado em:<br>
 <a alt="" href="https://github.com/dotnet/efcore/issues/10508">Issue-10508</a><br />
-<a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br />
+<a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br /></br>
+Build noturno clique <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a>
 
 ## Twitter
 <div class="notice--info">
