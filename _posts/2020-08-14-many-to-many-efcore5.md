@@ -24,19 +24,19 @@ o que você precisa fazer.
 
 ## EF Core 3.1
 <div style="text-align: justify;">
-Até a versão EF Core 3.1, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mais os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de poluir seu domínio.
+Até a versão EF Core 3.1, era necessário criar uma terceira classe para que o ORM conseguisse fazer o mapeado do modelo de dados corretamente, isso funcionava bem, mas os desenvolvedores não gostaram da ideia de conviver com essa nova abordagem, além de não ser a melhor abordagem para o que realmente é proposto.
 <br />
 </div>
 ## Cenário
 <div style="text-align: justify;">
 Vamos pensar em um cenário onde precisamos cadastrar alunos e cursos, logo um aluno poderá ter vários cursos, da mesma
 forma um curso pode ter vários alunos, esse tipo de cardinalidade é utilizado para o relacionamento entre duas entidades, 
-geralmente você irá ver uma representação <b>N:N</b>, é como abreviamos.
+geralmente você irá ver muitos exemplo assim "<b>N:N</b>", é como abreviamos.
 </div>
 ## Como funcionava no EF Core 3.1?
 <div style="text-align: justify;">
 Para o cenário que falei logo acima, com o <b>EFCore 3.1</b> temos as seguintes classes para representar nossas entidades, e montar 
-nosso relacionamento <b>N:N</b>, essas classes são necessárias para configurar nosso modelo de dados.
+nosso relacionamento <b>N:N</b>, sendo assim classes abaixo são necessárias para configurar nosso modelo de dados.
 </div>
 ```csharp
 public class Student
@@ -65,9 +65,9 @@ public class CourseStudent
 ``` 
 ## Workaround
 <div style="text-align: justify;">
-O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core até a versão 3.1, é necessário criar uma terceira classe "<b>CourseStudent</b>", e 
-isso realmente é o que muitos não concordam em fazer, e concordo, pois a complexidade deveria ser de responsabilidade do <b>Entity Framework Core</b> resolver, também era necessário a 
-configuração explícita com <b>Fluent API</b> para fazer o mapeamento correto de seu modelo de dados, já que o <b>Entity Framework Core</b> não era capaz de resolver, então era necessário fazer algo assim:
+O problema é que para que esse relacionamento realmente seja interpretado pelo EF Core 3.1 e ele seja capaz fazer o mapeado correto de seu modelo de dados, é necessário criar uma terceira classe "<b>CourseStudent</b>", e 
+isso realmente é o que muitos não concordam em fazer, e eu concordo plenamente com isso, pois essa complexidade o <b>Entity Framework Core</b> deveria ser capaz resolver, também era necessário a 
+configuração explícita com <b>Fluent API</b> para fazer o mapeamento correto de seu modelo de dados, já que o <b>Entity Framework Core</b> não era capaz de fazer esse mapeamento de forma mais inteligente, então era necessário fazer algo assim:
 </div>
 ```csharp
 public class SampleManyToManyContext : DbContext
@@ -75,6 +75,7 @@ public class SampleManyToManyContext : DbContext
     public DbSet<Student> Students { get; set; }
     public DbSet<Course> Course { get; set; }
 
+    // Configure Explicit
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<CourseStudent>()
@@ -98,7 +99,7 @@ public class SampleManyToManyContext : DbContext
 ``` 
 <div style="text-align: justify;">
 Detalhe, mesmo que você tente expor sua entidade na propriedade <b>DbSet</b> de seu contexto, já que EF Core é capaz de
-configurar seu modelo de dados com base nessas propriedades expostas em seu contexto, ele não era capaz de resolver 
+configurar seu modelo de dados com base nessas propriedades expostas em seu contexto, ele irá tentar, mas falhará, ele não é capaz de resolver 
 esse mapeamento de forma automática para você, sendo assim necessário fazer a configuração acima, caso contrário você receberá o seguinte erro:
 </div>
 ```csharp
@@ -108,13 +109,13 @@ If you intended to use a keyless entity type call 'HasNoKey()'.'
 
 ## Equipe
 <div style="text-align: justify;">
-A equipe do <b>Entity Framework Core</b> vem fazendo um excelente trabalho, sempre focado na qualidade e melhoria do ORM, para entregar para você uma ferramenta poderosa e performática, então tendo implementado outras diversas features ao produto, chegou a vez do Many-To-Many, e com um suporte e mapeamento mais adequado que anteriormente mostrado.
+A equipe do <b>Entity Framework Core</b> vem fazendo um excelente trabalho, sempre focado na qualidade e melhoria do ORM, para entregar para você uma ferramenta poderosa e performática, então tendo implementado outras diversas features ao produto, chegou a vez do <b>Many-To-Many</b>, com um suporte e mapeamento mais adequado que anteriormente mostrado.
 Inclusive você pode acompanhar a discussão sobre a feature <a href="https://github.com/dotnet/efcore/issues/1368" target="_BLANK">clicando aqui</a>.
 </div>
 ## E agora como ficou?
 <div style="text-align: justify;">
 O suporte <b>N:N</b> basicamente posso dizer que está finalizado, dado que está em fase de <b>Release Candidate</b>, e será lançado oficialmente em novembro, mas como citei no topo desse post, você pode já experimentar usando builds noturnos,
-nossas classes agora ficaram muito mais simples, com base nas classes apresentadas acima, fazendo pequenas alterações agora temos o seguinte:
+nossas classes agora ficaram muito mais simples, com base nas classes apresentadas acima, fiz pequenas alterações, observe que para o contexto do que é realmente proposto fica muito mais legível, então nossas classes ficaram assim:
 </div>
 ```csharp
 public class Student
@@ -225,7 +226,7 @@ static void Main(string[] args)
 ## Links
 Many-To-Many está sendo rastreado em:<br>
 <a alt="" href="https://github.com/dotnet/efcore/issues/10508">Issue-10508</a><br />
-<a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br /></br>
+<a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br /><br />
 Build noturno clique <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a>
 
 ## Twitter
