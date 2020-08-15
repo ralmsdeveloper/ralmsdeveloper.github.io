@@ -14,7 +14,7 @@ header:
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/manytomanyef5.png)
 <hr /> 
-<div class="notice--warning">
+<div class="notice--warning" style="background-color:#f8ffc4">
 Nesse post irei falar sobre um dos recursos mais solicitados do <b>Entity Framework Core</b>, e que estará disponível na versão 5 do EF Core o Many-To-Many, ou, muitos-para-muitos.
 <br /><br />
 <strong>FYI:</strong>
@@ -162,9 +162,51 @@ O <b>Entity Framework Core</b> agora é capaz de fazer o mapeamento correto apen
 no exemplo acima, isso porque o <b>Entity Framework Core</b> por conversão já faz todo mapemento pra gente de forma automatizada.
 ## Mepeamento Explícito
 Eu sou capaz de fazer essa junção de tabelas explicitamente?<br>
-A resposta é sim, e é muito simples de fazer isso, Veja um exemplo completo, onde eu criei mais uma classe <b>CourseStudent</b> que contém algumas 
-propriedades adicionais como <b>Protocol</b> e <b>CreatedAt</b> e usando <b>Fluent API</b> você pode fazer o mapeamento explicitamente,
-observe que agora eu tenho um novo método de extensão para fazer isso que é o <b>UsingEntity</b> vejo o exemplo:
+A resposta é sim, e é muito simples de fazer isso, você pode fazer de 2 formas, a primeira é expondo uma propriedade DbSet em seu contexto
+veja um exemplo, onde eu criei mais uma classe <b>CourseStudent</b> que contém algumas propriedades adicionais como <b>Protocol</b> e <b>CreatedAt</b>:
+```csharp
+
+public class Student
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+
+    public IList<Course> Courses { get; } = new List<Course>();
+}
+
+public class Course
+{
+    public int Id { get; set; }
+    public string Description { get; set; }
+
+    public IList<Student> Students { get; } = new List<Student>();
+}
+
+[Keyless]
+public class CourseStudent
+{
+    public int CourseId { get; set; }
+    public int StudentId { get; set; }
+    public string Protocol { get; set; }
+    public DateTime CreatedAt { get; set; }
+}
+
+public class SampleManyToManyContext : DbContext
+{
+    public DbSet<Student> Students { get; set; }
+    public DbSet<Course> Courses { get; set; }
+    public DbSet<CourseStudent> CourseStudents { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder
+            .EnableSensitiveDataLogging() // Show Data
+            .LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuted })
+            .UseSqlServer("Data source=(localdb)\\mssqllocaldb;Initial Catalog=SampleManyToManyExplicit5;Integrated Security=true");
+}
+```
+
+A segunda forma de fazer é usando <b>Fluent API</b> você pode fazer o mapeamento explicitamente, fazendo a junção de suas entidades,
+observe que agora eu tenho um novo método de extensão para fazer isso que é o <b>UsingEntity</b> vejo um exemplo completo:
 ```csharp
 
 public class Student
@@ -241,7 +283,7 @@ Many-To-Many está sendo rastreado em:<br>
 <a alt="" href="https://github.com/dotnet/efcore/issues/10508">Issue-10508</a><br />
 <a alt="" href="https://github.com/dotnet/efcore/issues/1368">Issue-1368</a><br /><br />
 Build noturno clique <a href="https://github.com/dotnet/aspnetcore/blob/master/docs/DailyBuilds.md"  target="_BLANK">aqui</a><br />
-Exemplo apresentados <a href="https://github.com/ralmsdeveloper/posts"  target="_BLANK">aqui</a><br />
+Exemplos apresentados <a href="https://github.com/ralmsdeveloper/posts"  target="_BLANK">aqui</a><br />
 
 ## Twitter
 <div class="notice--info">
