@@ -9,6 +9,7 @@ Minhas palestras:
 
 
 | Data       | Titulo da palestra                                 | Evento                               | Slide | Vídeo |
+| 19/09/2020 | Introdução ao ASP.NET Core              | Community | <a alt="" target="_BLANK" href="http://ralms.net/talks/aspnetcore-introdution">Slide</a> |  |
 | 27/03/2020 | Introdução ao gRPC                      | Community | <a alt="" target="_BLANK" href="http://ralms.net/talks/grpc-introdution">Slide</a> |  |
 | 28/02/2020 | DeepDive Entity FrameworkCore                      | DevelopersBR | <a alt="" target="_BLANK" href="http://ralms.net/talks/deep-dive-ef-core">Slide</a> |  |
 | 04/06/2019 | 10 Dicas de Performance no Entity Framework Core   | VS Summit 2019 | <a alt="" target="_BLANK" href="https://pt.slideshare.net/RafaelAlmeida59/10-dicas-de-performance-no-efcore">Slide</a> |  |
