@@ -1,7 +1,10 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\assets\\css",
+    "\\_posts",
+    "\\_sass\\minimal-mistakes"
   ],
-  "SelectedNode": "\\assets",
+  "SelectedNode": "\\_posts\\2020-08-14-many-to-many-efcore5.md",
   "PreviewInSolutionExplorer": false
 }

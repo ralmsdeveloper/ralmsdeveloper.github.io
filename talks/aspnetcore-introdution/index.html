@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+	<html class="sl-root decks export offline loaded">
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<title>Introdução ao ASP.NET Core</title>
+
+
+		<link rel="stylesheet" type="text/css" href="lib/offline-v2.css">
+
+
+
+	</head>
+	<body class="reveal-viewport theme-font-montserrat theme-color-white-blue">
+		<div class="reveal">
+			<div class="slides">
+				<section class="stack" data-id="3da95c3a2248eac6127d7a1521a1f3d6"><section data-id="02982acf8376e1a8db9b480996088bb1">
+<div class="sl-block" data-block-type="text" data-name="text-a7a32b" data-block-id="a5638147ffbfba74bce02077fcb97abf" style="height: auto; width: 859px; left: 58.5px; top: 384px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 159%; color: rgb(7, 55, 99);">
+<p>Construindo um API do Zero</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-12cb79" data-block-id="6a206a17c2c61444e64ca7f87ecdf8a6" style="width: 447px; height: 447px; left: 256.5px; top: 23px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 10;"><img style="" data-natural-width="550" data-natural-height="550" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/c6ed65efd81bd4d3206434a42210c526.jpg"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-629b2c" data-block-id="2e7acd90a72ddf663fb4a736d7180a3c" style="width: 139px; height: 139px; left: 418.5px; top: 457px;"><div class="sl-block-content" style="z-index: 12;"><img style="" data-natural-width="200" data-natural-height="200" data-src="introducao-ao-aspnetcore/da1a0c0ee4eea5d4bd815571a69927f3.png"></div></div></section><section data-id="3493b250d295889fdb886234b8f13f4c">
+<div class="sl-block" data-block-type="image" data-name="image-bb07ea" style="width: 83px; height: 83px; left: 355.881px; top: 518.5px; min-width: 1px; min-height: 1px;" data-block-id="c301102689b8ee1dccf4dd18125470c2"><div class="sl-block-content" style="z-index: 10;"><img data-natural-width="225" data-natural-height="225" style="" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/d464e43164a91f1c86c4e5c96d89eb9c.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-cb4def" data-block-id="fedec51549f686c15bdb9ac34441b5cd" style="width: 118px; height: 118px; left: 507px; top: 499.5px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 11;"><img data-natural-width="256" data-natural-height="256" style="" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/bbe5395cc1d1bdc9be110df6d684abf6.ico"></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-a621ea" data-block-id="f5a0c4223aa8dd1c0ef0ef8ae3ef65b8" style="height: auto; width: 600px; left: 190.75px; top: 236px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; font-size: 234%;">
+<p>Rafael Almeida</p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-8960fc" data-block-id="95390011cb1535dbb2bf39974a6c0be1" style="height: auto; width: 600px; left: 180.75px; top: 327px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;">
+<p>www.ralms.net</p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 336px; left: 312px; top: 473px;" data-block-id="06ed0272cf4ada5f6e2c9154352768a6" data-name="text-c5aea1"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;">
+<p>@ralmsdeveloper</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-b983de" data-block-id="a53c10fa1ed6c9c4df0dcf26ddd5695a" style="width: 122.5px; height: 122.5px; left: 416.5px; top: 495px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 15;"><img style="" data-natural-width="256" data-natural-height="256" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/8c11089275d74bbef10ca8608229d93a.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-040214" data-block-id="658482fb41130d3625dc6e20058e7088" style="width: 189.492px; height: 189.492px; left: 386.004px; top: 37.88px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 16; border-style: solid; border-radius: 200px;"><img style="" data-natural-width="309" data-natural-height="309" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/cd04447f8605bdb35ff463c740525cb0.jpg"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-871b6c" data-block-id="1028f0475504b2b37d1a1c1ea71ec4b5" style="width: 140.752px; height: 56.7881px; left: 279.399px; top: 367px; min-width: 1px; min-height: 1px;"><div class="sl-block-content" style="z-index: 17;"><img style="" data-natural-width="751" data-natural-height="303" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/1fe3ff381d9a306bc4e6c7bfc41cc2c9.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-4af7ac" style="width: 132.075px; height: 66.944px; left: 550.025px; top: 356.844px; min-width: 1px; min-height: 1px;" data-block-id="6cd01ccf32db6b893d7ec85c9bc87b03"><div class="sl-block-content" style="z-index: 18;"><img style="" data-natural-width="2040" data-natural-height="1034" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/55eae0c7ac8883b3f7d2e7521a664dfe.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-cb9de1" style="width: 116.758px; height: 48.71px; left: 422.371px; top: 371.039px; min-width: 1px; min-height: 1px;" data-block-id="f154f0273023ff3a2a8664e46b8eccfe"><div class="sl-block-content" style="z-index: 19;"><img data-natural-width="1280" data-natural-height="534" style="" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/502e79798d6309fd1775a39518728049.jpeg"></div></div></section><section data-id="83b7f53e8a0d204dcf5eed2edd04b8df">
+
+
+<div class="sl-block" data-block-type="image" data-name="image-12cb79" style="width: 208px; height: 208px; left: 752px; top: 0px; min-width: 1px; min-height: 1px;" data-block-id="3c152eb17c8f9b9e340376777c35d7dc"><div class="sl-block-content" style="z-index: 10;"><img style="" data-natural-width="550" data-natural-height="550" data-lazy-loaded="" data-src="introducao-ao-aspnetcore/c6ed65efd81bd4d3206434a42210c526.jpg"></div></div>
+<div class="sl-block" data-block-type="text" data-name="text-69637a" data-block-id="9dc058f5b3d8220756ce49b32867825a" style="height: auto; width: 600px; left: 21px; top: 79.5px;"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 183%;">
+<p><span style="color:#000080">O Que é ASP.NET Core?</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" data-name="text-203079" data-block-id="f1ba7db7036b326427cd4d2c74dbea93" style="height: auto; width: 899px; left: 30.5px; top: 260.5px;"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;" data-fragment-index="0">
+<p style="text-align: left;">ASP.NET Core é uma estrutura de software livre de plataforma cruzada, de alto desempenho para a criação de aplicativos modernos conectados à Internet, em nuvem. </p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 899px; left: 30.5px; top: 408.5px;" data-block-id="db7e57d9af4dac175ebf875c4c156e4e" data-name="text-28b32d"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13;" data-fragment-index="2">
+<p style="text-align:left"><span style="color:#000080">A verdade é que a Microsoft gostaria de inovar, mas sem se preocupar com código legado, que já existia desde 2002.</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 899px; left: 30.5px; top: 260.5px;" data-block-id="4cac193a5a35acfd9e9c81c10f9ca2f6" data-name="text-d9895d"><div class="sl-block-content fragment" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 14;" data-fragment-index="1">
+<p style="text-align:left"><s>ASP.NET Core é uma estrutura de software livre de plataforma cruzada, de alto desempenho para a criação de aplicativos modernos conectados à Internet, em nuvem.</s></p>
+</div></div>
+<div class="sl-block sl-block-group" data-block-type="group" data-name="group-6dd901" data-block-id="1e812a8d52da54f82b261a80dff6f6c7"><div class="sl-block-content sl-block-group-content" style="transform-origin: 470.694px 611.75px; z-index: 15;">
+<div class="sl-block" data-block-type="image" data-name="image-37885e" data-block-id="343b0e961f782f9c4c50da62fdbd8a05" style="width: 112.902px; height: 133px; left: 246.138px; top: 545.25px;"><div class="sl-block-content fragment" style="z-index: 16;" data-fragment-index="3"><img style="" data-natural-width="1146" data-natural-height="1350" data-src="introducao-ao-aspnetcore/46fe3f93c8053190b51c039ef66a4c91.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-5e1dbf" data-block-id="0c4b2cb9f694cb26f71f1c2a7e00bbe1" style="width: 129px; height: 129px; left: 388.5px; top: 549.25px;"><div class="sl-block-content fragment" style="z-index: 17;" data-fragment-index="3"><img data-natural-width="1200" data-natural-height="1200" style="" data-src="introducao-ao-aspnetcore/9b7aeb84d9b4ab071aa5e432b457c095.png"></div></div>
+<div class="sl-block" data-block-type="image" data-name="image-28e32f" data-block-id="ce3942ac592f2182ccec6b14931297ad" style="width: 148.5px; height: 148.5px; left: 546.75px; top: 537.5px;"><div class="sl-block-content fragment" style="z-index: 18;" data-fragment-index="3"><img style="" data-natural-width="302" data-natural-height="302" data-src="introducao-ao-aspnetcore/5866ef730f50cb014eeab1a06bd0c267.png"></div></div>
+</div></div></section><section data-id="5d57892223b1a532d1a8c7b74199c911">
+
+
+<div class="sl-block" data-block-type="text" data-name="text-69637a" style="height: auto; width: 744px; left: 96px; top: 61.5px;" data-block-id="2edce27e90137c44fea44034215c1e26"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11; font-size: 183%;">
+<p style="text-align:left"><span style="color:#4B0082">O que é preciso para iniciar?</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 899px; left: 30.5px; top: 238px;" data-name="text-28b32d" data-block-id="f30836fcc4bfc8ea57cfda0663d9420d"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12;">
+<p style="text-align:left">Antes de qualquer coisa você precisa instalar o SDK do <strong>.NET Core</strong>, que é o responsável por executar nossas aplicações.</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-0930e8" data-block-id="49e52959f25177cce4a7fd5f289ac252" style="width: 298.463px; height: 188.032px; left: 291.8px; top: 433.984px;"><div class="sl-block-content" style="z-index: 13;"><img data-natural-width="2500" data-natural-height="1575" style="" data-src="introducao-ao-aspnetcore/cdbd208296bb1e12f0ee63510e13868c.svg"></div></div></section><section data-id="860937e27382e516dc4f72d8700af903">
+
+
+<div class="sl-block" data-block-type="text" data-name="text-69637a" style="height: auto; width: 744px; left: 96px; top: 61.5px;" data-block-id="888596e233ccafb6a63a257883b55ea2"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 183%;">
+<p><span style="color:#4B0082">Por que eu deveria estudar ASP.NET Core?</span></p>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 899px; left: 52.5px; top: 324px;" data-name="text-28b32d" data-block-id="616abec9fa077adbf587d277c8ade853"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 11;">
+<ul>
+	<li style="text-align:left">É uma tecnologia que está sendo adotada e utilizada em todo mundo por grandes empresas.</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 848px; left: 61px; top: 449px;" data-block-id="fbf12a4f9825de00ac4f5cc07aadbeab" data-name="text-346338"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 12; text-align: left;">
+<ul>
+	<li>É open source</li>
+</ul>
+</div></div>
+<div class="sl-block" data-block-type="text" style="height: auto; width: 848px; left: 61px; top: 535px;" data-block-id="258abaa8b9f147a341a3a6d100a2259a" data-name="text-b2c3fa"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 13; text-align: left;">
+<ul>
+	<li>É Multiplataforma</li>
+</ul>
+</div></div></section><section data-id="29ebfcaa06e58754203fe523613efc86">
+
+
+<div class="sl-block" data-block-type="text" data-name="text-69637a" style="height: auto; width: 744px; left: 96px; top: 61.5px;" data-block-id="686d2136c41e35cff2276678e9fab9e3"><div class="sl-block-content" data-placeholder-tag="p" data-placeholder-text="Text" style="z-index: 10; font-size: 183%;">
+<p>Criando um projeto e entendendo a anatomia do ASP.NET Core</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-bb1508" data-block-id="e69ed04bf2561317b2160c377416aef4" style="width: 806.4px; height: 212.89px; left: 64.8px; top: 361.555px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="1000" data-natural-height="264" data-src="introducao-ao-aspnetcore/a2ef9fa5bf90d6aac1820b0dce154588.png"></div></div></section><section data-id="7408773ed89bf1e6fd2cf78f413c6c75"><div class="sl-block" data-block-type="text" style="width: 856px; left: 46px; top: 158px; height: auto;" data-name="text-38ee44" data-block-id="37f4e8d235321fdadf40394978724d11"><div class="sl-block-content" data-placeholder-tag="h1" data-placeholder-text="Title Text" style="z-index: 10; color: rgb(153, 0, 255);">
+<h1>Obrigado!!!</h1>
+
+<p> </p>
+
+<p>http://ralms.net</p>
+
+<p>Twitter: @ralmsdeveloper</p>
+</div></div>
+<div class="sl-block" data-block-type="image" data-name="image-6f5259" data-block-id="7710c3d68d563562099039f10243079b" style="width: 175px; height: 175px; left: 392.5px; top: 426px;"><div class="sl-block-content" style="z-index: 11;"><img style="" data-natural-width="200" data-natural-height="200" data-src="introducao-ao-aspnetcore/7f75bc09b3402702711811f69d53ca0a.png"></div></div></section></section>
+			</div>
+		</div>
+
+		<script>
+			var SLConfig = {"deck": {"id":1928331,"slug":"introducao-ao-aspnetcore","title":"Introdução ao ASP.NET Core","description":"","width":960,"height":700,"margin":0.05,"visibility":"self","published_at":null,"sanitize_messages":null,"thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/thumbnails/3c77628cbbc68769b8e2d9a9ed95dc5f/thumb.jpg?1600520381","view_count":0,"user":{"id":1276267,"username":"ralmsdeveloper","name":"Rafael Almeida","description":"","thumbnail_url":"https://s3.amazonaws.com/media-p.slid.es/avatars/1276267/pp.jpg","account_type":"pro","team_id":null,"settings":{"id":4930180,"present_controls":true,"present_upsizing":true,"present_pointer":true,"present_notes":true,"default_deck_tag_id":null}},"background_transition":"slide","transition":"slide","theme_id":null,"theme_font":"montserrat","theme_color":"white-blue","auto_slide_interval":0,"comments_enabled":true,"forking_enabled":false,"rolling_links":false,"center":false,"shuffle":true,"should_loop":true,"share_notes":true,"slide_number":true,"slide_count":8,"rtl":false,"version":2,"collaborative":false,"deck_user_editor_limit":3,"data_updated_at":1600520381677,"font_typekit":null,"font_google":null,"time_limit":null,"navigation_mode":"default","upsizing_enabled":true,"notes":{}}};
+
+
+			// Use local fonts
+			SLConfig.fonts_url = 'lib/fonts/';
+		</script>
+
+		<script src="lib/reveal.js"></script>
+		<script src="lib/reveal-plugins.js"></script>
+		<script src="lib/offline.js"></script>
+
+		<!-- Initialize the presentation -->
+		<script>
+			Reveal.initialize({
+				width: 960,
+				height: 700,
+				margin: 0.05,
+				
+
+				hash: true,
+				controls: true,
+				progress: true,
+				mouseWheel: false,
+				showNotes: true,
+				slideNumber: true,
+				fragmentInURL: true,
+
+				autoSlide: 0,
+				autoSlideStoppable: true,
+
+				autoAnimateMatcher: SL.deck.AutoAnimate.matcher,
+
+				center: false,
+				shuffle: true,
+				loop: true,
+				rtl: false,
+				navigationMode: "default",
+
+				transition: "slide",
+				backgroundTransition: "slide",
+
+				highlight: {
+					escapeHTML: false
+				},
+
+				plugins: [ RevealZoom, RevealNotes, RevealMarkdown, RevealHighlight ]
+			});
+		</script>
+
+		
+
+	</body>
+</html>
