@@ -6,9 +6,7 @@ toc: true
 toc_label: "Tópicos"
 categories:
   - dotnet
-  - channel
   - performance
-  - distributed
 header:
   teaser: /assets/images/channel/channel-top.png
   caption: "www.ralms.net"
