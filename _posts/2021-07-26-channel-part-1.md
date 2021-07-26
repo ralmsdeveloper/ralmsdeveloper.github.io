@@ -233,7 +233,7 @@ public class Performance
 
 ## Benchmark
 <div style="text-align: justify;">
-Como podemos observar temos um ganho muito significativo de performance ao utilizar o padrão <b>producer-consumer</b>, com isso aumentamos a capacidade de processamentos em nossa aplicação, mas usar um padrão não é o X da questão, e sim a utilização do <b>Channels</b>.
+Como podemos observar existe um ganho muito significativo de performance ao utilizar o padrão <b>producer-consumer</b>, com isso aumentamos a capacidade de processamentos em nossa aplicação, mas usar um padrão não é o X da questão, e sim a utilização do <b>Channels</b>.
 </div>
 ```
 BenchmarkDotNet=v0.13.0, OS=Windows 10.0.22000
