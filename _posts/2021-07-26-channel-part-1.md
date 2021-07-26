@@ -234,6 +234,7 @@ public class Performance
 ## Benchmark
 <div style="text-align: justify;">
 Como podemos observar existe um ganho muito significativo de performance ao utilizar o padrão <b>producer-consumer</b>, com isso aumentamos a capacidade de processamentos em nossa aplicação, mas usar um padrão não é o X da questão, e sim a utilização do <b>Channels</b>, ele implementa o padrão e fornece uma API robusta pra gente.
+<br />
 </div>
 ```
 BenchmarkDotNet=v0.13.0, OS=Windows 10.0.22000
@@ -253,7 +254,7 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 <div class="notice--warning" style="background-color:	#aeffe0">
 A motivação em escrever este artigo é que em nosso dia-a-dia passamos por situações que às vezes precisamos escrever muito código, mas existem inúmeras implementações nativas que podemos utilizar e que resolvem muito bem determinadas demandas.
 <br /><br />
-No próximo artigo faremos um deep-dive nas funcionalidades do <b>Channels</b>.
+No próximo artigo faremos um deep-dive nas funcionalidades do <b>Channels</b>, abordaremos qual melhor estratégia de uso do Channel, dado que utilizamos recurso de memória e a utilização incorreta pode também degradar a performance de nossas aplicações, mas utilizando de forma correta será um grande aliado nosso, até o próximo artigo.
 </div> 
  
 ## Twitter
