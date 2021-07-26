@@ -249,7 +249,6 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 | SemChannel | 15,945.549 ms | 31.3865 ms | 27.8233 ms | 15,941.479 ms |
 | ComChannel |      1.974 ms |  0.2007 ms |  0.5726 ms |      2.209 ms |
 ```
-<br />
 ## Considerações
 <div class="notice--warning" style="background-color:	#aeffe0">
 A motivação em escrever este artigo é que em nosso dia-a-dia passamos por situações que às vezes precisamos escrever muito código, mas existem inúmeras implementações nativas que podemos utilizar e que resolvem muito bem determinadas demandas.
@@ -257,9 +256,9 @@ A motivação em escrever este artigo é que em nosso dia-a-dia passamos por sit
 No próximo artigo faremos um deep-dive nas funcionalidades do <b>Channels</b>, abordaremos qual melhor estratégia de uso do Channel, dado que utilizamos recurso de memória e a utilização incorreta pode também degradar a performance de nossas aplicações, mas utilizando de forma correta será um grande aliado nosso, até o próximo artigo.
 </div> 
  
-## Twitter
+## Contatos
 <div class="notice--info">
- Fico por aqui! 😄 <br />
+ Fico por aqui, mas pode me contatar por meio de minhas redes sociais 😄 <br />
  twitter: <a alt="" href="https://twitter.com/RalmsDeveloper">@ralmsdeveloper</a><br />
  linkedin: <a alt="" href="https://www.linkedin.com/in/ralmsdeveloper/">@ralmsdeveloper</a><br />
 </div> 
