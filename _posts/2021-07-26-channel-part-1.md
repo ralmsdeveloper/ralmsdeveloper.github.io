@@ -187,7 +187,7 @@ public class ChannelTest<T>
 ```    
 
 ## Teste de performance
-Classe com métodos para executar testes de performance, o método <b>GetProdutos</b> é para abstrair o uso de um arquivo real, usaremos o <b><a alt="" href="https://benchmarkdotnet.org/">BenchmarkDotNet</a></b> para testes de performance.
+Classe com métodos para executar testes de performance, o método <b>GetProdutos</b> é para abstrair o uso de um arquivo real, usaremos o <b><a alt="" href="https://benchmarkdotnet.org/">BenchmarkDotNet</a></b> para executar nossos testes de performance.
 ```csharp
 [MemoryDiagnoser]
 public class Performance

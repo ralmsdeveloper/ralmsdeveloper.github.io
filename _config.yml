@@ -63,7 +63,7 @@ plugins:
 author:
   name   : "Rafael Almeida"
   avatar : /assets/images/bio.png
-  bio    : "Microsoft MVP, Speaker, Solution Architect, passionate about C#, Loves EF Core, gRPC, Apache Kafka, ScyllaDB and access to high performance data."
+  bio    : "Microsoft MVP, Speaker, Specialist Software Engineer, passionate about C#, EF Core, gRPC, Apache Kafka, ScyllaDB and access to high performance data."
   location: "Sergipe-Brasil"
   email: ralms@ralms.net
   github: ralmsdeveloper
