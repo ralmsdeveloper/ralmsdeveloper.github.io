@@ -15,7 +15,7 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/channel/channel-top.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
-Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de distribuir o processamento de dados em nossas aplicações por meio de um canal, usando o padrão: producer-consumer, o qual abordaremos logo mais.
+Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de distribuir o processamento de dados em nossas aplicações por meio de um canal, iremos usar o padrão arquitetural <b>producer-consumer</b>, o qual abordaremos logo mais.
 </div> 
 
 ## Introdução
