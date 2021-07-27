@@ -55,7 +55,7 @@ Em uma próxima oportunidade irei escrever um artigo falando sobre processamento
 </div>
 ## O que é Channel?
 <div style="text-align: justify;">
-Resumidamente o channel(<i>ou canal em português</i>) é uma implementação feita pela Microsoft no <b>dotnet core</b> e que está acessível por meio do namespace (<i>System.Threading.Channels</i>), fornece a possibilidade de distribuir o processamento de dados em nossas aplicações, fazendo um excelente uso de <b>concorrência e paralelismo</b>, a ideia básica é que por meio de um canal, possamos produzir algo para um consumidor recuperar e processar, com isso podemos escalar algumas tarefas para melhor a performance, logo temos um padrão: <b><i>“producer-consumer”</i></b>. 
+Resumidamente o channel(<i>ou canal em português</i>) é uma implementação feita pela Microsoft no <b>dotnet core</b> e que está acessível por meio do namespace (<i>System.Threading.Channels</i>), fornece a possibilidade de distribuir o processamento de dados em nossas aplicações, fazendo um excelente uso de <b>concorrência e paralelismo</b>, a ideia básica é que por meio de um canal, possamos produzir algo para um consumidor recuperar e processar, com isso podemos escalar algumas tarefas para melhorar a performance, logo temos um padrão: <b><i>“producer-consumer”</i></b>. 
 </div>
 ![Channel]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem-channel.png)
 <div style="text-align: justify;">
