@@ -42,7 +42,7 @@ Olhando para CPU é exatamente isso que ocorre quando temos apenas uma unidade d
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem02.png)
 <div style="text-align: justify;">
-Nesse exemplo fica explicitamente nítido um padrão de execução usando paralelismo, cada um consegue atuar isoladamente sem saber exatamente o que o outro está fazendo, o paralelismo é possível apenas quando temos mais de um núcleo de CPU, os sistemas operacionais sempre se comportaram de forma excelente, mesmo com limitações existente, fazia o bom uso da concorrência, mas com surgimento evolução dos processadores isso muda o jogo, agora podemos ser capazes de executar tarefas verdadeiramente paralelas, e cada núcleo de CPU se beneficiando ainda mais com o poder da concorrência e simultaneidade.
+Nesse exemplo fica explicitamente nítido um padrão de execução usando paralelismo, cada um consegue atuar isoladamente sem saber exatamente o que o outro está fazendo, o paralelismo é possível apenas quando temos mais de um núcleo de CPU, os sistemas operacionais sempre se comportaram de forma excelente, mesmo com limitações existente, fazia o bom uso da concorrência, mas com a evolução dos processadores isso muda o jogo, agora podemos ser capazes de executar tarefas verdadeiramente paralelas, e cada núcleo de CPU se beneficiando ainda mais com o poder da concorrência e simultaneidade.
 </div>
 
 ## Quebrando teorias errôneas e falácias
