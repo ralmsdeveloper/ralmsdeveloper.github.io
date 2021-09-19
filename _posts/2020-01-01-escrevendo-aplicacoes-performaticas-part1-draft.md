@@ -70,6 +70,9 @@ Vamos pegar um exemplo hipotético aqui onde precisamos montar uma string no for
 Depois de executar nosso teste de performance podemos analisar o benchmark e confirmar que o primeiro método que faz junção de string é muito mais lento e aloca mais espaço.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-string.png)
+<div style="text-align: justify;">
+Conforme a quantidade de caracteres vão crescendo temos um custo maior para copiar esses dados na memória para um novo endereço além de alocar muito mais espaço na memória, e se multiplicar isso em um aplicação que trabalha com muita threads podemos chegar a uma conclusão que iremos degradar a performance de nossa aplicação, sendo assim utilize sempre que possível StringBuilder para concatenar strings, o GC e sua memória agradece.
+</div>
 
 ## Quebrando teorias errôneas e falácias
 <div style="text-align: justify;">
