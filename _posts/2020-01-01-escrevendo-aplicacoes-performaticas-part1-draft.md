@@ -8,11 +8,11 @@ categories:
   - dotnet
   - performance
 header:
-  teaser: /assets/images/performance-01/image1.png.png
+  teaser: /assets/images/performance-01/header.png
   caption: "www.ralms.net"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/image1.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/header.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
 Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de distribuir o processamento de dados em nossas aplicações por meio de um canal, iremos usar o padrão arquitetural <b>producer-consumer</b>, o qual abordaremos logo mais.
@@ -26,23 +26,24 @@ Estaremos abordando neste artigo um dos assuntos que é extremamente importante 
 Estamos vivendo a era da computação em nuvem, onde frequentemente ouvimos falar de sistemas distribuídos, resiliência, escalabilidade horizontal e outras coisas legais, pois bem uma dessas coisas legais é o Kubernetes, geralmente utilizamos ele para fornecer a capacidade de escalar o processamento de dados e fornecer várias instâncias de nossas aplicações, com isso limitamos os recursos de cada pod/container para usar a menor unidade de recurso possível, sendo assim customizamos o limite de memória que será utilizado, aqui é onde começamos a pensar fora da caixa, ou seja, será que estamos nos preocupando com essa limitação de recurso?!
 Memory leak é um dos problemas mais comuns que ocorrem em uma aplicação dentro de um container por falta do bom gerenciamento de memória, sendo assim vamos ver como podemos escrever aplicações mais performáticas fazendo um bom gerenciamento de memória.
 Faremos um compilado de dicas e boas práticas para obter o melhor desempenho com .NET em nossas aplicações diminuindo alocações na memória e coletas do GC (Garbage Collector).
+
+<br />
 Vamos colocar a mão na massa!
-
 <br />
 <br />
-&nbsp;&nbsp;&nbsp;&nbsp;O recurso que abordaremos faz bom uso de concorrência e assincronismo, sendo assim existe a necessidade de esclarecer alguns pontos antes de seguir com o artigo, existe uma grande confusão por parte de muitas pessoas sobre o que é concorrência, simultaneidade e paralelismo, o problema é que concorrência é muito confundido com paralelismo, com a concorrência até conseguimos lidar com inúmeras coisas ao mesmo tempo em um único núcleo de CPU, mas isso de forma alguma quer dizer que está sendo executado de forma paralela.
 </div>
-## Concorrência
+## Destrutores são um pesadelo para sua aplicação
 <div style="text-align: justify;">
- &nbsp;&nbsp;&nbsp;&nbsp;Faz com que o programa seja capaz de lidar com várias coisas ao mesmo tempo, na vida real imaginemos a seguinte situação, você está indo ao banco fazer um depósito, então dois amigos chegam até você e perguntam se você pode fazer um depósito por eles, você fala que sim e ao chegar ao banco encontra três terminais livres, é obvio que poderíamos usar outro exemplo hipotético de concorrência e paralelismo, mas vamos pensar fora da caixa e seguir com o exemplo dos terminais.
+ &nbsp;&nbsp;&nbsp;&nbsp;Em .NET todo objeto que herda o tipo class pode ter um construtor e um destrutor. Geralmente usamos no destrutor instruções para limpar objetos na memória não gerenciada  ou seja, que não estão na Heap, com isso evitamos vazamento de memória, mas existe outra forma de fazer isso, um exemplo é utilizar um Pattern Dispose, a coleta feita pelo GC na geração 0 é a mais rápida, mas quando usamos finalizadores e o GC inicializa o ciclo de coleta e encontra um objeto com um destrutor, esse objeto sobrevive à primeira coleta e é promovido para próxima geração e colocado em uma de fila de finalização, portanto quando é chamado o Finalize internamente pela thread dedicada e responsável por fazer essas execuções, o objeto se torna legível para ser recuperado e liberado da memória, para provar isso faremos um benchmark para ver o quão custoso é um destrutor em sua classe mesmo que esteja vazio, que para muitos pode ser inofensivo.
+<br />
+As seguintes classes serão utilizadas como exemplos:
+</div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-sem-finalizador.png)
+<div style="text-align: justify;">
+Iremos utilizar a biblioteca BenchmarkDotNet para rastrear e analisar o desempenho, temos dois métodos responsáveis por criar em algumas fases (1.000, 10.000 e 100.000) instâncias das classes acima apresentadas.
+</div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/performance-destrutor.png)
 
-</div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem01.png)
-<div style="text-align: justify;">
-&nbsp;&nbsp;&nbsp;&nbsp;Então você tenta iniciar o procedimento de depósito nos três terminais ao mesmo tempo, e corre de um lado para o outro freneticamente, fica claro que você está concorrendo tempo com você mesmo, separando uma certa quantidade de tempo para ir de um terminal para o outro e tentar continuar de onde parou sua última iteração com o terminal, é assim que funciona a concorrência, estamos lidando com algumas coisas ao mesmo tempo, mas não executando paralelamente ao mesmo tempo.
-<br /><br />
-Olhando para CPU é exatamente isso que ocorre quando temos apenas uma unidade de processamento (1 Core), convivemos com a ilusão da simultaneidade, mas o que o processador faz é  apenas compartilhar um pequeno espaço de tempo entre os procedimentos para executar de forma concorrente, passando a sensação que tudo foi executado ao mesmo tempo.
-</div>
 ## Paralelismo
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;Pegando o exemplo apresentado anteriormente e alterando o cenário para o qual  seus amigos juntamente com você foram ao banco e encontraram três terminais livres, cada um se dirige a um terminal específico e inicia o processamento de forma isolada e ao mesmo tempo que você.
