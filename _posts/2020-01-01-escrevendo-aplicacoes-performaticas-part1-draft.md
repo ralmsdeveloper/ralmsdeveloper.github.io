@@ -55,10 +55,21 @@ Fica óbvio que podemos degradar consideravelmente a performance de nossa aplica
 &nbsp;&nbsp;&nbsp;&nbsp;É muito comum existir a necessidade de concatenar strings durante  o ciclo de desenvolvimento de um software, muitas das vezes é por existir a necessidade de construir algum tipo de informação com objetivo de passar para um algoritmo que possa processar esse dado, uma string é um dado imutável, significa que quando queremos concatenar um caractere ou uma nova cadeia de caracteres a uma string o que está acontece na verdade é uma nova cópia na memória com os dados novos concatenados.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/heap-1.png)
+
 <div style="text-align: justify;">
 Quando usamos StringBuilder o que acontece é um comportamento um pouco diferente, basicamente ele reserva um espaço na memória e os novos caracteres são inseridos nesse buffer sem existir a necessidade de fazer uma nova cópia na memória dos dados que estão sendo inseridos.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/heap-2.png)
+
+<div style="text-align: justify;">
+Vamos pegar um exemplo hipotético aqui onde precisamos montar uma string no formato JSON, é apenas para nossa didática, dado que temos classes robustas dedicadas para serializar e desserializar objetos, para isso temos dois métodos, um que concatena caracteres fazendo a junção de duas strings e outro que utiliza StringBuilder, veja a imagem seguinte:
+</div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/manipular-string.png)
+
+<div style="text-align: justify;">
+Depois de executar nosso teste de performance podemos analisar o benchmark e confirmar que o primeiro método que faz junção de string é muito mais lento e aloca mais espaço.
+</div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-string.png)
 
 ## Quebrando teorias errôneas e falácias
 <div style="text-align: justify;">
