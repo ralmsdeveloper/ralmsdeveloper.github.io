@@ -108,11 +108,10 @@ Uma outra dica importante ao utilizar o Regex é aplicar Timeout dado que nossas
 ## Considerações
 <div class="notice--warning" style="background-color:	#aeffe0">
 <b>Lições aprendidas com Regex:</b><br />
-  - Podemos escrever sempre um algoritmo melhor
-  - Regex Compilado não é bala de prata
-  - Não crie instância do Regex para cada validação se a expressão não muda
-  - Se vai utilizar Regex escolha sempre que possível Regex compilado
-
+  <li>Podemos escrever sempre um algoritmo melhor</li>
+  <li>Regex Compilado não é bala de prata</li>
+  <li>Não crie instância do Regex para cada validação se a expressão não muda</li>
+  <li>Se vai utilizar Regex escolha sempre que possível Regex compilado</li>
 <br /><br />
 Na continuação deste artigo estaremos conhecendo alguns operadores e novas features do .NET que contribuem para alocação mínima de memória.
 </div> 
