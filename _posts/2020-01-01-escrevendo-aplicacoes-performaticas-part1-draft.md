@@ -1,5 +1,5 @@
 ﻿---
-title: "Escrevendo aplicações mais performáticas - Parte 1"
+title: "Escrevendo aplicações mais performáticas"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
@@ -21,7 +21,6 @@ Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de
 ## Introdução
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;
-
 Estaremos abordando neste artigo um dos assuntos que é extremamente importante para uma aplicação muito mais performática e muita das vezes somos omissos seja por falta de conhecimento ou por existir uma demanda de entregas rápidas em nosso dia-a-dia e sempre deixamos melhorias de performance como dívida técnica, pois bem aqui é onde mora o perigo, na maioria das vezes não costumamos pagar esse tipo de dívida seja por esquecimento ou por existir a necessidade de entregar novas features, mas de alguma forma o universo costuma cobrar da gente e geralmente é da pior forma possível, um exemplo simples e que acontece frequentemente é o conhecido crash de container por falta de recurso seja memória ou disco.
 Estamos vivendo a era da computação em nuvem, onde frequentemente ouvimos falar de sistemas distribuídos, resiliência, escalabilidade horizontal e outras coisas legais, pois bem uma dessas coisas legais é o Kubernetes, geralmente utilizamos ele para fornecer a capacidade de escalar o processamento de dados e fornecer várias instâncias de nossas aplicações, com isso limitamos os recursos de cada pod/container para usar a menor unidade de recurso possível, sendo assim customizamos o limite de memória que será utilizado, aqui é onde começamos a pensar fora da caixa, ou seja, será que estamos nos preocupando com essa limitação de recurso?!
 Memory leak é um dos problemas mais comuns que ocorrem em uma aplicação dentro de um container por falta do bom gerenciamento de memória, sendo assim vamos ver como podemos escrever aplicações mais performáticas fazendo um bom gerenciamento de memória.
@@ -43,15 +42,23 @@ As seguintes classes serão utilizadas como exemplos:
 Iremos utilizar a biblioteca BenchmarkDotNet para rastrear e analisar o desempenho, temos dois métodos responsáveis por criar em algumas fases (1.000, 10.000 e 100.000) instâncias das classes acima apresentadas.
 </div>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/performance-destrutor.png)
+<div style="text-align: justify;">
+Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
+</div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-finalizador.png)
+<div style="text-align: justify;">
+Fica óbvio que podemos degradar consideravelmente a performance de nossa aplicação, mesmo usando um destrutor vazio temos um custo alto de aproximadamente <b>1700%</b> ao utilizar classes com destrutor comparado a uma classe que não possui destrutor, observando melhor temos vários objetos que foram promovidos para geração 1, apenas só por existir um destrutor vazio na classe, sendo assim se existir a necessidade de liberar recursos na memória não gerenciada utilize o Pattern Dispose você vai ter um melhor ganho de performance além de diminuir significativamente a quantidade de coletas feitas pelo GC.
+</div>
 
-## Paralelismo
+## Concatenar string ou utilizar StringBuilder ?
 <div style="text-align: justify;">
-&nbsp;&nbsp;&nbsp;&nbsp;Pegando o exemplo apresentado anteriormente e alterando o cenário para o qual  seus amigos juntamente com você foram ao banco e encontraram três terminais livres, cada um se dirige a um terminal específico e inicia o processamento de forma isolada e ao mesmo tempo que você.
+&nbsp;&nbsp;&nbsp;&nbsp;É muito comum existir a necessidade de concatenar strings durante  o ciclo de desenvolvimento de um software, muitas das vezes é por existir a necessidade de construir algum tipo de informação com objetivo de passar para um algoritmo que possa processar esse dado, uma string é um dado imutável, significa que quando queremos concatenar um caractere ou uma nova cadeia de caracteres a uma string o que está acontece na verdade é uma nova cópia na memória com os dados novos concatenados.
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem02.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/heap-1.png)
 <div style="text-align: justify;">
-Nesse exemplo fica explicitamente nítido um padrão de execução usando paralelismo, cada um consegue atuar isoladamente sem saber exatamente o que o outro está fazendo, o paralelismo é possível apenas quando temos mais de um núcleo de CPU, os sistemas operacionais sempre se comportaram de forma excelente, mesmo com limitações existente, fazia o bom uso da concorrência, mas com a evolução dos processadores isso muda o jogo, agora podemos ser capazes de executar tarefas verdadeiramente paralelas, e cada núcleo de CPU se beneficiando ainda mais com o poder da concorrência e simultaneidade.
+Quando usamos StringBuilder o que acontece é um comportamento um pouco diferente, basicamente ele reserva um espaço na memória e os novos caracteres são inseridos nesse buffer sem existir a necessidade de fazer uma nova cópia na memória dos dados que estão sendo inseridos.
 </div>
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/heap-2.png)
 
 ## Quebrando teorias errôneas e falácias
 <div style="text-align: justify;">
