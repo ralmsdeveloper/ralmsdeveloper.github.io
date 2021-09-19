@@ -74,210 +74,37 @@ Depois de executar nosso teste de performance podemos analisar o benchmark e con
 Conforme a quantidade de caracteres vão crescendo temos um custo maior para copiar esses dados na memória para um novo endereço além de alocar muito mais espaço na memória, e se multiplicar isso em um aplicação que trabalha com muita threads podemos chegar a uma conclusão que iremos degradar a performance de nossa aplicação, sendo assim utilize sempre que possível StringBuilder para concatenar strings, o GC e sua memória agradece.
 </div>
 
-## Quebrando teorias errôneas e falácias
+
+## Regex e suas armadilhas
 <div style="text-align: justify;">
-Não é porque podemos disparar inúmeras threads que iremos automaticamente ter paralelismo, isso não é uma verdade, multithreading  só existe com <b>paralelismo</b>, e paralelismo real só existe com mais de um core de CPU, então não se iluda, disparar muitas threads você tem <b>concorrência</b>, agendamentos de execução de procedimentos, fornecendo uma sensação de <b>simultaneidade</b>.
+&nbsp;&nbsp;&nbsp;&nbsp;Regex sem sombra de dúvidas é um dos recursos mais fantásticos que podemos ter em uma linguagem de programação, ele nos proporciona uma excelente produtividade.
+O .NET nos oferece dois sabores de Regex, o interpretado e o compilado, vamos testar a performance de ambos, para isso iremos usar o seguinte cenário no qual precisamos saber se uma string contém números e para isso iremos usar o Regex, na imagem a seguir temos dois métodos um que utiliza uma instância do objeto Regex interpretado e outro que utiliza a instância do Regex Compilado os dois utilizam o mesmo pattern que é validar se existe números em uma string.
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem03.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-regex.png)
+Depois de executar os testes de performance obtemos o seguinte resultado:
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-1.png)
+
 <div style="text-align: justify;">
-Em uma próxima oportunidade irei escrever um artigo falando sobre processamento síncrono, assíncrono, concorrência, multithreading e paralelismo, focaremos aqui no recurso channel do dotnet, mas não poderia seguir sem passar os conceitos básicos como apresentado logo acima.
+&nbsp;&nbsp;&nbsp;&nbsp;
+Fica explicitamente claro que temos um ganho de aproximadamente 260% ao utilizar o Regex compilado, quando estamos processando um alto volume de dados isso faz toda diferença, mas certamente podemos melhorar isso e pensar um pouco fora da caixa, o uso do Regex gera um pequeno custo adicional no quesito performance em nossa aplicação, existem cenários que podemos escrever nosso próprio algoritmo para fazer pequenas otimizações e esse é um deles, não necessariamente precisamos de Regex para saber se existe ou não número em uma string, vamos então vamos utilizar seguinte método para comparar a performance.
 </div>
-## O que é Channel?
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/metodo-customizado.png)
+Executando os testes de performance novamente obtivemos o seguinte resultado:
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-2.png)
+
 <div style="text-align: justify;">
-Resumidamente o channel(<i>ou canal em português</i>) é uma implementação feita pela Microsoft no <b>dotnet core</b> e que está acessível por meio do namespace (<i>System.Threading.Channels</i>), fornece a possibilidade de distribuir o processamento de dados em nossas aplicações, fazendo um excelente uso de <b>concorrência e paralelismo</b>, a ideia básica é que por meio de um canal, possamos produzir algo para um consumidor recuperar e processar, com isso podemos escalar algumas tarefas para melhorar a performance, logo temos um padrão: <b><i>“producer-consumer”</i></b>. 
+&nbsp;&nbsp;&nbsp;&nbsp;
+Fica claro que tivemos um absurdamente de performance comparado com o Regex, se analisar corretamente temos um ganho de aproximadamente 590% sobre o Regex compilado e  1.560% sobre o Regex interpretado isso só prova que sempre que possível devemos escrever nossos próprios algoritmos, vamos ver uma das grandes desvantagens de utilizar o Regex de forma errônea, o cenário é o seguinte, você não quer escrever algoritmos e quer se beneficiar da performance do Regex compilado dado que ele é mais performático que o interpretado certo? Errado, se não souber usar ele de forma correta pode ser seu maior problema de performance, em vez de utilizar as instâncias do Regex estaticamente como apresentado anteriormente vamos instanciar a cada execução e comparar sua performance, vamos utilizar os seguintes métodos:
 </div>
-![Channel]({{site.url}}{{site.baseurl}}/assets/images/channel/imagem-channel.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/regex-instanciado.png)
+Novamente depois de executar todos os testes obtivemos o seguinte resultado:
+![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-3.png)
+
 <div style="text-align: justify;">
-Podemos usar esse padrão para resolver alguns problemas inclusive de performance em nossas aplicações, produzir e consumir está presente em muitas das coisas na vida real, como por exemplo uma professora em uma sala de aula escrevendo em um quadro, e seus alunos consumindo suas informações, um garçom fazendo nosso pedido em um restaurante e enviando para a cozinha onde diversos profissionais realizarão tarefas com base no pedido enviado, na computação não é nada diferente, temos diversos problemas que podemos resolver com padrões e implementações feitas em frameworks para acelerar a produtividade. 
-<br /><br />
-O <b>Channel</b> surgiu exatamente para isso. 🔥🔥🔥
-<br /> <br /> 
-<b>Channel&#60;T&#62;</b> é uma classe abstrata genérica.
+Não é porque o Regex é compilado que será sempre mais rápido, como podemos observar ele ficou drasticamente muito mais lento e fez com que objetos fossem promovidos praticamente em todas as gerações pelo GC além de alocar muitos objetos na memória, podemos resolver isso? Sim, Essa lentidão apresentada é porque existe um custo no momento de criar uma instância do objeto Regex, isso porque o código do Regex é compilado em tempo de execução para ser otimizado, uma boa prática para melhorar a performance é reutilizar a instância do objeto, se sua aplicação não tem a necessidade constante de alterar a expressão que o regex irá utilizar então instanciar os objetos irá fazer com o tempo utilizado na compilação seja evitado.
+Uma outra dica importante ao utilizar o Regex é aplicar Timeout dado que nossas expressões se beneficiam de retrocesso com objetivo de fazer otimização, para mais informações sobre retrocesso basta acessar: Microsoft retrocesso, o timeout garante que a expressão seja validada dentro de uma janela de tempo específica, se não for processada no intervalo especificado será lançada uma exception: <b>RegexMatchTimeoutException</b>.
 </div>
-![Classe abstrata]({{site.url}}{{site.baseurl}}/assets/images/channel/classe-abstrata-01.png)
-![Classe abstrata]({{site.url}}{{site.baseurl}}/assets/images/channel/classe-abstrata-02.png)
-<div style="text-align: justify;">
-E para instanciar precisamos de alguns métodos que estão disponíveis na classe estática <b>Channel</b>, por meio desses métodos conseguimos criar canais parametrizados capazes de atender cenários específicos, mas iremos usar apenas um deles, dado que na sequência deste artigo estaremos fazendo um deep-dive explicando de forma detalhada, a classe estática é a seguinte:
-</div>
-![Métodos]({{site.url}}{{site.baseurl}}/assets/images/channel/metodos.png)
-<div style="text-align: justify;">
-Vamos ver dois métodos de forma resumida!<br /><br />
-<b>CreateBounded&#60;T&#62;(int capacity):</b>
-Cria um canal delimitando a capacidade de objetos que podem ser alocados, é uma boa forma de gerenciar o que será alocado na memória.<br />
-<b>CreateUnbounded&#60;T&#62;():</b>
-Cria um canal sem limitar a capacidade de objetos que podem ser alocados, ao usar método deve-se tomar muito cuidado, sabemos que recursos da máquina não são infinitos, com isso você pode sobrecarregar a memória, mas falaremos mais sobre isso na continuação deste artigo.
-<br />
-</div>
-## Cenário
-<div style="text-align: justify;">
-Vamos pegar um exemplo hipotético para começar a exercitar e alinhar nossos pensamentos de como realmente podemos usar o recurso <b>Channels</b> para nos ajudar a otimizar alguns processos, atender demandas específicas que são críticas e precisam ser processadas em uma janela pequena de tempo, o cenário é o seguinte: 
-</div>
-- Você tem um arquivo CSV com 1000 (mil produtos)
-- Precisa extrair as linhas desse arquivo
-- Montar um objeto e serializar
-- Enviar para um broker (SQS, Google Pub/Sub, Kafka, RabbitMQ)
 
-## Amostras de códigos
-Primeiramente vamos construir nossa classe <b>Produto</b>, usaremos ela para representar um registro do arquivo CSV.
-```csharp
-public class Produto
-{
-    public string SKU { get; set; }
-    public string Descricao { get; set; }
-    public decimal Preco { get; set; }
-    public int Estoque { get; set; }
-}
-```
-## Broker Fake
-Classe para simular o comportamento de envio de mensagens para um serviço de mensageria com tempo de resposta de 10 milissegundos.
-```csharp
-public class BrokerFake
-{
-    public static async ValueTask SendAsync<T>(T data)
-    {
-        var message = JsonSerializer.Serialize(data);
-
-        // Simular latência de 10 milissegundos
-        await Task.Delay(TimeSpan.FromMilliseconds(10));
-    }
-} 
-```    
-## Implementação de uso do Channel
-<div style="text-align: justify;">
-Classe com métodos para produzir e consumir dados do canal, o método <b>Enqueue</b> produz uma mensagem no canal, <b>Consumer</b> obtém a mensagem do canal, nosso método <b>StartConsumers</b> inicializa 6 consumidores, é uma estratégia para escalar e extrair o melhor do canal, é uma classe apenas para fins didático e benchmark, nosso consumer possui algumas adaptações para atender o case apresentado.
- </div>
-```csharp
-public class ChannelTest<T>
-{
-    private readonly Channel<T> _channel;
-    private bool _runningConsummer;
-    private bool _stopRequested;
-
-    public ChannelTest()
-    {
-        _channel = Channel.CreateBounded<T>(1000);
-    }
-
-    public async ValueTask Enqueue(T data) 
-        => await _channel.Writer.WriteAsync(data).ConfigureAwait(false);
-
-    public async Task Consumer()
-    {
-        while (true)
-        {
-            if(_stopRequested && _channel.Reader.Count == 0)
-            {
-                break;
-            }
-
-            if(_channel.Reader.Count == 0)
-            {
-                await Task.Delay(10);
-
-                continue;
-            }
-
-            if (_channel.Reader.TryRead(out var item))
-            {
-                await BrokerFake.SendAsync(item);
-            }
-        }
-    }
-
-    public void StartConsumers()
-    {
-        Task.Run(() =>
-        {
-            var tasks = new Task[6];
-
-            for (int i = 0; i < tasks.Length; i++)
-            {
-                tasks[i] = Consumer();
-            }
-
-            _runningConsummer = true;
-
-            Task.WaitAll(tasks);
-
-            _runningConsummer = false;
-        });
-    }
-
-    public void Complete()
-    {
-        _stopRequested = true;
-
-        while (_runningConsummer) 
-        { 
-            Task.Delay(10).Wait(); 
-        };
-    }
-}
-```    
-
-## Teste de performance
-Classe com métodos para executar testes de performance, o método <b>GetProdutos</b> é para abstrair o uso de um arquivo real, usaremos o <b><a alt="" href="https://benchmarkdotnet.org/">BenchmarkDotNet</a></b> para executar nossos testes de performance.
-```csharp
-[MemoryDiagnoser]
-public class Performance
-{
-    private static IEnumerable<Produto> GetProdutos()
-    {
-        var produtos = Enumerable.Range(1, 1000)
-            .Select(p => new Produto
-            {
-                SKU = Guid.NewGuid().ToString("N"),
-                Descricao = $"Produto {p}",
-                Preco = (p * 1.1m),
-                Estoque = p
-            });
-
-        return produtos;
-    }
-
-    [Benchmark]
-    public async ValueTask SemChannel()
-    {
-        foreach (var produto in GetProdutos())
-        {
-            await BrokerFake.SendAsync(produto);
-        }
-    }
-
-    [Benchmark]
-    public async ValueTask ComChannel()
-    {
-        var channel = new ChannelTest<Produto>();
-        channel.StartConsumers();
-
-        foreach (var produto in GetProdutos())
-        {
-            await channel.Enqueue(produto);
-        }
-
-        channel.Complete();
-    }
-}
-``` 
-
-## Benchmark
-<div style="text-align: justify;">
-Como podemos observar existe um ganho muito significativo de performance ao utilizar o padrão <b>producer-consumer</b>, com isso aumentamos a capacidade de processamentos em nossa aplicação, mas usar um padrão não é o X da questão, e sim a utilização do <b>Channels</b>, ele implementa o padrão e fornece uma API robusta pra gente.
-<br />
-</div>
-```
-BenchmarkDotNet=v0.13.0, OS=Windows 10.0.22000
-Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
-.NET SDK=6.0.100-preview.6.21355.2
-  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
-  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
-
-
-|     Method |          Mean |      Error |     StdDev |        Median |
-|----------- |--------------:|-----------:|-----------:|--------------:|
-| SemChannel | 15,945.549 ms | 31.3865 ms | 27.8233 ms | 15,941.479 ms |
-| ComChannel |      1.974 ms |  0.2007 ms |  0.5726 ms |      2.209 ms |
-```
 ## Considerações
 <div class="notice--warning" style="background-color:	#aeffe0">
 A motivação em escrever este artigo é que em nosso dia-a-dia passamos por situações que às vezes precisamos escrever muito código, mas existem inúmeras implementações nativas que podemos utilizar e que resolvem muito bem determinadas demandas.
