@@ -21,9 +21,9 @@ Estaremos abordando neste artigo um dos assuntos que é extremamente importante 
 ## Introdução
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;
-Estamos vivendo a era da computação em nuvem, onde frequentemente ouvimos falar de sistemas distribuídos, resiliência, escalabilidade horizontal e outras coisas legais, pois bem uma dessas coisas legais é o Kubernetes, geralmente utilizamos ele para fornecer a capacidade de escalar o processamento de dados e fornecer várias instâncias de nossas aplicações, com isso limitamos os recursos de cada pod/container para usar a menor unidade de recurso possível, sendo assim customizamos o limite de memória que será utilizado, aqui é onde começamos a pensar fora da caixa, ou seja, será que estamos nos preocupando com essa limitação de recurso?!
-Memory leak é um dos problemas mais comuns que ocorrem em uma aplicação dentro de um container por falta do bom gerenciamento de memória, sendo assim vamos ver como podemos escrever aplicações mais performáticas fazendo um bom gerenciamento de memória.
-Faremos um compilado de dicas e boas práticas para obter o melhor desempenho com .NET em nossas aplicações diminuindo alocações na memória e coletas do GC (Garbage Collector).
+Estamos vivendo a era da computação em nuvem, onde frequentemente ouvimos falar de sistemas distribuídos, resiliência, escalabilidade horizontal e outras coisas legais, pois bem uma dessas coisas legais é o <b>Kubernetes</b>, geralmente utilizamos ele para fornecer a capacidade de escalar o processamento de dados e fornecer várias instâncias de nossas aplicações, com isso limitamos os recursos de cada pod/container para usar a menor unidade de recurso possível, sendo assim customizamos o limite de memória que será utilizado, aqui é onde começamos a pensar fora da caixa, ou seja, será que estamos nos preocupando com essa limitação de recurso?!
+<b>Memory leak</b> é um dos problemas mais comuns que ocorrem em uma aplicação dentro de um container por falta do bom gerenciamento de memória, sendo assim vamos ver como podemos escrever aplicações mais performáticas fazendo um bom gerenciamento de memória.
+Faremos um compilado de dicas e boas práticas para obter o melhor desempenho com <b>.NET</b> em nossas aplicações diminuindo alocações na memória e coletas do GC (<b>Garbage Collector</b>).
 
 <br />
 Vamos colocar a mão na massa!
