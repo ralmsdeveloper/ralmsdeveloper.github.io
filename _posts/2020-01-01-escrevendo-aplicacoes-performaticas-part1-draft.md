@@ -203,8 +203,56 @@ Conforme a quantidade de caracteres vão crescendo temos um custo maior para cop
 &nbsp;&nbsp;&nbsp;&nbsp;Regex sem sombra de dúvidas é um dos recursos mais fantásticos que podemos ter em uma linguagem de programação, ele nos proporciona uma excelente produtividade.<br />
 O <b>.NET</b> nos oferece dois sabores de Regex, o <b>interpretado</b> e o <b>compilado</b>, vamos testar a performance de ambos, para isso iremos usar o seguinte cenário no qual precisamos saber se uma string contém números e para isso iremos usar o Regex, na imagem a seguir temos dois métodos um que utiliza uma instância do objeto Regex interpretado e outro que utiliza a instância do Regex Compilado os dois utilizam o mesmo pattern que é validar se existe números em uma string.
 </div>
+```chsarp
+[MemoryDiagnoser]
+public class PerformanceRegex
+{
+    private const string _dados = "lUk*avdr!ZhbbNF^J7yxsGueVAufYC3ixB8vqt";
+    private const string _pattern = @"[0-9]";
+    private readonly Regex _regexNaoCompilado = new(_pattern);
+    private readonly Regex _regexCompilado = new(_pattern, RegexOptions.Compiled);
+
+    [Benchmark]
+    public void RegexNormal()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            _ = _regexNaoCompilado.IsMatch(_dados);
+        } 
+    }
+
+    [Benchmark]
+    public void RegexCompilado()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            _ = _regexCompilado.IsMatch(_dados);
+        }
+    }
+    
+    [Params(100, 1_000, 10_000)]
+    public int Size { get; set; }
+}
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-regex.png)
 Depois de executar os testes de performance obtemos o seguinte resultado:
+<code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=6.0.100-preview.6.21355.2
+  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+
+
+|           Method |  Size |             Mean |          Error |         StdDev |
+|----------------- |------ |-----------------:|---------------:|---------------:|
+|      RegexNormal |   100 |        20.858 us |      0.4311 us |      1.2643 us |
+|   RegexCompilado |   100 |         7.929 us |      0.1889 us |      0.5570 us |
+|      RegexNormal |  1000 |       206.609 us |      4.1243 us |      8.1409 us |
+|   RegexCompilado |  1000 |        80.109 us |      1.5968 us |      4.3171 us |
+|      RegexNormal | 10000 |     2,125.230 us |     68.2312 us |    196.8627 us |
+|   RegexCompilado | 10000 |       799.817 us |     15.9848 us |     36.7277 us |
+</code>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-1.png)
 
 <div style="text-align: justify;">
