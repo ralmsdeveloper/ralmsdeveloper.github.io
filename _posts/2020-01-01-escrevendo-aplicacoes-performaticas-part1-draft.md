@@ -14,8 +14,8 @@ header:
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/header.png)
 <hr /> 
-<div class="notice--warning" style="background-color:#f8ffc4">
-Estaremos abordando neste artigo um dos assuntos que é extremamente importante para uma aplicação muito mais performática e muita das vezes somos omissos seja por falta de conhecimento ou por existir uma demanda de entregas rápidas em nosso dia-a-dia e sempre deixamos melhorias de performance como dívida técnica, pois bem aqui é onde mora o perigo, na maioria das vezes não costumamos pagar esse tipo de dívida seja por esquecimento ou por existir a necessidade de entregar novas features, mas de alguma forma o universo costuma cobrar da gente e geralmente é da pior forma possível, um exemplo simples e que acontece frequentemente é o conhecido crash de container por falta de recurso seja memória ou disco.
+<div  style="text-align: justify;" class="notice--warning" style="background-color:#f8ffc4">
+Estaremos abordando neste artigo um dos assuntos que é extremamente importante para uma aplicação muito mais performática e muita das vezes somos omissos seja por falta de conhecimento ou por existir uma demanda de entregas rápidas em nosso <b>dia-a-dia</b> e sempre deixamos melhorias de performance como dívida técnica, pois bem aqui é onde mora o perigo, na maioria das vezes não costumamos pagar esse tipo de dívida seja por esquecimento ou por existir a necessidade de entregar novas features, mas de alguma forma o universo costuma cobrar da gente e geralmente é da pior forma possível, um exemplo simples e que acontece frequentemente é o conhecido crash de container por falta de recurso seja <b>memória ou disco</b>.
 </div> 
 
 ## Introdução
