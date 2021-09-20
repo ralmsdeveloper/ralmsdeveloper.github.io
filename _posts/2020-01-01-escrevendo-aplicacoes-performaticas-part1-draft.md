@@ -36,10 +36,62 @@ Vamos colocar a mão na massa!
 <br /><br />
 As seguintes classes serão utilizadas como exemplos:
 </div>
+```csharp
+public class ClasseSemFinalizador
+{
+    public int Id { get; set; }
+    public string Nome { get; set; }
+}
+
+public class ClasseComFinalizador
+{
+    public int Id { get; set; }
+    public string Nome { get; set; }
+
+    ~ClasseComFinalizador()
+    {
+       // Fazer algo
+    }
+}
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-sem-finalizador.png)
 <div style="text-align: justify;">
 Iremos utilizar a biblioteca BenchmarkDotNet para rastrear e analisar o desempenho, temos dois métodos responsáveis por criar em algumas fases (1.000, 10.000 e 100.000) instâncias das classes acima apresentadas.
 </div>
+```csharp
+[MemoryDiagnoser]
+public class PerformanceDestrutor
+{
+    [Params(1_000, 10_000, 100_000)]
+    public int Size { get; set; }
+
+    [Benchmark]
+    public void ComFinalizador()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            var classe = new ClasseComFinalizador
+            {
+                Id = i,
+                Nome = "Teste"
+            };
+        } 
+    }
+
+    [Benchmark]
+    public void SemFinalizador()
+    {
+        for (int i = 0; i < Size; i++)
+        {
+            var classe = new ClasseSemFinalizador
+            {
+                Id = i,
+                Nome = "Teste"
+            }; 
+        } 
+    }
+}
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/performance-destrutor.png)
 <div style="text-align: justify;">
 Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
