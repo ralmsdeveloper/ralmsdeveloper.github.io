@@ -94,7 +94,8 @@ public class PerformanceDestrutor
 <div style="text-align: justify;">
 Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
 </div>
-<pre>
+
+<code>
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -110,7 +111,8 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 | SemFinalizador |  10000 |     76.591 us |   1.5304 us |  34.6680 |        - |    312 KB |
 | ComFinalizador | 100000 | 13,295.902 us | 262.2954 us | 343.7500 | 171.8750 |  3,125 KB |
 | SemFinalizador | 100000 |    779.552 us |  15.4507 us | 347.6563 |        - |  3,125 KB |
-</pre>
+</code>
+
 <div style="text-align: justify;">
 Fica óbvio que podemos degradar consideravelmente a performance de nossa aplicação, mesmo usando um destrutor vazio temos um custo alto de aproximadamente <b>1700%</b> ao utilizar classes com destrutor comparado a uma classe que não possui destrutor, observando melhor temos vários objetos que foram promovidos para geração 1, apenas só por existir um destrutor vazio na classe, sendo assim se existir a necessidade de liberar recursos na memória não gerenciada utilize o Pattern Dispose você vai ter um melhor ganho de performance além de diminuir significativamente a quantidade de coletas feitas pelo GC.
 </div>
@@ -129,11 +131,67 @@ Quando usamos StringBuilder o que acontece é um comportamento um pouco diferent
 <div style="text-align: justify;">
 Vamos pegar um exemplo hipotético aqui onde precisamos montar uma string no formato JSON, é apenas para nossa didática, dado que temos classes robustas dedicadas para serializar e desserializar objetos, para isso temos dois métodos, um que concatena caracteres fazendo a junção de duas strings e outro que utiliza StringBuilder, veja a imagem seguinte:
 </div>
+```csharp
+[MemoryDiagnoser]
+public class ManipularString
+{
+    [Params(1, 100, 1000)]
+    public int Size { get; set; }
+
+    [Benchmark]
+    public string ConcatenacaoString()
+    {
+        var json = "[";
+        for (int i = 0; i <= Size; i++)
+        {
+            json += "{";
+            json += "\"id\"";
+            json += ":";
+            json += i;
+            json += "}";
+        }
+        json += "]";
+        return json;
+    }
+
+    [Benchmark]
+    public string StringBuilderString()
+    {
+        var json = new StringBuilder("[", 100);
+        for (int i = 0; i <= Size; i++)
+        {
+            json.Append("{").Append("\"id\"") 
+                .Append(":").Append(i) 
+                .Append("}");
+        }
+        json.Append("]");
+
+        return json.ToString();
+    }
+}
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/manipular-string.png)
 
 <div style="text-align: justify;">
 Depois de executar nosso teste de performance podemos analisar o benchmark e confirmar que o primeiro método que faz junção de string é muito mais lento e aloca mais espaço.
 </div>
+<code>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=6.0.100-preview.6.21355.2
+  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+
+
+|              Method | Size |           Mean |     Gen 0 |    Gen 1 |    Allocated |
+|-------------------- |----- |---------------:|----------:|---------:|-------------:|
+|  ConcatenacaoString |    1 |       268.8 ns |    0.0572 |        - |        528 B |
+| StringBuilderString |    1 |       150.5 ns |    0.0367 |        - |        336 B |
+|  ConcatenacaoString |  100 |    78,626.9 ns |   51.0254 |   0.1221 |    469,184 B |
+| StringBuilderString |  100 |     4,270.6 ns |    0.5875 |        - |      5,392 B |
+|  ConcatenacaoString | 1000 | 8,968,043.9 ns | 5562.5000 | 109.3750 | 49,249,192 B |
+| StringBuilderString | 1000 |    64,200.5 ns |    5.1880 |   0.2441 |     46,008 B |
+</code>
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-string.png)
 <div style="text-align: justify;">
 Conforme a quantidade de caracteres vão crescendo temos um custo maior para copiar esses dados na memória para um novo endereço além de alocar muito mais espaço na memória, e se multiplicar isso em um aplicação que trabalha com muita threads podemos chegar a uma conclusão que iremos degradar a performance de nossa aplicação, sendo assim utilize sempre que possível StringBuilder para concatenar strings, o GC e sua memória agradece.
