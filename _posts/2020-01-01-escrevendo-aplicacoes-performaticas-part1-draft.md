@@ -54,7 +54,6 @@ public class ClasseComFinalizador
     }
 }
 ```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-sem-finalizador.png)
 <div style="text-align: justify;">
 Iremos utilizar a biblioteca BenchmarkDotNet para rastrear e analisar o desempenho, temos dois métodos responsáveis por criar em algumas fases (1.000, 10.000 e 100.000) instâncias das classes acima apresentadas.
 </div>
@@ -92,11 +91,26 @@ public class PerformanceDestrutor
     }
 }
 ```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/performance-destrutor.png)
 <div style="text-align: justify;">
 Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-finalizador.png)
+<pre>
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=6.0.100-preview.6.21355.2
+  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+
+
+|         Method |   Size |          Mean |       Error |    Gen 0 |    Gen 1 | Allocated |
+|--------------- |------- |--------------:|------------:|---------:|---------:|----------:|
+| ComFinalizador |   1000 |    133.693 us |   2.6418 us |   3.4180 |   1.7090 |     31 KB |
+| SemFinalizador |   1000 |      8.018 us |   0.1612 us |   3.4637 |        - |     31 KB |
+| ComFinalizador |  10000 |  1,333.029 us |  26.5482 us |  33.2031 |  15.6250 |    312 KB |
+| SemFinalizador |  10000 |     76.591 us |   1.5304 us |  34.6680 |        - |    312 KB |
+| ComFinalizador | 100000 | 13,295.902 us | 262.2954 us | 343.7500 | 171.8750 |  3,125 KB |
+| SemFinalizador | 100000 |    779.552 us |  15.4507 us | 347.6563 |        - |  3,125 KB |
+</pre>
 <div style="text-align: justify;">
 Fica óbvio que podemos degradar consideravelmente a performance de nossa aplicação, mesmo usando um destrutor vazio temos um custo alto de aproximadamente <b>1700%</b> ao utilizar classes com destrutor comparado a uma classe que não possui destrutor, observando melhor temos vários objetos que foram promovidos para geração 1, apenas só por existir um destrutor vazio na classe, sendo assim se existir a necessidade de liberar recursos na memória não gerenciada utilize o Pattern Dispose você vai ter um melhor ganho de performance além de diminuir significativamente a quantidade de coletas feitas pelo GC.
 </div>
