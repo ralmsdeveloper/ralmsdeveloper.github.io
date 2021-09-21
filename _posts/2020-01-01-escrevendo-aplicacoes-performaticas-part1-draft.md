@@ -15,7 +15,7 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/header.png)
 <hr /> 
 <div  style="text-align: justify;" class="notice--warning" style="background-color:#f8ffc4">
-Estaremos abordando neste artigo um dos assuntos que é extremamente importante para uma aplicação muito mais performática e muita das vezes somos omissos seja por falta de conhecimento ou por existir uma demanda de entregas rápidas em nosso <b>dia-a-dia</b> e sempre deixamos melhorias de performance como dívida técnica, pois bem aqui é onde mora o perigo, na maioria das vezes não costumamos pagar esse tipo de dívida seja por esquecimento ou por existir a necessidade de entregar novas features, mas de alguma forma o universo costuma cobrar da gente e geralmente é da pior forma possível, um exemplo simples e que acontece frequentemente é o conhecido crash de container por falta de recurso seja <b>memória ou disco</b>.
+Abordando neste artigo um dos assuntos que é extremamente importante para uma aplicação muito mais performática e muita das vezes somos omissos seja por falta de conhecimento ou por existir uma demanda de entregas rápidas em nosso <b>dia-a-dia</b> e sempre deixamos melhorias de performance como dívida técnica, pois bem aqui é onde mora o perigo, na maioria das vezes não costumamos pagar esse tipo de dívida seja por esquecimento ou por existir a necessidade de entregar novas features, mas de alguma forma o universo costuma cobrar da gente e geralmente é da pior forma possível, um exemplo simples e que acontece frequentemente é o conhecido crash de container por falta de recurso seja <b>memória ou disco</b>.
 </div> 
 
 ## Introdução
@@ -368,7 +368,7 @@ Uma outra dica importante ao utilizar o Regex é aplicar Timeout dado que nossas
   <li>Não crie instância do Regex para cada validação se a expressão não muda</li>
   <li>Se vai utilizar Regex escolha sempre que possível Regex compilado</li>
 <br /><br />
-Na continuação deste artigo estaremos conhecendo alguns operadores e novas features do .NET que contribuem para alocação mínima de memória.
+Na continuação deste artigo conheceremos alguns operadores e novas features do .NET que contribuem para alocação mínima de memória.
 </div> 
  
 ## Contatos
