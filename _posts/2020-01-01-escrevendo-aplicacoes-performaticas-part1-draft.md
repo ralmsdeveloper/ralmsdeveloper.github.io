@@ -95,7 +95,7 @@ public class PerformanceDestrutor
 Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
 </div>
 
-<code>
+```
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -111,7 +111,7 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 | SemFinalizador |  10000 |     76.591 us |   1.5304 us |  34.6680 |        - |    312 KB |
 | ComFinalizador | 100000 | 13,295.902 us | 262.2954 us | 343.7500 | 171.8750 |  3,125 KB |
 | SemFinalizador | 100000 |    779.552 us |  15.4507 us | 347.6563 |        - |  3,125 KB |
-</code>
+```
 
 <div style="text-align: justify;">
 Fica óbvio que podemos degradar consideravelmente a performance de nossa aplicação, mesmo usando um destrutor vazio temos um custo alto de aproximadamente <b>1700%</b> ao utilizar classes com destrutor comparado a uma classe que não possui destrutor, observando melhor temos vários objetos que foram promovidos para geração 1, apenas só por existir um destrutor vazio na classe, sendo assim se existir a necessidade de liberar recursos na memória não gerenciada utilize o Pattern Dispose você vai ter um melhor ganho de performance além de diminuir significativamente a quantidade de coletas feitas pelo GC.
@@ -175,7 +175,7 @@ public class ManipularString
 <div style="text-align: justify;">
 Depois de executar nosso teste de performance podemos analisar o benchmark e confirmar que o primeiro método que faz junção de string é muito mais lento e aloca mais espaço.
 </div>
-<code>
+```
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -191,7 +191,7 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 | StringBuilderString |  100 |     4,270.6 ns |    0.5875 |        - |      5,392 B |
 |  ConcatenacaoString | 1000 | 8,968,043.9 ns | 5562.5000 | 109.3750 | 49,249,192 B |
 | StringBuilderString | 1000 |    64,200.5 ns |    5.1880 |   0.2441 |     46,008 B |
-</code>
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-string.png)
 <div style="text-align: justify;">
 Conforme a quantidade de caracteres vão crescendo temos um custo maior para copiar esses dados na memória para um novo endereço além de alocar muito mais espaço na memória, e se multiplicar isso em um aplicação que trabalha com muita threads podemos chegar a uma conclusão que iremos degradar a performance de nossa aplicação, sendo assim utilize sempre que possível StringBuilder para concatenar strings, o GC e sua memória agradece.
@@ -236,7 +236,7 @@ public class PerformanceRegex
 ```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-regex.png)
 Depois de executar os testes de performance obtemos o seguinte resultado:
-<code>
+```
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -252,24 +252,111 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 |   RegexCompilado |  1000 |        80.109 us |      1.5968 us |      4.3171 us |
 |      RegexNormal | 10000 |     2,125.230 us |     68.2312 us |    196.8627 us |
 |   RegexCompilado | 10000 |       799.817 us |     15.9848 us |     36.7277 us |
-</code>
+```
 ![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-1.png)
 
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;
 Fica explicitamente claro que temos um ganho de aproximadamente <b>260%</b> ao utilizar o Regex compilado, quando estamos processando um alto volume de dados isso faz toda diferença, mas certamente podemos melhorar isso e pensar um pouco fora da caixa, o uso do Regex gera um pequeno custo adicional no quesito performance em nossa aplicação, existem cenários que podemos escrever nosso próprio algoritmo para fazer pequenas otimizações e esse é um deles, não necessariamente precisamos de Regex para saber se existe ou não número em uma string, vamos então vamos utilizar seguinte método para comparar a performance.
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/metodo-customizado.png)
+```csharp
+[Benchmark]
+public void MetodoCustomizado()
+{
+    for (int i = 0; i < Size; i++)
+    {
+        _ = ContemNumero(_dados.AsSpan());
+    }
+}
+
+[MethodImpl(MethodImplOptions.AggressiveInlining)]
+private static bool ContemNumero(ReadOnlySpan<char> span)
+{
+    for (var i = 0; i < span.Length; i++)
+    {
+        if (span[i] >= '0' && span[i] <= '9')
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+``` 
 Executando os testes de performance novamente obtivemos o seguinte resultado:
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-2.png)
+``` 
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=6.0.100-preview.6.21355.2
+  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+
+
+|            Method |  Size |             Mean |          Error |         StdDev |
+|------------------ |------ |-----------------:|---------------:|---------------:|
+|       RegexNormal |   100 |        20.858 us |      0.4311 us |      1.2643 us |
+|    RegexCompilado |   100 |         7.929 us |      0.1889 us |      0.5570 us |
+| MetodoCustomizado |   100 |         1.335 us |      0.0265 us |      0.0428 us |
+|       RegexNormal |  1000 |       206.609 us |      4.1243 us |      8.1409 us |
+|    RegexCompilado |  1000 |        80.109 us |      1.5968 us |      4.3171 us |
+| MetodoCustomizado |  1000 |        16.470 us |      0.3225 us |      0.6137 us |
+|       RegexNormal | 10000 |     2,125.230 us |     68.2312 us |    196.8627 us |
+|    RegexCompilado | 10000 |       799.817 us |     15.9848 us |     36.7277 us |
+| MetodoCustomizado | 10000 |       162.689 us |      3.1943 us |      4.5811 us |
+```  
 
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;
 Fica claro que tivemos um absurdamente de performance comparado com o <b>Regex</b>, se analisar corretamente temos um ganho de aproximadamente <b>590%</b> sobre o Regex compilado e <b>1.560%</b> sobre o Regex interpretado isso só prova que sempre que possível devemos escrever nossos próprios algoritmos, vamos ver uma das grandes desvantagens de utilizar o Regex de forma errônea, o cenário é o seguinte, você não quer escrever algoritmos e quer se beneficiar da performance do <b>Regex compilado</b> dado que ele é mais performático que o interpretado certo? Errado, se não souber usar ele de forma correta pode ser seu maior problema de performance, em vez de utilizar as instâncias do Regex estaticamente como apresentado anteriormente vamos instanciar a cada execução e comparar sua performance, vamos utilizar os seguintes métodos:
 </div>
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/regex-instanciado.png)
+```csharp
+[Benchmark]
+public void RegexNormalInstanciado()
+{
+    for (int i = 0; i < Size; i++)
+    {
+        var regex = new Regex(_pattern);
+        _ = regex.IsMatch(_dados);
+    }
+}
+
+[Benchmark]
+public void RegexCompiladoInstanciado()
+{
+    for (int i = 0; i < Size; i++)
+    {
+        var regex = new Regex(_pattern, RegexOptions.Compiled);
+        _ = regex.IsMatch(_dados);
+    }
+}
+```
 Novamente depois de executar todos os testes obtivemos o seguinte resultado:
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-3.png)
+```csharp
+BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
+Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
+.NET SDK=6.0.100-preview.6.21355.2
+  [Host]     : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+  DefaultJob : .NET 5.0.8 (5.0.821.31504), X64 RyuJIT
+
+
+|                    Method |  Size |             Mean |     Gen 0 |     Gen 1 |     Gen 2 |    Allocated |
+|-------------------------- |------ |-----------------:|----------:|----------:|----------:|-------------:|
+|               RegexNormal |   100 |        20.858 us |         - |         - |         - |            - |
+|            RegexCompilado |   100 |         7.929 us |         - |         - |         - |            - |
+|         MetodoCustomizado |   100 |         1.335 us |         - |         - |         - |            - |
+|    RegexNormalInstanciado |   100 |       253.201 us |   29.2969 |         - |         - |    268,000 B |
+| RegexCompiladoInstanciado |   100 |    87,663.636 us |         - |         - |         - |    776,800 B |
+|               RegexNormal |  1000 |       206.609 us |         - |         - |         - |            - |
+|            RegexCompilado |  1000 |        80.109 us |         - |         - |         - |            - |
+|         MetodoCustomizado |  1000 |        16.470 us |         - |         - |         - |            - |
+|    RegexNormalInstanciado |  1000 |     2,536.451 us |         - |         - |2,680,000 B|            - |
+| RegexCompiladoInstanciado |  1000 |   861,472.006 us |         - |         - |         - |  7,768,000 B |
+|               RegexNormal | 10000 |     2,125.230 us |         - |         - |         - |            - |
+|            RegexCompilado | 10000 |       799.817 us |         - |         - |         - |            - |
+|         MetodoCustomizado | 10000 |       162.689 us |         - |         - |         - |            - |
+|    RegexNormalInstanciado | 10000 |    25,384.456 us | 2937.5000 |         - |         - | 26,800,000 B |
+| RegexCompiladoInstanciado | 10000 | 8,872,594.393 us | 9000.0000 | 5000.0000 | 1000.0000 | 78,220,016 B |
+``` 
 
 <div style="text-align: justify;">
 Não é porque o <b>Regex</b> é compilado que será sempre mais rápido, como podemos observar ele ficou drasticamente muito mais lento e fez com que objetos fossem promovidos praticamente em todas as gerações pelo <b>GC</b> além de alocar muitos objetos na memória, podemos resolver isso? Sim, Essa lentidão apresentada é porque existe um custo no momento de criar uma instância do objeto <b>Regex</b>, isso porque o código do Regex é compilado em tempo de execução para ser otimizado, uma boa prática para melhorar a performance é reutilizar a instância do objeto, se sua aplicação não tem a necessidade constante de alterar a expressão que o regex irá utilizar então instanciar os objetos irá fazer com o tempo utilizado na compilação seja evitado.
