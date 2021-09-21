@@ -95,7 +95,7 @@ public class PerformanceDestrutor
 Para saber como utilizar a biblioteca BenchmarkDotNet basta acessar  BenchmarkDotNet apos executar o teste de performance vamos analisar o resultado produzido na seguinte imagem:
 </div>
 
-```
+```csharp
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -169,13 +169,12 @@ public class ManipularString
         return json.ToString();
     }
 }
-```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/manipular-string.png)
+``` 
 
 <div style="text-align: justify;">
 Depois de executar nosso teste de performance podemos analisar o benchmark e confirmar que o primeiro método que faz junção de string é muito mais lento e aloca mais espaço.
 </div>
-```
+```csharp
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -191,8 +190,7 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 | StringBuilderString |  100 |     4,270.6 ns |    0.5875 |        - |      5,392 B |
 |  ConcatenacaoString | 1000 | 8,968,043.9 ns | 5562.5000 | 109.3750 | 49,249,192 B |
 | StringBuilderString | 1000 |    64,200.5 ns |    5.1880 |   0.2441 |     46,008 B |
-```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-string.png)
+``` 
 <div style="text-align: justify;">
 Conforme a quantidade de caracteres vão crescendo temos um custo maior para copiar esses dados na memória para um novo endereço além de alocar muito mais espaço na memória, e se multiplicar isso em um aplicação que trabalha com muita threads podemos chegar a uma conclusão que iremos degradar a performance de nossa aplicação, sendo assim utilize sempre que possível StringBuilder para concatenar strings, o GC e sua memória agradece.
 </div>
@@ -233,10 +231,9 @@ public class PerformanceRegex
     [Params(100, 1_000, 10_000)]
     public int Size { get; set; }
 }
-```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/classe-regex.png)
+``` 
 Depois de executar os testes de performance obtemos o seguinte resultado:
-```
+```csharp
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
@@ -253,7 +250,6 @@ Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cor
 |      RegexNormal | 10000 |     2,125.230 us |     68.2312 us |    196.8627 us |
 |   RegexCompilado | 10000 |       799.817 us |     15.9848 us |     36.7277 us |
 ```
-![01]({{site.url}}{{site.baseurl}}/assets/images/performance-01/benchmark-regex-1.png)
 
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;
@@ -284,7 +280,7 @@ private static bool ContemNumero(ReadOnlySpan<char> span)
 }
 ``` 
 Executando os testes de performance novamente obtivemos o seguinte resultado:
-``` 
+```csharp
 BenchmarkDotNet=v0.13.1, OS=Windows 10.0.22000
 Intel Core i7-7500U CPU 2.70GHz (Kaby Lake), 1 CPU, 4 logical and 2 physical cores
 .NET SDK=6.0.100-preview.6.21355.2
