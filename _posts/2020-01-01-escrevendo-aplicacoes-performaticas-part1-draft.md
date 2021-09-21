@@ -201,7 +201,7 @@ Conforme a quantidade de caracteres vão crescendo temos um custo maior para cop
 &nbsp;&nbsp;&nbsp;&nbsp;Regex sem sombra de dúvidas é um dos recursos mais fantásticos que podemos ter em uma linguagem de programação, ele nos proporciona uma excelente produtividade.<br />
 O <b>.NET</b> nos oferece dois sabores de Regex, o <b>interpretado</b> e o <b>compilado</b>, vamos testar a performance de ambos, para isso iremos usar o seguinte cenário no qual precisamos saber se uma string contém números e para isso iremos usar o Regex, na imagem a seguir temos dois métodos um que utiliza uma instância do objeto Regex interpretado e outro que utiliza a instância do Regex Compilado os dois utilizam o mesmo pattern que é validar se existe números em uma string.
 </div>
-```chsarp
+```csharp
 [MemoryDiagnoser]
 public class PerformanceRegex
 {
