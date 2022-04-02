@@ -4,6 +4,8 @@ main:
     url: /categories/
   - title: "Palestras"
     url: /talks
+  - title: "Consultoria"
+    url: /about    
   #- title: "Sobre"
   #  url: https://ralms.net
   # - title: "About"
