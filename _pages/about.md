@@ -5,5 +5,7 @@ classes: wide
 ---
 
 <center>
-![01]({{ site.url }}{{ site.baseurl }}/assets/images/ralms.jfif)
+<img src="/assets/images/ralms.jfif" alt="" /><br />
+Rafael Almeida <br />
+Contato: +55 79 98829.3815
 </center>
