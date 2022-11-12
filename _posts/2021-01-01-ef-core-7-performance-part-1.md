@@ -161,10 +161,11 @@ Mas isso tinha um custo alto de CPU e memória, a instrução para atualização
       OUTPUT 1
       WHERE [Id] = @p67;
  ```
+
+## Resolvendo o problema
 <div style="text-align: justify;">
 O <b>EF Core 7</b> trouxe novos métodos de extensão que ajudam a resolver o problema apresentado anteriormente, ficou muito mais simples e extremamente rápido atualizar uma massa de registros, veja um exemplo:
 </div>
-## Resolvendo o problema
  ```csharp
 var rowsAffected = await db
     .Customers
