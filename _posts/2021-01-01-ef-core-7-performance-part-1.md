@@ -42,6 +42,27 @@ A versão do <b>EF Core 7</b> foi lançada oficialmente no 8 de novembro de 2022
  <br />
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image02.png)
  
+## Entendendo o problema
+<div style="text-align: justify;">
+Quando a gente precisava excluir ou atualizar uma massa de registros e existia a necessidade de aplicar um filtro para que as modificações fosse restrita apenas a um conjunto de dados, tínhamos que executar uma instrução bruta fora do capô do ORM ou consultar os dados via ORM para que os objetos fossem traqueados, executar a lógica desejada exclusão ou atualização do objeto e depois chamar o método SaveChanges, vamos pegar exemplo hipotético aqui atualização de desconto para todos clientes do estado de São Paulo, a gente usava algo assim:
+</div>
+ ```csharp
+public string ToSnakeCaseUsingRegex()
+{
+var customers = db.Customers.Where(p => p.State == "SP");
+foreach (var customer in customers)
+{
+    customer.Discount = 10m;
+}
+db.SaveChanges();
+}
+```
+Mas isso tinha um custo alto de CPU e memória.
+<div style="text-align: justify;">
+Quando a gente precisava excluir ou atualizar uma massa de registros e existia a necessidade de aplicar um filtro para que as modificações fosse restrita apenas a um conjunto de dados, tínhamos que executar uma instrução bruta fora do capô do ORM ou consultar os dados via ORM para que os objetos fossem traqueados, executar a lógica desejada exclusão ou atualização do objeto e depois chamar o método SaveChanges, vamos pegar exemplo hipotético aqui atualização de desconto para todos clientes do estado de São Paulo, a gente usava algo assim:
+</div>
+## Resolvendo o problema
+
 ## Contatos
 <div class="notice--info">
  Fico por aqui, mas pode me contatar por meio de minhas redes sociais 😄 <br />
