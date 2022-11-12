@@ -7,7 +7,7 @@ categories:
   - "ASPNET Core"
 header:
   teaser: /assets/images/JsonNamePolicy.png
-  caption: "www.ralms.net"
+  caption: "www.ralms.io"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/JsonNamePolicy.png)

@@ -7,7 +7,7 @@ categories:
   - "Entity Framework Core"
 header:
   teaser: /assets/images/efcorecsharp.png
-  caption: "www.ralms.net"
+  caption: "www.ralms.io"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcorecsharp.png)

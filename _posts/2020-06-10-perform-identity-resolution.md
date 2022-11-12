@@ -9,7 +9,7 @@ categories:
   - Entity Framework Core
 header:
   teaser: /assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png
-  caption: "www.ralms.net"
+  caption: "www.ralms.io"
 ---
 
 ![01]({{site.url}}{{site.baseurl}}/assets/images/ef5identityresolution/EF5_PerformIdentityResolution.png)

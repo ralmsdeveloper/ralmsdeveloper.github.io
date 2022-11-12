@@ -31,7 +31,7 @@ Usando Pascal Case em nosso código significa que a primeira letra de cada palav
 <strong style="color: green">Exemplo:</strong> 
 </div>
 ```csharp
-BlogRafael = "www.ralms.net";
+BlogRafael = "www.ralms.io";
 ``` 
 ## CamelCase 
 <div style="text-align: justify;">
@@ -39,7 +39,7 @@ BlogRafael = "www.ralms.net";
 <strong  style="color: green">Exemplo:</strong> 
 </div>
 ```csharp
-blogRafael = "www.ralms.net";
+blogRafael = "www.ralms.io";
 ```  
 ## SnakeCase 
 <div style="text-align: justify;">
@@ -48,8 +48,8 @@ esse caso em especial, não tem uma definição especifica quando se trata em de
 <strong style="color: green">Exemplo:</strong>
 </div> 
 ```csharp
-blog_rafael = "www.ralms.net";
-Blog_Rafael = "www.ralms.net";
+blog_rafael = "www.ralms.io";
+Blog_Rafael = "www.ralms.io";
 ```
 
 ## SpinalCase 
@@ -58,8 +58,8 @@ Mesma regra do <strong>SnakeCase</strong>, única diferença é em vez de usar "
 <strong style="color: green">Exemplo:</strong>
 </div> 
 ```csharp
-blog-rafael = "www.ralms.net";
-Blog-Rafael = "www.ralms.net";
+blog-rafael = "www.ralms.io";
+Blog-Rafael = "www.ralms.io";
 ```
  
 # Vamos codar?! 
