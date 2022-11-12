@@ -7,8 +7,10 @@ toc_label: "Tópicos"
 categories:
   - dotnet
   - performance
+  - Entity Framework Core
+  - Entity Framework Core 7
 header:
-  teaser: /assets/images/channel/channel-top.png
+  teaser: /assets/images/efcore7/topo.png
   caption: "www.ralms.io"
 ---
 
