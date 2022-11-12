@@ -172,12 +172,27 @@ var rowsAffected = await db
     .ExecuteUpdateAsync(p => p.SetProperty(x => x.Discount, 11m));
 ```   
 Instrução ficou muito mais simplificada:
- ```csharp
+ ```sql
  UPDATE [p]
       SET [p].[Discount] = 11.0
       FROM [Customers] AS [p]
       WHERE [p].[State] = N'SP'
 ```  
+<br />
+## Métodos de extensão novos
+- ExecuteUpdate
+- ExecuteUpdateAsync
+- ExecuteDelete
+- ExecuteDeleteAsync
+
+Para excluir registros em massa você pode executar o seguinte comando:
+ ```csharp
+var rowsAffected = await db
+    .Customers
+    .Where(p => p.State == "SP")
+    .ExecuteDeleteAsync();
+```
+Todos os métodos novos de extensão devolve a quantidade de registros que foram afetados na base de dados.
 ## Contatos
 <div class="notice--info">
  Fico por aqui, mas pode me contatar por meio de minhas redes sociais 😄 <br />
