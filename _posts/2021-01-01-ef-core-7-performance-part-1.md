@@ -17,7 +17,8 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/topo.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
-Este pequeno post é pra comemorar o lançamento do Entity Framework Core 7 e algumas observações pessoais.
+Este pequeno post é pra comemorar o lançamento do Entity Framework Core 7 e algumas observações pessoais, fiz alguns teses enquanto testava a performance
+de Minimal API vs MVC, e obtive uma performance de mais 500%, isso é simplesmente fantástico!
 </div> 
 
 ## Introdução
