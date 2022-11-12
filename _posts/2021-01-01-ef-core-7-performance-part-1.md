@@ -25,6 +25,7 @@ Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de
 A cada versão do produto geralmente costumamos ver diversas features sendo implementadas no produto, sendo que na versão EF Core 6 e agora o EF Core 7 não contém tantas features como costumávamos a ver, isso tem um motivo, o produto está ficando cada vez mais maduro e estável, além disso foco tem sido em melhorias de performance e features já existentes.
 
 A versão do EF Core 7 foi lançada oficialmente no 8 de novembro de 2022, ela não trouxe diversas novidades, mas trouxe algumas extremantes valiosas que são:
+</div>
 
 <br /> 
 - Suporte JSON nativo
@@ -32,6 +33,13 @@ A versão do EF Core 7 foi lançada oficialmente no 8 de novembro de 2022, ela n
 - Suporte atualização em massa
 - Suporte exclusão em massa
 
+## Foco
+<div style="text-align: justify;">
+&nbsp;&nbsp;&nbsp;&nbsp;Estarei focando aqui na atualização e exclusão em massa, dado que temos um ganho significativo de performance, vale lembrar que existem outras formas de atingir praticamente o mesmo objetivo que será apresentado, porém era workaround nada nativo do ORM.
+
+A atualização e exclusão em massa foi um dos tópicos mais comentados e solicitados no github do projeto, inclusive o próprio team fez uma apresentação onde disponibilizou um gráfico de performance e os ganhos que tivemos desde o EF 6.
+</div>
+ ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image01.png)
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image02.png)
  
 ## Contatos
