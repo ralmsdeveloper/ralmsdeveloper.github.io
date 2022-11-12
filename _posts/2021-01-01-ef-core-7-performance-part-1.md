@@ -12,7 +12,7 @@ header:
   caption: "www.ralms.net"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/channel/channel-top.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/topo.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
 Neste artigo abordaremos um dos recursos do .NET que nos fornece a capacidade de distribuir o processamento de dados em nossas aplicações por meio de um canal, iremos usar o padrão arquitetural <b>producer-consumer</b>, o qual abordaremos logo mais.
@@ -26,20 +26,19 @@ A cada versão do produto geralmente costumamos ver diversas features sendo impl
 
 A versão do EF Core 7 foi lançada oficialmente no 8 de novembro de 2022, ela não trouxe diversas novidades, mas trouxe algumas extremantes valiosas que são:
 </div>
-
-<br /> 
 - Suporte JSON nativo
 - Insert mais rápido
 - Suporte atualização em massa
 - Suporte exclusão em massa
 
-## Foco
+## Atualização em massa
 <div style="text-align: justify;">
 &nbsp;&nbsp;&nbsp;&nbsp;Estarei focando aqui na atualização e exclusão em massa, dado que temos um ganho significativo de performance, vale lembrar que existem outras formas de atingir praticamente o mesmo objetivo que será apresentado, porém era workaround nada nativo do ORM.
-
-A atualização e exclusão em massa foi um dos tópicos mais comentados e solicitados no github do projeto, inclusive o próprio team fez uma apresentação onde disponibilizou um gráfico de performance e os ganhos que tivemos desde o EF 6.
+<br />
+&nbsp;&nbsp;&nbsp;&nbsp;A atualização e exclusão em massa foi um dos tópicos mais comentados e solicitados no github do projeto, inclusive o próprio team fez uma apresentação onde disponibilizou um gráfico de performance e os ganhos que tivemos desde o EF 6.
 </div>
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image01.png)
+ <br />
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image02.png)
  
 ## Contatos
