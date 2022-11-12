@@ -12,7 +12,7 @@ toc_label: "Começando"
 
 <center><strong>Fala pessoal, tudo bem?! 🔑 </strong></center>
 <hr>
-No artigo anterior (<a href="http://ralms.net/dica/criptografiaefcore/" alt="">http://ralms.net/dica/criptografiaefcore/</a> eu mostrei como criptografar dados no EF Core usando <strong>HasConversion.</strong>
+No artigo anterior (<a href="https://ralms.io/dica/criptografiaefcore/" alt="">https://ralms.io/dica/criptografiaefcore/</a> eu mostrei como criptografar dados no EF Core usando <strong>HasConversion.</strong>
 ## Criptografia usando EF Core (Annotation)
 <div style="text-align: justify;">
 Classe de criptografia é a mesma do artigo anterior.<br><br>

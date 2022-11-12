@@ -246,7 +246,7 @@ var idx = lunr(function () {
   
     idx.add({
       title: "Gravando informações criptografadas #2",
-      excerpt: "Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion. Criptografia...",
+      excerpt: "Fala pessoal, tudo bem?! 🔑 No artigo anterior (https://ralms.io/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion. Criptografia...",
       categories: ["Dica"],
       tags: [],
       id: 26
@@ -849,7 +849,7 @@ var store = [
       {
         "title": "Gravando informações criptografadas #2",
         "url": "http://localhost:4000/dica/criptografiaefcoreparte2/",
-        "excerpt": "Fala pessoal, tudo bem?! 🔑 No artigo anterior (http://ralms.net/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion. Criptografia...",
+        "excerpt": "Fala pessoal, tudo bem?! 🔑 No artigo anterior (https://ralms.io/dica/criptografiaefcore/ eu mostrei como criptografar dados no EF Core usando HasConversion. Criptografia...",
         "teaser":
           
             null

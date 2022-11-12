@@ -17,7 +17,7 @@ header:
 <hr> 
 Curiosidade leva nos sempre a pensar fora da caixa!!!<br />
 <div style="text-align: justify;">
-No artigo <a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
+No artigo <a href="https://ralms.io/dica/snakecase/" target="_BLANK" alt="">SNAKE CASE</a> eu usei um <b>REGEX</b> para aplicar 
 a nomenclatura snake-case em uma <b>string</b>, mas hoje domingão (madrugada ainda rss), fiquei pensando de quanto performático era esse método.
 </div>
 <br />

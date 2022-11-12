@@ -20,8 +20,8 @@ Veja como fazer convenções de nomenclatura <strong>SnakeCase</strong> de forma
 <div class="notice--warning">
 <strong>FYI:</strong><br>
 Este artigo é uma versão atualizada de:
-<a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
-http://ralms.net/dica/snakecase/
+<a href="https://ralms.io/dica/snakecase/" target="_BLANK" alt="">
+https://ralms.io/dica/snakecase/
 </a>
 <br>
 O objetivo maior deste artigo é mostrar as alterações na API de metadados do Entity Framework Core 3.x.
@@ -32,8 +32,8 @@ O objetivo maior deste artigo é mostrar as alterações na API de metadados do 
 # Veja esse artigo! 
 Quer ver um resumidão sobre <b>Naming Conventions</b>?<br>
 acesse esse link:
-<a href="http://ralms.net/dica/snakecase/" target="_BLANK" alt="">
-http://ralms.net/dica/snakecase/
+<a href="https://ralms.io/dica/snakecase/" target="_BLANK" alt="">
+https://ralms.io/dica/snakecase/
 </a>
 
  
