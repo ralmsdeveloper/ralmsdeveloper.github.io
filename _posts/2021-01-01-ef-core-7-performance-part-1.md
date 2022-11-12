@@ -190,11 +190,17 @@ em minha maquina enquanto testava outras coisas como Minimal API vs MVC, eu obit
 - ExecuteDeleteAsync
 
 Para excluir registros em massa você pode executar o seguinte comando:
- ```csharp
+ ```sql
 var rowsAffected = await db
     .Customers
     .Where(p => p.State == "SP")
     .ExecuteDeleteAsync();
+```
+O comando executado na base de dados basicamente é mesmo que um humano escreveria.
+```sql
+DELETE FROM [p]
+      FROM [People] AS [p]
+      WHERE [p].[State] = N'SP'
 ```
 Todos os métodos novos de extensão devolve a quantidade de registros que foram afetados na base de dados.
 ## Contatos
