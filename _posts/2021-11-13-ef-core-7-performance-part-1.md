@@ -44,6 +44,8 @@ A atualização e exclusão em massa foi um dos tópicos mais comentados e solic
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image01.png)
  <br /> <br />
  ![01]({{site.url}}{{site.baseurl}}/assets/images/efcore7/image02.png)
+
+ Fonte imagens: <a href="https://view.officeapps.live.com/op/view.aspx?src=https%3A%2F%2Fraw.githubusercontent.com%2Fajcvickers%2FBlogManagementApi%2Fmain%2FLevelingUpData_v2.pptx&wdOrigin=BROWSELINK" alt="">PPT do Team EF Core</a>
  
 ## Entendendo o problema
 <div style="text-align: justify;">
