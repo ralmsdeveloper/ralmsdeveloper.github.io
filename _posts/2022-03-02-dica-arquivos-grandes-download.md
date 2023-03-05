@@ -24,9 +24,9 @@ Pois bem, sabemos que existem inúmeras formas de fazer download de arquivos na 
 <br><br>
 O problema que enfrentamos basicamente é sobre muitas abordagens que vemos por aí, que funciona apenas para arquivos pequenos, que é por exemplo escrever os bytes usando o MemoryStream e depois escrever em um arquivo como demonstrado abaixo:
 <br>
-
+</div>
 ```csharp
-...
+//...
 const string url = "https://ralms.io/poeira_em_alto_mar.mp4";
 using (var response = await client.GetAsync(url))
 using (var streamContent = await response.Content.ReadAsStreamAsync())
@@ -48,7 +48,7 @@ Vamos fazer essa pequena modificação:
 </div>
 
 ```csharp
-...
+//...
 const string url = "https://ralms.io/poeira_em_alto_mar.mp4";
 using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
 using (var streamContent = await response.Content.ReadAsStreamAsync())
@@ -65,7 +65,7 @@ using (var streamContent = await response.Content.ReadAsStreamAsync())
 Mas ainda continuamos com um problema da leitura do content completamente, porque falo isso? Bom, o motivo é que se você tem pouca memória você pode chegar ao ponto de exaurir seus recursos computacionais, então a dica é fragmentar a leitura do dado e escrever em pedaços menores em seu arquivo, isso se torna muito mais eficiente e você pode inclusive utilizar até paralelismo, veja como poderemos fazer de forma simples e resolver esse problema: 
 
 ```csharp
- ...
+// ...
 const string url = "https://ralms.io/poeira_em_alto_mar.mp4";
 using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
 using (var streamContent = await response.Content.ReadAsStreamAsync())
