@@ -15,7 +15,7 @@ header:
 ![01]({{site.url}}{{site.baseurl}}/assets/images/2022/legibilidade_and_or.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
-Durante o processo de desenvolvimento de um sistema sempre nos esforçamos para escrever código melhores, e, na dica de hoje irei apresentar um recurso do C# 9 fantástico.
+Durante o processo de desenvolvimento de um sistema sempre nos esforçamos para escrever códigos melhores, e, na dica de hoje irei apresentar um recurso do C# 9 fantástico.
 </div> 
 
 ## Introdução
@@ -30,13 +30,14 @@ Bom me parece que isso é bem simples concorda?<br />
 Como podemos melhorar isso?
 ## Novo recurso do C# 9.0
 <div style="text-align: justify;">
-Vamos agora simplificar o que já esta simplificado, usando os operadores <b>AND</b> e <b>OR</b>.
+A Microsoft lança o C# 9.0 com recursos bem legais como os operados <b>AND</b> e <b>OR</b> que podem simplificar muito mais seus códigos, vamos ver um exemplo simples 
+de refatoração do código criado acima..
 </div>
 ```csharp
 bool Exists(char letter) => letter is (>= '0' and <= '9') or (>= 'A' and <= 'Z');
 ```
 <div style="text-align: justify;">
-A mudança foi muito simples, porém conseguimos simplificar ainda mais nosso código!
+A mudança foi muito simples néh?! Porém conseguimos simplificar ainda mais nosso código, uma dica é que você não precisa entrar no hype, mas é importante conhecer esses novos recursos e analisar como podem lhe ajudar em seu dia a dia.
 </div> 
 ## Contatos
 <div class="notice--info">
