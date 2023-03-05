@@ -43,7 +43,8 @@ using (var streamContent = await response.Content.ReadAsStreamAsync())
 <div style="text-align: justify;">
 Com o código apresentado acima, temos 2 (dois) pequenos problemas... o primeiro é que ao fazer a solicitação do arquivo, você irá ter que aguardar 
 que o servidor escreva todo binário para o solicitante, pra depois você receber um status de OK, se o arquivos for muito grande seu sistema poderá ficar
-muito ocioso, então você pode melhor um pouco essa requisição passando mais parâmetros para o GET (<b>HttpCompletionOption.ResponseHeadersRead</b>), falando que assim que os headers forem escritos já é o suficiente para receber um Status de OK e a partir daí você tomar a decisão que precisa ser tomada, como por exemplo o tamanho do arquivo que pode vir no header.
+muito ocioso, então você pode melhor um pouco essa requisição passando mais parâmetros para o GET (<b>HttpCompletionOption.ResponseHeadersRead</b>), falando que assim que os headers forem escritos já é o suficiente para ler StatusCode e a partir daí você tomar uma decisão de negócio, como por exemplo analisar o tamanho do arquivo que pode vir no header.
+<br>
 Vamos fazer essa pequena modificação:
 </div>
 
@@ -62,21 +63,25 @@ using (var streamContent = await response.Content.ReadAsStreamAsync())
 ```
 
 ## Resolvendo o problema
-Mas ainda continuamos com um problema da leitura do content completamente, porque falo isso? Bom, o motivo é que se você tem pouca memória você pode chegar ao ponto de exaurir seus recursos computacionais, então a dica é fragmentar a leitura do dado e escrever em pedaços menores em seu arquivo, isso se torna muito mais eficiente e você pode inclusive utilizar até paralelismo, veja como poderemos fazer de forma simples e resolver esse problema: 
+Ainda continuamos com um problema da leitura do content completamente, porque falo isso? Bom, o motivo é que se você tem pouca memória, você pode chegar ao ponto de exaurir seus recursos computacionais, então a dica é fragmentar a leitura do dado e escrever em pedaços menores em seu arquivo, isso se torna muito mais eficiente e você pode inclusive utilizar até paralelismo, veja como poderemos fazer de forma simples e resolver esse problema: 
 
 ```csharp
 // ...
 const string url = "https://ralms.io/poeira_em_alto_mar.mp4";
+const int chunck = 1024 * 1024 * 5; //5Mb
+
 using (var response = await client.GetAsync(url, HttpCompletionOption.ResponseHeadersRead))
 using (var streamContent = await response.Content.ReadAsStreamAsync())
 {
     string tempFile = Path.GetTempFileName();
-    using (var streamWrite = File.Open(tempFile, FileMode.Create))
+    using (var streamWrite = new FileStream(tempFile, FileMode.OpenOrCreate, FileAccess.Write, FileShare.None, chunck, FileOptions.SequentialScan))
     {
-        await streamContent.CopyToAsync(streamWrite, 1024 * 1024 * 2); //2M
+        await streamContent.CopyToAsync(streamWrite, chunck); //5Mb
     } 
 } 
 ```
+## Observações
+No exemplo acima fragmentamos em pedaços de 5Mb isso se torna mais eficiente e seguro, pricipalmente em ambientes que são containeralizados... é uma simples dica de trabalhar sobre o HTTP Client, mas que pode lhe ajudar em seu dia a dia!
 
 ## Contatos
 <div class="notice--info">
