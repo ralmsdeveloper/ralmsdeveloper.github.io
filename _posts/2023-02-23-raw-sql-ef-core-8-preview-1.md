@@ -27,9 +27,35 @@ Nesse último preview lançado do produto podemos agora escrever consultas sem n
 Para comunidade isso é muito importante, dado que em muitos casos queremos utilizar todos recursos do EF Core, mas escrevendo consultas independentes, vamos ver como isso ficou.
 <br>
 </div>
+
+<div style="text-align: justify;">
+Para executar comandos no banco de dados como por exemplo atualizar um registro ou criar tabela já tinhamos essa funcionalidade que era o <b>ExecuteSql</b>:
+</div>
 ```csharp
-bool Exists(char letter) => (letter >= '0' && letter <= '9') || (letter >= 'A' && letter <= 'Z');
+var context = new MeuContexto();
+context.Database.ExecuteSql(@$"CREATE TABLE ....");
+context.Database.ExecuteSql(@$"UPDATE TABLE ....");
 ``` 
+<div style="text-align: justify;">
+Até aqui tudo bem certo?! Vamos agora para a parte da consulta, pra ver como podemos fazer consultas sem necessidade de fazer um mapeamento no EF Core, basicamente iremos utilizar o novo método chamado <b>SqlQuery</b>, vamos para o exemplo:
+</div>
+
+```csharp
+public class Artigo
+{
+    public int Id { get; set; }
+    public string Titulo { get; set; }
+}
+
+var artigos =
+    await context.Database
+        .SqlQuery<Artigo>($"SELECT TOP 12 * FROM Artigos ORDER BY id DESC")
+        .ToListAsync();
+``` 
+<div style="text-align: justify;">
+ Bom de forma bem simples é isso, basta você ter uma classe com os campos que corresponde a seus campos no banco de dados e executar sua consulta,
+ o EF Core irá fazer o discovery das propriedades e mapear para você.
+</div>
 ## Contatos
 <div class="notice--info">
  Fico por aqui, mas pode me contatar por meio de minhas redes sociais 😄 <br />
