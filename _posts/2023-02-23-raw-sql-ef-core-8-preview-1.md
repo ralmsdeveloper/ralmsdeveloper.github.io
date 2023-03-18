@@ -1,5 +1,5 @@
 ﻿---
-title: "Melhorar legibilidade do código (AND & OR)"
+title: "EF Core 8 Preview 1 - News"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
