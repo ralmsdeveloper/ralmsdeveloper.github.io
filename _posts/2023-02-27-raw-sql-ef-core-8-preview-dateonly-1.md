@@ -21,7 +21,7 @@ Esse é meu lugar especial onde adoro compartilhar novidades e pensamentos sobre
 
 ## Introdução
 <div style="text-align: justify;">
-Quando a Microsoft lançou o Entity Framework Core 8 além de tantas outras funcionalidades, ganhamos também mais um recurso interessante, o qual não precisamos ficar criando conversores dado que o EF Core fornece essa possibilidade.
+Quando a Microsoft lançou o Entity Framework Core 8 além de tantas outras funcionalidades, ganhamos também mais um recurso interessante, o qual não precisamos ficar criando conversores, falo isso porque o EF Core fornece essa possibilidade.
 <br><br>
 Bom, a novidade é o DateOnly e TimeOnly, que são tipos que foram lançados lá na versão do .NET 6 e que inclusive vários outro provedores de acesso a dados já tinham implementado, como por exemplo o de acesso ao PostgreSQL, e aí fica a pergunta porque o EF Core levou mais tempo para implementar esse recurso, bom a resposta é simples, como o EF Core para SQL Server tem uma forte dependência com o driver de acesso ao SQL Server, primeiramente seria necessário aguardar que o time de desenvolvimento do driver adicionasse esses novos tipos no driver.
 <br><br>
