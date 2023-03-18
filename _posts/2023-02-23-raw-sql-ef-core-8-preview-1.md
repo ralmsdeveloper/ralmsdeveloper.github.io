@@ -6,7 +6,8 @@ toc: true
 toc_label: "Tópicos"
 categories:
   - dotnet
-  - Dicas
+  - Entity Framework Core
+  - Entity Framework Core 8
 header:
   teaser: /assets/images/2023/ef_core_8_preview_1_raw.png
   caption: "www.ralms.io"
