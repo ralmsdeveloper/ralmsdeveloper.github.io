@@ -8,7 +8,7 @@ categories:
   - dotnet
   - Performance
 header:
-  teaser: /assets/images/2023/otimizacao_sem_regex.png
+  teaser: /assets/images/2022/otimizacao_sem_regex.png
   caption: "www.ralms.io"
 ---
 
