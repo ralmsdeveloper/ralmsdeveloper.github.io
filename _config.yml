@@ -111,7 +111,7 @@ tag_archive:
 comments:
   provider               : disqus
   disqus:
-    shortname            : ralmsdeveloper
+    shortname            : ralms-io
 
 analytics:
   provider               : google
