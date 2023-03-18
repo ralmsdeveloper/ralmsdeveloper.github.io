@@ -12,7 +12,7 @@ header:
   caption: "www.ralms.io"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/2022/legibilidade_and_or.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/2023/ef_core_8_preview_1_raw.png)
 <hr /> 
 <div class="notice--warning" style="background-color:#f8ffc4">
 Esse é meu lugar especial para compartilhar novidades e pensamentos sobre tecnologia com a comunidade.
