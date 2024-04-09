@@ -1,5 +1,5 @@
 ﻿---
-title: "Atualização em Massa"
+title: "Introdução ao LINQ"
 comments: true
 excerpt_separator: "Ler mais"
 toc: true
@@ -7,8 +7,7 @@ toc_label: "Tópicos"
 categories:
   - dotnet
   - performance
-  - Entity Framework Core
-  - Entity Framework Core 7
+  - LINQ
 header:
   teaser: /assets/images/net.png
   caption: "www.ralms.io"
