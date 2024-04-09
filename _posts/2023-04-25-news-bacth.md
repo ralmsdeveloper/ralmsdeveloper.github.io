@@ -58,10 +58,12 @@ Eficiência: ExecuteDelete e ExecuteUpdate executam comandos SQL únicos e otimi
 Flexibilidade: Os predicados permitem definir com precisão quais entidades devem ser atualizadas ou excluídas.
 Transações: A utilização de transações é compatível com os métodos, garantindo a integridade dos dados em caso de falhas.
 
-## Considerações:
+## Considerações
 
-Rastreamento de Entidades: Ao contrário do SaveChanges, os métodos não rastreiam o estado das entidades no contexto.
+Rastreamento de entidades que ao contrário do SaveChanges, os métodos não rastreiam o estado das entidades no contexto.
+
 Consultas Subsequentas: As alterações realizadas com ExecuteDelete e ExecuteUpdate não são automaticamente refletidas no contexto, portanto, consultas subsequentes podem precisar ser recarregadas.
+
 Segurança: O predicado deve ser cuidadosamente escrito para evitar exclusões ou atualizações indesejadas.
  
 
