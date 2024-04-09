@@ -202,11 +202,7 @@ Aprendemos que mesmo que o .NET já nos forneça uma pilha de bibliotecas, com m
 e analise seu cenário, quanto mais crítico ele for, mais a necessidade de performance você terá, pense fora da caixa, muitas das vezes você escrever seus próprios métodos pode ser a melhor opção.
 </div> 
 <br>
-# Fontes
-Os fontes do exemplo usado está aqui:<br>
-<a href="https://github.com/ralmsdeveloper/performanceregex" target="_BLANK" alt="">
-https://github.com/ralmsdeveloper/performanceregex
-</a>
+
 
 
 <br>
@@ -217,4 +213,4 @@ https://github.com/ralmsdeveloper/performanceregex
 </div> 
 
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore31 #netcore31 #span<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #performance #efcore7 #netcore7 #span<br><br>
