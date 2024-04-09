@@ -5,8 +5,7 @@ excerpt_separator: "Ler mais"
 toc: true
 toc_label: "Tópicos"
 categories:
-  - EF5
-  - Entity Framework Core
+  - EF7
 header:
   teaser: /assets/images/gdpr/LGPD_EFCORE.png
   caption: "www.ralms.io"
