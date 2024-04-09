@@ -7,7 +7,7 @@ categories:
   - "Entity Framework Core"
 ---
 
-![01]({{site.url}}{{site.baseurl}}/assets/images/efcorecsharp.png)
+![01]({{site.url}}{{site.baseurl}}/assets/images/dicasefcore.png)
 
 <center><strong>Fala pessoal, tudo bem?! 💚</strong></center>
 <hr> 
@@ -188,11 +188,7 @@ CREATE TABLE test_snake_case (
     CONSTRAINT pk_test_snake_case PRIMARY KEY (id)
 );
 ```
-<br>
-Os fontes do exemplo usado está aqui:<br>
-<a href="https://github.com/ralmsdeveloper/samplesnakecase" target="_BLANK" alt="">
-https://github.com/ralmsdeveloper/samplesnakecase
-</a>
+<br> 
 
 <div class="notice--success">
 <strong>
@@ -201,4 +197,4 @@ https://github.com/ralmsdeveloper/samplesnakecase
 </div> 
 
 
- #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #linqsolucoes<br><br>
+ #mvpbuzz #mvpbr #mvp #developerssergipe #share #vscode #postgresql #efcore<br><br>
